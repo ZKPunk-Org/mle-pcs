@@ -1,0 +1,1113 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Basefold 在 List Decoding 下的 Soundness 证明概览 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-habock-overview.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-habock-overview.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-habock-overview.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Basefold 在 List Decoding 下的 Soundness 证明概览</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold">Basefold 协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumcheck">结合 Sumcheck 协议</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fri">结合 FRI 协议</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">Soundness 概览</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit 阶段</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query">Query 阶段</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement">Correlated agreement 定理</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold-list-decoding-soundness">
+<h1>Basefold 在 List Decoding 下的 Soundness 证明概览<a class="headerlink" href="#basefold-list-decoding-soundness" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>本篇文章主要梳理 Ulrich Haböck 在论文 [H24] 中给出的关于 Basefold [ZCF23] 给出的 multilinear PCS 在 list decoding 下的安全性证明。在论文 [ZCF23] 中，给出的 soundness 证明是在 unique decoding 下针对 foldable linear code 的，而在 [H24] 中，其证明是针对 Reed-Solomon code 的，且是在 list decoding 下，将界提升到了 Johnson bound，即 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> 。为了证明安全性，论文中给出了两个比 [BCIKS20] 给出的 correlated agreement 更强的 correlated agreement 定理：</p>
+<ol class="arabic simple">
+<li><p>[H24, Theorem 3] Correlated agreement for subcodes.</p></li>
+<li><p>[H24, Theorem 4] Weighted correlated agreement for subcodes.</p></li>
+</ol>
+<p>如果考虑 Basefold 协议应用在 Reed-Solomon code 上，该协议结合了 FRI 和 sumcheck，要证明其安全性，[H24] 提出了能结合 sumcheck 约束的 subcodes，它是在 Reed-Solomon code 的基础上添加了类似 sumcheck 的约束，这样再结合对应的 correlated agreement 定理，就能对协议进行安全性证明了。</p>
+<section id="basefold">
+<h2>Basefold 协议<a class="headerlink" href="#basefold" title="Link to this heading">#</a></h2>
+<p>对于一个多元线性多项式 <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n) \in F[X_1, \ldots, X_n]\)</span> ，想要证明对于任何来自 <span class="math notranslate nohighlight">\(F^n\)</span> 的查询 <span class="math notranslate nohighlight">\(\vec{\omega} = (\omega_1, \ldots, \omega_n)\)</span> ，有 <span class="math notranslate nohighlight">\(v = P(\omega_1, \ldots, \omega_n)\)</span> 。为了实现多元线性多项式 <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n)\)</span> 的 PCS，Basefold 协议结合了 Sumcheck 与 FRI 协议。下面结合论文 [H24] 中的描述，进行介绍。</p>
+<section id="sumcheck">
+<h3>结合 Sumcheck 协议<a class="headerlink" href="#sumcheck" title="Link to this heading">#</a></h3>
+<p>为了证明  <span class="math notranslate nohighlight">\(v = P(\omega_1, \ldots, \omega_n)\)</span> ，首先将查询的值 <span class="math notranslate nohighlight">\(P(\omega_1, \ldots, \omega_n)\)</span> 转换为 Sumcheck 求和形式，即</p>
+<div class="math notranslate nohighlight">
+\[
+P(\omega_1, \ldots, \omega_n) = \sum_{\vec{x} = (x_1, \ldots, x_n) \in H_n} L(\vec{x}, \vec{\omega}) \cdot P(\vec{x}) 
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(H_n = \{0,1\}^n\)</span> ，这里 <span class="math notranslate nohighlight">\(L(\vec{x}, \vec{\omega})\)</span> 其实就是 <span class="math notranslate nohighlight">\(eq(\cdot, \cdot)\)</span> 函数，即</p>
+<div class="math notranslate nohighlight">
+\[
+L(\vec{x}, \vec{\omega}) = \prod_{i = 1}^n \left ((1 - x_i)(1 - \omega_i) + x_i\omega_i \right)
+\]</div>
+<p>因此要证明的 <span class="math notranslate nohighlight">\(v = P(\omega_1, \ldots, \omega_n)\)</span> 就转换为了证明在 <span class="math notranslate nohighlight">\(H_n\)</span> 上的求和，即</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\vec{x} = (x_1, \ldots, x_n) \in H_n} L(\vec{x}, \vec{\omega}) \cdot P(\vec{x}) = v
+\]</div>
+<p>接下来用 Sumcheck 协议可以证明该求和正确。</p>
+<p>对于 <span class="math notranslate nohighlight">\(i = 1, \ldots, n - 1\)</span> ，Prover 需要根据挑战的随机数 <span class="math notranslate nohighlight">\(\lambda_1, \ldots,\lambda_i\)</span> ，构造一个一元多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+q_i(X) = \sum_{\vec{x} = (x_{i + 2}, \ldots, x_n) \in H_{n - (i + 1)}} L(\lambda_1,\ldots, \lambda_i,X,\vec{x}, \vec{\omega}) \cdot P(\lambda_1, \ldots, \lambda_i,X,\vec{x})
+\]</div>
+<p>其对应的就是多项式 <span class="math notranslate nohighlight">\(P(\lambda_1, \ldots, \lambda_i, X, \omega_{i+2}, \ldots, \omega_{n})\)</span> 。</p>
+<p>可以看到在 <span class="math notranslate nohighlight">\(q_i(X)\)</span> 中，<span class="math notranslate nohighlight">\(L(\lambda_1,\ldots, \lambda_i,X,\vec{x}, \vec{\omega})\)</span> 关于 <span class="math notranslate nohighlight">\(X\)</span> 是一次的，而 <span class="math notranslate nohighlight">\(P(\lambda_1, \ldots, \lambda_i,X,\vec{x})\)</span> 关于 <span class="math notranslate nohighlight">\(X\)</span> 也是一次的，它们相乘之后关于 <span class="math notranslate nohighlight">\(X\)</span> 就变成二次的了，为了后续和对于 linear subcodes 的 correlated agreement 定理相对应，这里提取出关于 <span class="math notranslate nohighlight">\(X\)</span> 的一次线性项，Prover 需要发送的是线性多项式</p>
+<div class="math notranslate nohighlight">
+\[
+\Lambda_i(X) = \sum_{\vec{x} = (x_{i + 2}, \ldots, x_n) \in H_{n - (i + 1)}} L(\vec{x}, (\omega_{i+2}, \ldots, \omega_n)) \cdot P(\lambda_1, \ldots, \lambda_i,X,\vec{x})
+\]</div>
+<p>由于</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	L((\lambda_1, \ldots, \lambda_i, X, \vec{x}), \vec{\omega}) &amp; = L((\lambda_1, \ldots, \lambda_i, X, \vec{x}), (\omega_1, \ldots, \omega_{i}, \omega_{i+1}, \omega_{i+2}, \ldots, \omega_n)) \\
+	&amp; = \left( \prod_{j = 1}^{i}[(1 - \lambda_j)(1 - \omega_j) + \lambda_j \omega_j] \right) \\
+	&amp; \quad \cdot \left( (1 - \lambda_{i+1})(1 - \omega_{i+1}) + X \cdot \omega_{i+1} \right) \\
+	&amp; \quad \cdot \left( \prod_{j = i+2}^{n}[(1 - \lambda_j)(1 - \omega_j) + \lambda_j \omega_j] \right) \\
+	&amp; = L(\lambda_1, \ldots, \lambda_i, \omega_1, \ldots, \omega_i) \cdot L(X, \omega_{i+1}) \cdot L(\vec{x}, (\omega_{i+2}, \ldots, \omega_n))
+\end{aligned}
+\end{split}\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+q_i(X) = L(\lambda_1, \ldots, \lambda_i, \omega_1, \ldots, \omega_i) \cdot L(X, \omega_{i+1}) \cdot \Lambda_i(X).
+\]</div>
+<p>Prover 只需要提供 <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> ，Verifier 可以自己通过上式来计算 <span class="math notranslate nohighlight">\(q_i(X)\)</span> 。</p>
+<p>在 Sumcheck 协议中，Prover 先发送一个单变量多项式 <span class="math notranslate nohighlight">\(\Lambda_0(X) = \sum_{\vec{x} = (x_2, \ldots, x_n) \in H_{n - 1}}L(\vec{x}, (\omega_2, \ldots, \omega_n)) \cdot P(X, \vec{x})\)</span> 以及 <span class="math notranslate nohighlight">\(s_0 = v\)</span> ，接着在第 <span class="math notranslate nohighlight">\(1 \le i \le n - 1\)</span> 轮中，</p>
+<ol class="arabic simple">
+<li><p>Verifier 可以根据 <span class="math notranslate nohighlight">\(\Lambda_{i-1}(X)\)</span> 计算出 <span class="math notranslate nohighlight">\(q_{i-1}(X)\)</span> 并检查 <span class="math notranslate nohighlight">\(s_{i-1} = q_{i-1}(0) + q_{i-1}(1)\)</span> 。接着选择一个随机数 <span class="math notranslate nohighlight">\(\lambda_i \leftarrow \$ F\)</span> 发送给 Prover。</p></li>
+<li><p>Prover 根据 <span class="math notranslate nohighlight">\(\lambda_i\)</span> 计算可以得到 <span class="math notranslate nohighlight">\(P(\lambda_1, \ldots, \lambda_i, X_{i+1}, \ldots, X_n)\)</span> ，据此算出 <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> 发送给 Verifier，并且 Prover 和 Verifier 同时令 <span class="math notranslate nohighlight">\(s_i = q_{i-1}(\lambda_i)\)</span> 。</p></li>
+</ol>
+<p>在 Sumcheck 的最后一步需要得到 <span class="math notranslate nohighlight">\(P(X_1, \ldots, X_n)\)</span> 在一个随机点 <span class="math notranslate nohighlight">\((\lambda_1, \lambda_2, \ldots, \lambda_n)\)</span> 处的值，即</p>
+<div class="math notranslate nohighlight">
+\[
+P(\lambda_1,  \ldots, \lambda_n),
+\]</div>
+<p>该值可以通过在 FRI 协议中用同样的随机数 <span class="math notranslate nohighlight">\(\lambda_1,  \ldots, \lambda_n\)</span> 对一个与多元线性多项式 <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n)\)</span> 的次数不超过 <span class="math notranslate nohighlight">\(2^n - 1\)</span> 的一元多项式 <span class="math notranslate nohighlight">\(f_{0}(X)\)</span> 进行折叠得到。对 <span class="math notranslate nohighlight">\(f_{0}(X)\)</span> 进行 <span class="math notranslate nohighlight">\(n\)</span> 次折叠，最后会得到一个常数 <span class="math notranslate nohighlight">\(c\)</span> ，我们希望其值就是 <span class="math notranslate nohighlight">\(P(\lambda_1,  \ldots, \lambda_n) = c\)</span> 。</p>
+</section>
+<section id="fri">
+<h3>结合 FRI 协议<a class="headerlink" href="#fri" title="Link to this heading">#</a></h3>
+<p>对于多元线性多项式 <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n)\)</span> ，有一个一元多项式 <span class="math notranslate nohighlight">\(f_{0}(X)\)</span> （[H24] 中称之为 <em>univariate representation</em>）与其进行对应，</p>
+<div class="math notranslate nohighlight">
+\[
+f_0(X) = \sum_{i = 0}^{2^n - 1} P(i_1, \ldots, i_n) \cdot X^i
+\]</div>
+<p>其中，<span class="math notranslate nohighlight">\(i_1, \ldots, i_n\)</span> 是 <span class="math notranslate nohighlight">\(i\)</span> 的二进制表示，<span class="math notranslate nohighlight">\(i_1\)</span> 表示最低位，<span class="math notranslate nohighlight">\(i_n\)</span> 表示最高位。</p>
+<p>例如，<span class="math notranslate nohighlight">\(n = 3\)</span> ，假设多元线性多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+P(X_1, X_2, X_3) = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1X_2 + a_4 X_3 + a_5 X_1 X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3
+\]</div>
+<p>则与 <span class="math notranslate nohighlight">\(P(X_1, X_2, X_3)\)</span> 对应的一元多项式 <span class="math notranslate nohighlight">\(f_0(X)\)</span> 为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	f_0(X) &amp; = \sum_{i = 0}^{7}P(i_1,i_{2},i_3) \cdot X^i \\
+	&amp; = P(0, 0, 0) + P(1, 0, 0) X + P(0, 1, 0) X^2  + P(1,1,0) X^3  \\
+    &amp; \quad + P(0,0,1) X^4 + P(1,0,1) X^5 + P(0,1,1) X^6 +  P(1, 1, 1) X^{7} \\
+    &amp; = (P(0,0,0) + P(0, 1, 0) X^2 + P(0,0,1) X^4) \\
+    &amp; \quad + X \cdot (P(1, 0, 0) + P(1,1,0) X^2 + P(1,0,1) X^4 + P(1, 1, 1) X^{6}) \\
+    &amp; = f_{0,0}(X^2) + X \cdot f_{0,1}(X^2)
+\end{aligned}
+\end{split}\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(f_{0,0}(X^2)\)</span> 对应了 <span class="math notranslate nohighlight">\(f_0(X)\)</span> 的偶数项，而 <span class="math notranslate nohighlight">\(f_{0,1}(X^2)\)</span> 对应了 <span class="math notranslate nohighlight">\(f_0(X)\)</span> 的奇数项。可以发现偶数项中 <span class="math notranslate nohighlight">\(P(0,0,0) + P(0, 1, 0) X^2 + P(0,0,1) X^4\)</span> 系数对应了多元线性多项式中的 <span class="math notranslate nohighlight">\(P(0, \cdot, \cdot)\)</span> ，奇数项的系数则对应了 <span class="math notranslate nohighlight">\(P(1, \cdot, \cdot)\)</span> 。换句话说，<span class="math notranslate nohighlight">\(f_{0,0}(X)\)</span> 是 <span class="math notranslate nohighlight">\(P(0, X_2, X_3)\)</span> 的 <em>univariate representation</em> ，<span class="math notranslate nohighlight">\(f_{0,1}(X)\)</span> 是 <span class="math notranslate nohighlight">\(P(1, X_2, X_3)\)</span> 的 univariate representation ，因为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f_{0,0}(X) = \sum_{i = 0}^{3}P(0,i_1,i_2) \cdot X^i \\
+     f_{0,1}(X) = \sum_{i = 0}^{3}P(1,i_1,i_2) \cdot X^i 
+\end{aligned}
+\end{split}\]</div>
+<p>用 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 对 <span class="math notranslate nohighlight">\(f_{0,0}(X)\)</span> 与 <span class="math notranslate nohighlight">\(f_{0,1}(X)\)</span> 进行折叠，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+f_1(X) = (1 - \lambda_1) \cdot f_{0,0}(X) + \lambda_1 \cdot f_{0,1}(X)
+\]</div>
+<p>而 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 恰是 <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, X_3)\)</span> 的 <em>univariate representation</em> 。注意这里折叠的方式并不是 FRI 协议中常见的</p>
+<div class="math notranslate nohighlight">
+\[
+f_1(X) = f_{0,0}(X) + \lambda_1 \cdot f_{0,1}(X)
+\]</div>
+<p>这是因为在这种情况下，得到的 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 并不能与 <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, \ldots, X_n)\)</span> 对应，这和一元多项式与多元线性多项式之间的对应关系是绑定的，在这种折叠方式下，它们之间的对应关系应该变为(WHIR 论文 [ACFY24] 采取的就是这种对应方式) ：</p>
+<div class="math notranslate nohighlight">
+\[
+f_0(X) = P(X^{2^0}, X^{2^1}, \ldots, X^{2^{n-1}})
+\]</div>
+<p>这里就不展开推导在这种对应关系下 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 能与 <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, \ldots, X_n)\)</span> 对应。</p>
+<p>回到论文 [H24] 给出的一元多项式与多元线性多项式的对应关系，现在推导下在用 <span class="math notranslate nohighlight">\(1 - \lambda_1\)</span> 和 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 对 <span class="math notranslate nohighlight">\(f_0(X)\)</span> 折叠得到的 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 确实是与 <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, X_3)\)</span> 对应的。对于一般的 <span class="math notranslate nohighlight">\(P(X_1, \ldots, X_n)\)</span> 有</p>
+<div class="math notranslate nohighlight">
+\[
+P(\vec{X}) = \sum_{\vec{x} \in H_n} P(\vec{x}) \cdot L(\vec{x}, \vec{X})
+\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	P(\lambda_1, X_2, \ldots, X_n) &amp; = \sum_{\vec{b} \in H_n} P(\vec{b}) \cdot L(\vec{b}, (\lambda_1, X_2, \ldots, X_n)) \\
+	&amp; = \sum_{\vec{b} \in H_n} \left(P(\vec{b}) \cdot \left((1- b_1)(1 - \lambda_1) + b_1 \lambda_1\right)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; = \sum_{\vec{b} \in H_{n-1}} \left(P(0, \vec{b}) \cdot \left((1- 0)(1 - \lambda_1) + 0 \cdot  \lambda_1\right)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; \quad + \sum_{\vec{b} \in H_{n-1}} \left(P(1, \vec{b}) \cdot \left((1- 1)(1 - \lambda_1) + 1 \cdot \lambda_1\right)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; = \sum_{\vec{b} \in H_{n-1}} \left(P(0, \vec{b}) \cdot (1 - \lambda_1)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; \quad + \sum_{\vec{b} \in H_{n-1}} \left(P(1, \vec{b}) \cdot \lambda_1 \prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; =  (1 - \lambda_1) \sum_{\vec{b} \in H_{n-1}} \left(P(0, \vec{b}) \cdot\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; \quad + \lambda_1 \sum_{\vec{b} \in H_{n-1}} \left(P(1, \vec{b}) \cdot  \prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; = (1 - \lambda_1) P(0, X_2, \ldots, X_n) + \lambda_1 P(1, X_2, \ldots, X_n)
+\end{aligned}
+\end{split}\]</div>
+<p>从而有</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f_1(X) &amp; = (1 - \lambda_1) \cdot f_{0,0}(X) + \lambda_1 \cdot f_{0,1}(X) \\
+    &amp; = (1 - \lambda_1) \cdot \sum_{i = 0}^{3}P(0,i_1,i_2) \cdot X^i + \lambda_1 \cdot \sum_{i = 0}^{3}P(1,i_1,i_2) \cdot X^i \\
+    &amp; = \sum_{i = 0}^{3}((1 - \lambda_1)P(0,i_1,i_2) + \lambda_1 P(1,i_1,i_2)) \cdot X^i \\
+    &amp; = \sum_{i = 0}^{3}P(\lambda_1, i_1, i_2) \cdot X^i
+\end{aligned}
+\end{split}\]</div>
+<p>至此也就说明了 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 是 <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, X_3)\)</span> 的 univariate representation 。接着按这种方式对 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 用随机数 <span class="math notranslate nohighlight">\(\lambda_2, \lambda_3\)</span> 进行折叠，最后得到常数多项式，其值就恰好对应 <span class="math notranslate nohighlight">\(P(\lambda_1, \lambda_2, \lambda_3)\)</span> 。总结一下，Basefold 协议就是一边用随机数对多元线性多项式进行 Sumcheck 协议，一边用同样的随机数对对应的一元多项式进行 FRI 协议，从而实现多元线性多项式的 PCS，这对应 [H24, Protocol 1] ，是针对 Reed-Solomon  的 Basefold 协议 。整体协议的思路如此，这里就不再复述具体的协议流程了，详见 [H24, Protocol 1]  。</p>
+<blockquote>
+<div><p>🐞 <strong>typo</strong>
+在 [H24, Protocol 1] 中，Query 阶段论文中写道需要检验的折叠关系为</p>
+<div class="math notranslate nohighlight">
+\[
+&gt;  f_{i+1}(x_{i+1}) = \frac{f_0(x_i) + f_0(-x_i)}{2} + \lambda_i \cdot \frac{f_0(x_i) + f_0(-x_i)}{2 \cdot x_i}
+&gt; \]</div>
+<p>但根据前文给出的折叠关系，我认为应该改为</p>
+<div class="math notranslate nohighlight">
+\[
+&gt;  f_{i+1}(x_{i+1}) = (1 - \lambda_i) \cdot \frac{f_0(x_i) + f_0(-x_i)}{2} + \lambda_i \cdot \frac{f_0(x_i) - f_0(-x_i)}{2 \cdot x_i}
+&gt; \]</div>
+</div></blockquote>
+<p>[H24] 论文证明的 soundness 是针对的更通用的一个协议，即 batch 版本的 Basefold 协议。</p>
+<blockquote>
+<div><p><strong>Protocol 2</strong> [H24, Protocol 2] (Batch Reed-Solomon code Basefold). The prover shares the Reed-Solomon codewords <span class="math notranslate nohighlight">\(g_0, \ldots, g_M \in \mathcal{C}_0 = \mathrm{RS}_{2^n}[F,D_0] = \{q(x)|_{x \in D_0}: q(x) \in F[X]^{&lt;2^n} \}\)</span> of the multilinears <span class="math notranslate nohighlight">\(G_0, \ldots, G_M\)</span> , together with their evaluation claims <span class="math notranslate nohighlight">\(v_0, \ldots, v_M\)</span> at <span class="math notranslate nohighlight">\(\vec{\omega} \in F^n\)</span> with the verifier. Then they engage in the following extension of Protocol 1:</p>
+<ol class="arabic simple">
+<li><p>In a preceding round <span class="math notranslate nohighlight">\(i = 0\)</span> , the verifier sends a random <span class="math notranslate nohighlight">\(\lambda_0 \leftarrow \$ F\)</span> , and the prover answers with the oracle for</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+&gt; f_0 = \sum_{k = 0}^{M} \lambda_0^k \cdot g_k \tag{1} 
+&gt; \]</div>
+<p>Then both prover and verifier engage in Protocol 1 on <span class="math notranslate nohighlight">\(f_0\)</span> and the claim <span class="math notranslate nohighlight">\(v_0 = \sum_{k = 0}^M \lambda_0^k \cdot v_k\)</span> . In addition to the checks in Protocol 1, the verifier also checks that equation <span class="math notranslate nohighlight">\((1)\)</span> holds at every sample <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(D_0\)</span> .</p>
+</div></blockquote>
+<p>batch 版本的 Basefold 协议其实就是用一个随机数 <span class="math notranslate nohighlight">\(\lambda_{0}\)</span> ，通过它的幂次将 <span class="math notranslate nohighlight">\(g_{0}, \ldots, g_{M}\)</span> 线性组合起来，转换成一个函数 <span class="math notranslate nohighlight">\(f_{0}\)</span> ，再对它用 Protocol 1。</p>
+</section>
+</section>
+<section id="soundness">
+<h2>Soundness 概览<a class="headerlink" href="#soundness" title="Link to this heading">#</a></h2>
+<p>本节主要分析 Protocol 2 的 soundness error 证明思路。首先说明 soundness error 的含义，对于任意一个可能作恶的 Prover <span class="math notranslate nohighlight">\(P^*\)</span> ，其给出的 <span class="math notranslate nohighlight">\(g_{0}, \ldots, g_{M}\)</span> 中存在 <span class="math notranslate nohighlight">\(g_{k}\)</span> 距离 Reed-Solomon 编码空间 <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> 超过 <span class="math notranslate nohighlight">\(\theta\)</span> （[H24] 中研究 list decoding 下的证明，因此考虑参数 <span class="math notranslate nohighlight">\(\theta \in \left( \frac{1 - \rho}{2}, 1 - \sqrt{\rho} \right)\)</span>），或者 <span class="math notranslate nohighlight">\(g_k\)</span> 对应的 multilinear representation <span class="math notranslate nohighlight">\(P_k\)</span> 不满足 evaluation claim <span class="math notranslate nohighlight">\(P_{k}(\vec{\omega}) = v_{k}\)</span> ，在此条件下，<span class="math notranslate nohighlight">\(P^*\)</span> 通过 Verifier 检查的概率不超过 <span class="math notranslate nohighlight">\(\varepsilon\)</span> ，这个概率 <span class="math notranslate nohighlight">\(\varepsilon\)</span> 就称为 soundness error。换句话说，soundness error 就是分析作恶的 Prover <span class="math notranslate nohighlight">\(P^*\)</span> 能侥幸通过 Verifier 检查的概率。<span class="math notranslate nohighlight">\(P^*\)</span> 能侥幸通过检查，可能发生的地方会是那些引入随机的地方，分析协议发现有三处：</p>
+<ol class="arabic simple">
+<li><p>Commit 阶段</p>
+<ol class="arabic simple">
+<li><p>用随机数 <span class="math notranslate nohighlight">\(\lambda_{0}\)</span> 将 <span class="math notranslate nohighlight">\(g_{0},\ldots, g_{M}\)</span> 进行 batch，设此概率为 <span class="math notranslate nohighlight">\(\varepsilon_{C_1}\)</span> 。</p></li>
+<li><p>用随机数 <span class="math notranslate nohighlight">\(\lambda_1, \ldots, \lambda_n\)</span> 进行 sumcheck 协议与类似 FRI 折叠的过程，设此概率为 <span class="math notranslate nohighlight">\(\varepsilon_{C_2}\)</span> 。</p></li>
+</ol>
+</li>
+<li><p>Query 阶段</p>
+<ol class="arabic simple">
+<li><p>Verifier 随机选取 <span class="math notranslate nohighlight">\(x_0 \leftarrow D_0\)</span> 来检查折叠是否正确，设此概率为 <span class="math notranslate nohighlight">\(\varepsilon_{\mathrm{query}}\)</span></p></li>
+</ol>
+</li>
+</ol>
+<p>因此，整个协议的 soundness error 为</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon &lt; \varepsilon_{C_1} + \varepsilon_{C_2} + \varepsilon_{\mathrm{query}}.
+\]</div>
+<section id="commit">
+<h3>Commit 阶段<a class="headerlink" href="#commit" title="Link to this heading">#</a></h3>
+<p>现在考虑用 <span class="math notranslate nohighlight">\(\lambda_1 \leftarrow \$ F\)</span> 将 <span class="math notranslate nohighlight">\(f_0\)</span> 折叠成 <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> 的情况，即</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1} = (1 - \lambda_1) \cdot f_{0,0} + \lambda_1 \cdot f_{0,1}
+\]</div>
+<p>假设给定的参数 <span class="math notranslate nohighlight">\(\theta = \frac{1}{2}\)</span> ，由于 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 是选取自 <span class="math notranslate nohighlight">\(F\)</span> 的随机数，有可能出现下面这种情况：</p>
+<p><img alt="" src="../_images/basefold-habock-commit-phase-1.svg" /></p>
+<p>图中的 <span class="math notranslate nohighlight">\(p_0, p_{0,0}, p_{0,1}, p_{\lambda_1}\)</span> 分别是对应 Reed-Solomon 编码空间中距离 <span class="math notranslate nohighlight">\(f_0, f_{0,0}, f_{0,1}, f_{\lambda_1}\)</span> 最近的码字，颜色同为绿色表示它们在该点值相同，而不同的颜色表示在该点的值不同。可以看出，对于作恶的 Prover 提供的 <span class="math notranslate nohighlight">\(f_0\)</span> ，其距离 Reed-Solomon 空间 <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> 的距离大于 <span class="math notranslate nohighlight">\(\theta = \frac{1}{2}\)</span> ，但是经过 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 进行折叠之后得到的 <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> 距离 Reed-Solomon 空间 <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> 可能出现小于 <span class="math notranslate nohighlight">\(\theta\)</span> 的情况，这样 <span class="math notranslate nohighlight">\(f_1\)</span> 在后续的协议中就会通过 Verifier 的折叠验证，<span class="math notranslate nohighlight">\(P^*\)</span> 就成功的欺骗了 Verifier 。</p>
+<p>那么出现上述这种情况的概率是多少呢？其由 [BCIKS20] 给出的 Correlated Agreement 定理给出。该定理说的是，如果</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\lambda_1 \in F}[\Delta((1 - \lambda_1) f_{0,0} + \lambda_1 f_{0,1}, \mathcal{C}_1) \le \theta] &gt; \epsilon
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\epsilon\)</span> 是一个和 <span class="math notranslate nohighlight">\(\theta, \rho, |F|, |D_1|\)</span> 相关的一个式子，也可写为 <span class="math notranslate nohighlight">\(\epsilon(\theta, \rho, |F|, |D_1|)\)</span>，并且在 unique decoding 和 list decoding 下其给出的形式也不同（这一部分留在在下一节中进行详细说明）。也就是，取遍 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 在 <span class="math notranslate nohighlight">\(F\)</span> 中的所有可能，得到 <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> ，其中距离 <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> 不超过 <span class="math notranslate nohighlight">\(\theta\)</span> 的比例超过了 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，那么就一定存在一个子集 <span class="math notranslate nohighlight">\(D' \subset D_1\)</span> 以及 <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> 中的码字 <span class="math notranslate nohighlight">\(p_{0,0}, p_{0,1}\)</span> 使得</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D_1| \ge 1 - \theta\)</span> ，</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{0,0}|_{D'} = p_{0,0}|_{D'}\)</span> 以及 <span class="math notranslate nohighlight">\(f_{0,1}|_{D'} = p_{0,1}|_{D'}\)</span> 。</p></li>
+</ol>
+<p><img alt="" src="../_images/basefold-habock-commit-phase-2.svg" /></p>
+<p>现在我们能得到 <span class="math notranslate nohighlight">\(f_{0,0}\)</span> 与 <span class="math notranslate nohighlight">\(f_{0,1}\)</span> 不仅距离编码空间 <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> 比较近，同时它们共享一个相同的集合 <span class="math notranslate nohighlight">\(D'\)</span> 与对应的码字相同。这是一个很好的结论，可以帮我们来推导原来的 <span class="math notranslate nohighlight">\(f_0\)</span> 到 <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> 的距离。</p>
+<p>通过映射 <span class="math notranslate nohighlight">\(\pi: x \mapsto x^2\)</span> 可以将 <span class="math notranslate nohighlight">\(D_0\)</span> 中的点映射到 <span class="math notranslate nohighlight">\(D_1\)</span> ，现在可用 <span class="math notranslate nohighlight">\(\pi^{-1}\)</span> 将 <span class="math notranslate nohighlight">\(D' \subseteq D_1\)</span> 中的点映射回 <span class="math notranslate nohighlight">\(D_0\)</span> ，例如，设 <span class="math notranslate nohighlight">\(\omega^8 = 1\)</span> 及</p>
+<div class="math notranslate nohighlight">
+\[
+D_0 = \{\omega^0, \omega^1, \omega^2, \omega^3, \omega^4, \omega^5, \omega^6, \omega^7\}
+\]</div>
+<p>则通过映射 <span class="math notranslate nohighlight">\(\pi: x \mapsto x^2\)</span> 可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+D_1 = \{\omega^0, \omega^2, \omega^4, \omega^6\}
+\]</div>
+<p>假设 <span class="math notranslate nohighlight">\(D' = \{\omega^0, \omega^2, \omega^4 \}\)</span> ，那么可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+\pi^{-1}(D') = \{\omega^0, \omega^1, \omega^2, \omega^4, \omega^5, \omega^6 \}
+\]</div>
+<p>如下图所示：</p>
+<p><img alt="" src="../_images/basefold-habock-commit-map.svg" /></p>
+<p>现在根据 correlated agreement 定理得到了 <span class="math notranslate nohighlight">\(f_{0,0}|_{D'} = p_{0,0}|_{D'}\)</span> 以及 <span class="math notranslate nohighlight">\(f_{0,1}|_{D'} = p_{0,1}|_{D'}\)</span> ，因此可以根据 <span class="math notranslate nohighlight">\(p_{0,0}\)</span> 以及 <span class="math notranslate nohighlight">\(p_{0,1}\)</span> 得到折叠之前的多项式</p>
+<div class="math notranslate nohighlight">
+\[
+p_0(X) = p_{0,0}(X^2) + X \cdot p_{0,1}(X^2)
+\]</div>
+<p>可以得出 <span class="math notranslate nohighlight">\(f_0(X)\)</span> 与 <span class="math notranslate nohighlight">\(p_0(X)\)</span> 在 <span class="math notranslate nohighlight">\(\pi^{-1}(D')\)</span> 上的值是一致，由此也就得到了 <span class="math notranslate nohighlight">\(f_0(X)\)</span> 到编码空间 <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> 的距离</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta(f_0, \mathcal{C}_0) \le \frac{|\pi^{-1}(D')|}{|D_0|} \le \theta
+\]</div>
+<p><img alt="" src="../_images/basefold-habock-commit-phase-3.svg" /></p>
+<p>这也就能说明 Prover 没有作弊，函数 <span class="math notranslate nohighlight">\(f_0\)</span> 距离对应的编码空间不超过 <span class="math notranslate nohighlight">\(\theta\)</span> 。回到最初的问题，我们想分析 Prover 作弊情况下，其能成功骗过 Verifier 的概率，现在 correlated agreement 定理告诉了我们除了一个概率 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，能确保 Prover 没有作弊，这也说明如果 Prover 作弊，能成功骗过 Verifier 的概率不会超过这个概率 <span class="math notranslate nohighlight">\(\epsilon\)</span> 。</p>
+<p>至此我们就分析完 Commit 阶段的 soundness error 了吗？回顾下上述分析，我们使用 correlated agreement 定理得到了由于折叠随机数 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 的引入，导致折叠之后的多项式能骗过 Verifier 的概率，但是有一点要记住，Basefold 协议不仅要检查类似 FRI 的折叠是否正确，还要同时检查 sumcheck 的约束，因此上述分析是不够的。仿照上述 correlated agreement 定理的思路，在其基础上增加 sumcheck 的约束，如果存在的多项式 <span class="math notranslate nohighlight">\(p_{\lambda_1}\)</span> 对应的 <span class="math notranslate nohighlight">\(P_{\lambda_1} = P(\lambda_1, X_2, \ldots, X_n)\)</span> 满足 sumcheck 约束，想得到 <span class="math notranslate nohighlight">\(p_{0,0}(X)\)</span> 与 <span class="math notranslate nohighlight">\(p_{0,1}(X)\)</span> 对应的 <span class="math notranslate nohighlight">\(P_0 = P(0, X_2, \ldots, X_n)\)</span> 与 <span class="math notranslate nohighlight">\(P_1 = P(1, X_2, \ldots, X_n)\)</span> 也满足 sumcheck 约束，这样我们就能推断折叠前是否满足 sumcheck 约束了。</p>
+<p><img alt="" src="../_images/basefold-habock-commit-sumcheck.svg" /></p>
+<p>现在考虑 sumcheck 约束，已知</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L((\lambda_1, \cdot), \vec{\omega}), P_{\lambda_1} \rangle_{H_{n-1}} = q_0(\lambda_1)
+\]</div>
+<p>想得到</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L((0, \cdot), \vec{\omega}), P_{0} \rangle_{H_{n-1}} = q_0(0) \tag{2}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\langle L((1, \cdot), \vec{\omega}), P_{1} \rangle_{H_{n-1}} = q_0(1) \tag{3}
+\]</div>
+<p>如果式 <span class="math notranslate nohighlight">\((2)\)</span> 与式 <span class="math notranslate nohighlight">\((3)\)</span> 成立，由于 <span class="math notranslate nohighlight">\(s_0 = q_0(0) + q_0(1)\)</span> ，则可以得到由 <span class="math notranslate nohighlight">\(p_{0,0}(X)\)</span> 与 <span class="math notranslate nohighlight">\(q_{0,1}(X)\)</span> 得到的 <span class="math notranslate nohighlight">\(p_0(X)\)</span> 对应的多元线性多项式 <span class="math notranslate nohighlight">\(P(X)\)</span> 满足 sumcheck 约束。</p>
+<p>下面根据[H24]在 3.2 节的思路，推导出式 <span class="math notranslate nohighlight">\((2)\)</span> 与式 <span class="math notranslate nohighlight">\((3)\)</span> 成立。根据 <span class="math notranslate nohighlight">\(q_i(X)\)</span> 与 <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> 的关系，得到</p>
+<div class="math notranslate nohighlight">
+\[
+q_0(\lambda_1) = L(\lambda_1, \omega_1)  \cdot \Lambda_0(\lambda_1)
+\]</div>
+<p>而</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L((\lambda_1, \cdot), \vec{\omega}), P_{\lambda_1} \rangle_{H_{n-1}}  = L(\lambda_1, \omega_1) \cdot \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} \rangle_{H_{n-1}} 
+\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+L(\lambda_1, \omega_1) \cdot \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} \rangle_{H_{n-1}}  = L(\lambda_1, \omega_1)  \cdot \Lambda_0(\lambda_1)
+\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(L(X, \omega_1) = (1 - X)(1 - \omega_1) + X \cdot \omega_1\)</span> 是一个一次多项式，因此，<span class="math notranslate nohighlight">\(L(X)\)</span> 在 <span class="math notranslate nohighlight">\(F\)</span> 中只有一个零点，当 <span class="math notranslate nohighlight">\(\lambda_1\)</span> 取到该点时，就会有 <span class="math notranslate nohighlight">\(L(\lambda_1, \omega_1) = 0\)</span> ，此时上式自然成立，而发生这样的概率为 <span class="math notranslate nohighlight">\(1 / |F|\)</span> 。若 <span class="math notranslate nohighlight">\(L(\lambda_1, \omega_1) \neq 0\)</span> ，则有</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} \rangle_{H_{n-1}} = \Lambda_0(\lambda_1)
+\]</div>
+<p>[H24] 论文中给出</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} = 0 \tag{4}
+\]</div>
+<p>在这里给出一个详细推导，由于 <span class="math notranslate nohighlight">\(P_{\lambda_1} = P(\lambda_1, X_2, \ldots, X_n)\)</span> ，那么</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1}  \rangle_{H_{n-1}} &amp; = \sum_{\vec{x} \in H_{n-1}} L(\vec{x}, (\omega_2, \ldots, \omega_n)) \cdot P(\lambda_1, \vec{x}) \\
+	&amp; = P(\lambda_1, \omega_2, \ldots, \omega_n)
+\end{aligned}
+\end{split}\]</div>
+<p>那么上面的等式即为</p>
+<div class="math notranslate nohighlight">
+\[
+P(\lambda_1, \omega_2, \ldots, \omega_n) = \Lambda_0(\lambda_1)
+\]</div>
+<p>设一个函数为 <span class="math notranslate nohighlight">\(P'(X_2,\ldots, X_n) = P(\lambda_1, X_2, \ldots, X_n) - \Lambda_0(\lambda_1)\)</span> ，其在点 <span class="math notranslate nohighlight">\((\omega_2, \ldots, \omega_n)\)</span> 处的求值为 <span class="math notranslate nohighlight">\(P'(\omega_2, \ldots, \omega_n) = 0\)</span> ，且 <span class="math notranslate nohighlight">\(P'(\omega_2, \ldots, \omega_n)\)</span> 可表示为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	P'(\omega_2, \ldots, \omega_n) &amp; = \langle L(\cdot, \omega_2, \ldots, \omega_n), P'(\cdot)  \rangle_{H_{n-1}} \\
+	&amp; = \langle L(\cdot, \omega_2, \ldots, \omega_n), P(\lambda_1, \cdot) - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} \\
+	&amp; = \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} \\
+	&amp; = 0
+\end{aligned}
+\end{split}\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} = 0
+\]</div>
+<p>由线性性知</p>
+<div class="math notranslate nohighlight">
+\[
+\Lambda_{0}(\lambda_1) = (1 - \lambda_1) \cdot \Lambda_{0}(0) + \lambda_1 \cdot \Lambda_{0}(1) \tag{5}
+\]</div>
+<p>同时</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1} = (1 - \lambda_1) \cdot f_{0,0} + \lambda_1 \cdot f_{0,1} \tag{6}
+\]</div>
+<p>由等式 <span class="math notranslate nohighlight">\((6)\)</span> 减去 <span class="math notranslate nohighlight">\((5)\)</span> 得到</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1} - \Lambda_{0}(\lambda_1) = (1 - \lambda_1) \cdot (f_{0,0} - \Lambda_{0}(0)) + \lambda_1 \cdot (f_{0,1} - \Lambda_{0}(1))
+\]</div>
+<p>令新的多项式</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1}' =  (1 - \lambda_1) \cdot (f_{0,0} - \Lambda_{0}(0)) + \lambda_1 \cdot (f_{0,1} - \Lambda_{0}(1))
+\]</div>
+<p>依照之前 correlated agreement 定理的思路，根据条件，若</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\lambda_1 \in F}[\Delta((1 - \lambda_1) f_{0,0} + \lambda_1 f_{0,1}, \mathcal{C}_1) \le \theta] &gt; \epsilon
+\]</div>
+<p>也就是 <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> 距离 <span class="math notranslate nohighlight">\(p_{\lambda_1}\)</span> 不超过 <span class="math notranslate nohighlight">\(\theta\)</span> 大于一个界限 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，那么它们同时减去一个数 <span class="math notranslate nohighlight">\(\Lambda_0(\lambda_1)\)</span> ，并不影响它们之间的距离，因此 <span class="math notranslate nohighlight">\(f_{\lambda_1}'\)</span> 距离 <span class="math notranslate nohighlight">\(p_{\lambda_1}' = p_{\lambda_1} - \Lambda_0(\lambda_1)\)</span> 不超过 <span class="math notranslate nohighlight">\(\theta\)</span> 。</p>
+<p><span class="math notranslate nohighlight">\(p_{\lambda_1}' = p_{\lambda_1} - \Lambda_0(\lambda_1)\)</span> 属于哪个编码空间呢？我们知道 <span class="math notranslate nohighlight">\(p_{\lambda_1} \in \mathcal{P}_{n - 1} = F[X]^{&lt;2^{n-1}}\)</span> ，而 <span class="math notranslate nohighlight">\(\Lambda_0(\lambda_1)\)</span> 本质上是一个数，因此 <span class="math notranslate nohighlight">\(p_{\lambda_1}'\)</span> 依然在 <span class="math notranslate nohighlight">\(\mathcal{P}_{n - 1}\)</span> 空间中。同时我们上面已经推导出</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} = 0 
+\]</div>
+<p>说明 <span class="math notranslate nohighlight">\(p_{\lambda_1}'\)</span> 对应的多元线性多项式还满足一个这样的内积约束，因此可以说 <span class="math notranslate nohighlight">\(p_{\lambda_1}'\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{P}_{n - 1}\)</span> 的一个子空间中，即</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{P}_{n - 1}' = \{u(X) \in \mathcal{P}_{n - 1}: \langle L(\cdot, \omega_2, \ldots, \omega_n), U \rangle_{H_{n-1}} = 0 \}
+\]</div>
+<p>上式中的 <span class="math notranslate nohighlight">\(U\)</span> 就是与 <span class="math notranslate nohighlight">\(u(X)\)</span> 相对应的多元线性多项式。由这样的一个多项式子空间可以形成编码空间 <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> 的线性子码 <span class="math notranslate nohighlight">\(\mathcal{C}_1'\)</span> 。可以看到，通过将 <span class="math notranslate nohighlight">\(q_i(X)\)</span> 中的线性项 <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> 提出来，添加了类似 sumcheck 的约束之后，发现要考虑的编码空间是原来编码空间的一个线性子空间。</p>
+<p>现在总结下目前得到的结论，记 <span class="math notranslate nohighlight">\(f_{0,0}' := f_{0,0} - \Lambda_0(0)\)</span> , <span class="math notranslate nohighlight">\(f_{0,1}' := f_{0,1} - \Lambda_0(1)\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1}' = (1 - \lambda_1) \cdot f_{0,0}' + \lambda_1 \cdot f_{0,1}'
+\]</div>
+<p>同时，<span class="math notranslate nohighlight">\(f_{\lambda_1}'\)</span> 距离 <span class="math notranslate nohighlight">\(p_{\lambda_1}' = p_{\lambda_1} - \Lambda_0(\lambda_1)\)</span> 不超过 <span class="math notranslate nohighlight">\(\theta\)</span> 大于 <span class="math notranslate nohighlight">\(\epsilon\)</span> ， <span class="math notranslate nohighlight">\(p_{\lambda_1}' \in \mathcal{P}_{n-1}'\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\lambda_1 \in F}[\Delta((1 - \lambda_1) f_{0,0}' + \lambda_1 f_{0,1}', \mathcal{C}_1') \le \theta] &gt; \epsilon
+\]</div>
+<p>[H24, Theorem 3] 就给出了关于线性子码的 correlated agreement 定理，其严格描述留在下一节中进行介绍。该定理结论给出，会存在来自 <span class="math notranslate nohighlight">\(\mathcal{P}_{n-1}'\)</span> 的多项式 <span class="math notranslate nohighlight">\(p_{0,0}'\)</span> 以及 <span class="math notranslate nohighlight">\(p_{0,1}'\)</span> ，以及 <span class="math notranslate nohighlight">\(D' \subseteq D_1\)</span> ，满足</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D_1| \ge 1 - \theta\)</span> ，</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{0,0}'|_{D'} = p_{0,0}'|_{D'}\)</span> 以及 <span class="math notranslate nohighlight">\(f_{0,1}'|_{D'} = p_{0,1}'|_{D'}\)</span> 。</p></li>
+</ol>
+<p>这里 <span class="math notranslate nohighlight">\(\mathcal{P}_{n-1}'\)</span> 就包含了 sumcheck 的约束。根据 <span class="math notranslate nohighlight">\(f_{0,0}'\)</span> 和 <span class="math notranslate nohighlight">\(f_{0,1}'\)</span> 的定义可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	f_{0,0} = f_{0,0}' + \Lambda_0(0) \\
+	f_{0,1} = f_{0,1}' + \Lambda_0(1)
+\end{aligned}
+\end{split}\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(\Lambda_0(0)\)</span> 与 <span class="math notranslate nohighlight">\(\Lambda_0(1)\)</span> 本质上都表示一个数，根据结论 2 ，就有</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	f_{0,0}(X)|_{D'} = p_{0,0}'(X)|_{D'} + \Lambda_0(0) = (p_{0,0}'(X) + \Lambda_0(0))|_{D'} \\
+	f_{0,1}(X)|_{D'} = p_{0,1}'(X)|_{D'} + \Lambda_0(1) = (p_{0,1}'(X) + \Lambda_0(1))|_{D'} \\
+\end{aligned}
+\end{split}\]</div>
+<p>令</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	p_{0,0}(X) = p_{0,0}'(X) + \Lambda_0(0) \\
+	p_{0,1}(X) = p_{0,1}'(X) + \Lambda_0(1)
+\end{aligned}
+\end{split}\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(f_{0,0}(X), f_{0,1}(X)\)</span> 分别与 <span class="math notranslate nohighlight">\(p_{0,0}(X), p_{0,1}(X)\)</span> 在 <span class="math notranslate nohighlight">\(D'\)</span> 上是一致的。由 <span class="math notranslate nohighlight">\(p_{0,0}(X), p_{0,1}(X)\)</span> 可以分别得到它们对应的多元多项式 <span class="math notranslate nohighlight">\(P_0, P_1 \in F[X_2, \ldots, X_n]\)</span> 。而 <span class="math notranslate nohighlight">\(p_{0,0}'(X), p_{0,1}'(X) \in \mathcal{P}_{n-1}'\)</span> ，因此它们对应的多元线性多项式 <span class="math notranslate nohighlight">\(P_{0,0}', P_{0,1}'\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,0}' \rangle_{H_{n-1}} = 0 \\
+	\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,1}' \rangle_{H_{n-1}} = 0 \\
+\end{aligned}
+\end{split}\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,0}' + \Lambda_0(0) - \Lambda_0(0) \rangle_{H_{n-1}} = 0 \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,1}' + \Lambda_0(1) - \Lambda_0(1) \rangle_{H_{n-1}} = 0 \\
+	\Rightarrow \qquad \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_0 - \Lambda_0(0) \rangle_{H_{n-1}} = 0 \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_1 - \Lambda_0(1) \rangle_{H_{n-1}} = 0 \\
+	\Rightarrow \qquad \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_0 \rangle_{H_{n-1}} =  \Lambda_0(0) \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_1 \rangle_{H_{n-1}} = \Lambda_0(1) 
+\end{aligned}
+\end{split}\]</div>
+<p>在上式两边分别同时乘以 <span class="math notranslate nohighlight">\(L(0, \omega_1), L(1, \omega_1)\)</span> ，由 <span class="math notranslate nohighlight">\(q_0(X) = L(X, \omega_1) \cdot \Lambda_0(X)\)</span> 可得</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\langle L((0, \cdot), \vec{\omega}), P_{0} \rangle_{H_{n-1}} = q_0(0)\\
+	\langle L((1, \cdot), \vec{\omega}), P_{1} \rangle_{H_{n-1}} = q_0(1)
+\end{aligned}
+\end{split}\]</div>
+<p>至此也就说明了式 <span class="math notranslate nohighlight">\((2)\)</span> 与式 <span class="math notranslate nohighlight">\((3)\)</span> 成立，也就能推出 <span class="math notranslate nohighlight">\(p_0(X)\)</span> 对应的 <span class="math notranslate nohighlight">\(P(X)\)</span> 是满足 sumcheck 约束的。</p>
+<p>综上，在 commit 阶段的 soundness error 可以按上述思路分析，具体概率由 correlated agreement 给出。[H24, Theorem 1] 给出 commit 阶段的 soundness error 为</p>
+<ol class="arabic simple">
+<li><p>batching 阶段：<span class="math notranslate nohighlight">\(\varepsilon_{C_1} = \varepsilon(\mathcal{C}_0, M, 1, \theta)\)</span> 。</p></li>
+<li><p>sumcheck 与类似 FRI 折叠阶段：<span class="math notranslate nohighlight">\(\varepsilon_{C_2} = \sum_{i = 1}^n \left(\frac{1}{|F|} + \varepsilon(\mathcal{C}_i, 1, B_i, \theta) \right)\)</span> ，其中 <span class="math notranslate nohighlight">\(\frac{1}{|F|}\)</span> 就是在化简 sumcheck 约束时要使得 <span class="math notranslate nohighlight">\(L(X, \omega_i) = 0\)</span> 额外引入的。</p></li>
+</ol>
+<p>上述 <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_i, M_i, B_i, \theta)\)</span> 是由 [H24, Theorem 4] 带权重的 weighted correlated agreement 定理给出的。</p>
+</section>
+<section id="query">
+<h3>Query 阶段<a class="headerlink" href="#query" title="Link to this heading">#</a></h3>
+<p>对于一个作恶的 Prover <span class="math notranslate nohighlight">\(P^*\)</span> ，现在排除在 Commit 阶段出现能侥幸通过 Verifier 检查的情况，经过一次折叠，<span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> 会出现离 <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> 有 <span class="math notranslate nohighlight">\(\theta\)</span> 远，或者 sumcheck 约束不正确。</p>
+<p><img alt="" src="../_images/basefold-habock-query.svg" /></p>
+<p>对于 <span class="math notranslate nohighlight">\(\Delta(f_0, \mathcal{C}_0) &gt; \theta\)</span> ，由于 Verifier 会在 <span class="math notranslate nohighlight">\(D_0\)</span> 中随机选取一个 <span class="math notranslate nohighlight">\(x_0\)</span> 来检查折叠是否正确，因此如果查询到那些 <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> 和 <span class="math notranslate nohighlight">\(p_{\lambda_1}\)</span> 在 <span class="math notranslate nohighlight">\(D_1\)</span> 上一致的那些点，则会检查通过。这个比例不超过 <span class="math notranslate nohighlight">\(1 - \theta\)</span> ，如果重复查询 <span class="math notranslate nohighlight">\(s\)</span> 次，那么 <span class="math notranslate nohighlight">\(P^*\)</span> 侥幸通过检查的概率不超过 <span class="math notranslate nohighlight">\((1 - \theta)^s\)</span> 。</p>
+<p>对于 sumcheck 约束不正确的情况，verifier 会用 sumcheck 协议来检查约束是否正确，这里 <span class="math notranslate nohighlight">\(P^*\)</span> 不可能作弊成功，一定能被检查出来。</p>
+<p>综上，在 query 阶段 soundness error 为 <span class="math notranslate nohighlight">\(\varepsilon_{\mathrm{query}} = (1 - \theta)^s\)</span> 。</p>
+<p>因此，就得到了 [H24, Theorem 1] 给出的整个协议的 soundness error</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\varepsilon &amp; &lt; \varepsilon_{C_1} + \varepsilon_{C_2} + \varepsilon_{\mathrm{query}} \\
+	&amp; =  \varepsilon(\mathcal{C}_0, M, 1, \theta) + \sum_{i = 1}^n \left(\frac{1}{|F|} + \varepsilon(\mathcal{C}_i, 1, B_i, \theta) \right) + (1 - \theta)^s
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>🐞 <strong>typo</strong>
+我认为 [H24, Theorem 1] 条件中给出的 <span class="math notranslate nohighlight">\(\theta = (1 + \frac{1}{2m}) \cdot \sqrt{\rho}\)</span> 有误，根据后文的 [H24, Theorem 4] 给出的条件，应该改为  <span class="math notranslate nohighlight">\(\theta = 1 - (1 + \frac{1}{2m}) \cdot \sqrt{\rho}\)</span> 。</p>
+</div></blockquote>
+</section>
+</section>
+<section id="correlated-agreement">
+<h2>Correlated agreement 定理<a class="headerlink" href="#correlated-agreement" title="Link to this heading">#</a></h2>
+<p>本小节介绍 [BCIKS20] 给出的 correlated agreement 定理，以及 [H24] 在此基础上给出的针对 subcodes 的 correlated agreement 定理。</p>
+<p>首先是 [BCIKS20] 给出的 correlated agreement 定理，分为 unique decoding 界和在 list decoding 下达到 Johnson 界两个定理，符号上做了一些变化。令 <span class="math notranslate nohighlight">\(F\)</span> 表示一个有限域，<span class="math notranslate nohighlight">\(\mathcal{C} = RS_k[F, D]\)</span> 表示在 <span class="math notranslate nohighlight">\(F\)</span> 上的 Reed-Solomon code，其 evaluation domain 为 <span class="math notranslate nohighlight">\(D\)</span> ，码率为 <span class="math notranslate nohighlight">\(\rho = k /|D|\)</span> 。</p>
+<p><strong>Theorem 3</strong> [BCIKS20, Theorem 6.1] 假设 <span class="math notranslate nohighlight">\(\theta \leq \frac{1 - \rho}{2}\)</span>. 令 <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> 表示 <span class="math notranslate nohighlight">\(D \to F\)</span> 的函数。若</p>
+<div class="math notranslate nohighlight">
+\[ 
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}) \le \theta \}|}{|F|} &gt; \varepsilon 
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{|D|}{|F|}
+\]</div>
+<p>那么对于任意的 <span class="math notranslate nohighlight">\(z \in F\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[ 
+\Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}) \leq \theta, 
+\]</div>
+<p>另外，存在 <span class="math notranslate nohighlight">\(p_0, \ldots, p_M \in \mathcal{C}\)</span> 使得对所有的 <span class="math notranslate nohighlight">\(z \in F\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[ 
+\Delta(u_0 + zu_1 + \cdots + z_l u_l, v_0 + zv_1 + \cdots + z_l v_l) \leq \theta 
+\]</div>
+<p>事实上，</p>
+<div class="math notranslate nohighlight">
+\[ 
+| \{ x \in D : (u_0(x), \ldots, u_l(x)) \neq (v_0(x), \ldots, v_l(x)) \} | \leq \theta |D|. 
+\]</div>
+<p><strong>Theorem 4</strong> [BCIKS20, Theorem 6.2] 令 <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> 表示 <span class="math notranslate nohighlight">\(D \to F\)</span> 的函数。设 <span class="math notranslate nohighlight">\(m \ge 3\)</span> ，定义 <span class="math notranslate nohighlight">\(\theta_0(\rho, m) := 1 - \sqrt{\rho} \cdot (1 + \frac{1}{2m})\)</span> ，令 <span class="math notranslate nohighlight">\(\theta \le \theta_0(\rho, m)\)</span> ，若</p>
+<div class="math notranslate nohighlight">
+\[ 
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}) \le \theta \}|}{|F|} &gt; \varepsilon 
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{(m+\frac{1}{2})^7}{3 \cdot \rho^{3/2}} \cdot \frac{|D|^2}{|F|}
+\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M\)</span> 同时都距离 <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> 有 <span class="math notranslate nohighlight">\(\theta\)</span> 近，即存在 <span class="math notranslate nohighlight">\(p_0, \ldots, p_M \in \mathcal{C}\)</span> 使得</p>
+<div class="math notranslate nohighlight">
+\[ 
+| \{ x \in D : \forall 0 \leq i \leq M, f_i(x) = p_i(x) \} | \geq (1 - \theta) |D|. 
+\]</div>
+<p>Theorem 3 和 Theorem 4 分别给出了 unique decoding 和 list decoding 下的 correlated agreement 定理，虽然表述形式和上一节中给出的有所区别，但表达的含义是一样的，这里就给出了具体的 <span class="math notranslate nohighlight">\(\varepsilon\)</span> 表达式。</p>
+<p>在论文 [H24] 中，通过分析 [BCIKS20] 中 correlated agreement 定理证明中的 Guruswami-Sudan list decoder，得到了在 list decoding 下针对 subcode 的 correlated agreement 定理。</p>
+<p><strong>Theorem 5</strong> [H24, Theorem 3] (Correlated Agreement for Subcodes) 令 <span class="math notranslate nohighlight">\(F\)</span> 表示一个任意特征(characteristic)的有限域，<span class="math notranslate nohighlight">\(\mathcal{C} = RS_k[F, D]\)</span> 表示在 <span class="math notranslate nohighlight">\(F\)</span> 上的 Reed-Solomon code，其 evaluation domain 为 <span class="math notranslate nohighlight">\(D\)</span> ，码率为 <span class="math notranslate nohighlight">\(\rho = k /|D|\)</span> 。令 <span class="math notranslate nohighlight">\(\mathcal{C}'\)</span> 为 <span class="math notranslate nohighlight">\(\mathcal{C}\)</span> 的一个线性子码(linear subcode)，由一个来自于 <span class="math notranslate nohighlight">\(F[X]^{&lt;k}\)</span> 的多项式的子空间 <span class="math notranslate nohighlight">\(\mathcal{P}'\)</span> 生成。给定一个 proximity 参数  <span class="math notranslate nohighlight">\(\theta = 1 - \sqrt{\rho} \cdot \left(1 + \frac{1}{2m}\right)\)</span> ，其中 <span class="math notranslate nohighlight">\(m \geq 3\)</span> ，且 <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}') &lt; \theta \}|}{|F|} &gt; \varepsilon,
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{(m+\frac{1}{2})^7}{3 \cdot \rho^{3/2}} \cdot \frac{|D|^2}{|F|} ,
+\]</div>
+<p>则存在多项式 <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M \in \mathcal{P}'\)</span> ，以及一个集合 <span class="math notranslate nohighlight">\(D' \subseteq D\)</span> ，满足</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D| \ge 1 - \theta\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M\)</span> 与 <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M\)</span> 分别在 <span class="math notranslate nohighlight">\(D'\)</span> 上是一致的。</p></li>
+</ol>
+<p>对比 Theorem 5 和 Theorem 4，从 <span class="math notranslate nohighlight">\(\varepsilon\)</span> 的表达式来说，它们的形式可以说是一致的，不同的是 Theorem 5 是在 Reed-Solomon 编码空间的一个线性子码中考虑的。这里自然推测对于 unique decoding ，针对 subcode 也有类似 Theorem 4 的结果。</p>
+<p><strong>Conjecture 6</strong> 令 <span class="math notranslate nohighlight">\(F\)</span> 表示一个任意特征(characteristic)的有限域，<span class="math notranslate nohighlight">\(\mathcal{C} = RS_k[F, D]\)</span> 表示在 <span class="math notranslate nohighlight">\(F\)</span> 上的 Reed-Solomon code，其 evaluation domain 为 <span class="math notranslate nohighlight">\(D\)</span> ，码率为 <span class="math notranslate nohighlight">\(\rho = k /|D|\)</span> 。令 <span class="math notranslate nohighlight">\(\mathcal{C}'\)</span> 为 <span class="math notranslate nohighlight">\(\mathcal{C}\)</span> 的一个线性子码(linear sucode)，由一个来自于 <span class="math notranslate nohighlight">\(F[X]^{&lt;k}\)</span> 的多项式的子空间 <span class="math notranslate nohighlight">\(\mathcal{P}'\)</span> 生成。设 <span class="math notranslate nohighlight">\(\theta \le \frac{1 - \rho}{2}\)</span>，且 <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}') &lt; \theta \}|}{|F|} &gt; \varepsilon,
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{|D|}{|F|}
+\]</div>
+<p>则存在多项式 <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M \in \mathcal{P}'\)</span> ，以及一个集合 <span class="math notranslate nohighlight">\(D' \subseteq D\)</span> ，满足</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D| \ge 1 - \theta\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M\)</span> 与 <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M\)</span> 分别在 <span class="math notranslate nohighlight">\(D'\)</span> 上是一致的。</p></li>
+</ol>
+<p>类似在 [BCIKS20] 中对 batch FRI 协议的 soundness 证明，其用到的是 weighted 版本的 correlated agreement 定理，对于 batch Basefold 协议，在 [H24] 中也给出了 weighted correlated agreement 定理。根据 [H24] 中的描述，首先说明下 weighted 的含义，在 <span class="math notranslate nohighlight">\(D\)</span> 上给定一个子概率测度 <span class="math notranslate nohighlight">\(\mu\)</span> 以及 <span class="math notranslate nohighlight">\(f \in F^D\)</span> ，记</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(f, \mathcal{C}') \ge 1 - \theta
+\]</div>
+<p>含义是存在在 <span class="math notranslate nohighlight">\(\mathcal{P}'\)</span> 中的一个多项式 <span class="math notranslate nohighlight">\(p(X)\)</span> ，使得 <span class="math notranslate nohighlight">\(\mu(\{x \in D: f(x) = p(x)\}) \ge 1 - \theta\)</span> 。意思是用测度 <span class="math notranslate nohighlight">\(\mu\)</span> 去计算那些在集合 <span class="math notranslate nohighlight">\(D\)</span> 中满足 <span class="math notranslate nohighlight">\(f(x) = p(x)\)</span> 的 <span class="math notranslate nohighlight">\(x\)</span> 组成的集合。为了完整性，下面直接列出 [H24] 中给出的在 list decoding 下的 weighted correlated agreement 定理。</p>
+<p><strong>Theorem 7</strong> [H24, Theorem 4] (Weighted Correlated Agreement for Subcodes) Let <span class="math notranslate nohighlight">\(C'\)</span> be a linear subcode of <span class="math notranslate nohighlight">\(RS_k[F,D]\)</span>, and choose <span class="math notranslate nohighlight">\(\theta=1-\sqrt{\rho}\cdot\left(1+\frac{1}{2m}\right)\)</span>, for some integer <span class="math notranslate nohighlight">\(m\geq3\)</span>, where <span class="math notranslate nohighlight">\(\rho=k/|D|\)</span>. Assume a density function <span class="math notranslate nohighlight">\(\delta:D\to[0,1]\cap\mathbb{Q}\)</span> with common denominator <span class="math notranslate nohighlight">\(B\geq1\)</span>, i.e. for all <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(D\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\delta(x)=\frac{m_x}{B},
+\]</div>
+<p>for an integer value <span class="math notranslate nohighlight">\(m_x\in[0,B]\)</span>, and let <span class="math notranslate nohighlight">\(\mu\)</span> be the sub-probability measure with density <span class="math notranslate nohighlight">\(\delta\)</span>, defined by <span class="math notranslate nohighlight">\(\mu(\{x\})=\delta(x)/ |D|\)</span>. If for <span class="math notranslate nohighlight">\(f_0,f_1,\ldots,f_M\in F^D\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\{z\in F:\text{agree}_\mu(f_0+z\cdot f_1+\ldots+z^M\cdot f_M,\mathcal{C}')\ge 1-\theta\}}{|F|} &gt; \varepsilon(\mathcal{C},M,B,\theta)
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon(\mathcal{C},M,B,\theta)=\frac{M}{|F|} \cdot\frac{(m + \frac{1}{2})}{\sqrt{\rho}}\cdot\max\left(\frac{(m + \frac{1}{2})^6}{3\cdot\rho}\cdot|D|^2, 2\cdot(B\cdot|D|+1)\right),
+\]</div>
+<p>then there exist polynomials <span class="math notranslate nohighlight">\(p_0(X),p_1(X),\ldots,p_M(X)\)</span> belonging to the subcode <span class="math notranslate nohighlight">\(\mathcal{C}'\)</span>, and a set <span class="math notranslate nohighlight">\(A\)</span> with <span class="math notranslate nohighlight">\(\mu(A)\ge 1-\theta\)</span> on which <span class="math notranslate nohighlight">\(f_0,f_1,\ldots,f_M\)</span> coincide with <span class="math notranslate nohighlight">\(p_0(X),p_1(X),\ldots,p_M(X)\)</span>, respectively.</p>
+<p>weighted correlated agreement 定理的好处是，在协议 soundness 证明的过程中，<span class="math notranslate nohighlight">\(\mu\)</span> 是可以自己定义的，提高了灵活性。关于 Basefold 协议的 soundness 证明细节在下一篇文章中介绍。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[ACFY24] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.”<em>Cryptology ePrint Archive</em>(2024).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold">Basefold 协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumcheck">结合 Sumcheck 协议</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fri">结合 FRI 协议</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">Soundness 概览</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit 阶段</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query">Query 阶段</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement">Correlated agreement 定理</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

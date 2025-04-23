@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Basefold &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-simple-version/Basefold-simple-version';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../libra-pcs/libra-pcs.zh.html">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../virgo-pcs/virgo-pcs-01.zh.html">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ph23/ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ph23/ph23-pcs-02.zh.html">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ph23/ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ph23/ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ph23/ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Mercury</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../mercury/mercury-01.zh.html">Mercury 笔记：实现常数证明尺寸</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mercury/mercury-02.zh.html">Mercury 笔记：对接 KZG</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reductions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reductions/barrett.zh.html">Barrett Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reductions/montgomery.zh.html">Montgomery Reduction</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-simple-version/Basefold-simple-version.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/basefold/basefold-simple-version/Basefold-simple-version.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Basefold</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-basefold">What is Basefold?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-basefold">Why Basefold?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-basefold">How Basefold?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-oracle-proof-iop">Interactive Oracle Proof (IOP)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-oracle-proof-of-proximity-iopp">Interactive Oracle Proof of Proximity (IOPP)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fri">FRI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomial-commitment-scheme-pcs">Polynomial Commitment Scheme (PCS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-code">Linear Code</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reed-solomon-code-rs-code">Reed-Solomon Code (RS code)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reed-muller-code-rm-code">Reed-Muller Code (RM code)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-foldable-code-rfc">Random Foldable code (RFC)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Basefold</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-encoding">Basefold Encoding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp">Basefold IOPP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-pcs">Basefold PCS</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold">
+<h1>Basefold<a class="headerlink" href="#basefold" title="Link to this heading">#</a></h1>
+<section id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Overview</p>
+<ul>
+<li><p>What is Basefold?</p></li>
+<li><p>Why Basefold?</p></li>
+<li><p>How basefold?</p></li>
+</ul>
+</li>
+<li><p>Background</p>
+<ul>
+<li><p>Interactive Oracle Proof (IOP)</p></li>
+<li><p>Interactive Oracle Proof of Proximity (IOPP)</p></li>
+<li><p>FRI</p></li>
+<li><p>Polynomial Commitment Scheme (PCS)</p></li>
+</ul>
+</li>
+<li><p>Linear Code</p>
+<ul>
+<li><p>Reed Solomon code (RS code)</p></li>
+<li><p>Reed-Muller code (RM code)</p></li>
+<li><p>Random Foldable code (RFC)</p></li>
+</ul>
+</li>
+<li><p>Basefold</p>
+<ul>
+<li><p>Basefold Encoding</p>
+<ul>
+<li><p>Encoding phase</p></li>
+</ul>
+</li>
+<li><p>Basefold IOPP</p>
+<ul>
+<li><p>Commit phase</p></li>
+<li><p>Query phase</p></li>
+</ul>
+</li>
+<li><p>Basefold PCS</p>
+<ul>
+<li><p>Evaluation phase</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<section id="what-is-basefold">
+<h3>What is Basefold?<a class="headerlink" href="#what-is-basefold" title="Link to this heading">#</a></h3>
+<p>Basefold is a new <em>field-agnostic</em> Polynomial Commitment Scheme (PCS) for multilinear polynomials that has <span class="math notranslate nohighlight">\(O(\log^2 (n))\)</span> verifier costs and <span class="math notranslate nohighlight">\(O(n \log n)\)</span>prover time.</p>
+<p>Basefold PCS mainly combines two types of technique, one is FRI  IOPP (Fast Reed-Solomon Interactive-Oracle Proof of Proximity), and the other is sumcheck. It shows that FRI and sumcheck have similar interactive structures and can run in parallel and share the verifier randomness.</p>
+</section>
+<section id="why-basefold">
+<h3>Why Basefold?<a class="headerlink" href="#why-basefold" title="Link to this heading">#</a></h3>
+<p>The following are several advantages of Basefold compared with other SNARKs.</p>
+<ol class="arabic simple">
+<li><p><strong>Random Foldable Code(RFCs).</strong> RFCs are a special type of Reed-Muller code. It introduces recursion and foldable into the encoding phase, allowing for the flexible handling of messages of varying sizes. Unlike the RS codes, RFCs are foldable and have   <span class="math notranslate nohighlight">\(O(n \log n)\)</span> encoding time over any sufficiently large field. The foldable attribute is the key to achieving the field-agnosticism.</p></li>
+<li><p><strong>Field-Agnosticism.</strong> Basefold PCS could work over any sufficiently large finite field. ****It is a major boon to SNARK. For example, suppose an application is confined to the finite field <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> but the SNARK is defined over a finite field <span class="math notranslate nohighlight">\(\mathbb{F}_q\)</span>. In this case, the “modulo p” operation is explicitly encoded into the circuit and needs to be invoked for each multiplication gate. A field-agnostic PCS can deal with any large finite field, making it ideal as it enables the SNARK to avoid some large overhead associated with compatibility.</p></li>
+<li><p><strong>Efficiency.</strong> Basefold IOPP can be used for any linear code and Basefold PCS is very efficient. It is 2-3 times faster than prior multilinear PCS constructions from FRI (like ZeromorphFri. ) when defined over the same finite field.</p></li>
+</ol>
+</section>
+<section id="how-basefold">
+<h3>How Basefold?<a class="headerlink" href="#how-basefold" title="Link to this heading">#</a></h3>
+<p>There is a brief introduction of the overall Basefold that contains four phases:</p>
+<ul class="simple">
+<li><p>Encoding phase. The prover encodes its message <span class="math notranslate nohighlight">\(\mathbf f\)</span> using <em>random foldable code</em> and gets the codeword <span class="math notranslate nohighlight">\(\mathbf c\)</span>.</p></li>
+<li><p>Commit phase. The prover commits the codeword <span class="math notranslate nohighlight">\(\mathbf c\)</span> by Merkle commitment and generates the Merkle root <span class="math notranslate nohighlight">\(\pi_d\)</span> as the commitment of <span class="math notranslate nohighlight">\(\mathbf c\)</span>. The further process is similar to FRI which has many rounds, each round generates a new vector <span class="math notranslate nohighlight">\(\mathbf c_i\)</span> and a commitment <span class="math notranslate nohighlight">\(\pi_i\)</span> of  <span class="math notranslate nohighlight">\(\mathbf c_i\)</span>. Finally, The prover sends all the commitments <span class="math notranslate nohighlight">\((\pi_d,…,\pi_0)\)</span>  as oracles to the verifier.</p></li>
+<li><p>Query phase. The verifier queries a few points to check the consistency of these commitments <span class="math notranslate nohighlight">\((\pi_d,…,\pi_0)\)</span>.</p></li>
+<li><p>Evaluate phase. The verifier runs Basefold IOPP and sumcheck in parallel to check the commitment  <span class="math notranslate nohighlight">\(\pi_d = commit(Enc(\mathbf f))\)</span> and the evaluation <span class="math notranslate nohighlight">\(f(\mathbf z) =y\)</span>.</p></li>
+</ul>
+</section>
+</section>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
+<section id="interactive-oracle-proof-iop">
+<h3>Interactive Oracle Proof (IOP)<a class="headerlink" href="#interactive-oracle-proof-iop" title="Link to this heading">#</a></h3>
+<p>IOP is a cryptographic protocol that allows a prover to convince a verifier about the correctness of a statement without revealing the underlying data.</p>
+<p>A <span class="math notranslate nohighlight">\(k\)</span>-round public coin IOP runs as follows:</p>
+<p>Initially, the prover **sends an oracle string <span class="math notranslate nohighlight">\(\pi_0\)</span> to the verifier. Then, in each round <span class="math notranslate nohighlight">\(i ∈ [1, k]\)</span>, the verifier sends a random challenge <span class="math notranslate nohighlight">\(\alpha_i\)</span> to the prover, and the prover replies with a new oracle string <span class="math notranslate nohighlight">\(\pi_i\)</span>. After <span class="math notranslate nohighlight">\(k\)</span> **rounds of communications, the verifier **queries some entries of those oracle strings <span class="math notranslate nohighlight">\(\pi_0, \pi_1, . . . , \pi_k\)</span> **and outputs a bit <span class="math notranslate nohighlight">\(b\)</span> that indicates if the verifier has been convincing.</p>
+</section>
+<section id="interactive-oracle-proof-of-proximity-iopp">
+<h3>Interactive Oracle Proof of Proximity (IOPP)<a class="headerlink" href="#interactive-oracle-proof-of-proximity-iopp" title="Link to this heading">#</a></h3>
+<p>An IOPP is a special proof system for proofing that a <em><strong>committed vector</strong></em> over a field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> is close to a <em><strong>codeword</strong></em> in some linear error-correcting code.</p>
+</section>
+<section id="fri">
+<h3>FRI<a class="headerlink" href="#fri" title="Link to this heading">#</a></h3>
+<p>FRI stands for Fast Reed-Solomon Interactive oracle proof of proximity. It allows us to prove that the evaluations of a given polynomial <span class="math notranslate nohighlight">\(p\)</span>, over a domain <span class="math notranslate nohighlight">\(D_0\)</span>, correspond to the evaluations of a low-degree polynomial.</p>
+<p>The main idea of FRI is a low-degree test and it executes by “split and fold”. It first splits the original polynomial <span class="math notranslate nohighlight">\(p\)</span> into even and odd parts, and using a random <span class="math notranslate nohighlight">\(\beta\)</span> folds the two parts. Then the folded polynomial is the half degree of the original polynomial.</p>
+<p>Let us see an example of “split and fold”.</p>
+<p>let <span class="math notranslate nohighlight">\(p(x) = 1 + 2x+3x^2+4x^3\)</span></p>
+<p>then split <span class="math notranslate nohighlight">\(p(x)\)</span> into even part <span class="math notranslate nohighlight">\(p_e(x^2)\)</span> and odd part <span class="math notranslate nohighlight">\(p_o(x^2)\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(p_e(x^2) = 1 +3x^2\)</span></p>
+<p><span class="math notranslate nohighlight">\(p_o(x^2) = 2+4x^2\)</span></p>
+<p>We can see that: <span class="math notranslate nohighlight">\(p(x) = p_e(x^2) + xp_o(x^2)\)</span></p>
+<p>Then, we using a random <span class="math notranslate nohighlight">\(\beta\)</span> fold <span class="math notranslate nohighlight">\(p(x)\)</span> and get a new polynomial <span class="math notranslate nohighlight">\(p^{(1)}(x) = p_e(x)+\beta p_o(x)=1+2\beta+(3+4\beta)x\)</span>.</p>
+<p>We can see that the degree of the new polynomial <span class="math notranslate nohighlight">\(p^{(1)}(x)\)</span> is half the degree of <span class="math notranslate nohighlight">\(p(x)\)</span>.</p>
+<p>The split and fold process can be recursively executed until the final folded polynomial which is a constant polynomial.</p>
+</section>
+<section id="polynomial-commitment-scheme-pcs">
+<h3>Polynomial Commitment Scheme (PCS)<a class="headerlink" href="#polynomial-commitment-scheme-pcs" title="Link to this heading">#</a></h3>
+<p>A polynomial commitment scheme (PCS) is a cryptographic primitive that allows a prover to commit to a polynomial <span class="math notranslate nohighlight">\(f\in \mathbb F [x]\)</span> of degree <span class="math notranslate nohighlight">\(d\)</span> using a short commitment and later, the prover proves the committed polynomial satisfying <span class="math notranslate nohighlight">\(f(\alpha)=\beta\)</span>. It is a building block for many cryptographic applications.</p>
+<p>A PCS consists of a tuple of algorithms (Setup, Commit, Open, Eval).</p>
+<ul class="simple">
+<li><p><em>Setup</em> takes security parameters and other information of witness as input and outputs public parameters.</p></li>
+<li><p><em>Commit</em> takes a polynomial <span class="math notranslate nohighlight">\(f\)</span> as input and outputs a commitment <span class="math notranslate nohighlight">\(C\)</span>.</p></li>
+<li><p><em>Open</em> takes a commitment <span class="math notranslate nohighlight">\(C\)</span> and a polynomial as input and outputs a bit <span class="math notranslate nohighlight">\(b\)</span>. (<span class="math notranslate nohighlight">\(b\)</span> indicates whether <span class="math notranslate nohighlight">\(C=commit(f)\)</span>).</p></li>
+<li><p><em>Eval</em> takes a commitment <span class="math notranslate nohighlight">\(C\)</span>, an evaluation point <span class="math notranslate nohighlight">\(\mathbf z\)</span> , a value <span class="math notranslate nohighlight">\(y\)</span>  and a polynomial <span class="math notranslate nohighlight">\(f\)</span> (only the prover knows) as input. Then, the prover wants to convince the verifier that <span class="math notranslate nohighlight">\(f\)</span> is an opening to <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(f(\mathbf z) =y\)</span>.  The verifier outputs a bit <span class="math notranslate nohighlight">\(b\)</span> indicating whether it has been convinced.</p></li>
+</ul>
+</section>
+</section>
+<section id="linear-code">
+<h2>Linear Code<a class="headerlink" href="#linear-code" title="Link to this heading">#</a></h2>
+<p>In coding theory,  a linear code is an error-correcting code for which any linear combination of codewords is also a codeword.</p>
+<section id="reed-solomon-code-rs-code">
+<h3>Reed-Solomon Code (RS code)<a class="headerlink" href="#reed-solomon-code-rs-code" title="Link to this heading">#</a></h3>
+<p>Reed-Solomon is a type of error-correcting code that transforms a message of size <span class="math notranslate nohighlight">\(k\)</span> into a codeword of size <span class="math notranslate nohighlight">\(n\)</span>. The <strong>code rate</strong> <span class="math notranslate nohighlight">\(\rho\)</span> is defined as <span class="math notranslate nohighlight">\(\rho = \frac k n\)</span>.</p>
+<p>The encoding process is associated with a generator matrix, such that encoding of a vector <span class="math notranslate nohighlight">\(\mathbf v \in \mathbb F ^k\)</span> is <span class="math notranslate nohighlight">\(\mathbf v \cdot G\)</span>.</p>
+<p>The encoding process uses the following equation：</p>
+<p><span class="math notranslate nohighlight">\(\mathbf c = \mathbf v \cdot G\)</span></p>
+<p>Let’s see an example:</p>
+<p>Suppose we want to encode a message of size 4:  <span class="math notranslate nohighlight">\(\textbf{m}=(m_0,m_1,m_2,m_3)\)</span> , and the generator matrix <span class="math notranslate nohighlight">\(G\)</span> of size <span class="math notranslate nohighlight">\(4\times8\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G=\begin{bmatrix}
+g_{0,0} &amp; g_{0,1} &amp; g_{0,2}&amp; g_{0,3} &amp; g_{0,4} &amp; g_{0,5} &amp; g_{0,6} &amp; g_{0,7} \\  g_{1,0} &amp; g_{1,1} &amp; g_{1,2}&amp; g_{1,3} &amp; g_{1,4} &amp; g_{1,5} &amp; g_{1,6} &amp; g_{1,7}\\g_{2,0} &amp; g_{2,1} &amp; g_{2,2}&amp; g_{2,3} &amp; g_{2,4} &amp; g_{2,5} &amp; g_{2,6} &amp; g_{2,7}\\g_{3,0} &amp; g_{3,1} &amp; g_{3,2}&amp; g_{3,3} &amp; g_{3,4} &amp; g_{3,5} &amp; g_{3,6} &amp; g_{3,7}
+\end{bmatrix}
+\end{split}\]</div>
+<p>Then, we compute <span class="math notranslate nohighlight">\(\mathbf c = \mathbf m \cdot G\)</span> to get the codeword: <span class="math notranslate nohighlight">\(\mathbf{c}  = (c_0,c_1,c_2,c_3,c_4,c_5,c_6,c_7)\)</span>.</p>
+</section>
+<section id="reed-muller-code-rm-code">
+<h3>Reed-Muller Code (RM code)<a class="headerlink" href="#reed-muller-code-rm-code" title="Link to this heading">#</a></h3>
+<p>Reed-Muller code also is a type of error-correcting code used in coding theory. Here we introduce a special type of RM code named foldable RM code whose generator matrices have a foldable structure. A foldable RM code includes generator matrices( <span class="math notranslate nohighlight">\(G_0, … ,G_{d-1}\)</span>) and diagonal matrices( <span class="math notranslate nohighlight">\(T_0, … , T_{d-1}\)</span>), (<span class="math notranslate nohighlight">\(T_0^’, … , T_{d-1}^’\)</span>).  The foldable structure means that the generator matrix <span class="math notranslate nohighlight">\(G_{i+1}\)</span> can be generated from the previous generator matrix <span class="math notranslate nohighlight">\(G_i\)</span> and two diagonal matrices <span class="math notranslate nohighlight">\(T_i\)</span> and <span class="math notranslate nohighlight">\(T_i^{’}\)</span>, satisfying the following formula:</p>
+<p><span class="math notranslate nohighlight">\(G_{i+1}=\begin{bmatrix} G_{i}&amp; G_{i} \\
+G_{i}\cdot T_{i} &amp;  G_{i}\cdot T_{i}^{'}
+\end{bmatrix}\)</span></p>
+<p>Note that the elements on those diagonal matrices are distinct from each other.</p>
+</section>
+<section id="random-foldable-code-rfc">
+<h3>Random Foldable code (RFC)<a class="headerlink" href="#random-foldable-code-rfc" title="Link to this heading">#</a></h3>
+<p>The RFC, a variant of the foldable RM code, follows a recursive approach to generate its generator matrix. RFC is foldable and has <span class="math notranslate nohighlight">\(O(n \log n)\)</span> encoding time over any sufficiently large field, better than the traditional encoding method with <span class="math notranslate nohighlight">\(O(n^2)\)</span> encoding time.</p>
+<p>RFC introduces two modifications on diagonal matrices:</p>
+<ol class="arabic simple">
+<li><p>It assigns <span class="math notranslate nohighlight">\(T_i\)</span> as a diagonal matrix with entries drawn uniformly at random from <span class="math notranslate nohighlight">\(\mathbb{F}^\times\)</span>( <span class="math notranslate nohighlight">\(\mathbb F ^{\times}\)</span> denotes <span class="math notranslate nohighlight">\(\mathbb F\)</span> \ {0}).</p></li>
+<li><p>It sets <span class="math notranslate nohighlight">\(-T_i\)</span> as  <span class="math notranslate nohighlight">\(T'_i\)</span>.</p></li>
+</ol>
+<p>The generator matrices are created as follows:</p>
+<p><span class="math notranslate nohighlight">\(G_{i+1}=\begin{bmatrix} G_{i}&amp; G_{i} \\
+G_{i}\cdot T_{i} &amp;  G_{i}\cdot -T_{i}
+\end{bmatrix}\)</span></p>
+<p>The following graph shows an example of the process of creating generator matrices recursively.</p>
+<p><img alt="image.png" src="../../_images/image.png" /></p>
+</section>
+</section>
+<section id="id1">
+<h2>Basefold<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="basefold-encoding">
+<h3>Basefold Encoding<a class="headerlink" href="#basefold-encoding" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Encoding phase</strong></p></li>
+</ul>
+<p>Basefold encoding algorithm takes the original message <span class="math notranslate nohighlight">\(\mathbf m \in \mathbb F^{k_d}\)</span> as input and outputs codeword <span class="math notranslate nohighlight">\(\mathbf c \in \mathbb F ^{n_d}\)</span>.  <span class="math notranslate nohighlight">\(d\)</span> denotes the logarithm of <span class="math notranslate nohighlight">\(\mathbf m\)</span>’s length. If <span class="math notranslate nohighlight">\(length(\mathbf m) = 4\)</span>, then <span class="math notranslate nohighlight">\(d = \log 4 = 2\)</span>. There are initial generator matrix <span class="math notranslate nohighlight">\(\mathbf G_0\)</span> and diagonal matrices <span class="math notranslate nohighlight">\((T_0,T_1,…,T_{d-1})\)</span> as public parameters.</p>
+<p>Basefold uses a recursive way to encode messages rather than directly compute  <span class="math notranslate nohighlight">\(\mathbf c  = \mathbf m \cdot  G\)</span>. It split the message <span class="math notranslate nohighlight">\(\mathbf m\)</span> = <span class="math notranslate nohighlight">\((\mathbf m_l, \mathbf m_r)\)</span>, <span class="math notranslate nohighlight">\(\mathbf m_l\)</span> represents the first half of <span class="math notranslate nohighlight">\(\mathbf m\)</span>, and  <span class="math notranslate nohighlight">\(\mathbf m_r\)</span> represents the second half of <span class="math notranslate nohighlight">\(\mathbf m\)</span>. Then, it encodes <span class="math notranslate nohighlight">\(\mathbf m_l\)</span> and <span class="math notranslate nohighlight">\(\mathbf m_r\)</span>, respectively.</p>
+<p>In the encoding phase, there are two message statuses in the algorithm:</p>
+<ol class="arabic simple">
+<li><p>The message <span class="math notranslate nohighlight">\(\mathbf m\)</span> is the smallest unit of encoding, the algorithm will return the encoding result <span class="math notranslate nohighlight">\(Enc_0(\mathbf m) = \mathbf m \cdot G_0\)</span>.</p></li>
+<li><p>The message <span class="math notranslate nohighlight">\(\mathbf m\)</span> is not the smallest unit, then further split <span class="math notranslate nohighlight">\(\mathbf m\)</span> into  <span class="math notranslate nohighlight">\((\mathbf m_l, \mathbf m_r)\)</span>. Then the algorithm can reduce the <span class="math notranslate nohighlight">\(Enc_d(\mathbf m)\)</span> into <span class="math notranslate nohighlight">\(Enc_{d-1}(\mathbf m_l)\)</span> and <span class="math notranslate nohighlight">\(Enc_{d-1}(\mathbf m_r)\)</span> such that:</p></li>
+</ol>
+<p><span class="math notranslate nohighlight">\(Enc_d(\mathbf m) = \big(Enc_{d-1}(\mathbf m_l) + \mathbf t \circ Enc_{d-1}(\mathbf m_r),Enc_{d-1}(\mathbf m_l) - \mathbf t \circ Enc_{d-1}(\mathbf m_r)\big)\)</span></p>
+<p>, where <span class="math notranslate nohighlight">\(\mathbf t = {\rm diag}(T_{d-1})\)</span> represents a vector whose elements are diagonal elements of <span class="math notranslate nohighlight">\(T_{d-1}\)</span>. For example, let <span class="math notranslate nohighlight">\(T = \begin{bmatrix} t_0 &amp; 0 \\ 0 &amp; t_1 \end{bmatrix}\)</span>, then <span class="math notranslate nohighlight">\({\rm diag}(T) = [t_0,t_1]\)</span>.</p>
+<p>Let’s see an example of encode a message <span class="math notranslate nohighlight">\(\mathbf m = (m_0,m_1,m_2,m_3) \in \mathbb F ^{k_2}\)</span>.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%201.png" /></p>
+<p>Given the public parameters <span class="math notranslate nohighlight">\(G_0 = (g_0,g_1)\)</span>, <span class="math notranslate nohighlight">\(T_0 = \begin{bmatrix} t_0 &amp; 0 \\ 0 &amp; t_1 \end{bmatrix}\)</span>, <span class="math notranslate nohighlight">\(T_1 = \begin{bmatrix} t_2 &amp; 0 &amp;0&amp;0\\ 0 &amp; t_3 &amp;0&amp;0 \\ 0 &amp; 0 &amp;t_4&amp;0 \\ 0 &amp; 0 &amp;0&amp;t_5\end{bmatrix}\)</span>. Therefore, <span class="math notranslate nohighlight">\(\mathbf t_0 = [t_0,t_1]\)</span>, <span class="math notranslate nohighlight">\(\mathbf t_1 = [t_2,t_3,t_4,t_5]\)</span>.</p>
+<p>Our goal is encode <span class="math notranslate nohighlight">\(\mathbf m\)</span> and get <span class="math notranslate nohighlight">\(Enc_2(\mathbf m)\)</span>.</p>
+<p>At first, <span class="math notranslate nohighlight">\(\mathbf m = (m_0,m_1,m_2,m_3)\)</span> is not the smallest encoding unit. Therefore, we split  <span class="math notranslate nohighlight">\((m_0,m_1,m_2,m_3)\)</span> into  <span class="math notranslate nohighlight">\(\mathbf m_l = (m_0,m_1)\)</span> and  <span class="math notranslate nohighlight">\(\mathbf m_r = (m_2,m_3)\)</span>.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%202.png" /></p>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf l := Enc_1(\mathbf m_l)\)</span>, <span class="math notranslate nohighlight">\(\mathbf r := Enc_1(\mathbf m_r)\)</span>. We get : <span class="math notranslate nohighlight">\(Enc_2(\mathbf m) = (\mathbf l + \mathbf t_1 \circ \mathbf r,\mathbf l - \mathbf t_1 \circ \mathbf r)\)</span></p>
+<p>At this point, we can recursively compute <span class="math notranslate nohighlight">\(Enc_1(\mathbf m_l)\)</span> and <span class="math notranslate nohighlight">\(Enc_1(\mathbf m_r)\)</span>. We further split <span class="math notranslate nohighlight">\((m_0,m_1)\)</span> into <span class="math notranslate nohighlight">\((m_0)\)</span>, <span class="math notranslate nohighlight">\((m_1)\)</span> and split  <span class="math notranslate nohighlight">\((m_2,m_3)\)</span> into <span class="math notranslate nohighlight">\((m_2)\)</span>, <span class="math notranslate nohighlight">\((m_3)\)</span>.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%203.png" /></p>
+<p>Due to all <span class="math notranslate nohighlight">\((m_0)\)</span>, <span class="math notranslate nohighlight">\((m_1)\)</span>, <span class="math notranslate nohighlight">\((m_2)\)</span>, <span class="math notranslate nohighlight">\((m_3)\)</span> are the smallest units. We then encode the them and get <span class="math notranslate nohighlight">\(Enc_0(m_0),Enc_0(m_1),Enc_0(m_2),Enc_0(m_3)\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(Enc_0(m_0)=m_0\cdot G_0=\begin{bmatrix}m_0 g_0 &amp; m_0 g_1\end{bmatrix}\)</span></p>
+<p><span class="math notranslate nohighlight">\(Enc_0(m_1)=m_1\cdot G_0=\begin{bmatrix}m_1 g_0 &amp; m_1 g_1\end{bmatrix}\)</span></p>
+<p><span class="math notranslate nohighlight">\(Enc_0(m_2)=m_2\cdot G_0=\begin{bmatrix}m_2 g_0 &amp; m_2g_1\end{bmatrix}\)</span></p>
+<p><span class="math notranslate nohighlight">\(Enc_0(m_3)=m_3\cdot G_0=\begin{bmatrix}m_3 g_0 &amp; m_3 g_1\end{bmatrix}\)</span></p>
+<p>And then we can compute <span class="math notranslate nohighlight">\(\mathbf l = Enc_1(m_0, m_1),\mathbf r = Enc_1(m_2, m_3)\)</span> using <span class="math notranslate nohighlight">\(Enc_0(m_0),Enc_0(m_1),Enc_0(m_2),Enc_0(m_3)\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(\mathbf l=(Enc_0(m_0)+\mathbf t_0 \circ Enc_0(m_1),Enc_0(m_0)-\mathbf t_0 \circ Enc_0(m_1))=\begin{bmatrix}m_0g_0+m_1g_0t_0 &amp; m_0g_1+m_1g_1t_1 &amp;m_0g_0-m_1g_0t_0 &amp; m_0g_1-m_1g_1t_1 \end{bmatrix}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\mathbf r =(Enc_0(m_2)+\mathbf t_0 \circ Enc_0(m_3),Enc_0(m_2)-\mathbf t_0 \circ Enc_0(m_3))=\begin{bmatrix}m_2g_0+m_3g_0t_0 &amp; m_2g_1+m_3g_1t_1 &amp;m_2g_0-m_3g_0t_0 &amp; m_2g_1-m_3g_1t_1 \end{bmatrix}\)</span></p>
+<p>Finally, we compute <span class="math notranslate nohighlight">\(Enc_2(\mathbf m)=Enc_2(m_0,m_1,m_2,m_3)\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(Enc_2(m_0,m_1,m_2,m_3)\\=[\mathbf l + \mathbf t_1 \circ \mathbf r,\mathbf l - \mathbf t_1 \circ \mathbf r]\)</span></p>
+<p><span class="math notranslate nohighlight">\(= \begin{bmatrix}m_0g_0+m_1g_0t_0+m_2g_0t_2+m_3g_0t_0t_2 \\m_0g_1+m_1g_1t_1+ m_2g_1t_3+m_3g_1t_1t_3 \\m_0g_0-m_1g_0t_0+m_2g_0t_4-m_3g_0t_0t_4 \\m_0g_1-m_1g_1t_1+m_2g_1t_5-m_3g_1t_1t_5 \\m_0g_0+m_1g_0t_0-m_2g_0t_2-m_3g_0t_0t_2 \\m_0g_1+m_1g_1t_1- m_2g_1t_3-m_3g_1t_1t_3 \\m_0g_0-m_1g_0t_0-m_2g_0t_4+m_3g_0t_0t_4 \\m_0g_1-m_1g_1t_1-m_2g_1t_5+m_3g_1t_1t_5\end{bmatrix} = \begin{bmatrix}c_0&amp;c_1&amp;c_2&amp;c_3&amp;c_4&amp;c_5&amp;c_6&amp;c_7\end{bmatrix}\)</span></p>
+<p>At this point, we have obtained the codeword <span class="math notranslate nohighlight">\(\mathbf c=(c_0,c_1,c_2,c_3,c_4,c_5,c_6,c_7)\)</span>. The result of using the recursive encoding method is the same as the result of directly calculating <span class="math notranslate nohighlight">\(\mathbf c = \mathbf m \cdot \mathbf G_2\)</span>.</p>
+<p>In this case, the message of size 4 and the codeword of size 8, thus the code rate equal to <span class="math notranslate nohighlight">\(\frac {message \ size } {codeword \ size }= \frac 1 2\)</span>.</p>
+</section>
+<section id="basefold-iopp">
+<h3>Basefold IOPP<a class="headerlink" href="#basefold-iopp" title="Link to this heading">#</a></h3>
+<p>Basefold IOPP generalized the FRI IOPP to any foldable linear code. The Goal of Basefold IOPP is to ensure the verifier checks an oracle <span class="math notranslate nohighlight">\(\pi_d\)</span> sent by the prover is close to a codeword <span class="math notranslate nohighlight">\(C_d\)</span>.</p>
+<p>Basefold IOPP consists of two phases: Commit phase and Query phase.</p>
+<p><strong>Commit phase:</strong> **the prover commits a polynomial <span class="math notranslate nohighlight">\(f\)</span> and generates a list of oracles <span class="math notranslate nohighlight">\((\pi_d,…,\pi_0)\)</span> given the verifier’s folding challenge <span class="math notranslate nohighlight">\(r_i (0≤i&lt;d)\)</span>.</p>
+<p><strong>Query phase:</strong> the verifier samples a query index to check the consistency between oracles.</p>
+<ul class="simple">
+<li><p>Commit phase</p></li>
+</ul>
+<p>Basefold IOPP uses Merkle commitment to generate commitments. The graph below illustrates the process of deriving oracle <span class="math notranslate nohighlight">\(\pi_2\)</span> from <span class="math notranslate nohighlight">\(\mathbf c = (c_0,c_1,c_2,c_3,c_4,c_5,c_6,c_7)\)</span>. The Merkle root is exactly the commitment of <span class="math notranslate nohighlight">\(\mathbf c\)</span>.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%204.png" /></p>
+<p>Continuing from the previous example, let’s demonstrate how the prover generates a list of oracles <span class="math notranslate nohighlight">\((\pi_2,\pi_1, \pi_0)\)</span> given the verifier’s folding challenges <span class="math notranslate nohighlight">\(r_i (0≤i&lt;2)\)</span>. The prover first computes the Merkle root of <span class="math notranslate nohighlight">\(\mathbf c\)</span> and gets the commitment <span class="math notranslate nohighlight">\(\pi_2\)</span>. Next, upon receiving the folding challenge <span class="math notranslate nohighlight">\(r_2\)</span>, the prover can fold the vector <span class="math notranslate nohighlight">\(\mathbf c\)</span> into <span class="math notranslate nohighlight">\(\mathbf c_1\)</span>, which is half the size of <span class="math notranslate nohighlight">\(\mathbf c\)</span>. Then commit <span class="math notranslate nohighlight">\(\mathbf c_1\)</span> to get <span class="math notranslate nohighlight">\(\pi_1\)</span>. And using another folding challenge <span class="math notranslate nohighlight">\(r_1\)</span> fold <span class="math notranslate nohighlight">\(\mathbf c_1\)</span> to get <span class="math notranslate nohighlight">\(\mathbf c_2\)</span> which is half the size of <span class="math notranslate nohighlight">\(\mathbf c_1\)</span>. Then commit <span class="math notranslate nohighlight">\(\mathbf c_2\)</span> to get <span class="math notranslate nohighlight">\(\pi_0\)</span>.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%205.png" /></p>
+<p>The prover sends all the oracles <span class="math notranslate nohighlight">\((\pi_2,\pi_1, \pi_0)\)</span> to the verifier.</p>
+<p>Note that given an input oracle that is a commitment of an encoding of a polynomial <span class="math notranslate nohighlight">\(f\)</span>, the last oracle <span class="math notranslate nohighlight">\(\pi_0\)</span> sent by the honest prover in the IOPP protocol is exactly an encoding of a random evaluation <span class="math notranslate nohighlight">\(f(\mathbf r)\)</span>. Therefore, this ultimate oracle <span class="math notranslate nohighlight">\(\pi_0\)</span> must be a valid codeword.</p>
+<ul class="simple">
+<li><p>Query phase</p></li>
+</ul>
+<p>In this phase, the verifier samples a query index <span class="math notranslate nohighlight">\(\mu \isin [1, n_{d-1}]\)</span> to check the consistency between oracles. The figure below shows the query phase.  The verifier can query oracles several times. The larger the number of queries made, the higher security level of this model.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%206.png" /></p>
+<p>Let’s focus on a single query to see more details. The verifier selects an index 0, and each oracle returns the value at that position and the value at the corresponding position after halving the vector. In this case, oracles return (<span class="math notranslate nohighlight">\(c_0,c_4,c_0',c_2',c_0''\)</span>) . Then, the verifier checks if <span class="math notranslate nohighlight">\(c_0'\)</span> is accurately computed from <span class="math notranslate nohighlight">\(c_0,c_4\)</span>, and the folding challenge <span class="math notranslate nohighlight">\(r_2\)</span>, and checks if <span class="math notranslate nohighlight">\(c_0''\)</span> is correctly computed from <span class="math notranslate nohighlight">\(c_0',c_2'\)</span>, and the folding challenge <span class="math notranslate nohighlight">\(r_1\)</span>. The verifier also checks <span class="math notranslate nohighlight">\(\pi_0\)</span> is a valid codeword.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%207.png" /></p>
+<p>After several rounds, the prover passed all queries from the verifier. Finally, the verifier will believe the prover <span class="math notranslate nohighlight">\(\pi_2\)</span> is truly commitment of the polynomial <span class="math notranslate nohighlight">\(f\)</span>.</p>
+</section>
+<section id="basefold-pcs">
+<h3>Basefold PCS<a class="headerlink" href="#basefold-pcs" title="Link to this heading">#</a></h3>
+<p>Basefold PCS interleaves Basefold IOPP and sumcheck. The Goal of Basefold PCS is the prover wants to convince the verifier that it knows an opening of a private polynomial that <span class="math notranslate nohighlight">\(f(\mathbf z) =y\)</span>, with the polynomial’s commitment being <span class="math notranslate nohighlight">\(\pi_d\)</span>.</p>
+<p>Therefore, Basefold PCS consists of two parts to prove:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(Commit(Enc(f)) = \pi_d\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(f(\mathbf z)=y\)</span>.</p></li>
+</ol>
+<p>The first statement can be proved by Basefold IOPP, while the second statement can be proved by using sumcheck. Let’s see the further details:</p>
+<p>It is known that by using the classic sum-check protocol with a multilinear extension, we can transform the evaluation check of a multilinear polynomial <span class="math notranslate nohighlight">\(f ∈ \mathbb F[X_1,..., X_d]\)</span> at a point <span class="math notranslate nohighlight">\(\mathbf z \in \mathbb F^d\)</span>into an evaluation check of <span class="math notranslate nohighlight">\(f\)</span> **at a random point <span class="math notranslate nohighlight">\(\mathbf r \in \mathbb F ^d\)</span>. In the sumcheck protocol, the prover and the verifier interactive <span class="math notranslate nohighlight">\(d\)</span> rounds. In each round, a variate <span class="math notranslate nohighlight">\(X_i\)</span> is fixed using the verifier’s challenge, consequently reducing the dimensionality by 1 of <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p>As the earlier discussion on Basefold IOPP, shows that Basefold IOPP also involves <span class="math notranslate nohighlight">\(d\)</span> interactive rounds between the prover and the verifier. In each round, the codeword is halved in size.</p>
+<p>It can be seen that Basefold IOPP and sumcheck have a similar structure. Therefore, in the evaluation phase, the prover and verifier can simultaneously execute a Basefold IOPP protocol and a sumcheck protocol, using the identical set of random challenges <span class="math notranslate nohighlight">\(\mathbf r = (r_1, . . . , r_d)\)</span> . At the end of the Basefold PCS, the verifier checks that the claimed evaluation in the last round of the sumcheck protocol is consistent with the last prover message of the IOPP protocol.</p>
+<ul>
+<li><p><strong>Basefold Evaluation phase</strong></p>
+<p>Given a commitment <span class="math notranslate nohighlight">\(C\)</span>, a point <span class="math notranslate nohighlight">\(\textbf{z}\)</span> and value <span class="math notranslate nohighlight">\(y\)</span> , the prover wants to convince the verifier that it knows an opening of <span class="math notranslate nohighlight">\(f \isin \mathbb{F}[X_1,…,X_d]\)</span> such that <span class="math notranslate nohighlight">\(f(\textbf{z})=y\)</span>. Basefold PCS interleaves sumcheck with Basefold IOPP, operating as depicted in the the following figure, which illustrates the interactive process between the prover and the verifier.</p>
+<p>As from the figure, Basefold PCS executes Basefold IOPP and sumcheck in parallel. The blue part represents the sumcheck interactive process while the yellow part indicates the Basefold IOPP interactive process. The red part denotes the random challenge from the verifier.</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%208.png" /></p>
+</li>
+</ul>
+<p>Let’s see an example, suppose the prover holds a polynomial <span class="math notranslate nohighlight">\(f(\vec x)\)</span> whose coefficients are <span class="math notranslate nohighlight">\(\mathbf f=(f_0,f_1,f_2,f_3)\)</span>. First, the prover using Basefold encoding algorithm to encode <span class="math notranslate nohighlight">\(\mathbf f\)</span> into a codeword <span class="math notranslate nohighlight">\(\mathbf c = (c_0,c_1,c_2,c_3,c_4,c_5,c_6,c_7)\)</span>, and commit <span class="math notranslate nohighlight">\(\mathbf c\)</span> to produce the commitment <span class="math notranslate nohighlight">\(\pi_2\)</span>.</p>
+<p>The prover wants to prove :</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(Commit(Enc_2(\mathbf f))=\pi_2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f(\mathbf z) = y\)</span></p></li>
+</ol>
+<p>For prove 1, we utilize the Basefold IOPP. In the commit phase, the prover generates oracles <span class="math notranslate nohighlight">\((\pi_2,\pi_1,\pi_0)\)</span> given the verifier’s challenge <span class="math notranslate nohighlight">\((r_1,r_0)\)</span> and sents oracles to the verifier. Then, in the query phase, the verifier queries some points, if the prover can pass all the verifier’s checks and <span class="math notranslate nohighlight">\(\pi_0\)</span> is a valid codeword, the verifier will accept it.</p>
+<p>Regard to prove 2, we re-express the polynomial by the multilinear extension, <span class="math notranslate nohighlight">\(f(\vec x)\)</span> can be expressed as the sum: <span class="math notranslate nohighlight">\(f(x_1,x_2) = \sum_{\substack{\mathbf b \in \{0,1\}^2}}f(\mathbf b)\cdot \tilde{eq}_{\mathbf b}(x_1,x_2)\)</span>. Thus, checking <span class="math notranslate nohighlight">\(f(\mathbf z) =y\)</span> is equivalent to checking the sumcheck claim <span class="math notranslate nohighlight">\(y = \sum_{\substack{\mathbf b \in \{0,1\}^2}}f(\mathbf b)\cdot \tilde{eq}_{\mathbf b}(\mathbf z)\)</span>. Then, we can utilize the sumcheck protocol to prove it.</p>
+<p>The Basefold PCS runs as the following graph:</p>
+<p><img alt="image.png" src="basefold/basefold-simple-version/Basefold-simple-version-img/image%209.png" /></p>
+<p>We can see that Basefold IOPP and sumcheck share all the verifier’s challenges <span class="math notranslate nohighlight">\((r_1,r_0)\)</span>. If the prover passes all the verifier’s checks, then it convinces the verifier.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold/basefold-simple-version"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-basefold">What is Basefold?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-basefold">Why Basefold?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-basefold">How Basefold?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-oracle-proof-iop">Interactive Oracle Proof (IOP)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-oracle-proof-of-proximity-iopp">Interactive Oracle Proof of Proximity (IOPP)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fri">FRI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomial-commitment-scheme-pcs">Polynomial Commitment Scheme (PCS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-code">Linear Code</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reed-solomon-code-rs-code">Reed-Solomon Code (RS code)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reed-muller-code-rm-code">Reed-Muller Code (RM code)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-foldable-code-rfc">Random Foldable code (RFC)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Basefold</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-encoding">Basefold Encoding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp">Basefold IOPP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-pcs">Basefold PCS</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

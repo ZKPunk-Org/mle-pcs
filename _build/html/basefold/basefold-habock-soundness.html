@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Note on Soundness Proof of Basefold under List Decoding &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-habock-soundness';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-habock-soundness.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-habock-soundness.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Note on Soundness Proof of Basefold under List Decoding</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-lemma-1">Proof of Lemma 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="note-on-soundness-proof-of-basefold-under-list-decoding">
+<h1>Note on Soundness Proof of Basefold under List Decoding<a class="headerlink" href="#note-on-soundness-proof-of-basefold-under-list-decoding" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>In the previous article “Overview of Basefold’s Soundness Proof under List Decoding”, we outlined the approach to the soundness proof in the [H24] paper. This article will delve deeper into the proof details following this approach, focusing mainly on the proof of [H24, Lemma 1], which demonstrates the soundness error of the Basefold protocol in the commit phase.</p>
+<p><strong>Lemma 1</strong> [H24, Lemma 1] (Soundness commit phase). Take a proximity parameter <span class="math notranslate nohighlight">\(\theta=1-\left(1 + \frac{1}{2 \cdot m}\right) \cdot \sqrt{\rho}\)</span>, with <span class="math notranslate nohighlight">\(m\geq3\)</span>. Suppose that a (possibly computationally unbounded) algorithm <span class="math notranslate nohighlight">\(P^*\)</span> succeeds the commitment phase with <span class="math notranslate nohighlight">\(r\geq0\)</span> rounds with probability larger than</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon_C=\varepsilon_0+\varepsilon_1+\ldots+\varepsilon_r,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon_0=\varepsilon(\mathcal{C}_i,M,\theta)\)</span> is the soundness error from Theorem 3, and</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon_i:=\varepsilon(\mathcal{C}_i,1,B_i,\theta)+\frac{1}{|F|},
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_i,1,B_i,\theta)\)</span> being the soundness error from Theorem 4, where <span class="math notranslate nohighlight">\(B_i=\frac{|D|}{|D_i|}=2^i\)</span>. Then <span class="math notranslate nohighlight">\((g_0,\ldots,g_M)\)</span> belongs to <span class="math notranslate nohighlight">\(\mathcal{R}\)</span>.</p>
+<p>[H24, Theorem 3] mentioned in the lemma is the correlated agreement theorem for subcodes under list decoding, while [H24, Theorem 4] is the weighted version of [H24, Theorem 3].</p>
+<p>The relation <span class="math notranslate nohighlight">\(\mathcal{R}\)</span> implies that <span class="math notranslate nohighlight">\(P^*\)</span> has not cheated, indicating that the committed polynomials <span class="math notranslate nohighlight">\((g_{0}, \ldots, g_{M})\)</span> are both within distance <span class="math notranslate nohighlight">\(\theta\)</span> from the corresponding encoding space and consistent with the committed values <span class="math notranslate nohighlight">\(v_0, \ldots, v_M\)</span> at the query point <span class="math notranslate nohighlight">\(\vec{\omega} = (\omega_1, \ldots, \omega_n)\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathcal{R}=\left\{\begin{array}{c}
+\exists p_0, \ldots, p_M \in \mathscr{F}[X]^{&lt;2^n} \text { s.t. } \\
+\left(g_0, \ldots, g_M\right): d\left(\left(g_0, \ldots, g_M\right),\left(p_0, \ldots, p_M\right)\right)&lt;\theta \\
+\wedge \bigwedge_{k=0}^M P_k\left(\omega_1, \ldots, \omega_n\right)=v_k
+\end{array}\right\}.
+\end{split}\]</div>
+<p>Lemma 1 states that if <span class="math notranslate nohighlight">\(P^*\)</span>’s success probability in the commit phase exceeds <span class="math notranslate nohighlight">\(\varepsilon_C\)</span>, we can trust that <span class="math notranslate nohighlight">\(P^*\)</span> has not cheated, and the claimed relation <span class="math notranslate nohighlight">\(\mathcal{R}\)</span> holds.</p>
+<p>Here, we need to mathematically define what it means for <span class="math notranslate nohighlight">\(P^*\)</span> to succeed in the <span class="math notranslate nohighlight">\(0 \le r \le n\)</span> round of the commit phase. This is the concept of <span class="math notranslate nohighlight">\(\alpha\)</span>-good given in the [H24] paper. From the protocol itself, <span class="math notranslate nohighlight">\(P^*\)</span>’s success means that the verifier receives <span class="math notranslate nohighlight">\(f_0, \Lambda_0, f_1, \Lambda_1,  f_2, \Lambda_2, \ldots, \Lambda_{r-1}, f_r\)</span> from <span class="math notranslate nohighlight">\(P^*\)</span>, then performs checks: one is the sumcheck, and the other is randomly selecting <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(D_0\)</span> to verify that the FRI folding is correct. First, the parameter <span class="math notranslate nohighlight">\(\alpha = 1 - \theta \in (0,1)\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha = \left(1 + \frac{1}{2 \cdot m}\right) \cdot \sqrt{\rho}
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span> represent the polynomial space corresponding to the Reed-Solomon code <span class="math notranslate nohighlight">\(\mathcal{C}_i = \mathrm{RS}_{2^{n-i}}[F, D_i]\)</span>, where <span class="math notranslate nohighlight">\(D_i\)</span> is the result of applying the mapping <span class="math notranslate nohighlight">\(\pi\)</span> to <span class="math notranslate nohighlight">\(D\)</span> <span class="math notranslate nohighlight">\(i\)</span> times, i.e., <span class="math notranslate nohighlight">\(D_i = \pi^i(D), i = 0, \ldots, n\)</span>. Therefore, the polynomial subspace corresponding to <span class="math notranslate nohighlight">\(\mathcal{C}_i' \subseteq \mathcal{C}_i\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{F}_i' = \left\{p(X) \in \mathcal{F}_i: P(\omega_{i + 1}, \ldots, \omega_n) = 0 \right\}.
+\]</div>
+<ol class="arabic">
+<li><p>The sumcheck is correct. This means there exists <span class="math notranslate nohighlight">\(p_r(X) \in \mathcal{F}_r\)</span>, with corresponding multivariate polynomial <span class="math notranslate nohighlight">\(P_r\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+    L((\omega_1, \ldots, \omega_r), (\lambda_1, \ldots, \lambda_r)) \cdot P_r(\omega_1, \ldots, \omega_n) = q_{r-1}(\lambda_r) 
+    \]</div>
+<p>Based on the relationship between <span class="math notranslate nohighlight">\(q_i(X)\)</span> and <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span>, we can deduce that <span class="math notranslate nohighlight">\(P_r\)</span> needs to satisfy</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{aligned}
+        L((\omega_1, \ldots, \omega_r), (\lambda_1, \ldots, \lambda_r)) \cdot &amp; P_r(\omega_{r + 1}, \ldots, \omega_n) = q_{r-1}(\lambda_r) \\
+        &amp; =  L((\omega_1, \ldots, \omega_r), (\lambda_1, \ldots, \lambda_r)) \cdot \Lambda_{r - 1}(\lambda_r)
+    \end{aligned} \tag{1}
+    \end{split}\]</div>
+</li>
+<li><p>The folding is correct. It needs to satisfy</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \left| \left\{ x \in D_0 : \quad \begin{array}{c}
+        (f_0, \ldots, f_r) \text{ satisfy all folding checks along } x \\
+        \wedge f_r(\pi^r(x)) = p_r(\pi^r(x))
+    \end{array}\right\}\right| \ge \alpha \cdot |D_0| \tag{2}
+    \end{split}\]</div>
+<p>Here, only when the proportion of <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(D_0\)</span> satisfying the folding check is greater than <span class="math notranslate nohighlight">\(\alpha\)</span>, after mapping through <span class="math notranslate nohighlight">\(\pi^r\)</span>, will the verifier pass in the end.</p>
+</li>
+</ol>
+<p>When conditions 1 and 2 are met, we say that such <span class="math notranslate nohighlight">\((f_0, \Lambda_0, f_1, \Lambda_1,  f_2, \Lambda_2, \ldots, \Lambda_{r-1}, f_r)\)</span> is <span class="math notranslate nohighlight">\(\alpha\)</span>-good for <span class="math notranslate nohighlight">\((\lambda_0, \ldots, \lambda_r)\)</span>.</p>
+<section id="proof-of-lemma-1">
+<h2>Proof of Lemma 1<a class="headerlink" href="#proof-of-lemma-1" title="Link to this heading">#</a></h2>
+<p>The proof of Lemma 1 uses mathematical induction. First, it proves that the conclusion holds when <span class="math notranslate nohighlight">\(r = 0\)</span>, using [H24, Theorem 3]. Then, assuming Lemma 1 holds for <span class="math notranslate nohighlight">\(0 \le r &lt; n\)</span>, it proves that the conclusion also holds for <span class="math notranslate nohighlight">\(r + 1\)</span>. This process uses the weighted [H24, Theorem 4], following a similar approach to the one introduced in the previous article. For example, in the <span class="math notranslate nohighlight">\(r + 1\)</span> round, starting with the conditions satisfied by <span class="math notranslate nohighlight">\(f_{r + 1}\)</span> obtained after folding with the random number <span class="math notranslate nohighlight">\(\lambda_{r + 1}\)</span>, which is close to the corresponding encoding space and satisfies the sumcheck constraint, we first deduce that the corresponding <span class="math notranslate nohighlight">\(f_{r + 1}'\)</span> satisfies some conditions. This allows us to use the correlated agreement theorem for subcodes. Applying the theorem’s conclusion, we can then derive the properties satisfied by <span class="math notranslate nohighlight">\(f_{r,0}\)</span> and <span class="math notranslate nohighlight">\(f_{r,1}\)</span> before folding, and from this, deduce the properties satisfied by <span class="math notranslate nohighlight">\(f_r\)</span>. At this point, applying the induction hypothesis, we can obtain that the conditions of the lemma are satisfied in the <span class="math notranslate nohighlight">\(r\)</span>-th round, thus proving that the conclusion holds in the <span class="math notranslate nohighlight">\(r\)</span>-th round, which in turn proves that the lemma holds in the <span class="math notranslate nohighlight">\((r + 1)\)</span>-th round.</p>
+<p>Proof: First, prove that the lemma holds when <span class="math notranslate nohighlight">\(r = 0\)</span>. The given condition is that <span class="math notranslate nohighlight">\(P^*\)</span>’s success probability in the commit phase is greater than <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_0,M,\theta)\)</span>, and we want to prove that <span class="math notranslate nohighlight">\((g_1, \ldots, g_M) \in \mathcal{R}\)</span>. According to the condition and the definition of <span class="math notranslate nohighlight">\(\alpha\)</span>-good, we can deduce that with a probability greater than <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_0,M,\theta)\)</span>, the <span class="math notranslate nohighlight">\(f_0\)</span> provided by <span class="math notranslate nohighlight">\(P^*\)</span> is <span class="math notranslate nohighlight">\(\alpha\)</span>-good for <span class="math notranslate nohighlight">\(\lambda_0\)</span>. Then, considering the polynomials <span class="math notranslate nohighlight">\(g_k' = g_k - v_k\)</span> before folding, the probability that they are within distance <span class="math notranslate nohighlight">\(\theta\)</span> from the corresponding subcode <span class="math notranslate nohighlight">\(\mathcal{C}_0' \subseteq \mathcal{C}_0\)</span> (which means the consistent part is greater than <span class="math notranslate nohighlight">\(\alpha\)</span>) is</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr \left[ \lambda_0: \exists p_0' \in \mathcal{F}_0' \text{  s.t.  } \mathrm{agree} \left( \sum_{k = 0}^{M} g_k' \cdot \lambda_0^k, p_0'(X) \right) \ge \alpha  \right] &gt; \varepsilon(\mathcal{C}_0,M,\theta)
+\]</div>
+<p>The purpose of considering polynomials <span class="math notranslate nohighlight">\(g_k' = g_k - v_k\)</span> instead of <span class="math notranslate nohighlight">\(g_k\)</span> is to allow our analysis to enter the scope of the linear subcode <span class="math notranslate nohighlight">\(\mathcal{C}_0'\)</span>, so we can use [H24, Theorem 3] to obtain polynomials</p>
+<div class="math notranslate nohighlight">
+\[
+p_0'(X), \ldots, p_M'(X) \in \mathcal{F}_0'
+\]</div>
+<p>and a set <span class="math notranslate nohighlight">\(D_0' \subseteq D\)</span>, satisfying</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D_0'|/|D| \ge \alpha\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p_k'(X)|_{D_0'} = g_k'(X)|_{D_0'}\)</span></p></li>
+</ol>
+<p>Now that we have found polynomials <span class="math notranslate nohighlight">\(p_0'(X), \ldots, p_M'(X)\)</span>, for polynomials</p>
+<div class="math notranslate nohighlight">
+\[
+p_0'(X) + v_0, \ldots, p_M'(X) + v_M \in \mathcal{F}_0
+\]</div>
+<p>they satisfy</p>
+<div class="math notranslate nohighlight">
+\[
+(p_k'(X) + v_k)|_{D_0'} = (g_k'(X) + v_k)|_{D_0'} = g_k(X)|_{D_0'} \quad 0 \le k \le M
+\]</div>
+<p>The multilinear polynomial <span class="math notranslate nohighlight">\(P_k \in F[X_1, \ldots, X_n]\)</span> corresponding to <span class="math notranslate nohighlight">\(p_0'(X) + v_0\)</span> also satisfies <span class="math notranslate nohighlight">\(P_k(\vec{\omega}) = v_k\)</span>, therefore <span class="math notranslate nohighlight">\((g_1, \ldots, g_M) \in \mathcal{R}\)</span>.</p>
+<p>Now assume the lemma holds for <span class="math notranslate nohighlight">\(0 \le r &lt; n\)</span>, and we want to prove that it still holds for <span class="math notranslate nohighlight">\(r + 1\)</span>. According to the conditions of the lemma, in the <span class="math notranslate nohighlight">\((r + 1)\)</span>-th round, <span class="math notranslate nohighlight">\(P^*\)</span>’s success probability in the commit phase exceeds <span class="math notranslate nohighlight">\((\varepsilon_0 + \varepsilon_1 + \ldots + \varepsilon_r) + \varepsilon_{r + 1}\)</span>. Let <span class="math notranslate nohighlight">\(\mathfrak{T}\)</span> be the set composed of <span class="math notranslate nohighlight">\(\mathrm{tr}_r = (\lambda_0, f_0, \Lambda_0, \ldots, \lambda_r, f_r, \Lambda_r)\)</span>. Therefore, under the condition</p>
+<div class="math notranslate nohighlight">
+\[
+\operatorname{Pr}[\mathfrak{T}]&gt;\varepsilon_0+\ldots+\varepsilon_r
+\]</div>
+<p><span class="math notranslate nohighlight">\(P^*\)</span>’s success probability is greater than <span class="math notranslate nohighlight">\(\varepsilon_{r + 1}\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\Pr \left[ \lambda_{r+1}: 
+\begin{array}{c}
+    \exists f_{r + 1} \text{  s.t.  } (\lambda_0, f_0, \Lambda_0, \ldots, \lambda_r, f_r, \Lambda_r, f_{r + 1}) \\
+    \text{is $\alpha$-good for } (\lambda_0, \ldots, \lambda_{r + 1})
+\end{array}
+\right] &gt; \varepsilon_{r + 1}
+\end{split}\]</div>
+<p>From the definition of <span class="math notranslate nohighlight">\(\alpha\)</span>-good, we can deduce that for <span class="math notranslate nohighlight">\(\lambda_{r + 1}\)</span> satisfying <span class="math notranslate nohighlight">\(\alpha\)</span>-good, there exists a polynomial <span class="math notranslate nohighlight">\(p_{r + 1} \in \mathcal{F}_{r + 1}\)</span> satisfying the sumcheck constraint, such that</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0} + \lambda_{r + 1} \cdot f_{r,1}, p_{r + 1}) \ge \alpha \tag{3}
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\nu_r\)</span> is a sub-probability measure with density function defined as, for <span class="math notranslate nohighlight">\(y \in D_{r + 1}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\delta_r(y) : = \frac{|\{x \in \pi^{-(r + 1)}(y): (f_0, \ldots, f_r) \text{ satisfies all folding checks along } x \}|}{|\pi^{-(r+1)}(y)|}
+\]</div>
+<p>Here’s an explanation of what equation (3) essentially represents: it’s equivalent to equation (2) in the definition of <span class="math notranslate nohighlight">\(\alpha\)</span>-good. According to the definition of the <span class="math notranslate nohighlight">\(\mathrm{agree}\)</span> function, equation (3) is equivalent to</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\nu_r(\{ y \in D_{r + 1}: ((1 - \lambda_{r + 1}) \cdot f_{r,0} + \lambda_{r + 1} \cdot f_{r,1})(y) =  p_{r + 1}(y)\})}{|D_{r + 1}|} \ge \alpha
+\]</div>
+<p>First, let’s form a set <span class="math notranslate nohighlight">\(S_{r + 1}\)</span> consisting of <span class="math notranslate nohighlight">\(y\)</span> in <span class="math notranslate nohighlight">\(D_{r + 1}\)</span> that satisfy the folding relation, then calculate this set using the <span class="math notranslate nohighlight">\(\nu_r\)</span> function.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \nu_r (S_{r + 1}) &amp; = \sum_{y \in S_{r + 1}} \delta_r(y)  \\
+    &amp; = \sum_{y \in S_{r + 1}} \frac{|\{x \in \pi^{-(r + 1)}(y): (f_0, \ldots, f_r) \text{ satisfies all folding checks along } x \}|}{|\pi^{-(r+1)}(y)|}  \\
+    &amp; = \sum_{y \in S_{r + 1}} \frac{|\{x \in \pi^{-(r + 1)}(y): (f_0, \ldots, f_r) \text{ satisfies all folding checks along } x \}|}{2^{r + 1}}  \\
+    &amp; := \sum_{y \in S_{r + 1}} \frac{|S_{y,0}|}{2^{r + 1}} \\
+    &amp; = \frac{\sum_{y \in S_{r + 1}} |S_{y,0}|}{2^{r + 1}}
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0} + \lambda_{r + 1} \cdot f_{r,1}, p_{r + 1}) &amp; = \frac{\nu_r(S_{r + 1})}{|D_{r + 1}|} \\
+    &amp; = \frac{\sum_{y \in S_{r + 1}} |S_{y,0}|}{2^{r + 1} \cdot |D_{r + 1}|} \\
+    &amp; = \frac{\sum_{y \in S_{r + 1}} |S_{y,0}|}{|D_{0}|}
+\end{aligned}
+\end{split}\]</div>
+<p>The numerator <span class="math notranslate nohighlight">\(\sum_{y \in S_{r + 1}} |S_{y,0}|\)</span> in the above equation represents the number of points in <span class="math notranslate nohighlight">\(D_0\)</span> that satisfy the <span class="math notranslate nohighlight">\((r + 1)\)</span>-th folding correctly, and also pass the folding checks for <span class="math notranslate nohighlight">\((f_0, \ldots, f_r)\)</span>. Equation (3) becomes</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{y \in S_{r + 1}} |S_{y,0}| \ge \alpha \cdot |D_{0}|
+\]</div>
+<p>This is completely consistent with equation (2) in the definition of <span class="math notranslate nohighlight">\(\alpha\)</span>-good. Next, following the soundness proof approach introduced in the previous article, since the multilinear polynomial <span class="math notranslate nohighlight">\(P_{r+1}\)</span> corresponding to <span class="math notranslate nohighlight">\(p_{r+1}(X)\)</span> satisfies the sumcheck constraint, it satisfies</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    L((\omega_1, \ldots, \omega_{r+1}), (\lambda_1, \ldots, \lambda_{r + 1})) \cdot &amp; P_{r+1}(\omega_{r + 2}, \ldots, \omega_n) = q_{r}(\lambda_{r + 1}) \\
+    &amp; =  L((\omega_1, \ldots, \omega_{r + 1}), (\lambda_1, \ldots, \lambda_{r + 1})) \cdot \Lambda_{r}(\lambda_{r + 1})
+\end{aligned} 
+\end{split}\]</div>
+<p>This leads to</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    L((\omega_1, \ldots, \omega_{r}), (\lambda_1, \ldots, \lambda_{r})) \cdot L(\omega_{r+1}, \lambda_{r + 1}) \cdot &amp; P_{r+1}(\omega_{r + 2}, \ldots, \omega_n)  \\
+    &amp; =   L((\omega_1, \ldots, \omega_{r}), (\lambda_1, \ldots, \lambda_{r})) \cdot L(\omega_{r+1}, \lambda_{r + 1}) \cdot \Lambda_{r}(\lambda_{r + 1})
+\end{aligned} 
+\end{split}\]</div>
+<p>For the choice of <span class="math notranslate nohighlight">\(\lambda_{r + 1}\)</span>, there is a <span class="math notranslate nohighlight">\(1/|F|\)</span> probability that <span class="math notranslate nohighlight">\(L(\omega_{r+1}, \lambda_{r + 1}) = 0\)</span>, making the above equation hold. Therefore, with a probability exceeding</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon_{r + 1} - \frac{1}{|F|} = \varepsilon(\mathcal{C}_{i + 1}, 1, B_{r + 1}, \theta)
+\]</div>
+<p>polynomials <span class="math notranslate nohighlight">\(p_{r+1}' = p_{r + 1} - \Lambda_r(\lambda_{r + 1}) \in \mathcal{F}_{r + 1}'\)</span>, and <span class="math notranslate nohighlight">\(f_{r,0}' = f_{r,0} - \Lambda_r(0)\)</span>, <span class="math notranslate nohighlight">\(f_{r,1}' = f_{r,1} - \Lambda_r(1)\)</span> satisfy</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0}' + \lambda_{r + 1} \cdot f_{r,1}', p_{r + 1}') \ge \alpha
+\]</div>
+<p>The above satisfied condition can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr \left[ \lambda_{r+1}: \quad
+    \begin{array}{c}
+        \exists p_{r + 1}' \in \mathcal{F}_{r+1}' \text{  s.t.  }  \\
+       \mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0}' + \lambda_{r + 1} \cdot f_{r,1}', p_{r + 1}') \ge \alpha
+    \end{array}
+    \right] &gt; \varepsilon(\mathcal{C}_{i + 1}, 1, B_{r + 1}, \theta)
+\end{aligned}
+\end{split}\]</div>
+<p>This also satisfies the conditions of the weighted correlated agreement theorem [H24, Theorem 4], so we can obtain polynomials <span class="math notranslate nohighlight">\(p_{r,0}'(X), p_{r,1}'(X) \in \mathcal{F}_{r+1}'\)</span>, and a set <span class="math notranslate nohighlight">\(A_{r + 1} \subseteq D_{r+1}\)</span> satisfying:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\nu_r(A_{r+1}) \ge 1 - \theta\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p_{r,0}'(X)|_{A_{r+1}} = f_{r,0}'(X)|_{A_{r+1}}\)</span>, <span class="math notranslate nohighlight">\(p_{r,1}'(X)|_{A_{r+1}} = f_{r,1}'(X)|_{A_{r+1}}\)</span></p></li>
+</ol>
+<p>Now that we have found polynomials <span class="math notranslate nohighlight">\(p_{r,0}'(X), p_{r,1}'(X)\)</span>, there exist polynomials</p>
+<div class="math notranslate nohighlight">
+\[
+p_{r,0}(X) = p_{r,0}'(X) + \Lambda_r(0), \quad p_{r,1}(X) = p_{r,1}'(X) + \Lambda_r(1) \in \mathcal{F}_{r+1}
+\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[
+f_{r,0}(X) = f_{r,0}'(X) + \Lambda_r(0), \quad f_{r,1}(X) = f_{r,1}'(X) + \Lambda_r(1)
+\]</div>
+<p>According to conclusion 2 given by correlated agreement, we can get</p>
+<div class="math notranslate nohighlight">
+\[
+p_{r,0}(X)|_{A_{r+1}} = f_{r,0}(X)|_{A_{r+1}}, \quad p_{r,1}(X)|_{A_{r+1}} = f_{r,1}(X)|_{A_{r+1}}
+\]</div>
+<p>For the multilinear polynomials <span class="math notranslate nohighlight">\(P_{r,0}\)</span> and <span class="math notranslate nohighlight">\(P_{r,1}\)</span> corresponding to <span class="math notranslate nohighlight">\(p_{r,0}(X), p_{r,1}(X)\)</span>, according to the definition of <span class="math notranslate nohighlight">\(\mathcal{F}_{r}'\)</span>, we can get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    P_{r,0}(\omega_{r+2}, \ldots, \omega_{n}) = \Lambda_r(0) \\
+    P_{r,1}(\omega_{r+2}, \ldots, \omega_{n}) = \Lambda_r(1)
+\end{aligned}
+\end{split}\]</div>
+<p>Obtain <span class="math notranslate nohighlight">\(A_r = \pi^{-1}(A_{r+1}) \subseteq D_r\)</span> by inverse mapping the points in set <span class="math notranslate nohighlight">\(A_{r+1}\)</span> through <span class="math notranslate nohighlight">\(\pi\)</span>. At these points, <span class="math notranslate nohighlight">\(f_r\)</span> must be consistent with</p>
+<div class="math notranslate nohighlight">
+\[
+p_r(X) = p_{r,0}(X^2) + X \cdot p_{r,1}(X^2) \in \mathcal{F}_{r}
+\]</div>
+<p>For the multilinear polynomial <span class="math notranslate nohighlight">\(P_r\)</span> corresponding to <span class="math notranslate nohighlight">\(p_r(X)\)</span>, it satisfies</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    P_r(\omega_{r + 1}, \omega_{r + 2}, \ldots, \omega_n) &amp; = (1 - \omega_{r + 1}) \cdot P_{r,0}(\omega_{r+2}, \ldots, \omega_{n}) + \omega_{r + 1} \cdot P_{r,1}(\omega_{r+2}, \ldots, \omega_{n}) \\
+    &amp; = (1 - \omega_{r + 1}) \cdot \Lambda_r(0) + \omega_{r + 1} \cdot \Lambda_r(1) \\
+    &amp; = L(\omega_{r + 1}, 0) \cdot \Lambda_r(0) +  L(\omega_{r + 1}, 1) \cdot \Lambda_r(1)
+\end{aligned}
+\end{split}\]</div>
+<p>From this, we can conclude that the sumcheck in the <span class="math notranslate nohighlight">\(r\)</span>-th round is satisfied:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    L(\omega_{1}, \ldots, \omega_{r}, \lambda_1, \ldots, \lambda_r) &amp;\cdot P_r(\omega_{r + 1}, \omega_{r + 2}, \ldots, \omega_n)  \\
+    &amp; = L(\omega_{1}, \ldots, \omega_{r}, \lambda_1, \ldots, \lambda_r) \cdot L(\omega_{r + 1}, 0) \cdot \Lambda_r(0) \\
+    &amp; \quad +  L(\omega_{1}, \ldots, \omega_{r}, \lambda_1, \ldots, \lambda_r) \cdot L(\omega_{r + 1}, 1) \cdot \Lambda_r(1) \\
+    &amp; = q_r(0) + q_r(1) \\
+    &amp; = q_{r - 1}(\lambda_r)
+\end{aligned}
+\end{split}\]</div>
+<p>Now that we have obtained that the sumcheck in the <span class="math notranslate nohighlight">\(r\)</span>-th round is satisfied, we need to consider whether the folding relation is satisfied. Consider <span class="math notranslate nohighlight">\(x \in \pi^{-1}(A_r)\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; \frac{|\{x \in \pi^{-r}(A_r): \text{all folding checks hold for } f_0, \ldots, f_r \}|}{|D_0|} \\
+    &amp; = \frac{1}{|D_0|} \cdot \sum_{y \in A_{r+1}} \delta(y) \cdot |\pi^{-(r+1)}(y)| \\
+    &amp; = \frac{2^{r + 1}}{|D_0|} \cdot \sum_{y \in A_{r+1}} \delta(y) \\
+    &amp; =  \frac{1}{|D_{r + 1}|} \cdot \sum_{y \in A_{r+1}} \delta(y) \\
+    &amp; = \nu_r(A_{r+1})
+\end{aligned}
+\end{split}\]</div>
+<p>We have already obtained <span class="math notranslate nohighlight">\(\nu_r(A_{r+1}) \ge \alpha\)</span> through the correlated agreement theorem, so the proportion of <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(D_0\)</span> that can satisfy the folding check exceeds <span class="math notranslate nohighlight">\(\alpha\)</span>. Combining the sumcheck constraint and folding relation in the <span class="math notranslate nohighlight">\(r\)</span>-th round, we get that <span class="math notranslate nohighlight">\((f_0, \Lambda_0, \ldots, f_r, \Lambda_r)\)</span> is <span class="math notranslate nohighlight">\(\alpha\)</span>-good for <span class="math notranslate nohighlight">\((\lambda_0, \ldots, \lambda_r)\)</span>. Since the probability of generating such a trace set is</p>
+<div class="math notranslate nohighlight">
+\[
+\operatorname{Pr}[\mathfrak{T}]&gt;\varepsilon_0+\ldots+\varepsilon_r
+\]</div>
+<p>it satisfies the conditions of the lemma. By the induction hypothesis, the lemma holds in the <span class="math notranslate nohighlight">\(r\)</span>-th round, so we can conclude that <span class="math notranslate nohighlight">\((g_0, \ldots, g_M) \in \mathcal{R}\)</span>. This proves that the lemma also holds in the <span class="math notranslate nohighlight">\((r + 1)\)</span>-th round. Thus, the lemma is proved. <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-lemma-1">Proof of Lemma 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1367 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Hyrax-PCS &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'hyrax-pcs/hyrax-01';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fhyrax-pcs/hyrax-01.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/hyrax-pcs/hyrax-01.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Hyrax-PCS</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-of-mle-polynomials">1. Evaluation Proof of MLE Polynomials</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-input">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inner-product-protocol">Inner Product Protocol</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-ipa">2. Mini-IPA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-goal">Proof Goal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-parameters">Public Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#witnesses">Witnesses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-protocol-idea">Basic Protocol Idea</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol">Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#square-root-inner-product-argument">3. Square-root inner product argument</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Witness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commitment">Commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-protocol">Evaluation Proof Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bulletproofs-optimization">4. Bulletproofs Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Public Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Verification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-protocol">5. Complete Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Public Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-commitment">Calculating Commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Evaluation Proof Protocol</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Witness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-protocol">Proof Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3-repeated-i-0-1-n-1">Round 3 (Repeated <span class="math notranslate nohighlight">\(i=0, 1, ..., n-1\)</span>).</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round  5.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-hyrax-pcs">
+<h1>Notes on Hyrax-PCS<a class="headerlink" href="#notes-on-hyrax-pcs" title="Link to this heading">#</a></h1>
+<p>This article briefly introduces the principles of Hyrax-PCS, whose security assumption is Discrete Log. Its main idea is to prove an Inner Product and adopts the recursive folding approach to gradually fold two vectors of length <span class="math notranslate nohighlight">\(n\)</span> into two vectors of length <span class="math notranslate nohighlight">\(n/2\)</span>, reducing the inner product calculation to the inner product calculation of vectors with only half the length. The recursive folding idea mainly comes from [BCC+16] and [BBB+18], with the main problem being that the Verifier’s computational complexity is <span class="math notranslate nohighlight">\(O(n)\)</span>. To make Hyrax meet the requirements of zkSNARK, Hyrax rearranges the vector into a <span class="math notranslate nohighlight">\(\sqrt{n}\times\sqrt{n}\)</span> matrix, then reduces the inner product calculation to the inner product calculation of vectors with length <span class="math notranslate nohighlight">\(\sqrt{n}\)</span>. This results in the Verifier’s computational complexity being optimized to <span class="math notranslate nohighlight">\(O(\sqrt{n})\)</span>. At the same time, after optimization by [BCC+16], Hyrax’s Proof size (communication complexity) is also optimized to <span class="math notranslate nohighlight">\(O(\log{n})\)</span>.</p>
+<section id="evaluation-proof-of-mle-polynomials">
+<h2>1. Evaluation Proof of MLE Polynomials<a class="headerlink" href="#evaluation-proof-of-mle-polynomials" title="Link to this heading">#</a></h2>
+<p>Whether the MLE polynomial is in Coefficients form or Evaluation form, we can prove the evaluation of the polynomial at certain points through the “Inner Product Argument”.</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1, ..., X_{n-1}) = \sum_{i=0}^{2^n-1} a_i \cdot \tilde{eq}(\mathsf{bits}(i), X_0, X_1, ..., X_{n-1})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1, ..., X_{n-1}) = \sum_{i=0}^{2^n-1} c_i \cdot X_0^{i_0} \cdot X_1^{i_1} \cdot ... \cdot X_{n-1}^{i_{n-1}},  \quad \text{where } \mathsf{bits}(i) = (i_0, i_1, ..., i_{n-1})
+\]</div>
+<p>If we have an inner product proof protocol, we can easily construct an evaluation proof for MLE polynomials.</p>
+<section id="public-input">
+<h3>Public Input<a class="headerlink" href="#public-input" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Commitment of <span class="math notranslate nohighlight">\(\vec{a}\)</span>: <span class="math notranslate nohighlight">\(C_a=\mathsf{cm}(a_0, a_1, ..., a_{2^n-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, ..., u_{n-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(u_0, u_1, ..., u_{n-1})\)</span></p></li>
+</ol>
+</section>
+<section id="witness">
+<h3>Witness<a class="headerlink" href="#witness" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{a}\)</span></p></li>
+</ol>
+</section>
+<section id="inner-product-protocol">
+<h3>Inner Product Protocol<a class="headerlink" href="#inner-product-protocol" title="Link to this heading">#</a></h3>
+<p>Prover computes vector <span class="math notranslate nohighlight">\(\vec{e}\)</span>, length <span class="math notranslate nohighlight">\(2^n\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+e_0 &amp;= \tilde{eq}(\mathsf{bits}(0), u_0, u_1, ..., u_{n-1}) \\
+e_1 &amp;= \tilde{eq}(\mathsf{bits}(1), u_0, u_1, ..., u_{n-1}) \\
+\cdots \\
+e_{2^n-1} &amp;= \tilde{eq}(\mathsf{bits}(2^n-1), u_0, u_1, ..., u_{n-1}) \\
+\end{aligned}
+\end{split}\]</div>
+<p>Prover and Verifier use an Inner Product Argument protocol to prove that the inner product of <span class="math notranslate nohighlight">\(\vec{a}\)</span> and <span class="math notranslate nohighlight">\(\vec{e}\)</span> equals <span class="math notranslate nohighlight">\(v\)</span>. Below, we introduce a simple inner product proof that proves the inner product of two hidden vectors equals a public value.</p>
+</section>
+</section>
+<section id="mini-ipa">
+<h2>2. Mini-IPA<a class="headerlink" href="#mini-ipa" title="Link to this heading">#</a></h2>
+<p>Let’s start with the simplest case. Suppose Prover has two vectors <span class="math notranslate nohighlight">\(\vec{a}\)</span> and <span class="math notranslate nohighlight">\(\vec{b}\)</span>, satisfying <span class="math notranslate nohighlight">\(\langle \vec{a}, \vec{b} \rangle = c\)</span> (note: <span class="math notranslate nohighlight">\(c\)</span> is a <em>public value</em> here).</p>
+<section id="proof-goal">
+<h3>Proof Goal<a class="headerlink" href="#proof-goal" title="Link to this heading">#</a></h3>
+<p>Prover has knowledge <span class="math notranslate nohighlight">\((\vec{a},\vec{b})\)</span> (two vectors of equal length, denoted as <span class="math notranslate nohighlight">\(m\)</span>, so there are <span class="math notranslate nohighlight">\(2m\)</span> witnesses in total), and <span class="math notranslate nohighlight">\(\langle \vec{a}, \vec{b} \rangle = c\)</span></p>
+</section>
+<section id="public-parameters">
+<h3>Public Parameters<a class="headerlink" href="#public-parameters" title="Link to this heading">#</a></h3>
+<p>To compute the Pedersen Commitment of vectors, we need to select a set of random group elements <span class="math notranslate nohighlight">\(g_1, g_2, g_3, \ldots, g_m, h \in \mathbb{G}\)</span>.</p>
+</section>
+<section id="id1">
+<h3>Public Input<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Inner product result <span class="math notranslate nohighlight">\(c\)</span></p></li>
+<li><p>Commitment of vector <span class="math notranslate nohighlight">\(\vec{a}\)</span>: <span class="math notranslate nohighlight">\(C_a=\mathsf{cm}(\vec{a};\rho_a)\)</span>,</p></li>
+<li><p>Commitment of vector <span class="math notranslate nohighlight">\(\vec{b}\)</span>: <span class="math notranslate nohighlight">\(C_b=\mathsf{cm}(\vec{b};\rho_b)\)</span></p></li>
+</ol>
+</section>
+<section id="witnesses">
+<h3>Witnesses<a class="headerlink" href="#witnesses" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\((\vec{a}, \rho_a)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((\vec{b}, \rho_b)\)</span></p></li>
+</ol>
+</section>
+<section id="basic-protocol-idea">
+<h3>Basic Protocol Idea<a class="headerlink" href="#basic-protocol-idea" title="Link to this heading">#</a></h3>
+<p>Prover introduces two “blinder vectors”, <span class="math notranslate nohighlight">\(\vec{r}\)</span> and <span class="math notranslate nohighlight">\(\vec{s}\)</span>. These two vectors are flattened into one vector through a challenge number <span class="math notranslate nohighlight">\(\mu\)</span> (from Verifier):</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{a}' = \vec{r}+ \mu\cdot \vec{a}  \qquad \vec{b}' = \vec{s}+ \mu\cdot \vec{b}
+\]</div>
+<p>Then calculate the inner product (or dot product) of <span class="math notranslate nohighlight">\(\vec{a}'\cdot \vec{b}'\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\langle \vec{a}', \vec{b}' \rangle = (\vec{r}+ \mu\cdot \vec{a})(\vec{s}+ \mu\cdot \vec{b}) =\mu^2(\langle \vec{a}, \vec{b} \rangle) + \mu(\langle \vec{a}, \vec{s} \rangle + \langle \vec{b}, \vec{r} \rangle) + \langle \vec{r}, \vec{s} \rangle
+\]</div>
+<p>Observing <span class="math notranslate nohighlight">\(\vec{a}'\)</span> and <span class="math notranslate nohighlight">\(\vec{b}'\)</span>, we find that both vectors have <span class="math notranslate nohighlight">\(\mu\)</span> terms. After flattening the vectors and performing the inner product operation, we get a <strong>quadratic polynomial</strong> in <span class="math notranslate nohighlight">\(\mu\)</span>, where the “coefficient” of the <span class="math notranslate nohighlight">\(\mu^2\)</span> term is exactly the inner product of vectors <span class="math notranslate nohighlight">\(\vec{a}\)</span> and <span class="math notranslate nohighlight">\(\vec{b}\)</span> (should equal <span class="math notranslate nohighlight">\(c\)</span>), and the constant term <span class="math notranslate nohighlight">\(\vec{r}\cdot\vec{s}\)</span> is exactly the inner product of the two “blinder vectors”. However, the coefficient of <span class="math notranslate nohighlight">\(\mu\)</span> looks somewhat <em>messy</em>. We can ignore the messy coefficient of <span class="math notranslate nohighlight">\(\mu\)</span> for now and focus on the coefficient of the <span class="math notranslate nohighlight">\(\mu^2\)</span> term. According to the Schwartz-Zippel theorem, as long as Prover can successfully respond to Verifier’s challenge, the coefficients of all terms in the polynomial must be (with high probability) correct.</p>
+<p>We let Prover not only commit to the “blinder vectors” in the first step of the protocol but also commit to the coefficients of the polynomial (in <span class="math notranslate nohighlight">\(\mu\)</span>) after expanding the inner product. Then in the third step, Prover only needs to send the two flattened vectors <span class="math notranslate nohighlight">\(\vec{a}'\)</span> and <span class="math notranslate nohighlight">\(\vec{b}'\)</span>, which is just right. Verifier first verifies if <span class="math notranslate nohighlight">\(a'\)</span> can open <span class="math notranslate nohighlight">\(A'\)</span>, then verifies if <span class="math notranslate nohighlight">\(b'\)</span> can open <span class="math notranslate nohighlight">\(B'\)</span>, and finally Verifier verifies if <span class="math notranslate nohighlight">\(\vec{a}'\cdot\vec{b}'\)</span> can open the commitment <span class="math notranslate nohighlight">\(C'\)</span>. Let’s see how the protocol is specifically defined:</p>
+</section>
+<section id="protocol">
+<h3>Protocol<a class="headerlink" href="#protocol" title="Link to this heading">#</a></h3>
+<section id="round-1">
+<h4>Round 1<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h4>
+<p>Prover sends commitments <span class="math notranslate nohighlight">\(C_r\)</span> and <span class="math notranslate nohighlight">\(C_s\)</span> of two “blinder vectors” <span class="math notranslate nohighlight">\(\vec{r}\)</span> and <span class="math notranslate nohighlight">\(\vec{s}\)</span>; also sends polynomial coefficient commitments <span class="math notranslate nohighlight">\(C_0\)</span> and <span class="math notranslate nohighlight">\(C_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+C_r&amp;=\mathsf{cm}(\vec{r};\rho_{r}) \\
+C_s&amp;=\mathsf{cm}(\vec{s} ;\rho_{s}) \\
+C_0&amp;=\mathsf{cm}(\langle \vec{r}, \vec{s} \rangle; \rho_0) \\
+C_1&amp;=\mathsf{cm}(\langle \vec{a}, \vec{s} \rangle + \langle \vec{b}, \vec{r} \rangle; \rho_1) \\
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="round-2">
+<h4>Round 2<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier replies with a challenge number <span class="math notranslate nohighlight">\(\mu\)</span></p></li>
+<li><p>Prover sends two flattened vectors <span class="math notranslate nohighlight">\(\vec{a}'\)</span>, <span class="math notranslate nohighlight">\(\vec{b}'\)</span>, three random numbers mixed with <span class="math notranslate nohighlight">\(\mu\)</span>: <span class="math notranslate nohighlight">\(\rho'_a\)</span>, <span class="math notranslate nohighlight">\(\rho'_b\)</span>, <span class="math notranslate nohighlight">\(\rho'_{ab}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\vec{a}'&amp;=\vec{r} + \mu \cdot \vec{a}\\
+\vec{b}'&amp;=\vec{s} + \mu \cdot \vec{b}\\
+\end{aligned}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\rho'_a&amp;=\rho_{r} + \mu \cdot \rho_a \\
+\rho'_b&amp;=\rho_{s} + \mu \cdot \rho_b \\
+\rho'_{ab}&amp;=\rho_0 + \mu \cdot \rho_1 \\
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="verification">
+<h4>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h4>
+<p>Verifier homomorphically verifies in group <span class="math notranslate nohighlight">\(\mathbb{G}\)</span>: <span class="math notranslate nohighlight">\(\vec{a}'\)</span> and <span class="math notranslate nohighlight">\(\vec{b}'\)</span>, and their inner product</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathsf{cm}(\vec{a}'; \rho'_a)&amp;\overset{?}{=} C_r + \mu\cdot C_a \\
+\mathsf{cm}(\vec{b}'; \rho'_b)&amp;\overset{?}{=} C_s + \mu \cdot C_b \\
+\end{aligned}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{cm}(\langle \vec{a}', \vec{b}' \rangle; \rho'_{ab})\overset{?}{=} \mu^2\cdot\mathsf{cm}(c;0) + \mu\cdot C_1 + C_0
+\]</div>
+<p>The biggest problem with this protocol is that Verifier’s computational complexity is <span class="math notranslate nohighlight">\(O(n)\)</span>, because Verifier needs to compute <span class="math notranslate nohighlight">\(\langle \vec{a}', \vec{b}' \rangle\)</span>. Also, <span class="math notranslate nohighlight">\(\vec{b}\)</span> is hidden information, but for the MLE Evaluation proof protocol, <span class="math notranslate nohighlight">\(\vec{e}\)</span> (computed from <span class="math notranslate nohighlight">\(\vec{u}\)</span>) is a public value, so we need to adjust the protocol.</p>
+</section>
+</section>
+</section>
+<section id="square-root-inner-product-argument">
+<h2>3. Square-root inner product argument<a class="headerlink" href="#square-root-inner-product-argument" title="Link to this heading">#</a></h2>
+<p>The Hyrax paper proposes a simple and direct approach to reduce Verifier’s computational complexity to <span class="math notranslate nohighlight">\(O(\sqrt{n})\)</span>. A Sublinear Verifier is a basic requirement of zkSNARK. We still only consider the Coefficients form of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, i.e., <span class="math notranslate nohighlight">\(\vec{c}\)</span> is the coefficient of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>.</p>
+<p>We assume <span class="math notranslate nohighlight">\(n=4\)</span>, so <span class="math notranslate nohighlight">\(\vec{a}\)</span> has a length of 16, and we can arrange this vector into a matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+c_0 &amp; c_1 &amp; c_2 &amp; c_3 \\
+c_4 &amp; c_5 &amp; c_6 &amp; c_7 \\
+c_8 &amp; c_9 &amp; c_{10} &amp; c_{11} \\
+c_{12} &amp; c_{13} &amp; c_{14} &amp; c_{15}
+\end{bmatrix}
+\end{split}\]</div>
+<p>The MLE polynomial represented by <span class="math notranslate nohighlight">\(\vec{a}\)</span> can be expressed in the following form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\tilde{f}(X_0, X_1, X_2, X_3) = 
+\begin{bmatrix}
+1 &amp; X_2 &amp; X_3 &amp; X_2X_3 \\
+\end{bmatrix}
+\begin{bmatrix}
+c_0 &amp; c_1 &amp; c_2 &amp; c_3 \\
+c_4 &amp; c_5 &amp; c_6 &amp; c_7 \\
+c_8 &amp; c_9 &amp; c_{10} &amp; c_{11} \\
+c_{12} &amp; c_{13} &amp; c_{14} &amp; c_{15}
+\end{bmatrix}
+\begin{bmatrix}
+1 \\
+X_0 \\
+X_1 \\
+X_0X_1 \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>The result of this matrix calculation is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, X_2, X_3) = c_0 + c_1X_0 + c_2X_1 + c_3X_0X_1 + c_4X2 + \cdots + c_{14}X_1X_2X_3 + c_{15}X_0X_1X_2X_3
+\]</div>
+<p>We first split <span class="math notranslate nohighlight">\(\vec{u}\)</span> into two short vectors:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{u} = (u_0, u_1, u_2, u_3) = (u_0, u_1) \parallel (u_2, u_3)
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2, u_3)\)</span> can be represented as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\tilde{f}(u_0, u_1, u_2, u_3) = \begin{bmatrix}
+1 &amp; u_2 &amp; u_3 &amp; u_2u_3 \\
+\end{bmatrix}
+\begin{bmatrix}
+c_0 &amp; c_1 &amp; c_2 &amp; c_3 \\
+c_4 &amp; c_5 &amp; c_6 &amp; c_7 \\
+c_8 &amp; c_9 &amp; c_{10} &amp; c_{11} \\
+c_{12} &amp; c_{13} &amp; c_{14} &amp; c_{15}
+\end{bmatrix}
+\begin{bmatrix}
+1 \\
+u_0 \\
+u_1 \\
+u_0u_1 \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>Then, we calculate the commitments of the matrix composed of <span class="math notranslate nohighlight">\(\vec{c}\)</span> by rows, obtaining <span class="math notranslate nohighlight">\(C_0, C_1, C_2, C_3\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+C_0 &amp;= \mathsf{cm}(c_0, c_1, c_2, c_3; \rho_0) \\
+C_1 &amp;= \mathsf{cm}(c_4, c_5, c_6, c_7; \rho_1) \\
+C_2 &amp;= \mathsf{cm}(c_8, c_9, c_{10}, c_{11}; \rho_2) \\
+C_3 &amp;= \mathsf{cm}(c_{12}, c_{13}, c_{14}, c_{15}; \rho_3)
+\end{aligned}
+\end{split}\]</div>
+<p>Then we can use <span class="math notranslate nohighlight">\((1, u_2, u_3, u_2u_3)\)</span> and <span class="math notranslate nohighlight">\((C_0, C_1, C_2, C_3)\)</span> to perform an inner product operation, obtaining <span class="math notranslate nohighlight">\(C^*\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+C^* = C_0 + u_2C_1 + u_3C_2 + u_2u_3C_3
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(C^*\)</span> can be seen as the inner product of the column vector of matrix <span class="math notranslate nohighlight">\(M_c\)</span> and <span class="math notranslate nohighlight">\((1, u_2, u_3, u_2u_3)\)</span>, denoted as <span class="math notranslate nohighlight">\(\vec{d}=(d_0, d_1, d_2, d_3)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+d_0 &amp;= c_0 + c_4\cdot u_0 + c_8\cdot u_2 + c_{12}\cdot u_2u_0 \\
+d_1 &amp;= c_1 + c_5\cdot u_0 + c_9\cdot u_2 + c_{13}\cdot u_2u_0 \\
+d_2 &amp;= c_2 + c_6\cdot u_0 + c_{10}\cdot u_2 + c_{14}\cdot u_2u_0 \\
+d_3 &amp;= c_3 + c_7\cdot u_0 + c_{11}\cdot u_2 + c_{15}\cdot u_2u_0 \\
+\end{split}
+\end{split}\]</div>
+<p>It’s easy to verify:</p>
+<div class="math notranslate nohighlight">
+\[
+C^* = \mathsf{cm}(d_0, d_1, d_2, d_3; \rho^*)
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\rho^*=\rho_0 + \rho_1u_2 + \rho_2u_3 + \rho_3u_2u_3\)</span>.</p>
+<p>Using this approach, we construct a simple MLE polynomial commitment scheme.</p>
+<section id="id2">
+<h3>Public Input<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Commitment of <span class="math notranslate nohighlight">\(\vec{a}\)</span>: <span class="math notranslate nohighlight">\(C_a=\mathsf{cm}(a_0, a_1, ..., a_{2^n-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, ..., u_{n-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(u_0, u_1, ..., u_{n-1})\)</span></p></li>
+</ol>
+</section>
+<section id="id3">
+<h3>Witness<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{a}\)</span></p></li>
+</ol>
+</section>
+<section id="commitment">
+<h3>Commitment<a class="headerlink" href="#commitment" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Prover rearranges <span class="math notranslate nohighlight">\(\vec{a}\)</span> into a matrix <span class="math notranslate nohighlight">\(M_a\in\mathbb{F}_p^{l\times h}\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+M_a =
+\begin{bmatrix}
+a_0 &amp; a_1 &amp; a_2 &amp; \cdots &amp; a_{l-1} \\
+a_l &amp; a_{l+1} &amp; a_{l+2} &amp; \cdots &amp; a_{2l-1} \\
+a_{2l} &amp; a_{2l+1} &amp; a_{2l+2} &amp; \cdots &amp; a_{3l-1} \\
+a_{(h-1)l} &amp; a_{(h-1)l+1} &amp; a_{(h-1)l+2} &amp; \cdots &amp; a_{hl-1} \\
+\end{bmatrix}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover calculates commitments <span class="math notranslate nohighlight">\(C_0, C_1, ..., C_{h-1}\)</span> by row</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+C_0 &amp;= \mathsf{cm}(a_0, a_1, ..., a_{l-1}; \rho_0) \\
+C_1 &amp;= \mathsf{cm}(a_l, a_{l+1}, ..., a_{2l-1}; \rho_1) \\
+C_2 &amp;= \mathsf{cm}(a_{2l}, a_{2l+1}, ..., a_{3l-1}; \rho_2) \\
+\cdots\ &amp;=\quad \cdots \\
+C_{h-1} &amp;= \mathsf{cm}(a_{(h-1)l}, a_{(h-1)l+1}, ..., a_{hl-1}; \rho_{h-1}) \\
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="evaluation-proof-protocol">
+<h3>Evaluation Proof Protocol<a class="headerlink" href="#evaluation-proof-protocol" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Prover and Verifier split <span class="math notranslate nohighlight">\(\vec{u}\)</span> into two short vectors, represented by <span class="math notranslate nohighlight">\(\vec{u}_L\)</span> and <span class="math notranslate nohighlight">\(\vec{u}_R\)</span> respectively:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\vec{u}_L &amp;= (u_0, u_1, ..., u_{\log(l)-1}) \\
+\vec{u}_R &amp;= (u_{\log(l)}, u_{\log(l)+1}, ..., u_{n-1}) \\
+\end{aligned}
+\end{split}\]</div>
+<p>Obviously</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{u} = \vec{u}_L \parallel \vec{u}_R
+\]</div>
+<section id="id4">
+<h4>Round 1<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Prover calculates <span class="math notranslate nohighlight">\(\vec{e}=(e_0, e_1, ..., e_{h-1})\)</span>, length <span class="math notranslate nohighlight">\(h\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+e_0 &amp;= \tilde{eq}(\mathsf{bits}(0), \vec{u}_R) \\
+e_1 &amp;= \tilde{eq}(\mathsf{bits}(1), \vec{u}_R) \\
+\cdots\ &amp;=\quad \cdots \\
+e_{h-1} &amp;= \tilde{eq}(\mathsf{bits}(h-1), \vec{u}_R) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover calculates the matrix multiplication of <span class="math notranslate nohighlight">\(\vec{e}\)</span> and <span class="math notranslate nohighlight">\(M_a\)</span>, obtaining a new vector <span class="math notranslate nohighlight">\(\vec{b}\)</span>, length <span class="math notranslate nohighlight">\(l\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+b_0 &amp;= \langle \vec{e}, (a_0, a_l, ..., a_{(h-1)l}) \rangle \\
+b_1 &amp;= \langle \vec{e}, (a_1, a_{l+1}, ..., a_{(h-1)l+1}) \rangle \\
+\cdots\ &amp;=\quad \cdots \\
+b_{l-1} &amp;= \langle \vec{e}, (a_{l-1}, a_{l+l-1}, ..., a_{(h-1)l+l-1}) \rangle \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover calculates the commitment <span class="math notranslate nohighlight">\(C^*\)</span> of <span class="math notranslate nohighlight">\(\vec{b}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C^* = \mathsf{cm}(\vec{b}; \rho^*)
+\]</div>
+</section>
+<section id="id5">
+<h4>Round 2.<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<p>Prover and Verifier conduct an Inner Product Argument protocol to complete the inner product proof of <span class="math notranslate nohighlight">\(\vec{b}\)</span> and <span class="math notranslate nohighlight">\(\vec{d}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+d_0 &amp;= \tilde{eq}(\mathsf{bits}(0), \vec{u}_L) \\
+d_1 &amp;= \tilde{eq}(\mathsf{bits}(1), \vec{u}_L) \\
+\cdots\ &amp;=\quad \cdots \\
+d_{h-1} &amp;= \tilde{eq}(\mathsf{bits}(h-1), \vec{u}_L) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple">
+<li><p>Prover first samples a random number vector <span class="math notranslate nohighlight">\(\vec{r}\)</span>, used to protect the information of <span class="math notranslate nohighlight">\(\vec{b}\)</span>, then calculates its commitment:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{r} = \mathsf{cm}(\vec{r}; \rho_{r})
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover calculates the inner product of <span class="math notranslate nohighlight">\(\vec{r}\)</span> and <span class="math notranslate nohighlight">\(\vec{b}\)</span>, obtaining <span class="math notranslate nohighlight">\(v\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+s = \vec{r}\cdot\vec{d}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_0 = \mathsf{cm}(s; \rho_s)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_1 = \mathsf{cm}(0; \rho_t)
+\]</div>
+</section>
+<section id="round-3">
+<h4>Round 3.<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier sends a random number <span class="math notranslate nohighlight">\(\mu\)</span></p></li>
+<li><p>Prover calculates and sends the following values:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\vec{z_b} = \vec{r} + \mu\cdot\vec{b}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+z_\rho = \rho_r + \mu\cdot\rho^*
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+z_t = \rho_s + \mu^{-1}\cdot\rho_t
+\]</div>
+</section>
+<section id="id6">
+<h4>Verification<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<p>Verifier verifies:</p>
+<div class="math notranslate nohighlight">
+\[
+C_r + \mu\cdot{}C^*\overset{?}{=} \mathsf{cm}(\vec{z_b}; z_\rho)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_0 + \mu^{-1}\cdot{}C_1 + \mu\cdot\mathsf{cm}(v; 0)\overset{?}{=} \mathsf{cm}(\langle\vec{z}_b, \vec{d}\rangle; z_t)
+\]</div>
+</section>
+</section>
+</section>
+<section id="bulletproofs-optimization">
+<h2>4. Bulletproofs Optimization<a class="headerlink" href="#bulletproofs-optimization" title="Link to this heading">#</a></h2>
+<p>In the Round-2 of the “inner product proof” protocol (Mini-IPA) mentioned above, since Prover needs to send a vector of length <span class="math notranslate nohighlight">\(l\)</span> (<span class="math notranslate nohighlight">\(\vec{z}_b\)</span>), the overall communication of the protocol is <span class="math notranslate nohighlight">\(O(l)\)</span>. If the vector is quite long, the final proof size will be relatively large. J. Bootle et al. proposed a very interesting idea in the [BCC+16] paper, using a recursive method to gradually fold the proof, achieving <strong>compression of the proof size</strong>.</p>
+<p>Suppose we have a vector <span class="math notranslate nohighlight">\(\vec{a} = (a_1, a_2, a_3, a_4)\)</span> of length 4, we can split it in half into two vectors <span class="math notranslate nohighlight">\(\vec{a}_1 = (a_1, a_2)\)</span> and <span class="math notranslate nohighlight">\(\vec{a}_2 = (a_3, a_4)\)</span>, then stack them vertically to form a matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+a_1 &amp; a_2\\
+a_3 &amp; a_4 \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>Then we perform a “flattening” operation on this <span class="math notranslate nohighlight">\(2\times 2\)</span> matrix (with the help of a random number vector):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+(x, x^{-1})
+\left[
+\begin{array}{ll}
+a_1 &amp;a_2\\
+a_3 &amp;a_4
+\end{array}
+\right]
+= (a_1x + a_3x^{-1},\quad a_2x + a_4x^{-1})
+= \vec{a}'
+\end{split}\]</div>
+<p>As shown in the above formula, we left multiply the matrix by a random number vector <span class="math notranslate nohighlight">\((x, x^{-1})\)</span>, then obtain a vector <span class="math notranslate nohighlight">\(\vec{a}'\)</span> of length 2. We can view this action as a special vertical flattening. This trick is slightly different from the vertical flattening in the previous text, not using the naive flattening vector <span class="math notranslate nohighlight">\((x^0, x^1)\)</span>. We call this action “folding”.</p>
+<p>We can notice that the length of the folded vector <span class="math notranslate nohighlight">\(\vec{a}'\)</span> is only half of <span class="math notranslate nohighlight">\(\vec{a}\)</span>. Doing this recursively, by Verifier continuously sending challenge numbers and Prover repeatedly recursively folding, the vector can eventually be folded into a vector of prime length. However, if we are allowed to append some redundant values to the vector to align the vector length to <span class="math notranslate nohighlight">\(2^k\)</span>, then after <span class="math notranslate nohighlight">\(k\)</span> folds, we can fold the vector into a number with a length of only 1. This is equivalent to performing <strong>horizontal flattening</strong> on a matrix.</p>
+<p>This preliminary idea faces <strong>the first problem</strong>, which is that after the vector is cut in half, the commitment <span class="math notranslate nohighlight">\(A\)</span> of the original vector <span class="math notranslate nohighlight">\(\vec{a}\)</span> seems unusable. So how can Verifier obtain the commitment of the folded vector after Prover performs a folding action? From another perspective, Pedersen commitment, in a sense, is also a kind of inner product, that is, the inner product of the “vector to be committed” and the “base vector”:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{cm}_{\vec{G}}(\vec{a}) = a_1G_1 + a_2G_2 + \cdots + a_mG_m
+\]</div>
+<p>The next trick is crucial. We split the base vector <span class="math notranslate nohighlight">\(\vec{G}\)</span> in the same way, then fold it similarly, but use a <strong>different</strong> “challenge vector”:
+$<span class="math notranslate nohighlight">\(
+(x^{-1}, x)
+\left[
+\begin{array}{ll}
+G_1 &amp;G_2\\
+G_3 &amp;G_4
+\end{array}
+\right]
+= (G_1x^{-1} + G_3x, \quad G_2x^{-1} + G_4x) = \vec{G}'
+\)</span>$</p>
+<p>Please note that the two challenge vectors <span class="math notranslate nohighlight">\((x, x^{-1})\)</span> and <span class="math notranslate nohighlight">\((x^{-1}, x)\)</span> above look <em>symmetric</em>. The purpose of doing this is to create a special constant term. When calculating the inner product of the new vectors <span class="math notranslate nohighlight">\(\vec{a}'\)</span> and <span class="math notranslate nohighlight">\(\vec{G}'\)</span> together, its constant term is exactly the inner product of the original vector <span class="math notranslate nohighlight">\(\vec{a}\)</span> and <span class="math notranslate nohighlight">\(\vec{G}\)</span>. But for the non-constant terms (coefficients of <span class="math notranslate nohighlight">\(x^2\)</span> and <span class="math notranslate nohighlight">\(x^{-2}\)</span> terms), they are some values that look <em>rather messy</em>.</p>
+<p>Let’s expand the calculation. First, we split <span class="math notranslate nohighlight">\(\vec{a}\)</span> into two sub-vectors <span class="math notranslate nohighlight">\(\vec{a}=(\vec{a}_1, \vec{a}_2)\)</span>, <span class="math notranslate nohighlight">\(\vec{G}=(\vec{G}_1, \vec{G}_2)\)</span>, then perform folding respectively to get <span class="math notranslate nohighlight">\(\vec{a}'=\vec{a}_1x + \vec{a}_2x^{-1}\)</span>, <span class="math notranslate nohighlight">\(\vec{G}'=\vec{G}_1x^{-1} + \vec{G}_2x\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\vec{a}'\cdot\vec{G}'= 
+(1,1)\left(\left[
+\begin{array}{cc}
+\vec{a}_1\cdot\vec{G}_1 &amp;  \vec{a}_1\cdot\vec{G}_2 \\
+\vec{a}_2\cdot\vec{G}_1 &amp;  \vec{a}_2\cdot\vec{G}_2
+\end{array}
+\right]
+\circ
+\left[
+\begin{array}{cc}
+1 &amp; x^2 \\
+x^{-2} &amp;  1
+\end{array}
+\right]\right)
+\left(
+\begin{array}{c}
+1\\
+1
+\end{array}
+\right)
+\end{split}\]</div>
+<p>The right side of the above formula is a polynomial in <span class="math notranslate nohighlight">\(x\)</span>, so we can clearly see the coefficients of <span class="math notranslate nohighlight">\(x^2\)</span> and <span class="math notranslate nohighlight">\(x^{-2}\)</span>.</p>
+<p>Next, let’s solve the problem raised above: How to let Verifier calculate the commitment of the folded vector <span class="math notranslate nohighlight">\(\vec{a}'\)</span>:
+$<span class="math notranslate nohighlight">\(
+A'=A + (\vec{a}_1\cdot\vec{G}_2)~x^2 + (\vec{a}_2\cdot\vec{G}_1)~x^{-2}
+\)</span><span class="math notranslate nohighlight">\(
+We let Verifier calculate \)</span>A’=\vec{a}’\cdot \vec{G}’<span class="math notranslate nohighlight">\(. Obviously, Verifier can calculate \)</span>\vec{G}’<span class="math notranslate nohighlight">\( on their own, then Verifier can calculate \)</span>A’<span class="math notranslate nohighlight">\( based on \)</span>\vec{a}’$ sent by Prover.</p>
+<p>The commitment <span class="math notranslate nohighlight">\(A'\)</span> is a polynomial in <span class="math notranslate nohighlight">\(x\)</span>, where the constant term is the commitment <span class="math notranslate nohighlight">\(A\)</span> of the original vector, and the coefficients of the <span class="math notranslate nohighlight">\(x^2\)</span> and <span class="math notranslate nohighlight">\(x^{-2}\)</span> terms can be calculated and sent by Prover. What about the coefficients of the <span class="math notranslate nohighlight">\(x^1\)</span> and <span class="math notranslate nohighlight">\(x^{-1}\)</span> terms? They happen to be <em>zero</em>. Because we cleverly used two symmetric challenge vectors to perform folding operations on <span class="math notranslate nohighlight">\(\vec{a}\)</span> and <span class="math notranslate nohighlight">\(\vec{G}\)</span> respectively, the coefficients of the <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(x^{-1}\)</span> terms are exactly canceled out, while making the constant term equal to the inner product of the original vectors.</p>
+<p>The new commitment <span class="math notranslate nohighlight">\(A'\)</span> is easy to calculate <span class="math notranslate nohighlight">\(A'=A + Lx^2 + Rx^{-2}\)</span>, where <span class="math notranslate nohighlight">\(L=(\vec{a}_1\cdot \vec{G}_2)\)</span>, <span class="math notranslate nohighlight">\(R=(\vec{a}_2\cdot \vec{G}_1)\)</span>. The commitments <span class="math notranslate nohighlight">\(L\)</span> and <span class="math notranslate nohighlight">\(R\)</span> appear to be the result of cross inner products of the two sub-vectors. In this way, the problem is solved. When Prover needs to send a vector <span class="math notranslate nohighlight">\(\vec{v}\)</span> of length <span class="math notranslate nohighlight">\(m\)</span>, Prover can choose to send the vector <span class="math notranslate nohighlight">\(\vec{v}'\)</span> that is <strong>folded and flattened</strong>, which has a length of only <span class="math notranslate nohighlight">\(m/2\)</span>. Then Verifier can also verify the correctness of the original vector by verifying the opening of the folded and flattened vector.</p>
+<p>Recursive folding also has its cost. In addition to Verifier having to calculate <span class="math notranslate nohighlight">\(\vec{G}'\)</span> extra, Prover also has to calculate <span class="math notranslate nohighlight">\(L\)</span> and <span class="math notranslate nohighlight">\(R\)</span> extra, and they also need to add one round of interaction. We can see the complete process of recursive folding through the following recursive folding inner product proof protocol.</p>
+<section id="id7">
+<h3>Public Parameters<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p><span class="math notranslate nohighlight">\(\vec{G}, \vec{H}\in\mathbb{G}^n\)</span>; <span class="math notranslate nohighlight">\(U, T\in\mathbb{G}\)</span></p>
+</section>
+<section id="id8">
+<h3>Public Input<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p><span class="math notranslate nohighlight">\(P = \vec{a}\vec{G} + \vec{b}\vec{H} + cU + \rho T\)</span></p>
+<p><strong>Witnesses</strong>: <span class="math notranslate nohighlight">\(\vec{a}, \vec{b}\in\mathbb{Z}^n_p\)</span>; <span class="math notranslate nohighlight">\(c\in\Z_p\)</span></p>
+<p><strong>Step 1 (Commitment Step)</strong>: Prover sends commitments of two mask vectors <span class="math notranslate nohighlight">\(P_0\)</span> and <span class="math notranslate nohighlight">\(C_1\)</span>, <span class="math notranslate nohighlight">\(C_2\)</span>:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(P_0=\vec{a}_0\vec{G} + \vec{b}_0\vec{H} + \rho_{0}T\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_1=\vec{a}_0\cdot\vec{b}_0\cdot{}U + \rho_{1}T\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_2 = (\vec{a}\cdot\vec{b}_0 + \vec{a}_0\cdot\vec{b})\cdot U + \rho_{2}T\)</span></p></li>
+</ol>
+<p><strong>Step 2 (Challenge)</strong>: Verifier replies with a challenge number <span class="math notranslate nohighlight">\(z\)</span></p>
+<p><strong>Step 3</strong>: Prover calculates the flattened vectors <span class="math notranslate nohighlight">\(\vec{a}'\)</span>, <span class="math notranslate nohighlight">\(\vec{b}'\)</span>, <span class="math notranslate nohighlight">\(\rho'\)</span> with <span class="math notranslate nohighlight">\(z\)</span>, and sends <span class="math notranslate nohighlight">\(\rho_c\)</span></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{a}' = \vec{a} + z\vec{a}_0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{b}' = \vec{b} + z\vec{b}_0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho' = \rho + z\rho_0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho_c = z^2\rho_1 + z\rho_2\)</span></p></li>
+</ol>
+</section>
+<section id="id9">
+<h3>Verification<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>Verifier can calculate <span class="math notranslate nohighlight">\(P'\)</span></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(P' = P + zP_0 + zC_2 + z^2C_1 - \rho_cT\)</span></p></li>
+</ol>
+<p>Thus, Prover and Verifier can continue to run the rIPA protocol to prove <span class="math notranslate nohighlight">\(\vec{a}'\cdot\vec{b}'\overset{?}{=}c'\)</span>, where the commitments of these three values are merged into <span class="math notranslate nohighlight">\(P' = \vec{a}'\vec{G} + \vec{b}'\vec{H} + (\vec{a}'\cdot\vec{b}')U + \rho'T\)</span>.</p>
+</section>
+</section>
+<section id="complete-protocol">
+<h2>5. Complete Protocol<a class="headerlink" href="#complete-protocol" title="Link to this heading">#</a></h2>
+<p>Below is the complete protocol combining recursive folding and Square-root IPA, which supports the Zero-Knowledge property. If the ZK property is not needed, simply remove the <span class="math notranslate nohighlight">\(H\)</span> part related to <span class="math notranslate nohighlight">\(\rho\)</span>.</p>
+<section id="id10">
+<h3>Public Parameters<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(G_0, G_1, G_2, \ldots, G_{2^n-1}, H, U \in \mathbb{G}\)</span>.</p></li>
+</ul>
+</section>
+<section id="calculating-commitment">
+<h3>Calculating Commitment<a class="headerlink" href="#calculating-commitment" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Prover rearranges <span class="math notranslate nohighlight">\(\vec{a}\)</span> into a matrix <span class="math notranslate nohighlight">\(M_a\in\mathbb{F}_p^{l\times h}\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+M_a =
+\begin{bmatrix}
+a_0 &amp; a_1 &amp; a_2 &amp; \cdots &amp; a_{l-1} \\
+a_l &amp; a_{l+1} &amp; a_{l+2} &amp; \cdots &amp; a_{2l-1} \\
+a_{2l} &amp; a_{2l+1} &amp; a_{2l+2} &amp; \cdots &amp; a_{3l-1} \\
+a_{(h-1)l} &amp; a_{(h-1)l+1} &amp; a_{(h-1)l+2} &amp; \cdots &amp; a_{hl-1} \\
+\end{bmatrix}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover calculates commitments <span class="math notranslate nohighlight">\(C_0, C_1, ..., C_{h-1}\)</span> by row</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+C_0 &amp;= \mathsf{cm}(a_0, a_1, ..., a_{l-1}; \rho_0) \\
+C_1 &amp;= \mathsf{cm}(a_l, a_{l+1}, ..., a_{2l-1}; \rho_1) \\
+C_2 &amp;= \mathsf{cm}(a_{2l}, a_{2l+1}, ..., a_{3l-1}; \rho_2) \\
+\cdots\ &amp;=\quad \cdots \\
+C_{h-1} &amp;= \mathsf{cm}(a_{(h-1)l}, a_{(h-1)l+1}, ..., a_{hl-1}; \rho_{h-1}) \\
+\end{aligned}
+\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathsf{cm}(\vec{a};\rho)\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{cm}(\vec{a};\rho) = \sum_{i=0}^{l-1} a_iG_i + \rho H
+\]</div>
+</section>
+<section id="id11">
+<h3>Evaluation Proof Protocol<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+</section>
+<section id="id12">
+<h3>Public Input<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Commitment of <span class="math notranslate nohighlight">\(\vec{a}\)</span>: <span class="math notranslate nohighlight">\((C_0, C_1, ..., C_{h-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, ..., u_{n-1})=\vec{u}_L \parallel \vec{u}_R\)</span>, where <span class="math notranslate nohighlight">\(|\vec{u}_L|=\log(h)\)</span>, <span class="math notranslate nohighlight">\(|\vec{u}_R|=\log(l)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(u_0, u_1, ..., u_{n-1})\)</span></p></li>
+</ol>
+</section>
+<section id="id13">
+<h3>Witness<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{a}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((\rho_0, \rho_1, ..., \rho_{h-1})\)</span></p></li>
+</ol>
+</section>
+<section id="proof-protocol">
+<h3>Proof Protocol<a class="headerlink" href="#proof-protocol" title="Link to this heading">#</a></h3>
+<section id="id14">
+<h4>Round 1<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Prover calculates <span class="math notranslate nohighlight">\(\vec{e}\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+e_0 &amp;= \tilde{eq}(\mathsf{bits}(0), \vec{u}_R) \\
+e_1 &amp;= \tilde{eq}(\mathsf{bits}(1), \vec{u}_R) \\
+\cdots\ &amp;=\quad \cdots \\
+e_{h-1} &amp;= \tilde{eq}(\mathsf{bits}(h-1), \vec{u}_R) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover calculates the matrix multiplication of <span class="math notranslate nohighlight">\(\vec{e}\)</span> and <span class="math notranslate nohighlight">\(M_a\)</span>, obtaining <span class="math notranslate nohighlight">\(\vec{b}\)</span>, length <span class="math notranslate nohighlight">\(l\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+b_0 &amp;= \langle \vec{e}, (a_0, a_l, ..., a_{(h-1)l}) \rangle \\
+b_1 &amp;= \langle \vec{e}, (a_1, a_{l+1}, ..., a_{(h-1)l+1}) \rangle \\
+\cdots\ &amp;=\quad \cdots \\
+b_{l-1} &amp;= \langle \vec{e}, (a_{l-1}, a_{l+l-1}, ..., a_{(h-1)l+l-1}) \rangle \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover calculates the commitment <span class="math notranslate nohighlight">\(C^*\)</span> of <span class="math notranslate nohighlight">\(\vec{b}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C^* = \mathsf{cm}(\vec{b}; \rho^*)
+\]</div>
+</section>
+<section id="id15">
+<h4>Round 2.<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
+<p>Prover and Verifier conduct an IPA protocol to complete the inner product proof of <span class="math notranslate nohighlight">\(\vec{b}\)</span> and <span class="math notranslate nohighlight">\(\vec{d}\)</span>, <span class="math notranslate nohighlight">\(\vec{d}\)</span> is calculated as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+d_0 &amp;= \tilde{eq}(\mathsf{bits}(0), \vec{u}_L) \\
+d_1 &amp;= \tilde{eq}(\mathsf{bits}(1), \vec{u}_L) \\
+\cdots\ &amp;=\quad \cdots \\
+d_{h-1} &amp;= \tilde{eq}(\mathsf{bits}(h-1), \vec{u}_L) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple">
+<li><p>Verifier sends a random number <span class="math notranslate nohighlight">\(\gamma\)</span></p></li>
+<li><p>Prover and Verifier calculate <span class="math notranslate nohighlight">\(U'\in\mathbb{G}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+U' = \gamma\cdot U
+\]</div>
+</section>
+<section id="round-3-repeated-i-0-1-n-1">
+<h4>Round 3 (Repeated <span class="math notranslate nohighlight">\(i=0, 1, ..., n-1\)</span>).<a class="headerlink" href="#round-3-repeated-i-0-1-n-1" title="Link to this heading">#</a></h4>
+<p>First introduce the following symbols, for example, <span class="math notranslate nohighlight">\(\vec{b}_L\)</span> represents the first half of <span class="math notranslate nohighlight">\(\vec{b}\)</span>, <span class="math notranslate nohighlight">\(\vec{b}_R\)</span> represents the second half of <span class="math notranslate nohighlight">\(\vec{b}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned} 
+\vec{b}^{(i)}_L &amp;= (b^{(i)}_0, b^{(i)}_1, ..., b^{(i)}_{2^{n-1}-1}) \\
+\vec{b}^{(i)}_R &amp;= (b^{(i)}_{2^{n-1}}, b^{(i)}_{2^{n-1}+1}, ..., b^{(i)}_{2^n-1}) \\
+\vec{d}^{(i)}_L &amp;= (d^{(i)}_0, d^{(i)}_1, ..., d^{(i)}_{2^{n-1}-1}) \\
+\vec{d}^{(i)}_R &amp;= (d^{(i)}_{2^{n-1}}, d^{(i)}_{2^{n-1}+1}, ..., d^{(i)}_{2^n-1}) \\
+\vec{G}^{(i)}_L &amp;= (G^{(i)}_0, G^{(i)}_1, ..., G^{(i)}_{2^{n-1}-1}) \\
+\vec{G}^{(i)}_R &amp;= (G^{(i)}_{2^{n-1}}, G^{(i)}_{2^{n-1}+1}, ..., G^{(i)}_{2^n-1}) \\
+\end{aligned}
+\end{split}\]</div>
+<p>Note the initial values here, <span class="math notranslate nohighlight">\(\vec{b}^{(0)} = \vec{b}\)</span>, <span class="math notranslate nohighlight">\(\vec{d}^{(0)} = \vec{d}\)</span>, <span class="math notranslate nohighlight">\(\vec{G}^{(0)}_L=\vec{G}_L\)</span>, <span class="math notranslate nohighlight">\(\vec{G}^{(0)}_R=\vec{G}_R\)</span>.</p>
+<ol class="arabic simple">
+<li><p>Prover sends <span class="math notranslate nohighlight">\(L^{(i)}\)</span> and <span class="math notranslate nohighlight">\(R^{(i)}\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+L^{(i)} &amp;= \mathsf{cm}_{\vec{G}^{(i)}_L}(\vec{b}^{(i)}; \rho^{(i)}_L) + \langle\vec{b}^{(i)}_R, \vec{d}^{(i)}_L\rangle\cdot{}U' \\
+R^{(i)} &amp;= \mathsf{cm}_{\vec{G}^{(i)}_R}(\vec{b}^{(i)}; \rho^{(i)}_R) + \langle\vec{b}^{(i)}_L, \vec{d}^{(i)}_R\rangle\cdot{}U' \\
+\end{aligned}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Verifier sends a random number <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span>,</p></li>
+<li><p>Prover calculates and sends the following values:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\vec{b}^{(i+1)} &amp;= \vec{b}^{i}_L + \mu^{(i)}\cdot\vec{b}^{i}_R \\
+\vec{d}^{(i+1)} &amp;= \vec{d}^{i}_L + {\mu^{(i)}}^{-1}\cdot\vec{d}^{i}_R \\
+\end{aligned}
+\end{split}\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Prover and Verifier calculate <span class="math notranslate nohighlight">\(\vec{G}^{(i+1)}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\vec{G}^{(i+1)} &amp;= \vec{G}^{(i)}_L + {\mu^{(i)}}^{-1}\cdot\vec{G}^{(i)}_R \\
+\end{aligned}
+\end{split}\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Prover and Verifier recursively perform Round 3 until <span class="math notranslate nohighlight">\(i=n-1\)</span></p></li>
+<li><p>Prover calculates</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{\rho} = \rho^* + \sum_{i=0}^{n-1}\mu^{(i)}\cdot\rho^{(i)}_L + {\mu^{(i)}}^{-1}\cdot\rho^{(i)}_R
+\]</div>
+</section>
+<section id="round-4">
+<h4>Round 4.<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Prover calculates and sends <span class="math notranslate nohighlight">\(R\)</span>, where <span class="math notranslate nohighlight">\(r, \rho_r\in\mathbb{F}_p\)</span> are random numbers sampled by Prover</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+R = r\cdot(G^{(n-1)} + b^{(n-1)}\cdot{U'}) + \rho_r\cdot{}H
+\]</div>
+</section>
+<section id="round-5">
+<h4>Round  5.<a class="headerlink" href="#round-5" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier sends a random number <span class="math notranslate nohighlight">\(\zeta\in\mathbb{F}_p\)</span></p></li>
+<li><p>Prover calculates <span class="math notranslate nohighlight">\(z\)</span> and <span class="math notranslate nohighlight">\(z_r\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+z = r + \zeta\cdot b^{(n-1)}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+z_r = \rho_r + \zeta\cdot\hat{\rho}
+\]</div>
+</section>
+<section id="id16">
+<h4>Verification<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier calculates <span class="math notranslate nohighlight">\(C^*\)</span> and <span class="math notranslate nohighlight">\(P\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C^* = d_0C_0 + d_1C_1 + ... + d_{h-1}C_{h-1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+P = C^* + \sum_{i=0}^{n-1}\mu^{(i)}L^{(i)} + {\mu^{(i)}}^{-1}R^{(i)}
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Verifier verifies if the following equation holds</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+R + \zeta\cdot P \overset{?}{=} z\cdot (G^{(n-1)} + b^{(n-1)}\cdot{U'}) + z_r\cdot{}H
+\]</div>
+</section>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>[WTSTW16] Riad S. Wahby, Ioanna Tzialla, abhi shelat, Justin Thaler, and Michael Walfish. “Doubly-efficient zkSNARKs without trusted setup.”  In 2018 IEEE Symposium on Security and Privacy (SP), pp. 926-943. IEEE, 2018.  <a class="reference external" href="https://eprint.iacr.org/2016/263">https://eprint.iacr.org/2016/263</a></p></li>
+<li><p>[BBB+18] Bünz, Benedikt, Jonathan Bootle, Dan Boneh, Andrew Poelstra, Pieter Wuille, and Greg Maxwell. “Bulletproofs: Short proofs for confidential transactions and more.” In 2018 IEEE symposium on security and privacy (SP), pp. 315-334. IEEE, 2018. <a class="reference external" href="https://eprint.iacr.org/2017/1066">https://eprint.iacr.org/2017/1066</a></p></li>
+<li><p>[BCC+16] Jonathan Bootle, Andrea Cerulli, Pyrros Chaidos, Jens Groth, and Christophe Petit. “Efficient Zero-Knowledge Arguments for Arithmetic Circuits in the Discrete Log Setting.”  In Advances in Cryptology–EUROCRYPT 2016: 35th Annual International Conference on the Theory and Applications of Cryptographic Techniques, Vienna, Austria, May 8-12, 2016, Proceedings, Part II 35, pp. 327-357. Springer Berlin Heidelberg, 2016.  <a class="reference external" href="https://eprint.iacr.org/2016/263">https://eprint.iacr.org/2016/263</a></p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./hyrax-pcs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-of-mle-polynomials">1. Evaluation Proof of MLE Polynomials</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-input">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inner-product-protocol">Inner Product Protocol</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-ipa">2. Mini-IPA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-goal">Proof Goal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-parameters">Public Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#witnesses">Witnesses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-protocol-idea">Basic Protocol Idea</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol">Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#square-root-inner-product-argument">3. Square-root inner product argument</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Witness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commitment">Commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-protocol">Evaluation Proof Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bulletproofs-optimization">4. Bulletproofs Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Public Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Verification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-protocol">5. Complete Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Public Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-commitment">Calculating Commitment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Evaluation Proof Protocol</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Public Input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Witness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-protocol">Proof Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3-repeated-i-0-1-n-1">Round 3 (Repeated <span class="math notranslate nohighlight">\(i=0, 1, ..., n-1\)</span>).</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round  5.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

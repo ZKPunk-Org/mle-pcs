@@ -1,0 +1,1686 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>&lt;no title&gt; &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ph23/ph23';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ZeroMorph 笔记" href="../zeromorph/zeromorph.zh.html" />
+    <link rel="prev" title="缺失的协议 PH23-PCS（三）" href="ph23-pcs-zk.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../libra-pcs/libra-pcs.zh.html">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../virgo-pcs/virgo-pcs-01.zh.html">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-02.zh.html">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fph23/ph23.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/ph23/ph23.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1><no title></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define variables</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">2</span><span class="o">^</span><span class="n">n</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">var</span><span class="p">([</span><span class="s1">&#39;X</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span> <span class="c1"># Define the variables X_0, X-1,.....</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">var</span><span class="p">([</span><span class="s1">&#39;u</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span> <span class="c1"># Define the variables u_0, u-1,.....</span>
+
+<span class="c1"># Function to get binary representation as a list of bits</span>
+<span class="k">def</span> <span class="nf">bits</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="s1">&#39;0</span><span class="si">{}</span><span class="s1">b&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))))</span>
+
+<span class="k">def</span> <span class="nf">bits_reverse</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">bits_list</span> <span class="o">=</span> <span class="n">bits</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">bits_list</span><span class="p">))</span>
+
+<span class="c1"># Define the eq_tilde function</span>
+<span class="k">def</span> <span class="nf">eq_tilde</span><span class="p">(</span><span class="n">bits_i</span><span class="p">,</span> <span class="n">u_vector</span><span class="p">):</span>
+    <span class="n">result</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">bit</span><span class="p">,</span><span class="n">u</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bits_i</span><span class="p">,</span><span class="n">u_vector</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">bit</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="n">bit</span><span class="o">*</span><span class="n">u</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Coefficients of the polynomial</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="p">(</span><span class="s1">&#39;a</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="c1"># Coefficients a_0, a_1, ...., a_(N-1)</span>
+
+<span class="c1"># MLE polynomial</span>
+<span class="n">f_tilde</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">eq_tilde</span><span class="p">(</span><span class="n">bits</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n</span><span class="p">),</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="n">show</span><span class="p">(</span><span class="n">f_tilde</span><span class="p">)</span>
+
+<span class="c1"># Generate all combinations of (1-u[i]) and u[i] based on binary representation</span>
+<span class="k">def</span> <span class="nf">generate_c_vector</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+    <span class="n">c_vector</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">^</span><span class="n">n</span><span class="p">):</span>  <span class="c1"># Loop over all binary numbers from 0 to 2^n - 1</span>
+        <span class="n">binary</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">b&#39;</span><span class="p">)))</span>  <span class="c1"># Binary representation of i</span>
+        <span class="n">binary_reverse</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">binary</span><span class="p">))</span>  <span class="c1"># Reverse the binary representation</span>
+        <span class="n">product</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">binary_reverse</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">product</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>  <span class="c1"># Use (1 - u[j]) for 0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">product</span> <span class="o">*=</span> <span class="n">u</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="c1"># Use u[j] for 1</span>
+        <span class="n">c_vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">c_vector</span>
+
+<span class="c1"># Compute the c vector</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">generate_c_vector</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+<span class="c1"># Display the c vector</span>
+<span class="n">show</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+<span class="c1"># SageMath Implementation for Polynomial Encoding using Lagrange Basis</span>
+
+<span class="c1"># Define the finite field and subgroup H</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Example prime (p must be chosen appropriately)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Finite field F_p</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Example primitive 8th root of unity in F_p</span>
+<span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>  <span class="c1"># Multiplicative subgroup H of size 8</span>
+
+<span class="c1"># Define Lagrange Basis Polynomials</span>
+<span class="k">def</span> <span class="nf">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+        <span class="n">Li</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">Li</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>  <span class="c1"># Lagrange basis polynomial</span>
+        <span class="n">basis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Li</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">basis</span>
+
+<span class="c1"># Symbolic variable for the polynomial</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compute the Lagrange basis polynomials</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+
+<span class="c1"># Vector c as computed earlier</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="n">c_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">c_val</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]]</span>  <span class="c1"># Example values for c vector</span>
+<span class="n">show</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="c1"># Compute the polynomial encoding c(X)</span>
+<span class="n">c_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+
+<span class="c1"># Compute the polynomial encoding c(X) step by step</span>
+<span class="c1"># c_X = 0  # Start with an empty polynomial</span>
+<span class="c1"># print(&quot;Building c(X) step by step:&quot;)</span>
+<span class="c1"># for i in range(len(c)):</span>
+<span class="c1">#     show(c[i])</span>
+<span class="c1">#     show(L[i])</span>
+<span class="c1">#     term = c[i] * L[i]  # Compute the current term</span>
+<span class="c1">#     show(term)</span>
+<span class="c1">#     c_X += term  # Add the current term to the polynomial</span>
+<span class="c1">#     show(term)</span>
+<span class="c1">#     &#39;\n&#39;</span>
+<span class="c1"># #     print(f&quot;Step {i+1}: Adding term {term}&quot;)</span>
+<span class="c1"># #     print(f&quot;Partial sum: {c_X}\n&quot;)</span>
+
+<span class="c1"># # Final polynomial</span>
+<span class="c1"># print(&quot;Final polynomial c(X):&quot;)</span>
+<span class="c1"># show(c_X)</span>
+
+<span class="c1"># Display the resulting polynomial c(X)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">c_X</span><span class="p">)</span>
+
+<span class="c1"># Verification: Check that c(omega^i) = c_i</span>
+<span class="n">verification</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_X</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))]</span>
+<span class="n">show</span><span class="p">(</span><span class="n">verification</span><span class="p">)</span>
+
+
+<span class="c1"># Define subsets H0, H1, H2 based on the Group Tower relationship</span>
+<span class="n">H0</span> <span class="o">=</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># {1}</span>
+<span class="n">H1</span> <span class="o">=</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>  <span class="c1"># {1, ω^4}</span>
+<span class="n">H2</span> <span class="o">=</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="mi">6</span><span class="p">]]</span>  <span class="c1"># {1, ω^2, ω^4, ω^6}</span>
+<span class="n">H3</span> <span class="o">=</span> <span class="n">H</span>  <span class="c1"># Full set {1, ω, ω^2, ..., ω^7}</span>
+
+<span class="c1"># Define the vanishing polynomials v_H(X) and v_Hi(X)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>  <span class="c1"># Define X as a polynomial variable</span>
+
+<span class="k">def</span> <span class="nf">vanishing_polynomial</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the vanishing polynomial for a given domain.&quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v</span>
+
+<span class="c1"># Compute vanishing polynomials</span>
+<span class="n">v_H</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H3</span><span class="p">)</span>  <span class="c1"># Full vanishing polynomial for H</span>
+<span class="n">v_H0</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H0</span><span class="p">)</span>
+<span class="n">v_H1</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H1</span><span class="p">)</span>
+<span class="n">v_H2</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H2</span><span class="p">)</span>
+
+<span class="c1"># Compute the selector polynomials s_0(X), s_1(X), s_2(X)</span>
+<span class="n">s0</span> <span class="o">=</span>  <span class="n">v_H</span><span class="o">/</span><span class="n">v_H0</span>
+<span class="n">s1</span> <span class="o">=</span> <span class="n">v_H</span><span class="o">/</span><span class="n">v_H1</span>
+<span class="n">s2</span> <span class="o">=</span>  <span class="n">v_H</span><span class="o">/</span><span class="n">v_H2</span>
+
+<span class="c1"># Display the selector polynomials</span>
+<span class="n">show</span><span class="p">(</span><span class="n">s0</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><html>\(\displaystyle -a_{0} {\left(u_{0} - 1\right)} {\left(u_{1} - 1\right)} {\left(u_{2} - 1\right)} + a_{4} u_{0} {\left(u_{1} - 1\right)} {\left(u_{2} - 1\right)} + a_{2} {\left(u_{0} - 1\right)} u_{1} {\left(u_{2} - 1\right)} - a_{6} u_{0} u_{1} {\left(u_{2} - 1\right)} + a_{1} {\left(u_{0} - 1\right)} {\left(u_{1} - 1\right)} u_{2} - a_{5} u_{0} {\left(u_{1} - 1\right)} u_{2} - a_{3} {\left(u_{0} - 1\right)} u_{1} u_{2} + a_{7} u_{0} u_{1} u_{2}\)</html></div><div class="output text_html"><html>\(\displaystyle \left[-{\left(u_{0} - 1\right)} {\left(u_{1} - 1\right)} {\left(u_{2} - 1\right)}, u_{0} {\left(u_{1} - 1\right)} {\left(u_{2} - 1\right)}, {\left(u_{0} - 1\right)} u_{1} {\left(u_{2} - 1\right)}, -u_{0} u_{1} {\left(u_{2} - 1\right)}, {\left(u_{0} - 1\right)} {\left(u_{1} - 1\right)} u_{2}, -u_{0} {\left(u_{1} - 1\right)} u_{2}, -{\left(u_{0} - 1\right)} u_{1} u_{2}, u_{0} u_{1} u_{2}\right]\)</html></div><div class="output text_html"><html>\(\displaystyle \left[14 X^{7} + 11 X^{6} + X^{5} + 5 X^{4} + 3 X^{3} + 13 X^{2} + 10 X + 12, X^{7} + 4 X^{6} + 4 X^{5} + 5 X^{4} + 10 X^{3} + 4 X^{2} + 13 X + 10, 9 X^{7} + 5 X^{6} + 7 X^{5} + 6 X^{3} + 7 X^{2} + 4 X + 13, X^{7} + 11 X^{6} + 10 X^{4} + 10 X^{3} + 6 X^{2} + 10 X + 3, 5 X^{7} + 2 X^{6} + 3 X^{5} + 4 X^{4} + 10 X^{3} + 5 X + 5, 3 X^{7} + X^{6} + 15 X^{5} + 3 X^{4} + 7 X^{2} + 4 X + 1, 14 X^{7} + 3 X^{6} + X^{5} + 2 X^{4} + 11 X^{3} + 5 X^{2} + 4 X + 11, 4 X^{7} + 14 X^{6} + 3 X^{5} + 5 X^{4} + X^{3} + 9 X^{2} + X + 14\right]\)</html></div><div class="output text_html"><html>\(\displaystyle \left[1, 2, 3, 4, 5, 6, 7, 8\right]\)</html></div><div class="output text_html"><html>\(\displaystyle 16 X^{7} + 6 X^{6} + 13 X^{5} + 11 X^{4} + 12 X^{3} + 11 X^{2} + 3 X + 14\)</html></div><div class="output text_html"><html>\(\displaystyle \left[\mathrm{True}, \mathrm{True}, \mathrm{True}, \mathrm{True}, \mathrm{True}, \mathrm{True}, \mathrm{True}, \mathrm{True}\right]\)</html></div><div class="output text_html"><html>\(\displaystyle X^{7} + 2 X^{6} + 11 X^{5} + 4 X^{4} + 16 X^{3} + 7 X^{2} + 8 X + 13\)</html></div><div class="output text_html"><html>\(\displaystyle X^{6} + 15 X^{5} + 2 X^{4} + 13 X^{3} + 15 X^{2} + 15 X + 16\)</html></div><div class="output text_html"><html>\(\displaystyle X^{4} + 5 X^{3} + 4 X^{2} + 12 X + 1\)</html></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the finite field and its elements</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Prime modulus</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Finite field F_p</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">multiplicative_generator</span><span class="p">()</span> <span class="c1"># the root unity of F_p</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the root unity of F_p: &quot;</span><span class="p">,</span> <span class="n">generator</span><span class="p">)</span>
+
+<span class="c1"># find the order of the generator of F_p</span>
+<span class="k">def</span> <span class="nf">find_order</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">generator</span>
+    <span class="k">while</span> <span class="n">power</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">power</span> <span class="o">*=</span> <span class="n">generator</span>
+        <span class="n">order</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">order</span>
+
+<span class="c1"># return the root of unity in subgroup H, where |H| = N</span>
+<span class="k">def</span> <span class="nf">root_of_H</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">generator_order</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">generator</span><span class="o">**</span><span class="p">(</span><span class="n">generator_order</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
+
+<span class="n">generator_order</span> <span class="o">=</span> <span class="n">find_order</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">root_of_H</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">generator_order</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the root unity of subgroup H: &quot;</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>  <span class="c1"># Subgroup H of size 8 (2^3)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="c1"># Define variables</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>  <span class="c1"># Polynomial variable</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>  <span class="c1"># Size of the group H</span>
+
+<span class="c1"># Define vanishing polynomial of H</span>
+<span class="k">def</span> <span class="nf">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>
+    <span class="n">v_H</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">H</span><span class="p">:</span>
+        <span class="n">v_H</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v_H</span>
+
+<span class="n">v_H</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="c1"># Define polynomials a(X) and c(X)</span>
+<span class="n">a_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># Random coefficients for a(X)</span>
+<span class="n">c_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># Random coefficients for c(X)</span>
+
+<span class="n">a_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>  <span class="c1"># a(X)</span>
+<span class="n">c_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>  <span class="c1"># c(X)</span>
+
+<span class="c1"># Compute P(X) = a(X) * c(X)</span>
+<span class="n">P_X</span> <span class="o">=</span> <span class="n">a_X</span> <span class="o">*</span> <span class="n">c_X</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;P_X: &quot;</span><span class="p">,</span> <span class="n">P_X</span><span class="p">)</span>
+
+<span class="c1"># Compute the decomposition of P(X)</span>
+<span class="n">q_X</span> <span class="o">=</span> <span class="n">P_X</span> <span class="o">//</span> <span class="n">v_H</span>  <span class="c1"># Quotient</span>
+<span class="n">r_X</span> <span class="o">=</span> <span class="n">P_X</span> <span class="o">%</span> <span class="n">v_H</span>   <span class="c1"># Remainder</span>
+<span class="n">v</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">P_X</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">H</span><span class="p">)</span>  <span class="c1"># v = sum of P(ω) over H</span>
+<span class="n">g_X</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_X</span> <span class="o">-</span> <span class="n">v</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span> <span class="o">//</span> <span class="n">X</span>    <span class="c1"># g(X) </span>
+
+<span class="c1"># Verify the decomposition</span>
+<span class="n">decomposed_P_X</span> <span class="o">=</span> <span class="n">q_X</span> <span class="o">*</span> <span class="n">v_H</span> <span class="o">+</span> <span class="n">X</span> <span class="o">*</span> <span class="n">g_X</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">P_X</span> <span class="o">==</span> <span class="n">decomposed_P_X</span>  <span class="c1"># Ensure the decomposition holds</span>
+
+<span class="c1"># Verification at a challenge ζ</span>
+<span class="n">zeta</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>  <span class="c1"># Random challenge ζ</span>
+<span class="n">lhs</span> <span class="o">=</span> <span class="n">a_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span>  <span class="c1"># a(ζ) * c(ζ)</span>
+<span class="n">rhs</span> <span class="o">=</span> <span class="n">q_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">*</span> <span class="n">v_H</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">+</span> <span class="n">zeta</span> <span class="o">*</span> <span class="n">g_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># q(ζ) * v_H(ζ) + ζ * g(ζ) + v/N</span>
+
+<span class="c1"># Output results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;a(X):&quot;</span><span class="p">,</span> <span class="n">a_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c(X):&quot;</span><span class="p">,</span> <span class="n">c_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;P(X):&quot;</span><span class="p">,</span> <span class="n">P_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;q(X):&quot;</span><span class="p">,</span> <span class="n">q_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;g(X):&quot;</span><span class="p">,</span> <span class="n">g_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;v:&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Verification at ζ:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LHS (a(ζ) * c(ζ)):&quot;</span><span class="p">,</span> <span class="n">lhs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RHS (q(ζ) * v_H(ζ) + ζ * g(ζ) + v/N):&quot;</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">lhs</span> <span class="o">==</span> <span class="n">rhs</span><span class="p">,</span> <span class="s2">&quot;Verification failed!&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>the root unity of F_p:  3
+the root unity of subgroup H:  9
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle \left[1, 9, 13, 15, 16, 8, 4, 2\right]\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>P_X:  15*X^14 + 4*X^13 + 15*X^12 + 11*X^11 + X^10 + 15*X^9 + 11*X^8 + 3*X^7 + 14*X^6 + 14*X^5 + 3*X^4 + 6*X^3 + 5*X^2 + 7*X + 13
+a(X): 10*X^7 + 7*X^6 + 11*X^5 + 15*X^4 + 9*X^3 + 10*X^2 + 15*X + 4
+c(X): 10*X^7 + 7*X^6 + 6*X^5 + 15*X^4 + 6*X^3 + 15*X^2 + 14*X + 16
+P(X): 15*X^14 + 4*X^13 + 15*X^12 + 11*X^11 + X^10 + 15*X^9 + 11*X^8 + 3*X^7 + 14*X^6 + 14*X^5 + 3*X^4 + 6*X^3 + 5*X^2 + 7*X + 13
+q(X): 15*X^6 + 4*X^5 + 15*X^4 + 11*X^3 + X^2 + 15*X + 11
+g(X): 3*X^6 + 12*X^5 + X^4 + X^3 + 6*X + 5
+v: 5
+Verification at ζ:
+LHS (a(ζ) * c(ζ)): 15
+RHS (q(ζ) * v_H(ζ) + ζ * g(ζ) + v/N): 15
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the finite field and its elements</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Prime modulus</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Finite field F_p</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># Primitive 8th root of unity in F_p</span>
+<span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>  <span class="c1"># Subgroup H of size 8 (2^3)</span>
+
+<span class="c1"># Define the vanishing polynomial for H</span>
+<span class="k">def</span> <span class="nf">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>
+    <span class="n">v_H</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">H</span><span class="p">:</span>
+        <span class="n">v_H</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v_H</span>
+
+<span class="c1"># Lagrange basis polynomials</span>
+<span class="k">def</span> <span class="nf">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+        <span class="n">Li</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">Li</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">basis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Li</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">basis</span>
+
+<span class="c1"># Define variables</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>  <span class="c1"># Polynomial variable</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="c1"># Random coefficients for a(X) and c(X)</span>
+<span class="n">a_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">c_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+
+
+<span class="c1"># Construct a(X) and c(X)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">a_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="n">c_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># Compute the auxiliary vector z_i</span>
+<span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">a_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># z_0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c1"># Compute z(X) using Lagrange basis polynomials</span>
+<span class="n">z_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># Compute the final sum v</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Polynomial constraints</span>
+<span class="c1"># Constraint 1: L0(X) * (z(X) - a(X) * c_0)</span>
+<span class="n">constraint1</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">a_X</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Constraint 2: (X - 1) * (z(X) - z(ω^{-1} * X) - a(X) * c(X))</span>
+<span class="n">omega_inv</span> <span class="o">=</span> <span class="n">omega</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">z_shifted</span> <span class="o">=</span> <span class="n">z_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">omega_inv</span> <span class="o">*</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">constraint2</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">z_shifted</span> <span class="o">-</span> <span class="n">a_X</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">)</span>
+
+<span class="c1"># Constraint 3: LN-1(X) * (z(X) - v)</span>
+<span class="n">constraint3</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span>
+
+<span class="c1"># Display the constraints</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 1:&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">constraint1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 2:&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">constraint2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 3:&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">constraint3</span><span class="p">)</span>
+
+<span class="c1"># Evaluate constraints point-by-point in H to verify correctness</span>
+<span class="n">verification_points</span> <span class="o">=</span> <span class="n">H</span>  <span class="c1"># Points in the subgroup H</span>
+
+<span class="k">def</span> <span class="nf">verify_constraint_at_points</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a constraint is satisfied at all points in the given domain.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">constraint</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">point</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">)</span>
+
+<span class="c1"># Check if constraints are satisfied at all points in H</span>
+<span class="n">constraint1_valid</span> <span class="o">=</span> <span class="n">verify_constraint_at_points</span><span class="p">(</span><span class="n">constraint1</span><span class="p">,</span> <span class="n">verification_points</span><span class="p">)</span>
+<span class="n">constraint2_valid</span> <span class="o">=</span> <span class="n">verify_constraint_at_points</span><span class="p">(</span><span class="n">constraint2</span><span class="p">,</span> <span class="n">verification_points</span><span class="p">)</span>
+<span class="n">constraint3_valid</span> <span class="o">=</span> <span class="n">verify_constraint_at_points</span><span class="p">(</span><span class="n">constraint3</span><span class="p">,</span> <span class="n">verification_points</span><span class="p">)</span>
+
+<span class="c1"># Display results</span>
+<span class="k">if</span> <span class="n">constraint1_valid</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 1 is satisfied!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 1 failed!&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">constraint2_valid</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 2 is satisfied!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 2 failed!&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">constraint3_valid</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 3 is satisfied!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint 3 failed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Assert that all constraints are satisfied</span>
+<span class="k">assert</span> <span class="n">constraint1_valid</span><span class="p">,</span> <span class="s2">&quot;Constraint 1 failed!&quot;</span>
+<span class="k">assert</span> <span class="n">constraint2_valid</span><span class="p">,</span> <span class="s2">&quot;Constraint 2 failed!&quot;</span>
+<span class="k">assert</span> <span class="n">constraint3_valid</span><span class="p">,</span> <span class="s2">&quot;Constraint 3 failed!&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All constraints are satisfied!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Constraint 1:
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 13 X^{14} + 10 X^{13} + 14 X^{12} + 15 X^{11} + 2 X^{10} + 2 X^{9} + 3 X^{8} + 4 X^{6} + 7 X^{5} + 3 X^{4} + 2 X^{3} + 15 X^{2} + 15 X + 14\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Constraint 2:
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 7 X^{15} + 6 X^{14} + 11 X^{13} + 9 X^{12} + 7 X^{11} + 6 X^{10} + 6 X^{9} + 6 X^{8} + 10 X^{7} + 11 X^{6} + 6 X^{5} + 8 X^{4} + 10 X^{3} + 11 X^{2} + 11 X + 11\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Constraint 3:
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 5 X^{14} + 14 X^{13} + 11 X^{12} + 16 X^{11} + 12 X^{10} + 16 X^{9} + 2 X^{8} + 12 X^{6} + 3 X^{5} + 6 X^{4} + X^{3} + 5 X^{2} + X + 15\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Constraint 1 is satisfied!
+Constraint 2 is satisfied!
+Constraint 3 is satisfied!
+All constraints are satisfied!
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the finite field and its elements</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Prime modulus</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Finite field F_p</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># Primitive 8th root of unity in F_p</span>
+<span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>  <span class="c1"># Subgroup H of size 8 (2^3)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="c1"># Define the vanishing polynomial for H</span>
+<span class="k">def</span> <span class="nf">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>
+    <span class="n">v_H</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">H</span><span class="p">:</span>
+        <span class="n">v_H</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v_H</span>
+
+<span class="c1"># Polynomial variable</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">v_H</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="c1"># Define the lagrange basis polynomials</span>
+<span class="k">def</span> <span class="nf">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+        <span class="n">Li</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">Li</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">basis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Li</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">basis</span>
+
+<span class="n">L</span> <span class="o">=</span> <span class="n">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>  <span class="c1"># Lagrange basis polynomials</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;u: &quot;</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+
+<span class="c1"># Random coefficients for a(X) and c(X)</span>
+<span class="n">a_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))]</span>
+<span class="n">c_coeffs</span> <span class="o">=</span> <span class="n">generate_c_vector</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+<span class="c1"># c_coeffs = [F.random_element() for _ in range(len(H))]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c_coeffs: &quot;</span><span class="p">,</span> <span class="n">c_coeffs</span><span class="p">)</span>
+
+<span class="c1"># Construct a(X) and c(X)</span>
+<span class="n">a_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+<span class="n">c_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+
+<span class="c1"># Recursive auxiliary polynomial z(X)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">a_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">z_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Final sum</span>
+
+<span class="k">def</span> <span class="nf">compute_s_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="n">s_polynomials</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">s_polynomials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">X</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">s_polynomials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_polynomials</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">temp</span><span class="p">)</span>
+    <span class="n">s_polynomials</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">s_polynomials</span>
+
+<span class="c1"># # Define the polynomials p_i(X)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">s_polys</span> <span class="o">=</span> <span class="n">compute_s_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_polys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_X</span> <span class="o">-</span> <span class="n">prod</span><span class="p">([(</span><span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">u_i</span><span class="p">)</span> <span class="k">for</span> <span class="n">u_i</span> <span class="ow">in</span> <span class="n">u</span><span class="p">])))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">temp_X</span> <span class="o">=</span> <span class="n">c_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">(</span><span class="n">omega</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">^</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">))</span> <span class="o">*</span> <span class="n">X</span><span class="p">))</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_polys</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_X</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">temp_X</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">])))</span>
+
+<span class="c1"># Define h_1(X), h_2(X), h_3(X)</span>
+<span class="n">h1_X</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">a_X</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">h2_X</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">z_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">omega</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">a_X</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">)</span>
+<span class="n">h3_X</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span>
+
+<span class="c1"># Aggregate all polynomials into h(X)</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>  <span class="c1"># Random alpha</span>
+<span class="n">h_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">alpha</span><span class="o">^</span><span class="n">i</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">^</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">*</span> <span class="n">h1_X</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">^</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">h2_X</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">^</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">h3_X</span>
+
+<span class="c1"># Verify correctness of h(X)</span>
+<span class="n">t_X</span> <span class="o">=</span> <span class="n">h_X</span> <span class="o">//</span> <span class="n">v_H</span>  <span class="c1"># Quotient polynomial</span>
+<span class="n">remainder</span> <span class="o">=</span> <span class="n">h_X</span> <span class="o">%</span> <span class="n">v_H</span>  <span class="c1"># Remainder</span>
+
+<span class="c1"># Display results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Polynomial h(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">h_X</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Quotient polynomial t(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">t_X</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remainder:&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span>
+
+<span class="c1"># Verify that h(X) is divisible by v_H(X)</span>
+<span class="k">if</span> <span class="n">remainder</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;h(X) is not divisible by v_H(X)!&quot;</span><span class="p">)</span>
+<span class="k">else</span> <span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Verification successful: h(X) is divisible by v_H(X).&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>u:  [16, 14, 3]
+c_coeffs:  [1, 8, 12, 11, 7, 5, 16, 9]
+Polynomial h(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 8 X^{15} + 10 X^{14} + 13 X^{13} + 12 X^{12} + 10 X^{11} + 11 X^{10} + 11 X^{9} + 3 X^{8} + 9 X^{7} + 7 X^{6} + 4 X^{5} + 5 X^{4} + 7 X^{3} + 6 X^{2} + 6 X + 14\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Quotient polynomial t(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 8 X^{7} + 10 X^{6} + 13 X^{5} + 12 X^{4} + 10 X^{3} + 11 X^{2} + 11 X + 3\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Remainder:
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 0\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Verification successful: h(X) is divisible by v_H(X).
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate random challenge ζ ensuring ζ is not in H</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">zeta</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">zeta</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">H</span><span class="p">:</span>
+        <span class="k">break</span>
+
+<span class="c1"># Compute values of polynomials at ζ</span>
+<span class="n">f_zeta</span> <span class="o">=</span> <span class="n">a_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span>
+<span class="n">c_zeta</span> <span class="o">=</span> <span class="n">c_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span>
+<span class="n">z_zeta</span> <span class="o">=</span> <span class="n">z_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span>
+
+<span class="c1"># Compute quotient t(ζ) = h(ζ) // v_H(ζ)</span>
+<span class="n">v_H_zeta</span> <span class="o">=</span> <span class="n">v_H</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">v_H_zeta</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vanishing polynomial evaluates to zero at ζ, choose a different ζ.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute t(ζ)</span>
+<span class="n">t_zeta</span> <span class="o">=</span> <span class="n">h_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">//</span> <span class="n">v_H_zeta</span>
+
+<span class="c1"># Compute s_i(ζ) values</span>
+<span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">v_H</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">/</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">[:</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">])(</span><span class="n">zeta</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))]</span>
+
+<span class="c1"># Compute L_0(ζ) and L_{N-1}(ζ)</span>
+<span class="n">L0_zeta</span> <span class="o">=</span> <span class="n">v_H</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">zeta</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">LN_minus1_zeta</span> <span class="o">=</span> <span class="n">v_H</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="n">omega</span> <span class="o">*</span> <span class="n">zeta</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Compute p_i(ζ) values</span>
+<span class="n">p_zeta</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">p_zeta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_zeta</span> <span class="o">-</span> <span class="n">prod</span><span class="p">([(</span><span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">u_i</span><span class="p">)</span> <span class="k">for</span> <span class="n">u_i</span> <span class="ow">in</span> <span class="n">u</span><span class="p">])))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p_zeta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_zeta</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">(</span><span class="n">omega</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">^</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">))</span> <span class="o">*</span> <span class="n">zeta</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="p">])))</span>
+
+<span class="c1"># Compute h_1(ζ), h_2(ζ), h_3(ζ)</span>
+<span class="n">h1_zeta</span> <span class="o">=</span> <span class="n">L0_zeta</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_zeta</span> <span class="o">-</span> <span class="n">a_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">h2_zeta</span> <span class="o">=</span> <span class="p">(</span><span class="n">zeta</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_zeta</span> <span class="o">-</span> <span class="n">z_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">omega</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">zeta</span><span class="p">)</span> <span class="o">-</span> <span class="n">a_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">(</span><span class="n">zeta</span><span class="p">))</span>
+<span class="n">h3_zeta</span> <span class="o">=</span> <span class="n">LN_minus1_zeta</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_zeta</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span>
+
+<span class="c1"># Aggregate polynomial evaluations into h(ζ)</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>
+<span class="n">h_zeta</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">alpha</span><span class="o">^</span><span class="n">i</span> <span class="o">*</span> <span class="n">p_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_zeta</span><span class="p">)))</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">^</span><span class="nb">len</span><span class="p">(</span><span class="n">p_zeta</span><span class="p">)</span> <span class="o">*</span> <span class="n">h1_zeta</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">^</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_zeta</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">h2_zeta</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">^</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_zeta</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">h3_zeta</span>
+
+<span class="c1"># Verify correctness</span>
+<span class="n">t_zeta</span> <span class="o">=</span> <span class="n">h_zeta</span> <span class="o">//</span> <span class="n">v_H_zeta</span>
+<span class="c1"># remainder = h_zeta % v_H_zeta</span>
+
+<span class="c1"># Display results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;h(ζ):&quot;</span><span class="p">,</span> <span class="n">h_zeta</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;t(ζ):&quot;</span><span class="p">,</span> <span class="n">t_zeta</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remainder:&quot;</span><span class="p">,</span> <span class="n">remainder</span><span class="p">)</span>
+
+<span class="c1"># Ensure h(ζ) is divisible by v_H(ζ)</span>
+<span class="k">if</span> <span class="n">remainder</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Verification failed: h(ζ) is not divisible by v_H(ζ)!&quot;</span><span class="p">)</span>
+<span class="k">else</span> <span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Verification successful: h(ζ) is divisible by v_H(ζ).&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>h(ζ): 4
+t(ζ): 15
+Remainder: 0
+Verification successful: h(ζ) is divisible by v_H(ζ).
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the finite field and subgroup H</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Prime modulus</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Finite field F_p</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># Primitive N-th root of unity in F_p</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Size of H, N = 2^n</span>
+<span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># Multiplicative subgroup H of size N</span>
+
+<span class="c1"># Polynomial variable</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>
+
+<span class="c1"># Define the vanishing polynomial v_H(X)</span>
+<span class="k">def</span> <span class="nf">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>
+    <span class="n">v_H</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">H</span><span class="p">:</span>
+        <span class="n">v_H</span> <span class="o">*=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v_H</span>
+
+<span class="n">v_H</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+
+<span class="c1"># Define the Lagrange basis polynomials L_i(X)</span>
+<span class="k">def</span> <span class="nf">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">v_H</span><span class="p">):</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)):</span>
+        <span class="n">Li</span> <span class="o">=</span> <span class="p">(</span><span class="n">v_H</span> <span class="o">/</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">v_H</span><span class="o">.</span><span class="n">derivative</span><span class="p">()(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="n">basis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Li</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">basis</span>
+
+<span class="n">L</span> <span class="o">=</span> <span class="n">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">v_H</span><span class="p">)</span>
+
+<span class="c1"># Define the MLE Polynomial coefficients</span>
+<span class="n">a_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># Random coefficients a_0, ..., a_{N-1}</span>
+
+<span class="c1"># Construct the univariate polynomial a(X)</span>
+<span class="n">a_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># Display the univariate polynomial a(X)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Univariate Polynomial a(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">a_X</span><span class="p">)</span>
+
+<span class="c1"># Simulate the SRS of KZG10 (Commitment scheme)</span>
+<span class="c1"># Example SRS: {g^1, g^2, ..., g^N}, where g is a generator</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>  <span class="c1"># Random generator in F_p</span>
+<span class="n">SRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># SRS elements</span>
+
+<span class="c1"># Commit a(X)</span>
+<span class="n">commitment</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">SRS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Commitment of a(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">commitment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Univariate Polynomial a(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 10 X^{7} + 14 X^{6} + 9 X^{5} + 5 X^{4} + 16 X^{3} + 3 X^{2} + 8 X + 3\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Commitment of a(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 10\)</html></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Define Common Input Struct</span>
+<span class="k">class</span> <span class="nc">CommonInput</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commitment_a</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">,</span> <span class="n">polynomial_value_v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the common input for the protocol.</span>
+<span class="sd">        :param commitment_a: Commitment of a(X) (Ca)</span>
+<span class="sd">        :param evaluation_point_u: Evaluation point (u_0, u_1, ..., u_{n-1})</span>
+<span class="sd">        :param polynomial_value_v: Value of MLE polynomial at the evaluation point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commitment_a</span> <span class="o">=</span> <span class="n">commitment_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluation_point_u</span> <span class="o">=</span> <span class="n">evaluation_point_u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polynomial_value_v</span> <span class="o">=</span> <span class="n">polynomial_value_v</span>
+
+
+<span class="c1"># Step 2: Define the Prover Class</span>
+<span class="k">class</span> <span class="nc">Prover</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a_coeffs</span><span class="p">,</span> <span class="n">lagrange_basis</span><span class="p">,</span> <span class="n">subgroup_H</span><span class="p">,</span> <span class="n">vanishing_poly</span><span class="p">,</span> <span class="n">finite_field</span><span class="p">,</span> <span class="n">common_input</span><span class="p">:</span> <span class="n">CommonInput</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the prover with the polynomial coefficients and other required inputs.</span>
+<span class="sd">        :param a_coeffs: Coefficients of a(X)</span>
+<span class="sd">        :param lagrange_basis: Lagrange basis polynomials</span>
+<span class="sd">        :param subgroup_H: Subgroup H</span>
+<span class="sd">        :param vanishing_poly: Vanishing polynomial v_H(X)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_coeffs</span> <span class="o">=</span> <span class="n">a_coeffs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lagrange_basis</span> <span class="o">=</span> <span class="n">lagrange_basis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span> <span class="o">=</span> <span class="n">subgroup_H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vanishing_poly</span> <span class="o">=</span> <span class="n">vanishing_poly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polynomial_value</span> <span class="o">=</span> <span class="n">common_input</span><span class="o">.</span><span class="n">polynomial_value_v</span> <span class="c1"># v = f(u)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finite_field</span> <span class="o">=</span> <span class="n">finite_field</span> 
+    
+    <span class="k">def</span> <span class="nf">compute_selector_polynomials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct selector polynomials s_i(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s_polynomials</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">s_polynomials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">X</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">s_polynomials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s_polynomials</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">temp</span><span class="p">)</span>
+        <span class="n">s_polynomials</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;s_polys: &quot;</span><span class="p">,</span> <span class="n">s_polys</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s_polynomials</span>
+    
+    <span class="k">def</span> <span class="nf">compute_constraint_polynomials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_X</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct constraint polynomials p_0(X), ..., p_n(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p_polys</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">s_polys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_selector_polynomials</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">evaluation_point_u</span><span class="p">)</span>
+
+        <span class="c1"># Construct p_0(X)</span>
+        <span class="n">p_0</span> <span class="o">=</span> <span class="n">s_polys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_X</span> <span class="o">-</span> <span class="n">prod</span><span class="p">([(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">evaluation_point_u</span><span class="p">]))</span>
+        <span class="n">p_polys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p_0</span><span class="p">)</span>
+
+        <span class="c1"># Construct p_k(X) for k = 1 to n</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># omega_k = self.subgroup_H[k]</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="n">s_polys</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">evaluation_point_u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">evaluation_point_u</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">])</span> <span class="o">*</span> <span class="n">c_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">(</span><span class="n">omega</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">^</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)))</span> <span class="o">*</span> <span class="n">X</span><span class="p">))</span>
+            <span class="n">p_polys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p_polys</span>
+    
+    <span class="k">def</span> <span class="nf">compute_accumulation_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct accumulation polynomial z(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure c_X is a proper polynomial</span>
+        <span class="n">c_poly</span> <span class="o">=</span> <span class="n">c_X</span><span class="o">.</span><span class="n">numerator</span><span class="p">()</span>  <span class="c1"># Extract the numerator as a polynomial</span>
+        <span class="n">c_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_poly</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">]</span>
+    
+        <span class="c1"># Compute z(X) coefficients</span>
+        <span class="n">z_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">a_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># First term</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_coeffs</span><span class="p">)):</span>
+            <span class="n">z_coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_coeffs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># Construct z(X) as a linear combination of Lagrange basis</span>
+        <span class="n">z_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lagrange_basis</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_coeffs</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">z_X</span>
+    
+    <span class="k">def</span> <span class="nf">compute_constraint_h_polynomials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_X</span><span class="p">,</span> <span class="n">a_X</span><span class="p">,</span> <span class="n">c_X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct constraint polynomials h_0(X), h_1(X), h_2(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure c_X is a proper polynomial</span>
+        <span class="n">c_poly</span> <span class="o">=</span> <span class="n">c_X</span><span class="o">.</span><span class="n">numerator</span><span class="p">()</span>  <span class="c1"># Extract the numerator as a polynomial</span>
+        
+        <span class="c1"># Construct h_0(X)</span>
+        <span class="n">h0_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lagrange_basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_poly</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    
+        <span class="c1"># Construct h_1(X)</span>
+        <span class="n">z_prev</span> <span class="o">=</span> <span class="n">z_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="p">)</span>  <span class="c1"># z(ω^-1 * X)</span>
+        <span class="n">h1_X</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="n">z_prev</span> <span class="o">-</span> <span class="n">a_X</span> <span class="o">*</span> <span class="n">c_X</span><span class="p">)</span>
+    
+        <span class="c1"># Construct h_2(X)</span>
+        <span class="n">h2_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lagrange_basis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">polynomial_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">h0_X</span><span class="p">,</span> <span class="n">h1_X</span><span class="p">,</span> <span class="n">h2_X</span> 
+
+    
+    <span class="k">def</span> <span class="nf">compute_aggregation_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraint_polys</span><span class="p">,</span> <span class="n">h_polys</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct aggregation polynomial h(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">constraint_polys</span><span class="p">)</span>
+        <span class="n">h_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">alpha</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="n">constraint_polys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">h_X</span> <span class="o">+=</span> <span class="n">alpha</span><span class="o">**</span><span class="n">n</span> <span class="o">*</span> <span class="n">h_polys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">h_polys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">h_polys</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">h_X</span>
+
+    <span class="k">def</span> <span class="nf">compute_t_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h_X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute quotient polynomial t(X) satisfying h(X) = t(X) * v_H(X).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vanishing_poly</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;Vanishing polynomial v_H(X) evaluated to 0.&quot;</span><span class="p">)</span>
+        <span class="n">t_X</span> <span class="o">=</span> <span class="n">h_X</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">vanishing_poly</span>
+        <span class="k">return</span> <span class="n">t_X</span>
+    
+    <span class="k">def</span> <span class="nf">compute_c_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the polynomial c(X) using the provided evaluation point.</span>
+<span class="sd">        :param evaluation_point_u: The evaluation point (u_0, u_1, ..., u_{n-1})</span>
+<span class="sd">        :return: c(X)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">eq_tilde</span><span class="p">(</span><span class="n">bits_i</span><span class="p">,</span> <span class="n">u_vector</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">bit</span><span class="p">,</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bits_i</span><span class="p">,</span> <span class="n">u_vector</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">bit</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="n">bit</span> <span class="o">*</span> <span class="n">u</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="c1"># Compute coefficients c_i</span>
+        <span class="n">c_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">eq_tilde</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">03b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)))),</span> <span class="n">evaluation_point_u</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">))]</span>
+
+        <span class="c1"># Construct c(X)</span>
+        <span class="n">c_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lagrange_basis</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">c_X</span>
+
+    <span class="k">def</span> <span class="nf">commit_c_polynomial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the commitment of c(X).</span>
+<span class="sd">        :param c_X: The polynomial c(X)</span>
+<span class="sd">        :return: Commitment of c(X)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Convert c_X to a polynomial</span>
+        <span class="n">c_poly</span> <span class="o">=</span> <span class="n">c_X</span><span class="o">.</span><span class="n">numerator</span><span class="p">()</span>  <span class="c1"># Get the numerator to ensure it&#39;s a polynomial</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>  <span class="c1"># Random generator for SRS</span>
+        <span class="c1"># TODO: should set SRS be a parameter</span>
+        <span class="n">SRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">))]</span>
+
+        <span class="c1"># Get the coefficients of the polynomial</span>
+        <span class="n">c_coeffs</span> <span class="o">=</span> <span class="n">c_poly</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># Retrieve the list of coefficients</span>
+        <span class="c1"># Pad coefficients with zeros to match the length of the SRS</span>
+        <span class="n">c_coeffs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_coeffs</span><span class="p">))</span>
+
+        <span class="c1"># Compute the commitment as a linear combination with the SRS</span>
+        <span class="n">commitment_c</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">SRS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">commitment_c</span>
+
+    <span class="k">def</span> <span class="nf">round_2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_X</span><span class="p">,</span> <span class="n">a_X</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform all steps in Round 2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Step 1: Compute selector polynomials</span>
+        <span class="n">s_polys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_selector_polynomials</span><span class="p">()</span>
+
+        <span class="c1"># Step 2: Compute constraint polynomials</span>
+        <span class="n">constraint_polys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_constraint_polynomials</span><span class="p">(</span><span class="n">c_X</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">)</span>
+
+        <span class="c1"># Step 3: Compute accumulation polynomial z(X)</span>
+        <span class="n">z_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_accumulation_polynomial</span><span class="p">(</span><span class="n">c_X</span><span class="p">)</span>
+        <span class="n">z_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">z_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">]</span>
+
+        <span class="c1"># Step 4: Compute constraint h polynomials</span>
+        <span class="n">h_polys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_constraint_h_polynomials</span><span class="p">(</span><span class="n">z_X</span><span class="p">,</span> <span class="n">a_X</span><span class="p">,</span> <span class="n">c_X</span><span class="p">)</span>
+
+        <span class="c1"># Step 5: Compute aggregation polynomial h(X)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>  <span class="c1"># Random challenge</span>
+        <span class="n">h_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_aggregation_polynomial</span><span class="p">(</span><span class="n">constraint_polys</span><span class="p">,</span> <span class="n">h_polys</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+        <span class="c1"># Step 6: Compute quotient polynomial t(X)</span>
+        <span class="n">t_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_t_polynomial</span><span class="p">(</span><span class="n">h_X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">t_X</span><span class="p">,</span> <span class="n">h_X</span><span class="p">,</span> <span class="n">z_X</span>
+    
+    <span class="k">def</span> <span class="nf">round_3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verifier</span><span class="p">,</span> <span class="n">c_X</span><span class="p">,</span> <span class="n">z_X</span><span class="p">,</span> <span class="n">t_X</span><span class="p">,</span> <span class="n">a_X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform Round 3 of the protocol.</span>
+<span class="sd">        :param verifier: Verifier instance providing ζ</span>
+<span class="sd">        :param c_X: Polynomial c(X)</span>
+<span class="sd">        :param z_X: Accumulation polynomial z(X)</span>
+<span class="sd">        :param t_X: Quotient polynomial t(X)</span>
+<span class="sd">        :param a_X: Original polynomial a(X)</span>
+<span class="sd">        :return: Evaluations and KZG10 proofs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Step 1: Verifier sends random evaluation point ζ</span>
+        <span class="n">zeta</span> <span class="o">=</span> <span class="n">verifier</span><span class="o">.</span><span class="n">generate_valid_zeta</span><span class="p">()</span>  <span class="c1"># Verifier provides ζ</span>
+
+        <span class="c1"># Step 2: Calculate values of s_i(X) at ζ</span>
+        <span class="n">s_polys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_selector_polynomials</span><span class="p">()</span>
+        <span class="n">s_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">(</span><span class="n">zeta</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">s_polys</span><span class="p">]</span>
+
+        <span class="c1"># Step 3: Define new domain D and coset D&#39;</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span>
+        <span class="n">D_prime</span> <span class="o">=</span> <span class="p">[</span><span class="n">zeta</span> <span class="o">*</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
+<span class="c1">#         for d in D_prime:</span>
+<span class="c1">#             if self.vanishing_poly(d) == 0:</span>
+<span class="c1">#                 raise ZeroDivisionError(f&quot;v_H({d}) = 0, cannot compute t(X).&quot;)</span>
+
+
+        <span class="c1"># Step 4: Evaluate c(X), z(X), t(X), a(X) at D&#39;</span>
+        <span class="n">c_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_X</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">D_prime</span><span class="p">]</span>
+        <span class="n">z_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">z_X</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">D_prime</span><span class="p">]</span>
+        <span class="n">t_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">t_X</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">D_prime</span><span class="p">]</span>
+        <span class="n">a_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">a_X</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">D_prime</span><span class="p">]</span>
+
+        <span class="c1"># Step 5: Send evaluations and KZG10 proofs</span>
+        <span class="n">evaluations</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;c(X)&quot;</span><span class="p">:</span> <span class="n">c_values</span><span class="p">,</span>
+            <span class="s2">&quot;z(X)&quot;</span><span class="p">:</span> <span class="n">z_values</span><span class="p">,</span>
+            <span class="s2">&quot;t(X)&quot;</span><span class="p">:</span> <span class="n">t_values</span><span class="p">,</span>
+            <span class="s2">&quot;a(X)&quot;</span><span class="p">:</span> <span class="n">a_values</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Generate KZG10 proofs for the evaluations</span>
+        <span class="n">kzg_proofs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;c(X)&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_kzg_proof</span><span class="p">(</span><span class="n">c_X</span><span class="p">,</span> <span class="n">D_prime</span><span class="p">),</span>
+            <span class="s2">&quot;z(X)&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_kzg_proof</span><span class="p">(</span><span class="n">z_X</span><span class="p">,</span> <span class="p">[</span><span class="n">zeta</span><span class="p">,</span> <span class="n">zeta</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
+            <span class="s2">&quot;t(X)&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_kzg_proof</span><span class="p">(</span><span class="n">t_X</span><span class="p">,</span> <span class="n">D_prime</span><span class="p">),</span>
+            <span class="s2">&quot;a(X)&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_kzg_proof</span><span class="p">(</span><span class="n">a_X</span><span class="p">,</span> <span class="n">D_prime</span><span class="p">),</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Return evaluations and KZG proofs</span>
+        <span class="n">evaluations</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;c(X)&quot;</span><span class="p">:</span> <span class="n">c_values</span><span class="p">,</span>
+            <span class="s2">&quot;z(X)&quot;</span><span class="p">:</span> <span class="n">z_values</span><span class="p">,</span>
+            <span class="s2">&quot;t(X)&quot;</span><span class="p">:</span> <span class="n">t_values</span><span class="p">,</span>
+            <span class="s2">&quot;a(X)&quot;</span><span class="p">:</span> <span class="n">a_values</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">evaluations</span><span class="p">,</span> <span class="n">kzg_proofs</span>
+    
+    <span class="k">def</span> <span class="nf">generate_kzg_proof</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polynomial</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate KZG10 proofs for the given polynomial at the specified points.</span>
+<span class="sd">        :param polynomial: Polynomial for which the proof is generated</span>
+<span class="sd">        :param points: Points where the polynomial is evaluated</span>
+<span class="sd">        :return: List of proofs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure the polynomial is in the proper polynomial ring</span>
+        <span class="n">poly_ring</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finite_field</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>
+        <span class="n">polynomial</span> <span class="o">=</span> <span class="n">poly_ring</span><span class="p">(</span><span class="n">polynomial</span><span class="p">)</span>
+
+        <span class="c1"># Generate SRS large enough for the polynomial&#39;s degree</span>
+        <span class="n">max_degree</span> <span class="o">=</span> <span class="n">polynomial</span><span class="o">.</span><span class="n">degree</span><span class="p">()</span>
+        <span class="n">SRS</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">finite_field</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+        <span class="n">proofs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+            <span class="c1"># Compute the divisor</span>
+            <span class="n">divisor</span> <span class="o">=</span> <span class="n">polynomial</span> <span class="o">-</span> <span class="n">polynomial</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+
+            <span class="c1"># Convert the numerator into the finite field polynomial ring directly</span>
+            <span class="n">numerator</span> <span class="o">=</span> <span class="n">divisor</span><span class="o">.</span><span class="n">numerator</span><span class="p">()</span>
+            <span class="n">numerator_in_ring</span> <span class="o">=</span> <span class="n">poly_ring</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span>
+
+            <span class="c1"># Generate the proof as a sum of SRS coefficients</span>
+            <span class="n">proof</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">numerator_in_ring</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">SRS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numerator_in_ring</span><span class="o">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">proofs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proof</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">proofs</span>
+
+    
+<span class="k">class</span> <span class="nc">Verifier</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finite_field</span><span class="p">,</span> <span class="n">vanishing_poly</span><span class="p">,</span> <span class="n">subgroup_H</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finite_field</span> <span class="o">=</span> <span class="n">finite_field</span>  <span class="c1"># Finite field F_p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vanishing_poly</span> <span class="o">=</span> <span class="n">vanishing_poly</span>  <span class="c1"># Vanishing polynomial v_H(X)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span> <span class="o">=</span> <span class="n">subgroup_H</span>  <span class="c1"># Subgroup H of size 2^n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_zeta</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Random evaluation point ζ</span>
+    
+    <span class="k">def</span> <span class="nf">generate_random_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate and send random scalar α for aggregation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">finite_field</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_alpha</span>
+    
+    
+    <span class="k">def</span> <span class="nf">generate_valid_zeta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">zeta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">finite_field</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vanishing_poly</span><span class="p">(</span><span class="n">zeta</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">random_zeta</span> <span class="o">=</span> <span class="n">zeta</span>
+                <span class="k">return</span> <span class="n">zeta</span>
+
+    <span class="k">def</span> <span class="nf">verify_commitment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commitment</span><span class="p">,</span> <span class="n">evaluation_point</span><span class="p">,</span> <span class="n">polynomial</span><span class="p">,</span> <span class="n">proof</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verify a single KZG commitment.</span>
+<span class="sd">        :param commitment: Commitment of the polynomial</span>
+<span class="sd">        :param evaluation_point: Evaluation point ζ</span>
+<span class="sd">        :param polynomial: Polynomial to verify</span>
+<span class="sd">        :param proof: KZG proof</span>
+<span class="sd">        :return: True if verification succeeds, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Simulate KZG verification (replace with actual verification in implementation)</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="n">commitment</span><span class="p">,</span> <span class="n">evaluation_point</span><span class="p">,</span> <span class="n">polynomial</span><span class="p">,</span> <span class="n">proof</span><span class="p">))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">verify_constraint_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_zeta</span><span class="p">,</span> <span class="n">h_polys</span><span class="p">,</span> <span class="n">p_polys</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">v_H_zeta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verify the final constraint equation:</span>
+<span class="sd">        t(ζ) * v_H(ζ) = sum of constraint evaluations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Compute the left-hand side</span>
+        <span class="n">lhs</span> <span class="o">=</span> <span class="n">t_zeta</span> <span class="o">*</span> <span class="n">v_H_zeta</span>
+
+        <span class="c1"># Compute the right-hand side</span>
+        <span class="n">rhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">alpha</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="n">p_polys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_polys</span><span class="p">)))</span>
+        <span class="n">rhs</span> <span class="o">+=</span> <span class="n">alpha</span><span class="o">**</span><span class="nb">len</span><span class="p">(</span><span class="n">p_polys</span><span class="p">)</span> <span class="o">*</span> <span class="n">h_polys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rhs</span> <span class="o">+=</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_polys</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">h_polys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">rhs</span> <span class="o">+=</span> <span class="n">alpha</span><span class="o">**</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p_polys</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">h_polys</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">lhs</span> <span class="o">==</span> <span class="n">rhs</span>
+
+    <span class="k">def</span> <span class="nf">verify_proof</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proof</span><span class="p">,</span> <span class="n">zeta</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">v_H</span><span class="p">,</span> <span class="n">lagrange_basis</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform the verification of the proof π.</span>
+<span class="sd">        :param proof: Proof π containing all elements</span>
+<span class="sd">        :param zeta: Evaluation point ζ</span>
+<span class="sd">        :param alpha: Aggregation scalar α</span>
+<span class="sd">        :param v_H: Vanishing polynomial v_H(X)</span>
+<span class="sd">        :param lagrange_basis: Lagrange basis polynomials</span>
+<span class="sd">        :return: True if all verifications succeed, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Parse the proof</span>
+        <span class="n">C_t</span><span class="p">,</span> <span class="n">C_z</span><span class="p">,</span> <span class="n">C_c</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;C_t&quot;</span><span class="p">],</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;C_z&quot;</span><span class="p">],</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;C_c&quot;</span><span class="p">]</span>
+        <span class="n">a_zeta</span><span class="p">,</span> <span class="n">z_zeta</span><span class="p">,</span> <span class="n">z_omega_zeta</span><span class="p">,</span> <span class="n">t_zeta</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;a(ζ)&quot;</span><span class="p">],</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;z(ζ)&quot;</span><span class="p">],</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;z(ζ/ω)&quot;</span><span class="p">],</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;t(ζ)&quot;</span><span class="p">]</span>
+        <span class="n">c_values</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;c_values&quot;</span><span class="p">]</span>
+        <span class="n">kzg_proofs</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s2">&quot;kzg_proofs&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Verify individual KZG commitments</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_commitment</span><span class="p">(</span><span class="n">C_c</span><span class="p">,</span> <span class="n">zeta</span><span class="p">,</span> <span class="s2">&quot;c(X)&quot;</span><span class="p">,</span> <span class="n">kzg_proofs</span><span class="p">[</span><span class="s2">&quot;c(X)&quot;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_commitment</span><span class="p">(</span><span class="n">C_z</span><span class="p">,</span> <span class="n">zeta</span><span class="p">,</span> <span class="s2">&quot;z(X)&quot;</span><span class="p">,</span> <span class="n">kzg_proofs</span><span class="p">[</span><span class="s2">&quot;z(X)&quot;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_commitment</span><span class="p">(</span><span class="n">C_t</span><span class="p">,</span> <span class="n">zeta</span><span class="p">,</span> <span class="s2">&quot;t(X)&quot;</span><span class="p">,</span> <span class="n">kzg_proofs</span><span class="p">[</span><span class="s2">&quot;t(X)&quot;</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Compute constraint polynomials at ζ</span>
+        <span class="n">p_polys</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">lagrange_basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">zeta</span><span class="p">)),</span>
+            <span class="n">lagrange_basis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">zeta</span> <span class="o">-</span> <span class="n">z_omega_zeta</span><span class="p">),</span>
+            <span class="n">lagrange_basis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_zeta</span> <span class="o">-</span> <span class="n">a_zeta</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Compute h polynomials at ζ</span>
+        <span class="n">h_polys</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">lagrange_basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_zeta</span> <span class="o">-</span> <span class="n">a_zeta</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">z_zeta</span> <span class="o">-</span> <span class="n">z_omega_zeta</span><span class="p">)</span> <span class="o">-</span> <span class="n">t_zeta</span><span class="p">,</span>
+            <span class="n">lagrange_basis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_zeta</span> <span class="o">-</span> <span class="n">a_zeta</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Verify the final constraint equation</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_constraint_equation</span><span class="p">(</span><span class="n">t_zeta</span><span class="p">,</span> <span class="n">h_polys</span><span class="p">,</span> <span class="n">p_polys</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">v_H</span><span class="p">(</span><span class="n">zeta</span><span class="p">))</span>
+
+
+<span class="c1"># Initialize Parameters</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Prime modulus</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Finite field</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># Primitive root of unity</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Size of the subgroup H</span>
+<span class="n">H</span> <span class="o">=</span> <span class="p">[</span><span class="n">omega</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># Subgroup H</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">polygen</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compute vanishing polynomial and Lagrange basis</span>
+<span class="n">v_H</span> <span class="o">=</span> <span class="n">vanishing_polynomial</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">lagrange_basis</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">v_H</span><span class="p">)</span>
+
+<span class="c1"># Random coefficients for a(X)</span>
+<span class="n">a_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">a_X</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># Commitment of a(X)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>  <span class="c1"># Random generator for SRS</span>
+<span class="n">SRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">commitment_a</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">SRS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># Define common inputs</span>
+<span class="n">evaluation_point_u</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>  <span class="c1"># Random evaluation point</span>
+<span class="n">c_coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">eq_tilde</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">03b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)))),</span> <span class="n">evaluation_point_u</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;a_coeffs: &quot;</span><span class="p">,</span> <span class="n">a_coeffs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c_coeffs: &quot;</span><span class="p">,</span> <span class="n">c_coeffs</span><span class="p">)</span>
+<span class="n">polynomial_value_v</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_coeffs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;polynomial_value_v: &quot;</span><span class="p">,</span> <span class="n">polynomial_value_v</span><span class="p">)</span>
+<span class="c1"># polynomial_value_v = a_X(evaluation_point_u[0])  # Example: value of a(X) at evaluation point</span>
+<span class="n">common_input</span> <span class="o">=</span> <span class="n">CommonInput</span><span class="p">(</span><span class="n">commitment_a</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">,</span> <span class="n">polynomial_value_v</span><span class="p">)</span>
+
+<span class="c1"># Prover Round 1: Compute c(X) and its commitment</span>
+<span class="n">prover</span> <span class="o">=</span> <span class="n">Prover</span><span class="p">(</span><span class="n">a_coeffs</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">v_H</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">common_input</span><span class="p">)</span>
+<span class="n">c_X</span> <span class="o">=</span> <span class="n">prover</span><span class="o">.</span><span class="n">compute_c_polynomial</span><span class="p">(</span><span class="n">evaluation_point_u</span><span class="p">)</span>
+<span class="n">test_c_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_X</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">H</span><span class="p">]</span>
+<span class="n">commitment_c</span> <span class="o">=</span> <span class="n">prover</span><span class="o">.</span><span class="n">commit_c_polynomial</span><span class="p">(</span><span class="n">c_X</span><span class="p">)</span>
+
+<span class="c1"># Display results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">c_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Commitment of c(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">commitment_c</span><span class="p">)</span>
+
+<span class="c1"># Perform Round 2</span>
+<span class="n">t_X</span><span class="p">,</span> <span class="n">h_X</span><span class="p">,</span> <span class="n">z_X</span> <span class="o">=</span> <span class="n">prover</span><span class="o">.</span><span class="n">round_2</span><span class="p">(</span><span class="n">c_X</span><span class="p">,</span> <span class="n">a_X</span><span class="p">,</span> <span class="n">evaluation_point_u</span><span class="p">)</span>
+
+<span class="c1"># Display results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Quotient Polynomial t(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">t_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aggregation Polynomial h(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">h_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accumulation Polynomial z(X):&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">z_X</span><span class="p">)</span>
+
+<span class="c1"># Initialize Verifier with subgroup H and vanishing polynomial</span>
+<span class="n">verifier</span> <span class="o">=</span> <span class="n">Verifier</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">vanishing_poly</span><span class="o">=</span><span class="n">prover</span><span class="o">.</span><span class="n">vanishing_poly</span><span class="p">,</span> <span class="n">subgroup_H</span><span class="o">=</span><span class="n">prover</span><span class="o">.</span><span class="n">subgroup_H</span><span class="p">)</span>
+
+<span class="c1"># Validate v_H(X) at D&#39;</span>
+<span class="c1"># v_H_values = [prover.vanishing_poly(zeta * d) for d in prover.subgroup_H]</span>
+<span class="c1"># if any(v == 0 for v in v_H_values):</span>
+<span class="c1">#     print(&quot;Error: v_H(X) evaluates to 0 at some points in D&#39;.&quot;)</span>
+
+<span class="c1"># Perform Round 3 with valid zeta</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">evaluations</span><span class="p">,</span> <span class="n">kzg_proofs</span> <span class="o">=</span> <span class="n">prover</span><span class="o">.</span><span class="n">round_3</span><span class="p">(</span><span class="n">verifier</span><span class="p">,</span> <span class="n">c_X</span><span class="p">,</span> <span class="n">z_X</span><span class="p">,</span> <span class="n">t_X</span><span class="p">,</span> <span class="n">a_X</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Evaluations at coset D&#39;:&quot;</span><span class="p">,</span> <span class="n">evaluations</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KZG10 Proofs:&quot;</span><span class="p">,</span> <span class="n">kzg_proofs</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ZeroDivisionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error during Round 3:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Error:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a_coeffs:  [1, 10, 9, 7, 12, 6, 11, 12]
+c_coeffs:  [2, 6, 11, 16, 0, 0, 0, 0]
+polynomial_value_v:  1
+c(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 6 X^{7} + 6 X^{6} + X^{5} + X^{4} + 9 X^{3} + 13 X^{2} + 2 X + 15\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Commitment of c(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 10\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>s_polys:  [X^7 + X^6 + X^5 + X^4 + X^3 + X^2 + X + 1, X^6 + X^4 + X^2 + 1, X^4 + 1]
+s_polys:  [X^7 + X^6 + X^5 + X^4 + X^3 + X^2 + X + 1, X^6 + X^4 + X^2 + 1, X^4 + 1]
+Quotient Polynomial t(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 5 X^{7} + 10 X^{6} + 5 X^{5} + 13 X^{4} + 13 X^{3} + 6 X^{2} + 4 X + 12\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Aggregation Polynomial h(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 5 X^{15} + 10 X^{14} + 5 X^{13} + 13 X^{12} + 13 X^{11} + 6 X^{10} + 4 X^{9} + 12 X^{8} + 12 X^{7} + 7 X^{6} + 12 X^{5} + 4 X^{4} + 4 X^{3} + 11 X^{2} + 13 X + 5\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accumulation Polynomial z(X):
+</pre></div>
+</div>
+<div class="output text_html"><html>\(\displaystyle 10 X^{7} + 7 X^{6} + 16 X^{5} + 4 X^{4} + 13 X^{3} + 4 X + 16\)</html></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>s_polys:  [X^7 + X^6 + X^5 + X^4 + X^3 + X^2 + X + 1, X^6 + X^4 + X^2 + 1, X^4 + 1]
+Evaluations at coset D&#39;: {&#39;c(X)&#39;: [10, 1, 0, 1, 6, 15, 11, 8], &#39;z(X)&#39;: [11, 13, 11, 16, 0, 10, 12, 4], &#39;t(X)&#39;: [8, 7, 10, 1, 14, 16, 12, 11], &#39;a(X)&#39;: [6, 1, 0, 16, 3, 6, 12, 7]}
+KZG10 Proofs: {&#39;c(X)&#39;: [5, 14, 15, 14, 9, 0, 4, 7], &#39;z(X)&#39;: [2, 0], &#39;t(X)&#39;: [3, 4, 1, 10, 14, 12, 16, 0], &#39;a(X)&#39;: [4, 9, 10, 11, 7, 4, 15, 3]}
+</pre></div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "SageMath-10.3"
+        },
+        kernelOptions: {
+            name: "SageMath-10.3",
+            path: "./ph23"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'SageMath-10.3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ph23-pcs-zk.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">缺失的协议 PH23-PCS（三）</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../zeromorph/zeromorph.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ZeroMorph 笔记</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

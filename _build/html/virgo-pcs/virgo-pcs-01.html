@@ -1,0 +1,887 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Virgo-PCS &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'virgo-pcs/virgo-pcs-01';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fvirgo-pcs/virgo-pcs-01.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/virgo-pcs/virgo-pcs-01.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Virgo-PCS</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-principles">1. Protocol Principles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simplified-protocol">2. Simplified Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-parameters">Protocol Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commitment-calculation">Commitment Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof">Evaluation Proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#public-input">Public Input</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round 5.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-zero-knowledge">3. Supporting Zero-Knowledge</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Commitment Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Evaluation Proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Public Input</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Round 5.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">4. Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-virgo-pcs">
+<h1>Notes on Virgo-PCS<a class="headerlink" href="#notes-on-virgo-pcs" title="Link to this heading">#</a></h1>
+<p>Virgo is a zkSNARK proof system based on the GKR protocol. Unlike Libra, Virgo adopts a different polynomial commitment scheme, referred to as zkVPD (Verifiable Polynomial Delegation) in the paper. Virgo-zkVPD is based on the FRI (Fast Reed-Solomon IOP) protocol derived from the STARK system, making it a proof system that doesn’t require a trusted setup. Its security assumptions are based on information theory and the collision resistance of hash functions.</p>
+<p>This article introduces the protocol principles of Virgo-PCS, which differ slightly from the original paper. The PCS system in the original paper supports arbitrary multivariate polynomials, while this article only considers MLE polynomials.</p>
+<section id="protocol-principles">
+<h2>1. Protocol Principles<a class="headerlink" href="#protocol-principles" title="Link to this heading">#</a></h2>
+<p>For any MLE polynomial, <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \cdots, X_{n-1})\)</span>, it can be expressed in the following coefficient form (or Monomial form):</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \cdots, X_{n-1}) = \sum_{i=0}^{2^{n}-1} c_i\cdot X_0^{i_0}X_1^{i_1}\cdots{}X_{n-1}^{i_{n-1}}
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\vec{c}=(c_0, c_1, \cdots, c_{2^n-1})\)</span> is the coefficient vector, and <span class="math notranslate nohighlight">\(\mathsf{bits}(i)=(i_0, i_1, \cdots, i_{n-1})\)</span> is the binary representation of <span class="math notranslate nohighlight">\(i\)</span> (Little Endian).</p>
+<p>If we consider how to prove the evaluation of this polynomial at a given point <span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, \cdots, u_{n-1})\)</span>, i.e., <span class="math notranslate nohighlight">\(\tilde{f}(\vec{u})=v\)</span>, we only need to prove the following “sum”:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=0}^{2^n - 1} c_i\cdot u_0^{i_0}u_1^{i_1}\cdots{}u_{n-1}^{i_{n-1}} = v
+\]</div>
+<p>The approach of Virgo-PCS is similar to PH23-PCS, using a Univariate Sumcheck protocol to prove the above sum. The Prover first commits to <span class="math notranslate nohighlight">\(\vec{c}\)</span>, then proves through the following Univariate Sumcheck formula:</p>
+<div class="math notranslate nohighlight">
+\[
+c(X)\cdot{}m(X) = h(X)\cdot v_{\mathbb{H}}(X) + X\cdot g(X) + \frac{v}{N}
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> is a multiplicative subgroup of the finite field <span class="math notranslate nohighlight">\(\mathbb{F}_{p}\)</span>, with a size of <span class="math notranslate nohighlight">\(N = |\mathbb{H}| = 2^n\)</span>. The polynomial <span class="math notranslate nohighlight">\(v_{\mathbb{H}}= \prod_{x \in \mathbb{H}}(X - x)\)</span> is the vanishing polynomial of <span class="math notranslate nohighlight">\(\mathbb{H}\)</span>. The polynomial <span class="math notranslate nohighlight">\(m(X)\)</span> encodes the vector <span class="math notranslate nohighlight">\(\vec{m}=(m_0, m_1, \cdots, m_{2^n-1})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+m_i = u_0^{i_0}u_1^{i_1}\cdots{}u_{n-1}^{i_{n-1}}
+\]</div>
+<p>Then the Prover calculates the FRI commitment of <span class="math notranslate nohighlight">\(h(X)\)</span> and sends it to the Verifier. The Prover and Verifier then use the FRI protocol to prove the existence of the following Low Degree quotient polynomial <span class="math notranslate nohighlight">\(g(X)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = \frac{N\cdot c(X)\cdot m(X) - N\cdot h(X)\cdot v_{\mathbb{H}}(X) - v}{N\cdot X}
+\]</div>
+<p>Clearly, if we can prove that <span class="math notranslate nohighlight">\(\deg(g)&lt;N-1\)</span>, then we have proven that <span class="math notranslate nohighlight">\(\sum_{i=0}^{2^n - 1} c_i\cdot m_i = v\)</span>.</p>
+<p>Here is an explanation of how to convert the proof of the above “sum” into proving <span class="math notranslate nohighlight">\(\deg(g) &lt; N - 1\)</span>. To prove <span class="math notranslate nohighlight">\(\sum_{i=0}^{2^n - 1} c_i \cdot m_i = v\)</span>, we can first encode <span class="math notranslate nohighlight">\(c_i\)</span> and <span class="math notranslate nohighlight">\(m_i\)</span> as polynomials <span class="math notranslate nohighlight">\(c(X)\)</span> and <span class="math notranslate nohighlight">\(m(X)\)</span> over <span class="math notranslate nohighlight">\(\mathbb{H}\)</span>, and then convert it to proving</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{x \in \mathbb{H}} c(x) \cdot m(x) = v
+\]</div>
+<p>The degree of <span class="math notranslate nohighlight">\(c(X) \cdot m(X)\)</span> is <span class="math notranslate nohighlight">\(N - 1 + N - 1 = 2N - 2\)</span>. By decomposing <span class="math notranslate nohighlight">\(c(X) \cdot m(X)\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[
+c(X) \cdot m(X) = g'(X) + h(X) \cdot v_{\mathbb{H}}(X)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\deg(h(X)) &lt; 2N - 1 - N = N - 1\)</span> and <span class="math notranslate nohighlight">\(\deg(g'(X)) &lt; N\)</span>. Therefore, the proof of the “sum” can be converted into proving</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{x \in \mathbb{H}} c(x) \cdot m(x) = \sum_{x \in \mathbb{H}} (g'(x) + h(x) \cdot v_{\mathbb{H}}(x)) = \sum_{x \in \mathbb{H}} g'(x) = g'(0) \cdot N = v
+\]</div>
+<p>The second-to-last equality above is obtained from the following lemma.</p>
+<blockquote>
+<div><p><strong>Lemma</strong> ([BC99]) Let <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> be a multiplicative coset of <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, and <span class="math notranslate nohighlight">\(g(X)\)</span> be a univariate polynomial over <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> with degree strictly less than <span class="math notranslate nohighlight">\(|\mathbb{H}|\)</span>. Then <span class="math notranslate nohighlight">\(\sum_{x \in \mathbb{H}} g(x) = g(0) \cdot |\mathbb{H}|\)</span>.</p>
+</div></blockquote>
+<p>Now we only need to prove <span class="math notranslate nohighlight">\(\deg(g') &lt; N\)</span> and <span class="math notranslate nohighlight">\(g'(0) = v/N\)</span>. This can be converted into proving that the polynomial</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{g'(X) - g'(0)}{X - 0} = \frac{g'(X) - v/N}{X - 0} = \frac{N \cdot g'(X) - v}{N \cdot X}
+\]</div>
+<p>has a degree strictly less than <span class="math notranslate nohighlight">\(N - 1\)</span>. The above polynomial is</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = \frac{N \cdot c(X) \cdot m(X) - N \cdot h(X) \cdot v_{\mathbb{H}}(X) - v}{N \cdot X}
+\]</div>
+<p>Thus, proving the “sum” is converted into proving <span class="math notranslate nohighlight">\(\deg(g) &lt; N - 1\)</span>.</p>
+<p>This approach is generally correct, but the Verifier needs <span class="math notranslate nohighlight">\(O(N)\)</span> work because they need to calculate the values of <span class="math notranslate nohighlight">\(m(X)\)</span> at <span class="math notranslate nohighlight">\(\kappa\)</span> sampling points. And <span class="math notranslate nohighlight">\(m(X)\)</span> must be a publicly computable vector from <span class="math notranslate nohighlight">\(\vec{u}\)</span>.</p>
+<p>The Virgo paper suggests that computing the value of <span class="math notranslate nohighlight">\(m(X)\)</span> at a point can utilize a GKR protocol, delegating the Verifier’s computation to the Prover while ensuring the correctness of the computation through the GKR protocol. This way, the Verifier only needs <span class="math notranslate nohighlight">\(O(\log^2(N))\)</span> work.</p>
+<p>This GKR circuit is divided into four parts:</p>
+<ol class="arabic simple">
+<li><p>Calculate the value of <span class="math notranslate nohighlight">\(\vec{m}\)</span> based on <span class="math notranslate nohighlight">\(\vec{u}\)</span></p></li>
+<li><p>Calculate the coefficient vector of <span class="math notranslate nohighlight">\(m(X)\)</span> using the IFFT algorithm based on <span class="math notranslate nohighlight">\(\vec{m}\)</span></p></li>
+<li><p>Calculate the values of <span class="math notranslate nohighlight">\(m(X)\)</span> on the Extended Domain <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> based on the coefficient vector of <span class="math notranslate nohighlight">\(m(X)\)</span></p></li>
+<li><p>Filter out the values of <span class="math notranslate nohighlight">\(m(X)\)</span> on <span class="math notranslate nohighlight">\(\{\mathbb{L}_i\}_{i\in Q}\)</span> according to the FRI-Query index set <span class="math notranslate nohighlight">\(Q\)</span> provided by the Verifier</p></li>
+</ol>
+<p>Since all calculations in this GKR protocol are based on public values, and the input length of the circuit is <span class="math notranslate nohighlight">\(n=\log(N)\)</span>, the depth of the circuit is <span class="math notranslate nohighlight">\(\log(N)\)</span>, and the width of the circuit is <span class="math notranslate nohighlight">\(|\mathbb{L}|=N / \rho\)</span>, the Verifier’s computational complexity is only <span class="math notranslate nohighlight">\(O(\log^2(N))\)</span> to complete the verification.</p>
+</section>
+<section id="simplified-protocol">
+<h2>2. Simplified Protocol<a class="headerlink" href="#simplified-protocol" title="Link to this heading">#</a></h2>
+<section id="protocol-parameters">
+<h3>Protocol Parameters<a class="headerlink" href="#protocol-parameters" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Domain <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> is a multiplicative subgroup of the prime field <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>, with size <span class="math notranslate nohighlight">\(N=2^n\)</span>.</p></li>
+<li><p>Extended Domain <span class="math notranslate nohighlight">\(\mathbb{L}\subset\mathbb{F}_p\)</span> is a multiplicative subgroup Coset of size <span class="math notranslate nohighlight">\(|\mathbb{L}|=\rho\cdot N\)</span>, where <span class="math notranslate nohighlight">\(\rho\)</span> represents the code rate.</p></li>
+</ol>
+</section>
+<section id="commitment-calculation">
+<h3>Commitment Calculation<a class="headerlink" href="#commitment-calculation" title="Link to this heading">#</a></h3>
+<p>The Prover calculates the commitment value <span class="math notranslate nohighlight">\(C_{\tilde{f}}\)</span> of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \cdots, X_{n-1})\)</span> similar to the general FRI protocol, calculating the values of the corresponding Univariate polynomial <span class="math notranslate nohighlight">\(c(X)\)</span> on <span class="math notranslate nohighlight">\(\mathbb{L}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+C_{\tilde{f}} = \mathsf{MerkleTree.Commit}(\vec{c})
+\]</div>
+</section>
+<section id="evaluation-proof">
+<h3>Evaluation Proof<a class="headerlink" href="#evaluation-proof" title="Link to this heading">#</a></h3>
+<section id="public-input">
+<h4>Public Input<a class="headerlink" href="#public-input" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_{\tilde{f}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(\vec{u})\)</span></p></li>
+</ol>
+</section>
+<section id="round-1">
+<h4>Round 1.<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Calculate <span class="math notranslate nohighlight">\(\vec{m}\)</span>, and construct <span class="math notranslate nohighlight">\(m(X)\)</span>, whose Evaluation is <span class="math notranslate nohighlight">\(\vec{m}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+m(X) = m_0\cdot L_{0}(X) + m_1\cdot L_{1}(X) + \cdots + m_{N-1}\cdot L_{N-1}(X)
+\]</div>
+<ol class="arabic simple">
+<li><p>Construct <span class="math notranslate nohighlight">\(h(X)\)</span>, and calculate its commitment <span class="math notranslate nohighlight">\(C_h\)</span>, where <span class="math notranslate nohighlight">\(h(X)\)</span> satisfies the following equation:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) = \frac{c(X)\cdot m(X) - X\cdot g(X) - v/N}{v_{\mathbb{H}}(X)}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_h = \mathsf{MerkleTree.Commit}(h|_{\mathbb{L}})
+\]</div>
+</section>
+<section id="round-2">
+<h4>Round 2.<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h4>
+<p>The Prover and Verifier use the FRI protocol to prove the existence of <span class="math notranslate nohighlight">\(g(X)\)</span>. In the Query phase of the protocol, the Verifier provides an index set <span class="math notranslate nohighlight">\(Q\)</span>, and the Prover calculates the values of <span class="math notranslate nohighlight">\(c(X)\)</span> and <span class="math notranslate nohighlight">\(h(X)\)</span> on <span class="math notranslate nohighlight">\(\{x_i\}_{i\in Q}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\{(c(x_i), \pi_{c}(x_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, c(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\{(h(x_i), \pi_{h}(x_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, h(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<p>Here, all <span class="math notranslate nohighlight">\(x_i\)</span> are elements in <span class="math notranslate nohighlight">\(\mathbb{L}\)</span>.</p>
+</section>
+<section id="round-3">
+<h4>Round 3.<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h4>
+<p>The Verifier checks the correctness of <span class="math notranslate nohighlight">\(\{c(x_i), h(x_i)\}_{i\in Q}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_f, i, c(x_i), \pi_{c}(x_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_h, i, h(x_i), \pi_{h}(x_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+</section>
+<section id="round-4">
+<h4>Round 4.<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h4>
+<p>The Prover and Verifier run the GKR protocol to calculate the values of <span class="math notranslate nohighlight">\(m|_{\mathbb{L}}\)</span>, and output the values of <span class="math notranslate nohighlight">\(\{m|_{x_i}\}_{i\in Q}\)</span>, where <span class="math notranslate nohighlight">\(x_i\)</span> is the <span class="math notranslate nohighlight">\(i\)</span>-th element in the multiplicative subgroup <span class="math notranslate nohighlight">\(\mathbb{L}\)</span>.</p>
+</section>
+<section id="round-5">
+<h4>Round 5.<a class="headerlink" href="#round-5" title="Link to this heading">#</a></h4>
+<p>The Verifier verifies the correctness of each folding step in the FRI protocol using <span class="math notranslate nohighlight">\(\{c(x_i), h(x_i), m(x_i)\}_{i\in Q}\)</span>.</p>
+</section>
+</section>
+</section>
+<section id="supporting-zero-knowledge">
+<h2>3. Supporting Zero-Knowledge<a class="headerlink" href="#supporting-zero-knowledge" title="Link to this heading">#</a></h2>
+<p>To support the Zero-Knowledge property, Virgo introduces random numbers in two places:</p>
+<ol class="arabic simple">
+<li><p>A Mask polynomial <span class="math notranslate nohighlight">\(r(X)\)</span> is added to the commitment of <span class="math notranslate nohighlight">\(c(X)\)</span></p></li>
+<li><p>In the Univariate Sumcheck protocol, a random polynomial <span class="math notranslate nohighlight">\(s(X)\)</span> is introduced. When verifying <span class="math notranslate nohighlight">\(\sum_{x_i\in\mathbb{H}}c(x_i)m(x_i)=v\)</span>, it simultaneously proves <span class="math notranslate nohighlight">\(\sum_{x_i\in\mathbb{H}}s(x_i)=v'\)</span>.</p></li>
+</ol>
+<section id="id1">
+<h3>Commitment Calculation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>The Prover samples a random polynomial <span class="math notranslate nohighlight">\(r(X)\)</span> with Degree <span class="math notranslate nohighlight">\(\kappa-1\)</span>, i.e., containing <span class="math notranslate nohighlight">\(\kappa\)</span> random numbers.</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = c(X) + v_{\mathbb{H}}(X)\cdot r(X)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_{\tilde{f}} = \mathsf{MerkleTree.Commit}(c^*(X)|_{\mathbb{L}})
+\]</div>
+<p>Clearly, <span class="math notranslate nohighlight">\(\deg(c^*(X)) = N + \kappa - 1\)</span>.</p>
+</section>
+<section id="id2">
+<h3>Evaluation Proof<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<section id="id3">
+<h4>Public Input<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_{\tilde{f}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(\vec{u})\)</span></p></li>
+</ol>
+</section>
+<section id="witness">
+<h4>Witness<a class="headerlink" href="#witness" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Coefficient vector <span class="math notranslate nohighlight">\(\vec{c}\)</span> of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \cdots, X_{n-1})\)</span></p></li>
+<li><p>Random polynomial <span class="math notranslate nohighlight">\(r(X)\)</span></p></li>
+</ol>
+</section>
+<section id="id4">
+<h4>Round 1.<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Prover calculates <span class="math notranslate nohighlight">\(\vec{m}\)</span>, and constructs <span class="math notranslate nohighlight">\(m(X)\)</span>, whose Evaluation is <span class="math notranslate nohighlight">\(\vec{m}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+m(X) = m_0\cdot L_{0}(X) + m_1\cdot L_{1}(X) + \cdots + m_{N-1}\cdot L_{N-1}(X)
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>The Prover samples a polynomial <span class="math notranslate nohighlight">\(s(X)\)</span> with Degree <span class="math notranslate nohighlight">\(2N + \kappa - 1\)</span>, whose sum on <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> is <span class="math notranslate nohighlight">\(v'\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\sum_{a\in\mathbb{H}}s(a) = v'
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>The Prover calculates the commitment of <span class="math notranslate nohighlight">\(s(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_s = \mathsf{MerkleTree.Commit}(s|_{\mathbb{L}})
+\]</div>
+</section>
+<section id="id5">
+<h4>Round 2.<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Verifier provides a random number <span class="math notranslate nohighlight">\(\alpha\)</span> to aggregate the sums of two different Sumcheck protocols.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+v^* = v + \alpha\cdot v'
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>The Prover constructs <span class="math notranslate nohighlight">\(h(X)\)</span>, and calculates its commitment <span class="math notranslate nohighlight">\(C_h\)</span>, where <span class="math notranslate nohighlight">\(h(X)\)</span> satisfies the following equation:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) = \frac{c^*(X)\cdot m(X) + \alpha\cdot s(X) - X\cdot g(X) - v^*/N}{v_{\mathbb{H}}(X)}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_h = \mathsf{MerkleTree.Commit}(h|_{\mathbb{L}})
+\]</div>
+</section>
+<section id="id6">
+<h4>Round 3.<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<p>The Prover and Verifier use the FRI protocol to prove that the Degree of <span class="math notranslate nohighlight">\(g(X)\)</span> is less than <span class="math notranslate nohighlight">\(N-1\)</span>. This includes <span class="math notranslate nohighlight">\(O(\log(N))\)</span> rounds of Split-and-fold.</p>
+</section>
+<section id="id7">
+<h4>Round 4.<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Verifier samples <span class="math notranslate nohighlight">\(\kappa\)</span> random indices, <span class="math notranslate nohighlight">\(Q\)</span>, and requires the Prover to provide the values of <span class="math notranslate nohighlight">\(c^*(X)\)</span>, <span class="math notranslate nohighlight">\(s(X)\)</span>, and <span class="math notranslate nohighlight">\(h(X)\)</span> on <span class="math notranslate nohighlight">\(\{a_i\}_{i\in Q}\)</span>. Here <span class="math notranslate nohighlight">\(a_i\in\mathbb{L}\)</span> is the <span class="math notranslate nohighlight">\(i\)</span>-th element in <span class="math notranslate nohighlight">\(\mathbb{L}\)</span>.</p></li>
+<li><p>The Prover sends the values of <span class="math notranslate nohighlight">\(c^*(X)\)</span>, <span class="math notranslate nohighlight">\(s(X)\)</span>, and <span class="math notranslate nohighlight">\(h(X)\)</span> on <span class="math notranslate nohighlight">\(\{a_i\}_{i\in Q}\)</span>, along with the Merkle paths.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\{(c^*(a_i), \pi_{c^*}(a_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, c^*(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\{(s(a_i), \pi_{s}(a_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, s(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\{(h(a_i), \pi_{h}(a_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, h(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+</section>
+<section id="id8">
+<h4>Round 5.<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<p>The Prover and Verifier run the GKR protocol to calculate the values of <span class="math notranslate nohighlight">\(m|_{\mathbb{L}}\)</span>, and output the values of <span class="math notranslate nohighlight">\(\{m|_{a_i}\}_{i\in Q}\)</span>, where <span class="math notranslate nohighlight">\(a_i\)</span> is the <span class="math notranslate nohighlight">\(i\)</span>-th element in the multiplicative subgroup <span class="math notranslate nohighlight">\(\mathbb{L}\)</span>.</p>
+</section>
+<section id="verification">
+<h4>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Verifier checks the correctness of <span class="math notranslate nohighlight">\(\{c^*(a_i), s(a_i), h(a_i)\}_{i\in Q}\)</span>.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_f, i, c^*(a_i), \pi_{c^*}(a_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_s, i, s(a_i), \pi_{s}(a_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_h, i, h(a_i), \pi_{h}(a_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>The Verifier verifies the correctness of each folding step in the FRI protocol using <span class="math notranslate nohighlight">\(\{c^*(a_i), s(a_i), h(a_i), m(a_i)\}_{i\in Q}\)</span>.</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="summary">
+<h2>4. Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>Virgo-PCS is one of the earliest protocols to use the MLE-to-Univariate approach to construct polynomial commitments. It is also one of the earliest protocols to use Small Field, Mersenne-61 prime field to improve performance. Although the Virgo-PCS protocol requires the MLE polynomial to be given in Coefficient form, if we only consider the commitment of the MLE polynomial, we can directly use the Evaluation (Lagrange Basis) form of the MLE polynomial for proof without converting the MLE polynomial to Coefficient (Monomial Basis) form.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>[ZXZS19] Jiaheng Zhang, Tiancheng Xie, Yupeng Zhang, and Dawn Song. “Transparent Polynomial Delegation and Its Applications to Zero Knowledge Proof”. In 2020 IEEE Symposium on Security and Privacy (SP), pp. 859-876. IEEE, 2020. <a class="reference external" href="https://eprint.iacr.org/2019/1482">https://eprint.iacr.org/2019/1482</a>.</p></li>
+<li><p>[PH23] Papini, Shahar, and Ulrich Haböck. “Improving logarithmic derivative lookups using GKR.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/1284">https://eprint.iacr.org/2023/1284</a>.</p></li>
+<li><p>[BCRSVW19] Eli Ben-Sasson, Alessandro Chiesa, Michael Riabzev, Nicholas Spooner, Madars Virza, and Nicholas P. Ward. “Aurora: Transparent succinct arguments for R1CS.” Advances in Cryptology–EUROCRYPT 2019: 38th Annual International Conference on the Theory and Applications of Cryptographic Techniques, Darmstadt, Germany, May 19–23, 2019, Proceedings, Part I 38. Springer International Publishing, 2019. <a class="reference external" href="https://eprint.iacr.org/2018/828">https://eprint.iacr.org/2018/828</a>.</p></li>
+<li><p>[BC99] Byott, Nigel P., and Robin J. Chapman. “Power sums over finite subspaces of a field.” <em>Finite Fields and Their Applications</em> 5, no. 3 (1999): 254-265.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./virgo-pcs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-principles">1. Protocol Principles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simplified-protocol">2. Simplified Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-parameters">Protocol Parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commitment-calculation">Commitment Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof">Evaluation Proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#public-input">Public Input</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round 5.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-zero-knowledge">3. Supporting Zero-Knowledge</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Commitment Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Evaluation Proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Public Input</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Round 5.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">4. Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

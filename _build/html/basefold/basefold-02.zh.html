@@ -1,0 +1,757 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Basefold 笔记：IOPP &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-02.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Basefold 笔记： MLE 求值证明" href="basefold-03.zh.html" />
+    <link rel="prev" title="Basefold 笔记：可折叠线性编码" href="basefold-01.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-02.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-02.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Basefold 笔记：IOPP</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-proximity">Proof of Proximity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-phase">Commit-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-phase">Query-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold-iopp">
+<h1>Basefold 笔记：IOPP<a class="headerlink" href="#basefold-iopp" title="Link to this heading">#</a></h1>
+<section id="proof-of-proximity">
+<h2>Proof of Proximity<a class="headerlink" href="#proof-of-proximity" title="Link to this heading">#</a></h2>
+<p>下面我们给出利用 Foldable code 来实现 IOPP 的证明。</p>
+<p>假设有一个 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> 表示如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{d-1}) = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + \cdots + f_{2^d-1}X_{d-1} 
+\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(\tilde{f}(X)\)</span> 是一个多元多项式（Multivariate Polynomial），总共有 <span class="math notranslate nohighlight">\(d-1\)</span> 个未知数，那么它的系数向量长度为 <span class="math notranslate nohighlight">\(2^d\)</span> 。记住这里我们选择 Lexicographic Order 作为多项式的排序方式。</p>
+<p>我们对 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> 的系数向量 <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> 进行编码， 得到 codeword <span class="math notranslate nohighlight">\(c_\mathbf{f}=\mathsf{Enc}(\mathbf{f})\)</span> ，长度为 <span class="math notranslate nohighlight">\(n_d\)</span>。然后使用 Hash-based Merkle Tree 产生承诺：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{cm}(\mathbf{f}) = \mathsf{Merklize}(\mathsf{Enc}(f_0, f_1, f_2, \ldots, f_{2^d-1}))
+\]</div>
+<p>与 FRI 协议类似，Basefold-IOPP 协议用来证明一个承诺 <span class="math notranslate nohighlight">\(\pi_d=\mathbf{cm}(\mathbf{f})\)</span> 是一个极大概率「接近」于 <span class="math notranslate nohighlight">\(C_d\)</span> 编码的向量， 因此这个协议被称为 Proof of Proximity。这个协议是构造 Evaluation Argument 的核心协议之一。</p>
+<p>Proof of Proximity 利用了线性编码的一个神奇性质：「Proximity Gap」，即如果两个向量 <span class="math notranslate nohighlight">\(\pi, \pi'\)</span> 如果远离合法的 codeword space，那么它们的随机线性组合 <span class="math notranslate nohighlight">\(\pi+\alpha\cdot \pi'\)</span> 要么极小概率变合法，要么继续远离合法的 codeword space：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{cases}
+\Delta(\pi_{i}, C_i) = 0 &amp; \text{(with negligible probability)} \\
+\Delta(\pi_{i}, C_i) \leq \Delta(\pi_{i+1}, C_{i+1}) &amp; \text{(with non-negligible probability)} \\
+\end{cases}
+\end{split}\]</div>
+<p>这就说明了对 codeword 的折叠过程不会破坏向量与合法 codeword space 之间的距离，这个把向量折叠到足够小之后，Verifier 可以用极小的代码来验证折叠最后产生的向量是否是合法 codeword，从而可以得知原始向量是否是合法 codeword。</p>
+<blockquote>
+<div><p>📖 <strong>Notes on Proximity Gap</strong>
+Proof of Proximity 利用了线性编码的一个神奇性质：「Proximity Gap」，即对两个向量 <span class="math notranslate nohighlight">\(\pi, \pi'\)</span> 用随机数 <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span> 进行折叠得到一个集合 <span class="math notranslate nohighlight">\(A = \{\pi+\alpha\cdot \pi': \alpha \in \mathbb{F}\}\)</span> ，不同的 <span class="math notranslate nohighlight">\(\alpha\)</span> 就对应集合 <span class="math notranslate nohighlight">\(A\)</span> 中不同的元素，那么 「Proximity Gap」结论告诉我们这个集合中的元素要么都距离合法的 codeword space <span class="math notranslate nohighlight">\(C_{i}\)</span> 很近，要么只有极小极小部分元素距离合法的 codeword space <span class="math notranslate nohighlight">\(C_{i}\)</span> 比较近，大部分的元素都距离 <span class="math notranslate nohighlight">\(C_{i}\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远。用概率表示即为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; \Pr_{a \in A}[\Delta(a, C_{i}) \le \delta] = \begin{cases}
+&gt;    \epsilon \quad \text{(small enough)}\\
+&gt;    1
+&gt; \end{cases}
+&gt; \end{split}\]</div>
+<p>这样对于 Verifier 来说就可以大胆用随机数 <span class="math notranslate nohighlight">\(\alpha\)</span> 来进行折叠了，因为哪怕 Prover 给到的两个向量 <span class="math notranslate nohighlight">\(\pi, \pi'\)</span> 中只有一个向量距离 <span class="math notranslate nohighlight">\(C_{i}\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远，用随机数折完之后结果距离 <span class="math notranslate nohighlight">\(C_{i}\)</span> 变得比较近的概率只有 <span class="math notranslate nohighlight">\(\epsilon\)</span> 那么小，换句话说，作弊的 Prover 想要逃脱 Verifier 的火眼金睛需要像中彩票那么幸运才行。这样如果开始想作弊的 Prover 选的 <span class="math notranslate nohighlight">\(\pi_{d}\)</span> 距离合法的 codeword space 比较远，Verifier 选取一系列随机数让 Prover 不断去折叠，直到最后得到 <span class="math notranslate nohighlight">\(\pi_{0}\)</span> ，这个过程中有足够大的概率不会让 <span class="math notranslate nohighlight">\(\pi_{0}\)</span> 变得离合法的 codeword space 比较近，这样 Verifer 在最后就能检查出 Prover 作弊了。
+「Proximity Gap」结论带给了 Verifer 一个极大的好处，那就是每次不用去验证 <span class="math notranslate nohighlight">\(A = \{\pi+\alpha\cdot \pi': \alpha \in \mathbb{F}\}\)</span> 这个集合中所有的元素是否距离合法的编码空间比较近了，Verifer 只需要随机选择其中的一个点进行验证就行了，这大大减少了 Verifier 的计算量。</p>
+</div></blockquote>
+<p>Proof of Proximity 协议分为两个阶段：Commit-phase 和 Query-phase。前者的子协议是完成  codeword 的多次折叠过程，并产生每一次折叠后的 codeword 的承诺（或称为 Oracle）；后者 Query-phase 是 Verifier 通过随机抽样来验证每一次的折叠过程是否合法。</p>
+</section>
+<section id="commit-phase">
+<h2>Commit-phase<a class="headerlink" href="#commit-phase" title="Link to this heading">#</a></h2>
+<p>下面先解释下 Commit-phase。Prover 通过多次折叠编码 <span class="math notranslate nohighlight">\(\pi_d\)</span>（其长度为 <span class="math notranslate nohighlight">\(n_d\)</span>），分别得到长度为 <span class="math notranslate nohighlight">\(n_{d-1}, \ldots, n_0\)</span> 的 codeword，分别记为 <span class="math notranslate nohighlight">\((\pi_{d-1}, \pi_{d-2}, \ldots, \pi_0)\)</span>，然后把它们发送给 Verifier。
+记住这是一个交互式协议，总共有 <span class="math notranslate nohighlight">\(d\)</span> 轮交互。每一轮交互中（假设为第 <span class="math notranslate nohighlight">\(i\)</span> 轮，<span class="math notranslate nohighlight">\(0 \leq i &lt; d\)</span>），Prover 根据 Verifier 发送的随机数 <span class="math notranslate nohighlight">\(\alpha_{i}\)</span> 对 <span class="math notranslate nohighlight">\(\pi_{i+1}\)</span> 的折叠，得到一个新的 codeword，记为 <span class="math notranslate nohighlight">\(\pi_{i}\)</span>，经过 <span class="math notranslate nohighlight">\(d\)</span> 轮之后，Prover 得到一个长度为 <span class="math notranslate nohighlight">\(n_0\)</span> 的 codeword，记为 <span class="math notranslate nohighlight">\(\pi_0\)</span>。Prover 把 <span class="math notranslate nohighlight">\((\pi_d, \ldots, \pi_0)\)</span> 分别进行承诺，然后把 <span class="math notranslate nohighlight">\(\mathsf{cm}(\pi_d), \ldots, \mathsf{cm}(\pi_0)\)</span> 作为 <span class="math notranslate nohighlight">\(\mathsf{IOPP.Commit}\)</span> 输出的结果。</p>
+<p>下面我们分析下单次折叠 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 的技术细节。假设 <span class="math notranslate nohighlight">\(\pi_{i}\in C_i\)</span> 是一个合法的 codeword（即满足 <span class="math notranslate nohighlight">\(\pi_{i}=\mathbf{m}G_i\)</span>），长度为 <span class="math notranslate nohighlight">\(n_i\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_i = (c_0, c_1, c_2, \ldots, c_{n_{i}-1})
+\]</div>
+<p>我们把这个向量从中间拆分为两部分，上下叠放在一起：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left(
+\begin{array}{cccc}
+c_0, &amp; c_1, &amp; \ldots, &amp; c_{n_{i-1}-1} \\
+c_{n_{i-1}}, &amp; c_{n_{i-1}+1}, &amp; \ldots, &amp; c_{n_{i}-1} \\
+\end{array}
+\right)
+\end{split}\]</div>
+<p>这时需要 Verifier 提供一个随机数 <span class="math notranslate nohighlight">\(\alpha^{(i)}\)</span>，我们把上面的两排向量进行随机线性组合，换个说法就是折叠：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{i-1} = \big(\mathsf{fold}_{\alpha_i}(c_0, c_{n_{i-1}}), \mathsf{fold}_{\alpha_i}(c_1, c_{n_{i-1}+1}), \ldots, \mathsf{fold}_{\alpha_i}(c_{n_{i-1}}, c_{n_{i}-1})\big)
+\]</div>
+<p>上面即为折叠后的向量 <span class="math notranslate nohighlight">\(\pi_{i-1}\)</span>，假设 Prover 诚实的情况下，折叠后的向量应该是一个合法的 <span class="math notranslate nohighlight">\(C_{i-1}\)</span> codeword。上面等式中的 <span class="math notranslate nohighlight">\(\mathsf{fold}_{\alpha_i}\)</span> 函数定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_{\alpha}(c_j, c_{n_{i-1}+j}) = \frac{t_j\cdot c_{n_{i-1}+j} - t'_j\cdot c_{j} }{t_j + t'_j} + \alpha\cdot \frac{(c_{j} - c_{n_{i-1}+j})}{t_j - t'_j}
+\]</div>
+<p>如何理解上面的 <span class="math notranslate nohighlight">\(\mathsf{fold}_{\alpha}(\cdot, \cdot)\)</span> 函数？其实它是一个多项式插值的过程。我们把待折叠的两排向量看成是在两个 Domain 上的点集，而这两个 Domain 分别递归编码过程中所采用的 <span class="math notranslate nohighlight">\(\mathsf{diag}(T_i)=(t_0, t_1, \ldots, t_{n_{i-1}-1})\)</span> 和 <span class="math notranslate nohighlight">\(\mathsf{diag}(T'_i)=(t'_0, t'_1, \ldots, t'_{n_{i-1}-1})\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left(
+\begin{array}{cccc}
+(t_0, c_0), &amp; (t_1, c_1), &amp; \ldots, &amp; (t_{i-1}, c_{n_{i-1}-1}) \\
+(t'_0, c_{n_{i-1}}), &amp; (t'_1, c_{n_{i-1}+1}), &amp; \ldots, &amp; (t'_{i-1}, c_{n_{i}-1}) \\
+\end{array}
+\right)
+\end{split}\]</div>
+<p>然后我们对上面矩阵的每一列在 Domain <span class="math notranslate nohighlight">\((t_j, t'_j)\)</span> 上进行插值，产生一组共 <span class="math notranslate nohighlight">\(n_{i-1}={n_i}/{2}\)</span> 个多项式，记为 <span class="math notranslate nohighlight">\(p^{(i-1)}_j(X)\)</span>，其中 <span class="math notranslate nohighlight">\(0\leq j &lt; n_{i-1}\)</span>。然后 Prover 计算 <span class="math notranslate nohighlight">\(p^{(i-1)}_j(X)\)</span> 在 <span class="math notranslate nohighlight">\(X=\alpha_{i}\)</span> 点处的值，这样我们总共可以得到 <span class="math notranslate nohighlight">\(n_{i-1}\)</span> 个多项式在 <span class="math notranslate nohighlight">\(X=\alpha_{i}\)</span> 处的取值，这些取值就作为新的 codeword <span class="math notranslate nohighlight">\(\pi_{i-1}\)</span>。</p>
+<p>这里折叠函数的定义和线性多项式插值过程应该是一致的，我们可以手动推导一下折叠函数的定义的由来。因为这里我们对 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 编码采用的是折半折叠，所以折叠后的 codeword 是有 <span class="math notranslate nohighlight">\(n_{i-1}\)</span> 个「线性多项式」的求值向量。假设第 <span class="math notranslate nohighlight">\(j\)</span> 个多项式刻画了一条穿过两个点的直线，两个点为 <span class="math notranslate nohighlight">\((x_0, y_0), (x_1, y_1)\)</span>，那么这两个点的插值多项式 <span class="math notranslate nohighlight">\(p(X)\)</span> 可以定义：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+p(X) &amp;= \frac{y_0}{x_0-x_1}(X-x_1) + \frac{y_1}{x_1-x_0}(X-x_0) \\[2ex]
+     &amp;= \frac{x_0y_1-x_1y_0}{x_0-x_1} + \frac{y_0-y_1}{x_0-x_1}\cdot X
+\end{split}
+\end{split}\]</div>
+<p><img alt="alt text" src="../_images/inter-poly.png" />
+代入 <span class="math notranslate nohighlight">\(x_0=t_j, x_1=t'_j\)</span>，还有 <span class="math notranslate nohighlight">\(X=\alpha\)</span> 我们即可得到上面折叠函数 <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha(y_0, y_1)\)</span> 的定义</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}_\alpha(y_0, y_1) = p(\alpha) &amp;= \frac{t_j\cdot y_1 - t'_j\cdot y_0}{t_j - t'_j} + \frac{y_0-y_1}{t_j - t'_j}\cdot \alpha\\
+\end{split}
+\end{split}\]</div>
+<p>如果 <span class="math notranslate nohighlight">\(x_0\)</span> 和 <span class="math notranslate nohighlight">\(x_1\)</span> 互为正负数，即 <span class="math notranslate nohighlight">\(t_j=-t'_j\)</span>，那么 <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha(y_0, y_1)\)</span> 就变成 FRI 协议中熟悉的定义：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_\alpha(y_0, y_1) = \frac{1}{2}(y_0 + y_1) + \alpha\cdot \frac{y_0-y_1}{2\cdot t_j}
+\]</div>
+<p>因为我们用折叠函数定义了折叠后 codeword <span class="math notranslate nohighlight">\(\mathbf{c}^{(i-1)}\)</span>，所以折叠函数定义需要和前面我们采用生成矩阵 <span class="math notranslate nohighlight">\(G_{i-1}\)</span> 所产生的编码空间保持一致。那么我们继续推理下这个直觉上的关系。假设对于第 <span class="math notranslate nohighlight">\(i\)</span> 轮，如果 <span class="math notranslate nohighlight">\(\mathbf{c}^{(i)}\)</span> 确实是 <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> 的编码，那么根据定义，它会满足下面的 Foldable Codes 的性质：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\pi_{i} &amp;= \mathbf{m} G_i \\
+&amp; = (\mathbf{m}_l \parallel \mathbf{m}_r)\begin{bmatrix}
+G_{i-1} &amp; G_{i-1} \\
+G_{i-1}\cdot T_{i-1} &amp; G_{i-1}\cdot T'_{i-1}
+\end{bmatrix}\\[4ex]
+&amp;=\Big(\mathbf{m}_l G_{i-1} + \mathbf{m}_r G_{i-1}\circ \mathbf{diag}(T_{i-1})\Big) \parallel \Big(\mathbf{m}_l G_{i-1} + \mathbf{m}_r G_{i-1}\circ \mathbf{diag}(T'_{i-1})\Big)\\
+\end{split}
+\end{split}\]</div>
+<p>而 Prover 将其对半折叠后，得到的新的 codeword 为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}_\alpha(\pi_{i}) &amp;= \Big(\mathsf{fold}_\alpha(\pi_{i}[0], \pi_{i}[n_{i-1}]), \mathsf{fold}_\alpha(\pi_{i}[1], \pi_{i}[n_{i-1}+1]), \ldots, \mathsf{fold}_\alpha(\pi_{i}[n_{i-1}-1], \pi_{i}[n_{i}-1])\Big) \\
+\end{split}
+\end{split}\]</div>
+<p>我们现在验证其中每一个 <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha(\pi_{i}[j], \pi_{i}[n_{i-1}+j])\)</span> 都是 <span class="math notranslate nohighlight">\(\mathbf{m}_lG_{i-1}[j]\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{m}_rG_{i-1}[j]\)</span> 关于 <span class="math notranslate nohighlight">\(\alpha\)</span> 的线性组合，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}_\alpha(\pi_{i}[j], \pi_{i}[n_{i-1}+j]) &amp; = \frac{1}{t_j - t'_j}\cdot\Big(
+t_j\cdot (\mathbf{m}_l G_{i-1}[j] + t'_j\cdot \mathbf{m}_r G_{i-1}[j]) - t'_j\cdot(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j]) \Big)\\
+&amp; + \frac{\alpha}{t_j - t'_j}\cdot \Big(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j] - \mathbf{m}_l G_{i-1}[j] - t'_j\cdot \mathbf{m}_r G_{i-1}[j] \Big) \\
+&amp; = \mathbf{m}_l G_{i-1}[j] + \alpha\cdot \mathbf{m}_r G_{i-1}[j]
+\end{split}
+\end{split}\]</div>
+<p>于是，整个 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 的折叠也等价于 <span class="math notranslate nohighlight">\(\mathbf{m}_lG_{i-1}\)</span> 和 <span class="math notranslate nohighlight">\(\mathbf{m}_rG_{i-1}\)</span> 关于 <span class="math notranslate nohighlight">\(\alpha\)</span> 的线性组合:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_\alpha(\pi_{i}) = \mathbf{m}_l G_{i-1} + \alpha\cdot \mathbf{m}_r G_{i-1} = (\mathbf{m}_l + \alpha\cdot \mathbf{m}_r)G_{i-1} 
+\]</div>
+<p>折叠后的 codeword 恰好是 <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> 关于 <span class="math notranslate nohighlight">\(\alpha\)</span> 的对半折叠，记为 <span class="math notranslate nohighlight">\(\mathbf{m}^{(i-1)}\)</span>，然后再对其进行 <span class="math notranslate nohighlight">\(G_{i-1}\)</span> 编码，得到 <span class="math notranslate nohighlight">\(\pi_{i-1}\)</span>。这并不奇怪，因为这个 Foldable Codes 和 Codeword 的递归折叠是一个互逆的过程，所以在折叠后，编码引入的 <span class="math notranslate nohighlight">\(T_i\)</span> 和 <span class="math notranslate nohighlight">\(T'_i\)</span> 参数会被消除掉。</p>
+<p>下面我们用一个简单的例子来走一遍协议的流程，来看看 Basefold-IOPP 协议的 Commit-phase 是如何运作的。</p>
+<p><strong>公共输入</strong></p>
+<ul class="simple">
+<li><p>MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的 codeword， <span class="math notranslate nohighlight">\(\pi_3=\mathsf{Enc}_3(\mathbf{f})=\mathbf{f}G_3\)</span></p></li>
+</ul>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>MLE 多项式  <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的系数向量 <span class="math notranslate nohighlight">\(\mathbf{f} = (f_0, f_1, f_2, f_3, f_4, f_5, f_6, f_7)\)</span></p></li>
+</ul>
+<p>第一轮：Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha_2\)</span></p>
+<p>第二轮：Prover 计算 <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{fold}_\alpha(\pi_3)\)</span>，然后发送给 Verifier</p>
+<p>计算 <span class="math notranslate nohighlight">\(\pi_2\)</span> 的过程如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_2[j] = \mathsf{fold}_\alpha(\pi_3[j], \pi_3[j+4]), \quad j\in\{0, 1, 2, 3\}
+\]</div>
+<p>计算出的 <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{Enc}_2(f^{(2)})\)</span>，即 <span class="math notranslate nohighlight">\(\pi_2\)</span> 是 <span class="math notranslate nohighlight">\(f^{(2)}\)</span> 的 codeword，而 <span class="math notranslate nohighlight">\(f^{(2)}\)</span> 是 <span class="math notranslate nohighlight">\(f\)</span> 的关于 <span class="math notranslate nohighlight">\(\alpha_2\)</span> 的折叠结果：</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(2)}(X_0, X_1) = f(X_0, X_1, \alpha_2) = (f_0 + f_4\alpha_2) + (f_1 + f_5\alpha_2)X_0 + (f_2 + f_6\alpha_2)X_1 + (f_3 + f_7\alpha_2)X_0X_1
+\]</div>
+<p>第三轮：Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha_1\)</span></p>
+<p>第四轮：Prover 计算 <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{fold}_\alpha(\pi_2)\)</span>，然后发送给 Verifier</p>
+<p>计算 <span class="math notranslate nohighlight">\(\pi_1\)</span> 的过程如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_1[j] = \mathsf{fold}_\alpha(\pi_2[j], \pi_2[j+2]), \quad j\in\{0, 1\}
+\]</div>
+<p>计算出的 <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{Enc}_1(f^{(1)})\)</span>，即 <span class="math notranslate nohighlight">\(\pi_1\)</span> 是 <span class="math notranslate nohighlight">\(f^{(1)}\)</span> 的 codeword，而 <span class="math notranslate nohighlight">\(f^{(1)}\)</span> 是 <span class="math notranslate nohighlight">\(f^{(2)}\)</span> 的关于 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 的折叠结果：</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(X_0) = f(X_0, \alpha_1, \alpha_2)  = (f_0 + f_4 \alpha_2 +  \alpha_1 (f_2 +  + f_6 \alpha_2)) + (f_1 + f_5 \alpha_2 +  \alpha_1 (f_3 +  + f_7 \alpha_2))X_0
+\]</div>
+<p>第五轮：Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha_0\)</span></p>
+<p>第六轮：Prover 计算 <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{fold}_\alpha(\pi_1)\)</span>，然后发送给 Verifier</p>
+<p>计算 <span class="math notranslate nohighlight">\(\pi_0\)</span> 的过程如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_0[j] = \mathsf{fold}_\alpha(\pi_1[j], \pi_1[j+1]), \quad j=0
+\]</div>
+<p>同样 <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{Enc}_0(f^{(0)})\)</span>，即 <span class="math notranslate nohighlight">\(\pi_0\)</span> 是 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 的 codeword，而 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 是 <span class="math notranslate nohighlight">\(f\)</span> 的关于 <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span> 的折叠结果：</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)} = f(\alpha_0, \alpha_1, \alpha_2) = f_0 + f_1\alpha_0 + f_2\alpha_1 + f_3\alpha_0 \alpha_1 + f_4\alpha_2 + f_5\alpha_0\alpha_2 + f_6\alpha_1\alpha_2 + f_7\alpha_0\alpha_1\alpha_2
+\]</div>
+<p>到此，Commit-phase 结束，Prover 总共发送了 <span class="math notranslate nohighlight">\((\pi_{2}, \pi_{1}, \pi_0)\)</span> 给 Verifier。 Verifier 收到后，首先验证 <span class="math notranslate nohighlight">\(\pi_0\)</span> 是否是常数多项式。不过这样还不够，Verifier 还需要验证 Prover 的三次折叠行为都是诚实的。如果验证全部 <span class="math notranslate nohighlight">\(\pi_i\)</span> 的折叠，Verifier 将会丧失 Succinctness，从而失去验证效率。由于 Proximity Gap 性质，Verifier 只需要少量的验证即可确保 <span class="math notranslate nohighlight">\(\pi_i\)</span> 是合法的 codeword。</p>
+</section>
+<section id="query-phase">
+<h2>Query-phase<a class="headerlink" href="#query-phase" title="Link to this heading">#</a></h2>
+<p>与 FRI 协议类似，在 Query-phase 阶段，Verifier 要对 Prover 发送的 <span class="math notranslate nohighlight">\((\pi_{d}, \pi_{d-1}, \ldots, \pi_0)\)</span> 进行多轮的随机抽查，以确保 Prover 的折叠过程是诚实的。我们下面讨论每一轮的抽查过程。</p>
+<p>Verifier 会在 <span class="math notranslate nohighlight">\(\pi_{d}\)</span> 中随机选择一个位置 <span class="math notranslate nohighlight">\(\mu\)</span> 并发送给 Prover，注意 <span class="math notranslate nohighlight">\(0\leq \mu &lt; n_{d-1}\)</span>，其中 <span class="math notranslate nohighlight">\(n_{d-1}\)</span> 只有 <span class="math notranslate nohighlight">\(\pi_{d}\)</span> 。Prover 打开 <span class="math notranslate nohighlight">\(\pi_{d}[\mu]\)</span> 和 <span class="math notranslate nohighlight">\(\pi_{d}[\mu+n_{d-1}]\)</span> 这两点，同时将折叠后的 codeword <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> 中位置为 <span class="math notranslate nohighlight">\(\mu\)</span> 的值，即 <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu]\)</span> 一起发送给 Verifier，再加上这三个点的 Merkle Path。</p>
+<p>Verifier 收到后，首先验证这三个点是否对应到 <span class="math notranslate nohighlight">\(\pi_{d}\)</span> 和 <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> 的 codeword 上，然后验证它们三者是否满足折叠关系：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{d-1}[\mu] \overset{?}{=} \mathsf{fold}_{\alpha_{d-1}}(\pi_{d}[\mu], \pi_{d}[\mu+n_{d-1}])
+\]</div>
+<p>只验证 <span class="math notranslate nohighlight">\(\pi_d\)</span> 到 <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> 的折叠关系是不够的，Verifier 还要验证 <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> 到 <span class="math notranslate nohighlight">\(\pi_{0}\)</span> 的所有折叠关系。Prover 还要发送 <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> 到 <span class="math notranslate nohighlight">\(\pi_{d-2}\)</span> 的点。这里 Verifier 不用重新选择随机数，而是继续使用 <span class="math notranslate nohighlight">\(\mu\)</span>，因为在下一轮折叠中，<span class="math notranslate nohighlight">\(\pi_{d-1}[\mu]\)</span> 这个位置将要和另一个对称的点进行关于 <span class="math notranslate nohighlight">\(\alpha_{d-2}\)</span> 的折叠，具体是哪个位置的点，需要分情况讨论。如果 <span class="math notranslate nohighlight">\(\mu &lt; n_{d-2}\)</span>，那么 <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu+n_{d-2}]\)</span> 就是对称点；如果 <span class="math notranslate nohighlight">\(\mu \geq n_{d-2}\)</span>，那么 <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu-n_{d-2}]\)</span> 就是对称点。我们假设 <span class="math notranslate nohighlight">\(\mu \geq n_{d-2}\)</span>，那么 Prover 就发送 <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu-n_{d-2}]\)</span> 和 它的 Merkle Path 给 Verifier。以便 Verifier 验证 <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> 到 <span class="math notranslate nohighlight">\(\pi_{d-2}\)</span> 的折叠关系。</p>
+<p>这样一来，Verifier 只需要给一个随机数 <span class="math notranslate nohighlight">\(\mu\)</span>，就可以验证从 <span class="math notranslate nohighlight">\(\pi_{d}\)</span> 到 <span class="math notranslate nohighlight">\(\pi_{0}\)</span> 的所有折叠关系。这样的验证过程就是一轮。</p>
+<p>为了将可靠性提升到一个足够的高度，Verifier 要进行多轮，确保 Prover 没有作弊空间。Query-phase 正是利用了 Proximity Gap 这一特性。Prover 篡改后的 codeword 大概率距离合法的编码空间比较远，这样 Verifier 只需要少量的抽样次数即可发现作弊行为。</p>
+</section>
+<section id="id1">
+<h2>总结<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>本文描述了下 Basefold-IOPP 协议的 Commit-phase 和 Query-phase 的框架。这个框架是对 FRI 协议的一个泛化和扩展，从 RS-Code 扩展到了任何的 Foldable Linear Codes。但是请注意，Basefold 并不支持 Degree 大于 2 的 codeword 折叠。这样由于 Basefold-IOPP 协议不仅仅要完成 Proximity Testing，还要提供一个 MLE 多项式的运算结果。这将是本系列文章的下一篇。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="basefold-01.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Basefold 笔记：可折叠线性编码</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="basefold-03.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Basefold 笔记： MLE 求值证明</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-proximity">Proof of Proximity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-phase">Commit-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-phase">Query-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

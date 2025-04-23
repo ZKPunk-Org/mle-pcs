@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Basefold 笔记：IOPP 可靠性分析 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-05.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="[BBHR18] FRI 论文 soundness 解析" href="../fri/BBHR18-FRI.zh.html" />
+    <link rel="prev" title="Basefold 笔记：Random Foldable Codes" href="basefold-04.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-05.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-05.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Basefold 笔记：IOPP 可靠性分析</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iopp">IOPP 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">分析思路</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iopp-soundness">IOPP Soundness 定理</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">情况 1 的证明</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">情况 2 的证明</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold-iopp">
+<h1>Basefold 笔记：IOPP 可靠性分析<a class="headerlink" href="#basefold-iopp" title="Link to this heading">#</a></h1>
+<p>在本篇文章中将梳理 [ZCF23] 论文中给出的 IOPP soundness 证明思路，其与 [BKS18] 中关于 FRI 协议的 soundness 证明类似。其中用到了二叉树的方式来分析 Prover 可能作弊的点，这个思想也在 [BGKS20] DEEP-FRI  协议的 soundness 证明中出现过。</p>
+<section id="iopp">
+<h2>IOPP 协议<a class="headerlink" href="#iopp" title="Link to this heading">#</a></h2>
+<p>在前面第 2 篇文章中已经详细介绍了 IOPP 协议，为了后文的分析，这里简单罗列下 IOPP 协议，它是 FRI 协议的一个扩展，在理解协议的过程中，完全可以带入 FRI 协议，commit 阶段和 query 阶段都是一致的。</p>
+<p><strong>协议 1 [ZCF23, Protocol 2] IOPP.commit</strong></p>
+<p>输入 oracle：<span class="math notranslate nohighlight">\(\pi_d \in \mathbb{F}^{n_d}\)</span>
+输出 oracles: <span class="math notranslate nohighlight">\((\pi_{d-1}, \ldots, \pi_0) \in \mathbb{F}^{n_{d-1}} \times \cdots \times \mathbb{F}^{n_0}\)</span></p>
+<ul class="simple">
+<li><p>对于 <span class="math notranslate nohighlight">\(i\)</span> 从 <span class="math notranslate nohighlight">\(d-1\)</span> 到 <span class="math notranslate nohighlight">\(0\)</span>：</p>
+<ol class="arabic simple">
+<li><p>Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中采样并发送 <span class="math notranslate nohighlight">\(\alpha_i \leftarrow \$ \mathbb{F}\)</span> 给 Prover</p></li>
+<li><p>对于每一个索引 <span class="math notranslate nohighlight">\(j \in [1, n_i]\)</span>，Prover
+a. 设置 <span class="math notranslate nohighlight">\(f(X) := \mathrm{interpolate}((\mathrm{diag}(T_i)[j], \pi_{i+1}[j]), (\mathrm{diag}(T'_i)[j], \pi_{i+1}[j+n_i]))\)</span>
+b. 设置 <span class="math notranslate nohighlight">\(\pi_i[j] = f(\alpha_i)\)</span></p></li>
+<li><p>Prover 输出 oracle <span class="math notranslate nohighlight">\(\pi_i \in \mathbb{F}^{n_i}\)</span> 。</p></li>
+</ol>
+</li>
+</ul>
+<p><strong>协议 2 [ZCF23, Protocol 3] IOPP.query</strong></p>
+<p>输入 oracles：<span class="math notranslate nohighlight">\((\pi_{d-1}, \ldots, \pi_0) \in \mathbb{F}^{n_{d-1}} \times \ldots \times \mathbb{F}^{n_0}\)</span>
+输出：accept 或 reject</p>
+<ul class="simple">
+<li><p>Verifier 采样 <span class="math notranslate nohighlight">\(\mu \leftarrow \$ [1, n_{d-1}]\)</span></p></li>
+<li><p>对于 <span class="math notranslate nohighlight">\(i\)</span> 从 <span class="math notranslate nohighlight">\(d-1\)</span> 到 <span class="math notranslate nohighlight">\(0\)</span> ，Verifier</p>
+<ol class="arabic simple">
+<li><p>查询 oracle <span class="math notranslate nohighlight">\(\pi_{i+1}[\mu], \pi_{i+1}[\mu + n_i]\)</span></p></li>
+<li><p>计算 <span class="math notranslate nohighlight">\(p(X) := \mathrm{interpolate}((\mathrm{diag}(T_i)[\mu], \pi_{i+1}[\mu]), (\mathrm{diag}(T'_i)[\mu], \pi_{i+1}[\mu + n_i]))\)</span></p></li>
+<li><p>检查 <span class="math notranslate nohighlight">\(p(\alpha_i) = \pi_i[\mu]\)</span></p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(i &gt; 0\)</span> 且 <span class="math notranslate nohighlight">\(\mu &gt; n_i - 1\)</span>，则更新 <span class="math notranslate nohighlight">\(\mu \leftarrow \mu - n_{i - 1}\)</span></p></li>
+</ol>
+</li>
+<li><p>如果 <span class="math notranslate nohighlight">\(\pi_0\)</span> 是关于生成矩阵 <span class="math notranslate nohighlight">\(\mathbf{G}_0\)</span> 的一个有效的码字，则输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code>，否则输出 <code class="docutils literal notranslate"><span class="pre">reject</span></code>。</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>分析思路<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>IOPP soundness 分析的就是对于任意的一个 Prover，其可能会作弊，在这种情况下，Verifier 输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> 的概率最多是多少，我们希望这个概率足够的小，这样这个协议才比较安全。当然这个概率肯定和协议中的一些参数相关，在实际中，我们希望其达到一个提前给定的安全参数 <span class="math notranslate nohighlight">\(\lambda\)</span> （例如取 <span class="math notranslate nohighlight">\(\lambda\)</span> 为 <span class="math notranslate nohighlight">\(128\)</span> 或 <span class="math notranslate nohighlight">\(256\)</span> ），意思是这个概率要小于 <span class="math notranslate nohighlight">\(2^{-\lambda}\)</span> 。</p>
+<p>我们现在来看看 IOPP 协议中对于作弊的 Prover ，有哪些地方可以钻漏洞使得 Verifier 输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> 。我们注意到，有两个地方 Verifier 引入了随机数。</p>
+<ol class="arabic simple">
+<li><p>在 IOPP.commit 阶段，协议第 1 步，Verifier 会从 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中选取随机数 <span class="math notranslate nohighlight">\(\alpha_{i}\)</span> 给 Prover，让 Prover 去对原来的 <span class="math notranslate nohighlight">\(\pi_{i+1}\)</span> 进行折叠，得到 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 。</p></li>
+<li><p>在 IOPP.query 阶段，协议的第 1 步，Verifier 就会从 <span class="math notranslate nohighlight">\([1, n_{d-1}]\)</span> 中采样得到 <span class="math notranslate nohighlight">\(\mu\)</span> ，然后去进行检查之前 Prover 折叠的是否正确。</p></li>
+</ol>
+<p>假设初始作弊的 Prover 给出的 <span class="math notranslate nohighlight">\(\pi_{d}\)</span> 距离 <span class="math notranslate nohighlight">\(C_{d}\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远，我们希望 Verifier 最后能检查出 <span class="math notranslate nohighlight">\(\pi_{0}\)</span> 距离 <span class="math notranslate nohighlight">\(C_0\)</span> 也有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远，也就是在折叠的过程中保持这个 <span class="math notranslate nohighlight">\(\delta\)</span> 距离，还有一种就是检查出 Prover 没有正确折叠。考虑两种情况：</p>
+<ol class="arabic">
+<li><p>Prover 非常幸运，Verifier 选取的随机数 <span class="math notranslate nohighlight">\(\alpha_{i}\)</span> 能使得对 <span class="math notranslate nohighlight">\(\pi_{i+1}\)</span> 折叠之后的 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 距离对应的 <span class="math notranslate nohighlight">\(C_{i}\)</span> 没有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远了，此时 Verifier 会输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> 。为什么说对于这种情况 Prover 非常幸运呢？因为这是 Proximity Gaps 告诉我们的结论，意思是说发生这种情况的概率非常非常的小（假设该概率为 <span class="math notranslate nohighlight">\(\epsilon\)</span> ），小到发生这种情况就相当于 Prover 中了彩票。</p></li>
+<li><p>Prover 没有情况 1 所说的那么幸运了，这时用随机数折叠之后的消息 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 距离对应的还是有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远。由于 Verifier 在 IOPP.query 阶段是会随机选取 <span class="math notranslate nohighlight">\(\mu \leftarrow \$ [1,n_{d-1}]\)</span> ，然后进行检查，因此不会检查 <span class="math notranslate nohighlight">\(\pi_{i}\)</span> 中的所有元素，这就给了 Prover 可乘之机了。例如，用随机数折叠之后的消息 <span class="math notranslate nohighlight">\(a\)</span> 距离编码空间的相对 Hamming 距离会大于 <span class="math notranslate nohighlight">\(\delta_{0}\)</span> ，即 <span class="math notranslate nohighlight">\(\Delta(a, C) &gt; \delta\)</span> 。Verifier 会随机检查 <span class="math notranslate nohighlight">\(a[i]\)</span> 与 <span class="math notranslate nohighlight">\(c[i]\)</span> 是否相等，如果不等就会拒绝。</p>
+<p><img alt="" src="../_images/basefold-05-delta.svg" /></p>
+<p>由于 <span class="math notranslate nohighlight">\(\Delta(a, C) &gt; \delta\)</span> ，这时 <span class="math notranslate nohighlight">\(a\)</span> 中有大于 <span class="math notranslate nohighlight">\(\delta\)</span> 比例的分量与编码空间中的码字不相等，当 Verifier 选到这些不等的位置时，会进行拒绝，因此 Verifier 抓到 Prover 作弊的概率会大于 <span class="math notranslate nohighlight">\(\delta\)</span> 。</p>
+<p><img alt="" src="../_images/basefold-05-delta-reject.svg" /></p>
+<p>如果 Verifier 查询 <span class="math notranslate nohighlight">\(l\)</span> 次，那么 Prover 能通过 Verifier 检查的概率就不会超过 <span class="math notranslate nohighlight">\((1 - \delta)^{l}\)</span> 。</p>
+</li>
+</ol>
+<p>综合上述两种情况，Prover 作弊成功的概率不超过</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon + (1 - \delta)^{l} \tag{1}
+\]</div>
+<p>这是一个整体分析的思路，具体的表达式与 <span class="math notranslate nohighlight">\((1)\)</span> 式也会有所不同，下面来看看具体的 IOPP soundness 定理。</p>
+</section>
+<section id="iopp-soundness">
+<h2>IOPP Soundness 定理<a class="headerlink" href="#iopp-soundness" title="Link to this heading">#</a></h2>
+<p><strong>定理 1</strong> [ZCF23, Theorem3] (可折叠的线性编码的 IOPP Soundness) 令 <span class="math notranslate nohighlight">\(C_d\)</span> 表示一个 <span class="math notranslate nohighlight">\((c, k_0, d)\)</span> 可折叠的线性编码，其生成矩阵为 <span class="math notranslate nohighlight">\((G_0, \ldots, G_d)\)</span> 。我们用 <span class="math notranslate nohighlight">\(C_i\)</span> （<span class="math notranslate nohighlight">\(0 \le i &lt; d\)</span>）表示生成矩阵 <span class="math notranslate nohighlight">\(G_i\)</span> 的编码，假设对于所有的 <span class="math notranslate nohighlight">\(i \in [0, d-1]\)</span> 都有相对最小距离 <span class="math notranslate nohighlight">\(\Delta C_i \ge \Delta C_{i+1}\)</span> 。令 <span class="math notranslate nohighlight">\(\gamma &gt; 0\)</span> ，设 <span class="math notranslate nohighlight">\(\delta := \min(\Delta^*(\pi_d, C_d), J_{\gamma}(J_{\gamma}(\Delta_{C_d})))\)</span> ，其中 <span class="math notranslate nohighlight">\(\Delta^*(\pi_d, C_d)\)</span> 是 <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> 和 <span class="math notranslate nohighlight">\(C_d\)</span> 之间的相对陪集最小距离(relative coset minimum distance)。那么对于任意的（自适应选择的）Prover oracles <span class="math notranslate nohighlight">\(\pi_{d-1}, \ldots, \pi_0\)</span> ，Verifier 在 IOPP.query 阶段重复 <span class="math notranslate nohighlight">\(\ell\)</span> 次，都输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> 的概率至多为 <span class="math notranslate nohighlight">\((1 - \delta + \gamma d)^{\ell}\)</span> 。</p>
+<p>定理中提到的出现的 <span class="math notranslate nohighlight">\(J_{\gamma}(J_{\gamma}(\Delta_{C_d}))\)</span> 是两个 Johnson 函数的复合。其定义为如下。</p>
+<p><strong>定义 1</strong> [ZCF23, Definition 4] (Johnson Bound) 对于任意的 <span class="math notranslate nohighlight">\(\gamma \in (0,1]\)</span> ，定义 <span class="math notranslate nohighlight">\(J_{\gamma}: [0,1] \rightarrow [0,1]\)</span> 为函数</p>
+<div class="math notranslate nohighlight">
+\[
+J_{\gamma}(\lambda) := 1 - \sqrt{1 - \lambda(1 - \gamma)} .
+\]</div>
+<p>相对陪集最小距离(relative coset minimum distance) 的定义如下。</p>
+<p><strong>定义 2</strong> [ZCF23, Definition 5] (Relative Coset Minimum Distance) 令 <span class="math notranslate nohighlight">\(n\)</span> 为一个偶数，<span class="math notranslate nohighlight">\(C\)</span> 为一个 <span class="math notranslate nohighlight">\([n,k,d]\)</span> 纠错码。对于一个向量 <span class="math notranslate nohighlight">\(\mathbf{v} \in \mathbb{F}^{n}\)</span> 和一个码字 <span class="math notranslate nohighlight">\(c \in C\)</span> ，<span class="math notranslate nohighlight">\(\mathbf{v}\)</span> 和 <span class="math notranslate nohighlight">\(c\)</span> 之间的相对距离 <span class="math notranslate nohighlight">\(\Delta^*(\mathbf{v},c)\)</span> 定义为</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta^*(\mathbf{v},c) = \frac{2 |\{ j \in [1, n/2]: \mathbf{v}[j]  \neq c[j] \vee \mathbf{v}[j + n/2]  \neq c[j + n/2] \}  |}{n}.
+\]</div>
+<p>这个定义和 [BBHR18] 中证明 soundness 用到的 Block-wise 距离定义([BBHR18, Definition 3.2])是类似的，它是相对最小 Hamming 距离的一个替代版本。将 <span class="math notranslate nohighlight">\(\{j,j+n/2\}\)</span> 组成成一对，对比 FRI 协议，集合 <span class="math notranslate nohighlight">\(\{j,j+n/2\}\)</span> 可以对应一个陪集。例如对于 <span class="math notranslate nohighlight">\(n = 8\)</span> ，设生成元为 <span class="math notranslate nohighlight">\(\omega\)</span> ，且 <span class="math notranslate nohighlight">\(\omega^8 = 1\)</span> ，选取映射 <span class="math notranslate nohighlight">\(x \mapsto x^2\)</span> ，那么可以看到 <span class="math notranslate nohighlight">\(\{1,5\}\)</span> 、<span class="math notranslate nohighlight">\(\{2,6\}\)</span> 、<span class="math notranslate nohighlight">\(\{3,7\}\)</span> 、<span class="math notranslate nohighlight">\(\{4,8\}\)</span> 对应的元素组成一个陪集，总共形成 4 个陪集。</p>
+<p><img alt="" src="../_images/basefold-05-coset-example.svg" /></p>
+<p><span class="math notranslate nohighlight">\(\Delta^*(\mathbf{v},c)\)</span> 衡量就是在所有的陪集中，有多少比例的陪集，使得 <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> 与 <span class="math notranslate nohighlight">\(c\)</span> 在这些陪集中不完全一致。</p>
+<p><img alt="" src="../_images/basefold-05-coset-distance.svg" /></p>
+<p>令 <span class="math notranslate nohighlight">\(\Delta^*(\mathbf{v},C) := \min_{c \in C}\Delta^*(\mathbf{v},c)\)</span> ，那么它与相对最小 Hamming 距离有这样的一个关系：<span class="math notranslate nohighlight">\(\Delta(\mathbf{v},C) \le \Delta^*(\mathbf{v},C)\)</span> 。</p>
+<p>尽管多了这些不同的定义和 Johnson 函数，但是 IOPP Soundness 的证明思路与前面说的分析思路还是一致的，分两种情况讨论。我们的目的是分析作弊的 Prover 最后能够通过 Verifier 的检查，最终输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> 的概率。证明的思路是：</p>
+<p><strong>情况 1</strong> : Prover 非常幸运，由于 Verifer 选取随机数 <span class="math notranslate nohighlight">\(\alpha_i\)</span> ，导致进行折叠(fold)之后的消息距离编码空间比较近，这样 Prover 后续都能通过 Verifier 的检查。对于 Verifier 来说，也就是发生了一些”坏”的事件，定义存在 <span class="math notranslate nohighlight">\(i \in [0, d-1]\)</span> ，使得</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta(\mathrm{fold}_{\alpha_i}(\pi_{i+1}), C_i) \le \min(\Delta^*(\pi_{i+1}, C_{i+1}), J_{\gamma}(J_{\gamma}(\Delta_{C_d}))) - \gamma
+\]</div>
+<p>用反证法通过 Correlated Agreement 定理（其能推导出对应的 Proximity Gaps 定理）可以证明发生“坏”的事件的概率是比较小的，证明得到其概率最多为 <span class="math notranslate nohighlight">\(\frac{2d}{\gamma^3 |\mathbb{F}|}\)</span> 。</p>
+<p><strong>情况 2</strong> : 假设 Prover 没有那么幸运了，也就是情况 1 中的“坏”的事件没有发生，那么Verifier 在 IOPP.query 阶段会选取 <span class="math notranslate nohighlight">\(\mu \leftarrow \$ [1, n_{d-1}]\)</span> ，这个时候 Prover 可能会躲过 Verifier 的检查，让 Verifier 选到了 Prover 没有作弊的那些点。重复执行IOPP.query <span class="math notranslate nohighlight">\(l\)</span> 次，Prover 都能够通过的概率最多为 <span class="math notranslate nohighlight">\((1 - \delta + \gamma d)^{l}\)</span> 。</p>
+<p>综合 1 和 2 就得到了对于可折叠的线性编码(Foladable Linear Codes)的 IOPP Soundness ，至少为</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{s}^-(\delta) = 1 - \left(\frac{2d}{\gamma^3 |\mathbb{F}|} + \left(1 - \delta + \gamma d \right)^l \right) .
+\]</div>
+<p>也就证得了定理 1 。</p>
+<section id="id2">
+<h3>情况 1 的证明<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>下面的推论 1 证明了对于某一次 <span class="math notranslate nohighlight">\(i\)</span> ，折叠之后的结果距离 <span class="math notranslate nohighlight">\(C_i\)</span> 的相对 Hamming 距离比较近，设为事件 <span class="math notranslate nohighlight">\(B^{(i)}\)</span> ，那么其概率不超过 <span class="math notranslate nohighlight">\(\frac{2}{\gamma^3 |\mathbb{F}|}\)</span> 。那么如果发生了某些事件 <span class="math notranslate nohighlight">\(B_i\)</span> ，其概率不会超过这些 <span class="math notranslate nohighlight">\(B_i\)</span> 发生的概率之和，即</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr\left[\bigcup_{i = 0}^{d-1} B^{(i)} \right] \le \sum_{i = 0}^{d-1} \Pr[B^{(i)}] \le \frac{2d}{\gamma^3 |\mathbb{F}|}.
+\]</div>
+<p>我们具体来看看推论 1。</p>
+<p><strong>推论 1</strong> [ZCF23, Corollary 1] 固定任意的 <span class="math notranslate nohighlight">\(i \in [0, d-1]\)</span> 和 <span class="math notranslate nohighlight">\(\gamma, \delta &gt; 0\)</span> ，使得 <span class="math notranslate nohighlight">\(\delta \le J_{\gamma}(J_{\gamma}(\Delta_{C_d}))\)</span> ，那么如果 <span class="math notranslate nohighlight">\(\Delta^*(\mathbf{v}, C_{i+1}) &gt; \delta\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\alpha_i \leftarrow \$ \mathbb{F}}[\Delta(\mathrm{fold}_{\alpha_i}(\mathbf{v}), C_i) \le \delta - \gamma] \le \frac{2}{\gamma^3 |\mathbb{F}|}. \tag{2}
+\]</div>
+<p>其中的 <span class="math notranslate nohighlight">\(\mathrm{fold}_{\alpha_i}(\cdot)\)</span> 函数定义如下。令 <span class="math notranslate nohighlight">\(\mathbf{u},\mathbf{u'} \in \mathbf{F}^{n_i}\)</span> 是两个唯一的插值向量使得</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{i+1} = (\mathbf{u} + \mathrm{diag}(T_i) \circ \mathbf{u}', \mathbf{u} + \mathrm{diag}(T_i') \circ \mathbf{u}')
+\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(\mathrm{fold}_{\alpha_i}(\pi_{i+1})\)</span> 定义为</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{fold}_{\alpha_i}(\pi_{i+1}) := \mathbf{u}' + \alpha_i \mathbf{u}.
+\]</div>
+<p>这其实就是对 <span class="math notranslate nohighlight">\(\pi_{i+1}\)</span> 用随机数 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 进行折叠的过程。</p>
+<p>推论 1 将 [BKS18] 的推论 7.3 的结果推广到了一般的可折叠的线性编码。</p>
+<p><em><strong>推论 1 证明思路：</strong></em> 现在想证明用随机数 <span class="math notranslate nohighlight">\(\alpha_i\)</span> fold 之后的相对 Hamming 距离比原来小，这件事发生的概率比较小，即不超过 <span class="math notranslate nohighlight">\(\frac{2}{\gamma^3 |\mathbb{F}|}\)</span> 。如果用反证法，假设这件事发生的概率比较大，那么就可以直接 Correlated Agreement 定理（来自[BKS18] 定理 4.4）的结论，来证明对于 affine space <span class="math notranslate nohighlight">\(U = \{\mathbf{u} + x \mathbf{u'} : x \in \mathbb{F}\}\)</span> ，在 <span class="math notranslate nohighlight">\(C_i\)</span> 中存在一个比较大的 Correlated Agree 子集 <span class="math notranslate nohighlight">\(T\)</span> ，使得在这里面存在 <span class="math notranslate nohighlight">\(\mathbf{w}, \mathbf{w'} \in C_i\)</span> 使得分别与对应的 <span class="math notranslate nohighlight">\(\mathbf{u}, \mathbf{u'}\)</span> 在 <span class="math notranslate nohighlight">\(T\)</span> 上是一致的，再将 <span class="math notranslate nohighlight">\(\mathbf{w}, \mathbf{w'}\)</span> 进行编码，得到的码字 <span class="math notranslate nohighlight">\(c_{w}\)</span> 是在 <span class="math notranslate nohighlight">\(C_{i+1}\)</span> 中的，从而来估计 <span class="math notranslate nohighlight">\(\Delta^{*}(\mathbf{v}, C_{i+1})\)</span> ，能得到其不超过 <span class="math notranslate nohighlight">\(\delta\)</span> ，与假设矛盾，因此得证。</p>
+</section>
+<section id="id3">
+<h3>情况 2 的证明<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>想要证明调用 IOPP.query <span class="math notranslate nohighlight">\(l\)</span> 次，Verifier 输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> 的概率不超过 <span class="math notranslate nohighlight">\((1 - \delta + \gamma d)^l\)</span>，我们只需要证明调用一次 IOPP.query，Verifier <code class="docutils literal notranslate"><span class="pre">reject</span></code> 的概率至少为 <span class="math notranslate nohighlight">\(\delta - \gamma d\)</span> 。</p>
+<p>用二叉树的思想来进行证明，首先定义一个“坏”的节点 <span class="math notranslate nohighlight">\((i,\mu)\)</span> ，如下图所示，将那些没有通过 IOPP.query 第 3 步的点表示出来。也就是当 Verifier 选取随机数 <span class="math notranslate nohighlight">\(\mu\)</span> 之后，对任意的 <span class="math notranslate nohighlight">\(i \in [0, d-1]\)</span> 以及任意的 <span class="math notranslate nohighlight">\(\mu \in [n_i]\)</span> ，Verifier 先计算 IOPP.query 第 2 步，计算</p>
+<div class="math notranslate nohighlight">
+\[
+p(X) := \mathrm{interpolate}((\mathrm{diag}(T_i)[\mu], \pi_{i+1}[\mu]), (\mathrm{diag}(T'_i)[\mu], \pi_{i+1}[\mu + n_i]))
+\]</div>
+<p>接着检查 IOPP.query 协议的第 3 步，发现</p>
+<div class="math notranslate nohighlight">
+\[
+p(\alpha_i) \neq \pi_i[\mu]
+\]</div>
+<p>这时我们说节点 <span class="math notranslate nohighlight">\((i,\mu)\)</span> 是“坏”的。</p>
+<p><img alt="" src="../_images/basefold-05-badnode.svg" /></p>
+<p>下面考虑 <span class="math notranslate nohighlight">\(i\)</span> 从 <span class="math notranslate nohighlight">\(d-1\)</span> 到 <span class="math notranslate nohighlight">\(0\)</span> ，一个 <span class="math notranslate nohighlight">\(\mu\)</span> 能生成一棵二叉树，取遍所有的 <span class="math notranslate nohighlight">\(\mu \in [1, n_{d-1}]\)</span> 能生成如下图所示 <span class="math notranslate nohighlight">\(n_{0}\)</span> 棵二叉树。</p>
+<p><img alt="" src="../_images/basefold-05-binarytree.svg" /></p>
+<p>如果在其中有一个 <span class="math notranslate nohighlight">\((i,\mu)\)</span> 节点是”坏”的，假设在第 <span class="math notranslate nohighlight">\(d-1\)</span> 到第 <span class="math notranslate nohighlight">\(i +1\)</span> 层的所有节点和其孩子节点都是一致的，也就是在 IOPP.query 协议中，从 <span class="math notranslate nohighlight">\(d-1\)</span> 步直到第 <span class="math notranslate nohighlight">\(i+1\)</span> 步都通过了第 3 步的检查，但是在第 <span class="math notranslate nohighlight">\(i\)</span> 步，遇到了一个 <span class="math notranslate nohighlight">\((i,u)\)</span> 没有通过第 3 步的检查，这个时候 Verifier 就会拒绝。在图中，从第 <span class="math notranslate nohighlight">\(i+1\)</span> 到第 <span class="math notranslate nohighlight">\(d-1\)</span> 层都为“好”的节点。那么也就是说只要整棵树中有一个坏的节点，Verifier 就会拒绝。如果用 <span class="math notranslate nohighlight">\(\beta_i\)</span> 表示的是在第 <span class="math notranslate nohighlight">\(i\)</span> 层坏的节点的比率，那么在第 <span class="math notranslate nohighlight">\(i\)</span> 层 Verifier 拒绝的概率就是 <span class="math notranslate nohighlight">\(\beta_i\)</span> ，考虑整个 IOPP.query 阶段，其拒绝的概率就是 <span class="math notranslate nohighlight">\(\sum_{i=0}^{d-1}\beta_i\)</span> ，其中 <span class="math notranslate nohighlight">\(\beta_i := \Delta(\pi_i, \mathrm{fold}_{\alpha_i}(\pi_{i+1}))\)</span> ，也就是那些“坏”的点，对 <span class="math notranslate nohighlight">\(\pi_{i+1}\)</span> 折叠之后与 <span class="math notranslate nohighlight">\(\pi_i\)</span> 不一致。</p>
+<p>那么剩下的任务就是估计 <span class="math notranslate nohighlight">\(\sum_{i=0}^{d-1}\beta_i\)</span> 。[ZCF23, Claim 2] 给出了每个 <span class="math notranslate nohighlight">\(\beta_i\)</span> 的不等式。</p>
+<p>**命题 1 ** [ZCF23, Claim 2] 对任意的 <span class="math notranslate nohighlight">\(i \in [0, d]\)</span> ，定义 <span class="math notranslate nohighlight">\(\delta^{(i)} := \min(\Delta^*(\pi_i, C_i), J_{\gamma}(J_{\gamma}(\Delta_{C_d})))\)</span> 。对所有的 <span class="math notranslate nohighlight">\(i \in [0, d-1]\)</span> 都有</p>
+<div class="math notranslate nohighlight">
+\[
+\beta_i \ge \delta^{(i+1)} - \delta^{(i)} - \gamma .
+\]</div>
+<p>那么根据 soundness 中的条件，<span class="math notranslate nohighlight">\(\delta = \delta^{(d)}\)</span> 。同时由于 <span class="math notranslate nohighlight">\(\Delta^{*}(\pi_0, C_0) = \Delta(\pi_0, C_0) = 0\)</span> ，因此 <span class="math notranslate nohighlight">\(\delta^{(0)} = 0\)</span> 。则根据命题的结论有</p>
+<div class="math notranslate nohighlight">
+\[
+\delta = \delta^{(d)} - \delta^{(0)} = \sum_{i = 0}^{d-1} \delta^{(i+1)} - \delta^{(i)} \le \sum_{i = 0}^{d-1} \beta_i + \gamma d,
+\]</div>
+<p>从而得证 <span class="math notranslate nohighlight">\(\sum_{i = 0}^{d-1} \beta_i \ge \delta - \gamma d\)</span> 。因此如果没有坏的事件 <span class="math notranslate nohighlight">\(B\)</span> 发生，调用一次 IOPP.query ，拒绝的概率至少为 <span class="math notranslate nohighlight">\(\delta - \gamma d\)</span> 。至此情况 2 的结论也证明了。</p>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BBHR18] Eli Ben-Sasson, Iddo Bentov, Ynon Horesh, and Michael Riabzev. Fast Reed-Solomon Interactive Oracle Proofs of Proximity. In Proceedings of the 45th International Colloquium on Automata, Languages, and Programming (ICALP), 2018. Available online as Report 134-17 on Electronic Colloquium on Computational Complexity.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. DEEP-FRI: sampling outside the box improves soundness. In Thomas Vidick, editor, 11th Innovations in Theoretical Computer Science Conference, ITCS 2020, January 12-14, 2020, Seattle, Washington, USA, volume 151 of LIPIcs, pages 5:1–5:32. Schloss Dagstuhl-Leibniz-Zentrum für Informatik, 2020.</p></li>
+<li><p>[BKS18] Eli Ben-Sasson, Swastik Kopparty, and Shubhangi Saraf. “Worst-Case to Average Case Reductions for the Distance to a Code”. In: Proceedings of the 33rd Computational Complexity Conference. CCC ’18. San Diego, California: Schloss Dagstuhl-Leibniz-Zentrum fuer Informatik, 2018. isbn: 9783959770699.</p></li>
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="basefold-04.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Basefold 笔记：Random Foldable Codes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../fri/BBHR18-FRI.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">[BBHR18] FRI 论文 soundness 解析</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iopp">IOPP 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">分析思路</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iopp-soundness">IOPP Soundness 定理</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">情况 1 的证明</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">情况 2 的证明</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,854 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Libra-PCS &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'libra-pcs/libra-pcs.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notes on Virgo-PCS" href="../virgo-pcs/virgo-pcs-01.zh.html" />
+    <link rel="prev" title="Notes on Hyrax-PCS" href="../hyrax-pcs/hyrax-01.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../virgo-pcs/virgo-pcs-01.zh.html">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-02.zh.html">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Flibra-pcs/libra-pcs.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/libra-pcs/libra-pcs.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Libra-PCS</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle">1. MLE 多项式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. MLE 多项式的除法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3. Libra-PCS 的构造</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-evaluation">4. 支持 MLE Evaluation 形式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="libra-pcs">
+<h1>Libra-PCS<a class="headerlink" href="#libra-pcs" title="Link to this heading">#</a></h1>
+<section id="mle">
+<h2>1. MLE 多项式<a class="headerlink" href="#mle" title="Link to this heading">#</a></h2>
+<p>当然一个 MLE 多项式也可以采用「系数式」来表示，即 Coefficients form ，表示如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i_0=0}^{1}\sum_{i_1=0}^{1}\cdots \sum_{i_{n-1}=0}^{1} f_{i_0i_1\cdots i_{n-1}} X_0^{i_0}X_1^{i_1}\cdots X_{n-1}^{i_{n-1}}
+\]</div>
+<p>对于上图三维 MLE 多项式的例子，我们可以将它写为：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, X_2) = f_0 + f_1X_0 + f_2X_1 + f_3X_2 + f_4X_0X_1 + f_5X_0X_2 + f_6X_1X_2 + f_7X_0X_1X_2
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\((f_0, f_1, \ldots, f_7)\)</span> 为 MLE 多项式的系数向量。注意因为 MLE 多项式属于多元多项式（Multivariate Polynomial），任何表示方式都需要事先确定多项式中的项的排序顺序，本文以及后续讨论我们都基于 Lexicographic Order。</p>
+<p>对于 MLE 多项式的「点值式」表示，我们可以定义为：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i_0=0}^{1}\sum_{i_1=0}^{1}\cdots \sum_{i_{n-1}=0}^{1} a_{i_0i_1\cdots i_{n-1}}\cdot eq(i_0, i_1, \ldots, i_{n-1}, X_0, X_1, \ldots, X_{n-1})
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(eq\)</span> 为 一组关于 <span class="math notranslate nohighlight">\(n\)</span> 维 Boolean HyperCube <span class="math notranslate nohighlight">\(\{0, 1\}^n\)</span> 的 Lagrange Polynomial：</p>
+<div class="math notranslate nohighlight">
+\[
+eq(i_0, i_1, \ldots, i_{n-1}, X_0, X_1, \ldots, X_{n-1}) = \prod_{j=0}^{n-1} \Big((1-i_j)\cdot (1-X_j)+ i_j\cdot X_j\Big)
+\]</div>
+<p>MLE 多项式在「点值式」和「系数式」之间存在 <span class="math notranslate nohighlight">\(N\log(N)\)</span> 的转换算法，这里不再深入讨论。</p>
+</section>
+<section id="id1">
+<h2>2. MLE 多项式的除法<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>对于 Univariate 多项式 <span class="math notranslate nohighlight">\(f(X)\in\mathbb{F}_p[X]\)</span> ，如果 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(X=u\)</span> 处的运算值为 <span class="math notranslate nohighlight">\(v\)</span> ，那么我们可以有下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X)= q(X)\cdot (X-u) + v 
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(q(X)\)</span> 是 <span class="math notranslate nohighlight">\(f(X)\)</span> 除以 <span class="math notranslate nohighlight">\((X-u)\)</span> 的商多项式，<span class="math notranslate nohighlight">\(v\)</span> 是余数。</p>
+<p>我们可以简单推导下上面的这个等式。当我们把 <span class="math notranslate nohighlight">\(X=u\)</span> 代入到等式，可以得到 <span class="math notranslate nohighlight">\(f(u)=v\)</span> 。这说明多项式的求值问题等价于为多项式的除法余数。那么，我们可以让 <span class="math notranslate nohighlight">\(f(X)\)</span> 减去这个余数，那么得到的多项式 <span class="math notranslate nohighlight">\(g(X)=f(X)-v\)</span> ，显然可以被 <span class="math notranslate nohighlight">\((X-u)\)</span> 整除，即存在一个商多项式，记为 <span class="math notranslate nohighlight">\(q(X)\)</span>。</p>
+<p>那么对于一个 Multivariate 多项式 <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{n-1})\)</span> ，论文 [PST13] 给出了一个类似的除法关系等式：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1, \ldots, X_{n-1}) - f(u_0, u_1, \ldots, u_{n-1})= \sum_{k=0}^{n-1}q_k(X_0, X_1, \ldots, X_{n-1}) \cdot (X_k - u_k)
+\]</div>
+<p>如果 <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{n-1})\)</span> 是一个 MLE 多项式，那么它可以被简化为下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) - \tilde{f}(u_0, u_1, \ldots, u_{n-1}) &amp; = \tilde{q}_{n-1}(X_0, X_1, \ldots, X_{\color{red}n-2}) \cdot (X_{n-1} - u_{n-1}) \\
+&amp; + \tilde{q}_{n-2}(X_0, X_1, \ldots, X_{\color{red}n-3}) \cdot (X_{n-2} - u_{n-2}) \\
+&amp; + \cdots \\
+&amp; + \tilde{q}_{1}(X_{\color{red}0}) \cdot (X_{1} - u_{1}) \\
+&amp; + \tilde{q}_{0} \cdot (X_{0} - u_{0}) \\
+\end{split}
+\end{split}\]</div>
+<p>这是因为 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span> 中每一个未知数 <span class="math notranslate nohighlight">\(X_k\)</span> 的最高次数为 <span class="math notranslate nohighlight">\(1\)</span>，对于 <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{k})\)</span>，它除以 <span class="math notranslate nohighlight">\((X_k-u_k)\)</span> 这个因式之后，余数多项式中将不再含有未知数 <span class="math notranslate nohighlight">\(X_k\)</span> ，所以当 <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{n-1})\)</span> 按顺序除以 <span class="math notranslate nohighlight">\((X_{n-1} - u_{n-1})\)</span> 到 <span class="math notranslate nohighlight">\((X_0 - u_0)\)</span> 这些因式，我们得到的商多项式和余数多项式中的未知数数量将依次减少，直到最后得到一个常数的商多项式 <span class="math notranslate nohighlight">\(\tilde{q}_0\)</span>，当然在 <span class="math notranslate nohighlight">\(n\)</span> 次除法结束之后，会出现一个常数的余数多项式，而它正好是 MLE 多项式在 <span class="math notranslate nohighlight">\((u_0, u_1, \ldots, u_{n-1})\)</span> 处的求值。这被称为 Ruffini’s 法则 [Ruffini]。</p>
+<p>我们假设这个最后的求值为 <span class="math notranslate nohighlight">\(v\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, \ldots, u_{n-1}) = v
+\]</div>
+</section>
+<section id="id2">
+<h2>3. Libra-PCS 的构造<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>类比 KZG10 的构造，Libra-PCS 也需要一个结构化的 SRS。需要注意的是，Libra 论文基于 KOE 安全假设，而本文介绍的是基于 AGM 的安全假设，所以方案的 SRS 具有更小的尺寸，同时也可以在 AGM 假设下证明方案的正确性和 Extractibility 性质。</p>
+<p>它由一个 Trusted Setup 来产生：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+SRS = \left(
+\begin{array}{l}
+[1]_1, [\tau_0]_1, [\tau_1]_1, [\tau_0\tau_1]_1, [\tau_2]_1, [\tau_0\tau_2]_1, [\tau_1\tau_2]_1, [\tau_0\tau_1\tau_2]_1, \ldots, [\tau_0\tau_1\cdots\tau_{n-1}]_1, [\xi]_1\\[1.5ex]
+[1]_2,\ [\tau_0]_2,\ [\tau_1]_2,\ [\tau_2]_2,\ \ldots,\ [\tau_{n-1}]_2,\ [\xi]_2
+\end{array}
+\right)
+\end{split}\]</div>
+<p>有了这个 SRS，我们可以将一个 n 元 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span> 进行承诺计算。即将其长度为 <span class="math notranslate nohighlight">\(N=2^n\)</span> 的系数向量用 SRS 作为 Basis 进行线性组合，得到 <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> 上的一个元素。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) &amp; = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + f_4X_2 + f_5X_0X_2 + f_6X_1X_2 \\
+&amp; + f_7X_0X_1X_2 + \cdots + f_{N-1}X_0X_1\cdots X_{n-1} \\
+\end{split}
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\vec{f}=(f_0, f_1, f_2, \ldots, f_{N-1})\)</span> 是 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span> 的系数向量。那么 Commitment 的计算方式如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+F=\mathsf{Commit}(\tilde{f}(X_0, X_1, \ldots, X_{n-1}); \rho) &amp; = f_0 \cdot [1]_1 + f_1 \cdot [\tau_0]_1 + f_2 \cdot [\tau_1]_1 + f_3 \cdot [\tau_0\tau_1]_1 \\
+&amp; + f_4 \cdot [\tau_2]_1 + f_5 \cdot [\tau_0\tau_2]_1 + f_6 \cdot [\tau_1\tau_2]_1 + f_7 \cdot [\tau_0\tau_1\tau_2]_1 \\
+&amp; + \cdots + f_{N-1} \cdot [\tau_0\tau_1\cdots\tau_{n-1}]_1 + \rho \cdot [\xi]_1
+\end{split}
+\end{split}\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\rho\)</span> 是一个随机数，用来隐藏 <span class="math notranslate nohighlight">\(\vec{f}\)</span> 的信息。</p>
+<p>然后如果 Prover 要证明 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, \ldots, u_{n-1}) = v\)</span>，他需要承诺 <span class="math notranslate nohighlight">\(\tilde{q}_0, \tilde{q}_1, \ldots, \tilde{q}_{n-1}\)</span> 这些商多项式。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+Q_0=\mathsf{Commit}(\tilde{q}_0; \eta_0) &amp; = \tilde{q}_0 \cdot [1]_1 + \eta_0 \cdot [\xi]_1 \\[1ex]
+Q_1=\mathsf{Commit}(\tilde{q}_1; \eta_1) &amp; = \tilde{q}_{1,0} \cdot [1]_1 + \tilde{q}_{1,1} \cdot [\tau_0]_1 +  \eta_1 \cdot [\xi]_1 \\[1ex]
+Q_2=\mathsf{Commit}(\tilde{q}_2; \eta_2) &amp; = \tilde{q}_{2,0} \cdot [1]_1 + \tilde{q}_{2,1} \cdot [\tau_0]_1 + \tilde{q}_{2,2} \cdot [\tau_1]_1 + \tilde{q}_{2,3} \cdot [\tau_0\tau_1]_1 + \eta_2 \cdot [\xi]_1 \\[1ex]
+\cdots &amp; = \cdots \\[1ex]
+Q_{n-1}=\mathsf{Commit}(\tilde{q}_{n-1}; \eta_{n-1}) &amp; = \tilde{q}_{n-1,0} \cdot [1]_1 + \tilde{q}_{n-1,1} \cdot [\tau_0]_1 + \tilde{q}_{n-1,2} \cdot [\tau_1]_1 + \cdots \\
+&amp; \ + \tilde{q}_{n-1,2^{n-1}-1} \cdot [\tau_0\tau_1\cdots\tau_{n-2}]_1 + \eta_{n-1} \cdot [\xi]_1 \\[1ex]
+\end{split}
+\end{split}\]</div>
+<p>为了保证 Verifier 可以验证这些 Commitment，并且允许每一个 Commitment 都带有一个 Blinding Factor。但是增加了这些 Blinding Factor 后，需要修改下 MLE 多项式的除法等式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+&amp;(q_0 + \eta_0\xi)(X_0-u_0) + (q_1 + \eta_1\xi)(X_1-u_1) + \cdots + (q_{n-1} + \eta_{n-1}\xi)(X_{n-1}-u_{n-1}) \\
+=\ &amp; q_0(X_0-u_0) + q_1(X_0)(X_1-u_1) + \cdots + q_{n-1}(X_0,\ldots,X_{n-2})(X_{n-1}-u_{n-1}) \\
+&amp; + \eta_0\xi(X_0-u_0) + \eta_1\xi(X_1-u_1) + \cdots + \eta_{n-1}\xi(X_{n-1}-u_{n-1}) \\
+=\ &amp; f(\vec{X}) - f(\vec{u}) + ({\color{red}\eta_0(X_0-u_0) + \eta_1(X_1-u_1) + \cdots + \eta_{n-1}(X_{n-1}-u_{n-1})})\cdot \xi \\
+=\ &amp; f(\vec{X}) + \rho\xi- f(\vec{u}) + ({\color{red}\eta_0(X_0-u_0) + \eta_1(X_1-u_1) + \cdots + \eta_{n-1}(X_{n-1}-u_{n-1})-\rho})\cdot \xi\\
+\end{split}
+\end{split}\]</div>
+<p>因此 Prover 还需要计算一个额外的 Commitment，搜集所有的 Blinding Factor，即上面等式右边标红色的部分：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+R &amp; = \rho\cdot[1]_1 + (-\eta_0\cdot[\tau_0]_1 + (\eta_0\cdot u_0)[1]_1) + (-\eta_1\cdot[\tau_1]_1 + (\eta_1\cdot u_1)[1]_1) \\
+&amp; + \cdots + (-\eta_{n-1}\cdot[\tau_{n-1}]_1 + (\eta_{n-1}\cdot u_{n-1})[1]_1)
+\end{split}
+\end{split}\]</div>
+<p>这里的 <span class="math notranslate nohighlight">\(R\)</span> 显然也是一个 <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> 上的元素。</p>
+<p>所以当 Prover 发送 <span class="math notranslate nohighlight">\((Q_0, Q_1, \ldots, Q_{n-1}, R)\)</span> 给 Verifier 之后，Verifier 可以通过下面的 Pairing 等式来验证：</p>
+<div class="math notranslate nohighlight">
+\[
+e(F - v[1]_1, [1]_2) \overset{?}{=} e(R, [\xi]_2) + \sum_{i=0}^{n-1} e(Q_i, [\tau_i]_2-u_i[1]_2)
+\]</div>
+</section>
+<section id="mle-evaluation">
+<h2>4. 支持 MLE Evaluation 形式<a class="headerlink" href="#mle-evaluation" title="Link to this heading">#</a></h2>
+<p>上面的 Libra-PCS 中，Prover 计算 Commitment 的时候，需要先得到 MLE 多项式的「系数形式」 Coefficient Form，然后才能计算 Commitment。但是在很多 Sumcheck 协议中，采用的是 MLE 的 Evaluation Form，即点值式。也就是说，n 元 MLE 多项式用它在 n-维 Boolean Hypercube 上的运算值来表示：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i_0=0}^{1}\sum_{i_1=0}^{1}\cdots \sum_{i_{n-1}=0}^{1} a_{i_0i_1\cdots i_{n-1}}\cdot eq(i_0, i_1, \ldots, i_{n-1}, X_0, X_1, \ldots, X_{n-1})
+\]</div>
+<p>如果我们需要将 MLE 多项式的 Evaluation form 转换到 Coefficient form，那么这个转换算法需要 <span class="math notranslate nohighlight">\(O(n\cdot2^n)\)</span> 的时间复杂度。那么能不能直接支持 MLE 的 Evaluation form 呢？</p>
+<p>MLE 的 Evaluation form 会带来两个困难问题，第一个是如何根据 SRS 来计算一个 Evaluation Form 的承诺，第二个难点是如何计算 MLE 多项式的 <span class="math notranslate nohighlight">\(n\)</span> 次除法，得到 <span class="math notranslate nohighlight">\(n\)</span> 个商多项式 <span class="math notranslate nohighlight">\(q_0, q_1, \ldots, q_{n-1}\)</span>。</p>
+<p>我们先看看第一个问题，如何针对 Evaluation Form 计算 Commitment。这里有两种方式。比较直接的方式是，在计算 SRS 的时候，直接产生 MLE 多项式的 Multilinear Basis 的 Commitment，而不是 Monomial Basis 的 Commitment。</p>
+<p>比如，假设 n=3，那么我们产生一组新的 SRS 参数，用来计算 三元 MLE 多项式的 Evaluation Form 的 Commitment。</p>
+<div class="math notranslate nohighlight">
+\[
+SRS^{(3)} = ([eq_0(\tau_0,\tau_1, \tau_2)]_1, [eq_1(\tau_0,\tau_1, \tau_2)]_1, [eq_2(\tau_0,\tau_1, \tau_2)]_1, \ldots, [eq_{7}(\tau_0,\tau_1, \tau_2)]_1, [\xi]_1)
+\]</div>
+<p>为了简化表示，我们用 <span class="math notranslate nohighlight">\(eq_i(\vec{X})\)</span> 来表示 <span class="math notranslate nohighlight">\(eq(i_0,i_1,\ldots,i_{n-1},X_0,X_1,\ldots,X_{n-1})\)</span>。假设我们有一个多项式 <span class="math notranslate nohighlight">\(f(X_0, X_1, X_2)\)</span>：
+假设我们有一个多项式 <span class="math notranslate nohighlight">\(f(X_0, X_1, X_2)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1, X_2) = a_0\cdot eq_0(X_0, X_1, X_2) + a_1\cdot eq_1(X_0, X_1, X_2) + \cdots + a_7\cdot eq_7(X_0, X_1, X_2)
+\]</div>
+<p>于是我们计算它的 Commitment 如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{cm}(f) = a_0\cdot [eq_0(\tau_0,\tau_1, \tau_2)]_1 + a_1\cdot [eq_1(\tau_0,\tau_1, \tau_2)]_1 + \cdots + a_7\cdot [eq_7(\tau_0,\tau_1, \tau_2)]_1 + \rho\cdot [\xi]_1
+\]</div>
+<p>不过，我们需要意识到 <span class="math notranslate nohighlight">\(SRS^{(3)}\)</span> 并不够，因为 <span class="math notranslate nohighlight">\(eq_i(\vec{X})\)</span> 这种 Multilinear Basis 是和 Domain 的大小相关。我们要能发现，如果我们要承诺一个 二元多项式的 Evaluation Form，那么我们不能使用 <span class="math notranslate nohighlight">\(SRS^{(3)}\)</span> 来计算。而需要再产生一组针对 二元 MLE 多项式的 SRS 参数，记为 <span class="math notranslate nohighlight">\(SRS^{(2)}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+SRS^{(2)} = ([eq_0(\tau_0,\tau_1)]_1, [eq_1(\tau_0,\tau_1)]_1, \ldots, [eq_{3}(\tau_0,\tau_1)]_1)
+\]</div>
+<p>同样，我们还需要一组针对一元多项式的 SRS 参数，记为 <span class="math notranslate nohighlight">\(SRS^{(1)}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+SRS^{(1)} = ([eq_0(\tau_0)]_1, [eq_1(\tau_0)]_1)
+\]</div>
+<p>最后对于常数多项式，我们只需要 <span class="math notranslate nohighlight">\([1]_1\)</span> 作为 Basis来计算承诺即可。我们把所有这些基于 <span class="math notranslate nohighlight">\(k\)</span>-MLE 的 <span class="math notranslate nohighlight">\(SRS^{(k)}\)</span> 合并在一起，记为 <span class="math notranslate nohighlight">\(SRS^*\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+SRS^* = \left(
+\begin{array}{l}
+[eq_0(\tau_0,\tau_1, \tau_2)]_1, [eq_1(\tau_0,\tau_1, \tau_2)]_1, [eq_2(\tau_0,\tau_1, \tau_2)]_1, \ldots, [eq_{7}(\tau_0,\tau_1, \tau_2)]_1, \\[1ex]
+[eq_0(\tau_0,\tau_1)]_1, [eq_1(\tau_0,\tau_1)]_1, \ldots, [eq_{3}(\tau_0,\tau_1)]_1, \\[1ex]
+[eq_0(\tau_0)]_1, [eq_1(\tau_0)]_1, \\[1ex]
+[1]_1, [\xi]_1 \\[1ex]
+[1]_2,\ [\tau_0]_2,\ [\tau_1]_2,\ [\tau_2]_2,\ \ldots,\ [\tau_{n-1}]_2,\ [\xi]_2
+\end{array}
+\right)
+\end{split}\]</div>
+<p>接下来，假如我们得到了 <span class="math notranslate nohighlight">\(f(X_0,X_1,X_2)\)</span> 的三个商多项式 <span class="math notranslate nohighlight">\(q_0, q_1(X_0), q_2(X_0,X_1)\)</span>。那么我们通过它们的 Evaluation Form 来计算所对应的 Commitment：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{cm}(q_0) &amp; = q_0\cdot [1]_1 + \eta_0\cdot [\xi]_1 \\[1.5ex]
+\mathsf{cm}(q_1) &amp; = q_{1,0}\cdot [eq_0(\tau_0)]_1 + q_{1,1}\cdot [eq_1(\tau_0)]_1 + \eta_1\cdot [\xi]_1 \\[1.5ex]
+\mathsf{cm}(q_2) &amp; = q_{2,0}\cdot [eq_0(\tau_0,\tau_1)]_1 + q_{2,1}\cdot [eq_1(\tau_0,\tau_1)]_1 + q_{2,2}\cdot [eq_2(\tau_0,\tau_1)]_1 + q_{2,3}\cdot [eq_3(\tau_0,\tau_1)]_1 + \eta_2\cdot [\xi]_1 \\[1.5ex]
+\end{split}
+\end{split}\]</div>
+<p>接下来，我们考虑第二个困难问题，如何计算 MLE 多项式的 <span class="math notranslate nohighlight">\(n\)</span> 次除法，得到 <span class="math notranslate nohighlight">\(n\)</span> 个商多项式 <span class="math notranslate nohighlight">\(q_0, q_1, \ldots, q_{n-1}\)</span> 的 Evaluation Form。我们熟知的多项式长除法只适用于多项式的 Coefficient Form，而 Libra 论文 [XZZPS19] 则给出了一个 <span class="math notranslate nohighlight">\(O(n)\)</span> 的算法支持 MLE 多项式的 Evaluation Form 的除法。</p>
+<p>我们先考虑一个简单的情况，假设一个二元 MLE 多项式 <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> 的 Evaluation Form：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1) = a_0 \cdot (1-X_0)(1-X_1) + a_1 \cdot X_0(1-X_1) + a_2 \cdot (1-X_0)X_1 + a_3 \cdot X_0X_1
+\]</div>
+<p>第一步，我们计算 <span class="math notranslate nohighlight">\(f(X_0, X_1)/(X_1-u_1)\)</span>，</p>
+<p>我们把 <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> 的 Evaluation Form 按照 <span class="math notranslate nohighlight">\(X_1\)</span> 的次数展开，得到：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f(X_0, X_1) &amp; = ({\color{blue}a_0(1-X_0) + a_1X_0})(1-X_1) + ({\color{red}a_2(1-X_0) + a_3X_0})X_1 \\
+&amp; = ({\color{blue}a_0(1-X_0) + a_1X_0}) + ({\color{red}a_2(1-X_0) + a_3X_0} - ({\color{blue}a_0(1-X_0) + a_1X_0})) \cdot X_1
+\end{split}
+\end{split}\]</div>
+<p>那么商多项式 <span class="math notranslate nohighlight">\(q_1(X_0)\)</span> 就等于：</p>
+<div class="math notranslate nohighlight">
+\[
+q_1(X_0) = ({\color{red}a_2(1-X_0) + a_3X_0}) - ({\color{blue}a_0(1-X_0) + a_1X_0})
+\]</div>
+<p>我们重新整理下 <span class="math notranslate nohighlight">\(q_1(X_0)\)</span> 的项，可以得到：</p>
+<div class="math notranslate nohighlight">
+\[
+q_1(X_0) = ({\color{red}a_2}-{\color{blue}a_0})(1-X_0) + ({\color{red}a_3}-{\color{blue}a_1})X_0
+\]</div>
+<p>上面的等式恰好是 <span class="math notranslate nohighlight">\(q_1(X_0)\)</span> 的 Evaluation Form，要计算它并不难，只要将 <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> 的 Evaluation 向量的后半段减去前半段，即可得到 <span class="math notranslate nohighlight">\(q_1(X_0)\)</span> 的 Evaluation 向量。</p>
+<p>接下来看看 <span class="math notranslate nohighlight">\(f(X_0, X_1)/(X_1-u_1)\)</span> 除完之后的余数多项式，这是一个关于 <span class="math notranslate nohighlight">\(X_0\)</span> 的一元多项式，记为 <span class="math notranslate nohighlight">\(f'(X_0)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f'(X_0) &amp;= f(X_0, X_1) - q_1(X_0)(X_1-u_1)  \\
+ &amp; = ({\color{blue}a_0(1-X_0) + a_1X_0}) + u_1\cdot \Big(({\color{red}a_2(1-X_0) + a_3X_0}) - ({\color{blue}a_0(1-X_0) + a_1X_0})\Big) \\
+ &amp; = (1-u_1)\cdot ({\color{blue}a_0(1-X_0) + a_1X_0}) + u_1\cdot ({\color{red}a_2(1-X_0) + a_3X_0}) \\
+ &amp; = ((1-u_1)\cdot {\color{blue}a_0} + u_1\cdot {\color{red}a_2})\cdot(1-X_0) + ((1-u_1)\cdot {\color{blue}a_1} + u_1\cdot {\color{red}a_3})\cdot X_0 \\
+\end{split}
+\end{split}\]</div>
+<p>经过整理之后，我们看到余数多项式 <span class="math notranslate nohighlight">\(f'(X_0)\)</span> 的 Evaluation 向量，恰好是 <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> 的 Evaluation 向量前半段和后半段的合并，即：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{evaluations}(f)= (a_0, a_1, a_2, a_3)
+\]</div>
+<p>那么
+$<span class="math notranslate nohighlight">\(
+\mathsf{evaluations}(f') = (\mathsf{fold}(u_1, a_0, a_2),\ \mathsf{fold}(u_1, a_1, a_3))
+\)</span>$</p>
+<p>这里折叠函数 <span class="math notranslate nohighlight">\(\mathsf{fold}\)</span> 的定义是：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}(u, a, b) = (1-u)\cdot a + u\cdot b
+\]</div>
+<p>因此，我们可以得到一个清晰的算法，每次将 Evaluation 向量拆成两半，用高一半减去低一半，得到商多项式的 Evaluation 向量；将高低两半进行折叠，得到余数多项式的 Evaluation 向量。然后继续递归下去，就可以得到所有的商多项式。下面我们给出这个算法的 Python 实现：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">decompose_by_div</span><span class="p">(</span><span class="n">evaluations</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">evaluations</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">log_2</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="n">quotients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">pow_2</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">half</span>  <span class="c1"># init quotient MLE (evalations)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">):</span>
+            <span class="n">q</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="n">half</span><span class="p">]</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="c1"># compute quotient MLE</span>
+            <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="n">half</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># fold by point[k-i-1]</span>
+        <span class="n">quotients</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+        <span class="n">half</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">quotients</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># e[0] = f(point)</span>
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[PST13] Papamanthou, Charalampos, Elaine Shi, and Roberto Tamassia. “Signatures of correct computation.” Theory of Cryptography Conference. Berlin, Heidelberg: Springer Berlin Heidelberg, 2013. <a class="reference external" href="https://eprint.iacr.org/2011/587">https://eprint.iacr.org/2011/587</a></p></li>
+<li><p>[XZZPS19] Tiancheng Xie, Jiaheng Zhang, Yupeng Zhang, Charalampos Papamanthou, and Dawn Song. “Libra: Succinct Zero-Knowledge Proofs with Optimal Prover Computation.” Cryptology ePrint Archive (2019). <a class="reference external" href="https://eprint.iacr.org/2019/317">https://eprint.iacr.org/2019/317</a></p></li>
+<li><p>[Ruffini] Ruffini’s rule. (<a class="reference external" href="https://en.wikipedia.org/wiki/Ruffini%27s_rule">https://en.wikipedia.org/wiki/Ruffini’s_rule</a>)</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./libra-pcs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../hyrax-pcs/hyrax-01.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Notes on Hyrax-PCS</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../virgo-pcs/virgo-pcs-01.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notes on Virgo-PCS</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle">1. MLE 多项式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. MLE 多项式的除法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">3. Libra-PCS 的构造</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-evaluation">4. 支持 MLE Evaluation 形式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

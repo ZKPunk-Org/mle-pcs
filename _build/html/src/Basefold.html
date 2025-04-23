@@ -1,0 +1,1532 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Finite Field &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'src/Basefold';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fsrc/Basefold.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/src/Basefold.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Finite Field</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Finite Field</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#foldable-code">Foldable code</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reed-solomon-code">Reed-Solomon Code</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp">Basefold IOPP</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-evaluation-argument">Basefold Evaluation Argument</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-features">More features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#todo">TODO</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="finite-field">
+<h1>Finite Field<a class="headerlink" href="#finite-field" title="Link to this heading">#</a></h1>
+<div class="math notranslate nohighlight">
+\[
+p = 64 * 3 + 1
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F193</span><span class="o">.&lt;</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">193</span><span class="p">)</span>
+<span class="n">R193</span><span class="o">.&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">F193</span><span class="p">[]</span>
+<span class="n">R193</span>
+<span class="n">Fp</span><span class="o">=</span><span class="n">F193</span>
+<span class="n">Fp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Field of size 193
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R_2</span><span class="o">.&lt;</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">,</span> <span class="n">X4</span><span class="p">,</span> <span class="n">X5</span><span class="p">,</span> <span class="n">X6</span><span class="p">,</span> <span class="n">X7</span><span class="p">,</span> <span class="n">X8</span><span class="p">,</span> <span class="n">X9</span><span class="p">,</span> <span class="n">Y0</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">Y2</span><span class="p">,</span> <span class="n">Y3</span><span class="p">,</span> <span class="n">Y4</span><span class="p">,</span> <span class="n">Y5</span><span class="p">,</span> <span class="n">Y6</span><span class="p">,</span> <span class="n">Y7</span><span class="p">,</span> <span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">B2</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">Fp</span><span class="p">[];</span> <span class="n">R_2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multivariate Polynomial Ring in X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, A0, A1, A2, B0, B1, B2 over Finite Field of size 193
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">field</span> <span class="kn">import</span> <span class="n">magic</span>
+
+<span class="n">Fp</span> <span class="o">=</span> <span class="n">magic</span><span class="p">(</span><span class="n">Fp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bits_le_with_width</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">**</span><span class="n">width</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Failed&quot;</span>
+    <span class="n">bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="n">width</span><span class="p">:</span>
+        <span class="n">bits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">//=</span> <span class="mi">2</span>
+        <span class="n">width</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">bits</span>
+        
+<span class="n">bits_le_with_width</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0, 1, 1, 0, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_power_of_two</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">next_power_of_two</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No negative integer&quot;</span>
+    <span class="k">if</span> <span class="n">is_power_of_two</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">n</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">k</span>
+
+<span class="n">is_power_of_two</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span> <span class="n">next_power_of_two</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(False, 4)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X0*X1 - X0 - X1 + 1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Fp</span><span class="p">(((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X1</span><span class="p">))(</span><span class="n">X0</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">X1</span><span class="o">=</span><span class="mi">19</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Field([144])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Fp</span><span class="p">((</span><span class="n">X0</span> <span class="o">*</span> <span class="n">X1</span><span class="p">)(</span><span class="n">X0</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">X1</span><span class="o">=</span><span class="mi">19</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Field([171])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="foldable-code">
+<h1>Foldable code<a class="headerlink" href="#foldable-code" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># m: message</span>
+<span class="c1"># k0: message length of base code</span>
+<span class="c1"># c: blowup factor</span>
+
+<span class="k">def</span> <span class="nf">rep_encode</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">%</span> <span class="n">k0</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;len(m): </span><span class="si">%d</span><span class="s2"> is not a multiple of k0: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">k0</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">k0</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+            <span class="n">code</span> <span class="o">+=</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">k0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">code</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rep_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">rep_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">rep_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>([1, 1, 1, 2, 2, 2],
+ [1, 2, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4],
+ [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4])
+</pre></div>
+</div>
+</div>
+</div>
+<section id="reed-solomon-code">
+<h2>Reed-Solomon Code<a class="headerlink" href="#reed-solomon-code" title="Link to this heading">#</a></h2>
+<p>Fix a sequence <span class="math notranslate nohighlight">\(\mathbf{\alpha} = (\alpha_1, \alpha_2, \ldots, \alpha_n)\)</span> of <span class="math notranslate nohighlight">\(n\)</span> distict elements from <span class="math notranslate nohighlight">\(\mathbf{F}_q\)</span>. Map a message <span class="math notranslate nohighlight">\(\mathbf{m} = (m_0, m_1, \ldots, m_{k_0 - 1})\)</span> with <span class="math notranslate nohighlight">\(m_i \in \mathbf{F}_q\)</span> to the degree <span class="math notranslate nohighlight">\(k_0 - 1\)</span> polynomial.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{m} \mapsto f_{\mathbf{m}}(X)
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\mathbf{m}}(X) = \sum_{i = 0}^{k_0 - 1} m_i X^i
+\]</div>
+<p>Then</p>
+<div class="math notranslate nohighlight">
+\[
+\text{RS}_q[\mathbf{\alpha}, k_0](\mathbf{m}) = (f_{\mathbf{m}}(\alpha_1), f_{\mathbf{m}}(\alpha_2), \ldots, f_{\mathbf{m}}(\alpha_{n}))
+\]</div>
+<p>For simplicity, we can choose <span class="math notranslate nohighlight">\(\alpha_1 = 0, \alpha_2 = 1, \ldots, \alpha_{n} = n - 1\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reed-Solomon code for m = (m_0, ..., m_{k_0 - 1})</span>
+<span class="c1"># alpha: evaluation points</span>
+<span class="c1"># c: blowup factor</span>
+<span class="k">def</span> <span class="nf">rs_encode_single</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="n">k0</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">k0</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k0</span> <span class="o">*</span> <span class="n">c</span><span class="p">):</span> 
+        <span class="c1"># comput f_m(alpha[i])</span>
+        <span class="n">code</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">code</span>
+
+<span class="c1"># Reed-Solomon code for m</span>
+<span class="c1"># m: message</span>
+<span class="c1"># k0: message length of base code</span>
+<span class="c1"># c: blowup factor</span>
+<span class="c1"># default alpha: [0, 1, 2, ... , k0*c - 1]</span>
+<span class="k">def</span> <span class="nf">rs_encode</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">%</span> <span class="n">k0</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;len(m): </span><span class="si">%d</span><span class="s2"> is not a multiple of k0: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">k0</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">k0</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span> <span class="c1"># 这里默认 alpha = [0, 1, 2, ... , k0*c - 1]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">k0</span><span class="p">):</span>
+        <span class="n">code</span> <span class="o">+=</span> <span class="n">rs_encode_single</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">k0</span><span class="p">],</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">code</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rs_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">rs_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">rs_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>([1, 1, 1, 2, 2, 2],
+ [1, 3, 5, 7, 9, 11, 3, 7, 11, 15, 19, 23],
+ [1, 10, 49, 142, 313, 586, 985, 1534, 2257, 3178, 4321, 5710])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># m: message with length `n`</span>
+<span class="c1"># k0: message length of code `G_0`,  G_0: k0 \otimes ck0</span>
+<span class="c1"># depth: </span>
+<span class="c1"># c: blowup factor</span>
+<span class="c1"># G_0: an encoding function</span>
+<span class="c1">#      G_0(m, k0, c)</span>
+<span class="c1"># T: RM code table</span>
+
+<span class="k">def</span> <span class="nf">basefold_encode</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">G0</span><span class="o">=</span><span class="n">rep_encode</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: m=</span><span class="si">{}</span><span class="s2">, k0=</span><span class="si">{}</span><span class="s2">, d=</span><span class="si">{}</span><span class="s2">, blowup_factor=</span><span class="si">{}</span><span class="s2">, T=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span>
+    <span class="n">kd</span> <span class="o">=</span> <span class="n">k0</span> <span class="o">*</span> <span class="mi">2</span><span class="o">^</span><span class="n">depth</span>
+    <span class="n">blowup_factor</span> <span class="o">=</span> <span class="n">c</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">kd</span><span class="p">,</span> <span class="s2">&quot;len(m): </span><span class="si">%d</span><span class="s2"> != kd: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">kd</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">==</span> <span class="n">depth</span><span class="p">,</span> <span class="s2">&quot;len(T): </span><span class="si">%d</span><span class="s2"> != depth: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">depth</span><span class="p">)</span>
+     
+    <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">k0</span>
+    <span class="n">chunk_num</span> <span class="o">=</span> <span class="mi">2</span><span class="o">^</span><span class="n">depth</span>
+    
+    <span class="n">code</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">chunk_num</span><span class="p">):</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">chunk_size</span><span class="p">:</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">chunk_size</span><span class="p">]</span>
+        <span class="n">chunk_code</span> <span class="o">=</span> <span class="n">G0</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">blowup_factor</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">+=</span> <span class="n">chunk_code</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: code=&quot;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">code</span>
+
+    <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">k0</span> <span class="o">*</span> <span class="n">blowup_factor</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: chunk_size=&quot;</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: chunk_num=&quot;</span><span class="p">,</span> <span class="n">chunk_num</span><span class="p">)</span>
+
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="o">==</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="s2">&quot;table[</span><span class="si">{}</span><span class="s2">] != chunk_size, len(table)=</span><span class="si">{}</span><span class="s2">, chunk_size=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: table=&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">chunk_num</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">left</span>  <span class="o">=</span> <span class="n">code</span><span class="p">[</span>    <span class="n">c</span><span class="o">*</span><span class="n">chunk_size</span> <span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">chunk_size</span><span class="p">]</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">code</span><span class="p">[(</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">chunk_size</span> <span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">chunk_size</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: left=</span><span class="si">{}</span><span class="s2">, right=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; basefold_encode: i=</span><span class="si">{}</span><span class="s2">, c=</span><span class="si">{}</span><span class="s2">, j=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+                <span class="n">rhs</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">table</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">lhs</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">code</span><span class="p">[(</span><span class="n">c</span><span class="p">)</span><span class="o">*</span><span class="n">chunk_size</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">lhs</span> <span class="o">+</span> <span class="n">rhs</span>
+                <span class="n">code</span><span class="p">[(</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">chunk_size</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">lhs</span> <span class="o">-</span> <span class="n">rhs</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">chunk_num</span> <span class="o">=</span> <span class="n">chunk_num</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">code</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># basefold_encode(m, k0, depth, c, G0, T, debug=False):</span>
+
+<span class="k">def</span> <span class="nf">basefold_encode_rec</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">G0</span><span class="o">=</span><span class="n">rep_encode</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">k0</span><span class="p">,</span> <span class="s2">&quot;len(m): </span><span class="si">%d</span><span class="s2"> != k0: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">k0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">G0</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    
+    <span class="n">kd</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">kd</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">code_size</span> <span class="o">=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">kd</span>
+
+    <span class="n">m_left</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+    <span class="n">m_right</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+    
+    <span class="n">code_left</span> <span class="o">=</span> <span class="n">basefold_encode_rec</span><span class="p">(</span><span class="n">m_left</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">G0</span><span class="o">=</span><span class="n">G0</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;code_left=&quot;</span><span class="p">,</span> <span class="n">code_left</span><span class="p">)</span>
+    <span class="n">code_right</span> <span class="o">=</span> <span class="n">basefold_encode_rec</span><span class="p">(</span><span class="n">m_right</span><span class="p">,</span> <span class="n">k0</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">G0</span><span class="o">=</span><span class="n">G0</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;code_right=&quot;</span><span class="p">,</span> <span class="n">code_right</span><span class="p">)</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="n">code_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;wrong table size, len(table)=</span><span class="si">{}</span><span class="s2">, code_size=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">code_size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;t=&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">code_half</span> <span class="o">=</span> <span class="n">kd</span> <span class="o">*</span> <span class="n">c</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">code_half</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">code_half</span><span class="p">):</span>
+        <span class="n">code</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">code_left</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">code_right</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">code</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="n">code_half</span><span class="p">]</span> <span class="o">=</span> <span class="n">code_left</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">code_right</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">code</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">basefold_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">]],</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; basefold_encode: m=[1, 2], k0=1, d=1, blowup_factor=2, T=[[X0, X1]]
+&gt;&gt;&gt; basefold_encode: code= [1, 1, 2, 2]
+&gt;&gt;&gt; basefold_encode: chunk_size= 2
+&gt;&gt;&gt; basefold_encode: chunk_num= 2
+&gt;&gt;&gt; basefold_encode: table= [X0, X1]
+&gt;&gt;&gt; basefold_encode: left=[1, 1], right=[2, 2]
+&gt;&gt;&gt; basefold_encode: i=0, c=0, j=0
+&gt;&gt;&gt; basefold_encode: i=0, c=0, j=1
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2*X0 + 1, 2*X1 + 1, -2*X0 + 1, -2*X1 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">basefold_encode_rec</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>code_left= [1, 1]
+code_right= [2, 2]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2*X0 + 1, 2*X1 + 1, -2*X0 + 1, -2*X1 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">basefold_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">]],</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; basefold_encode: m=[1, 2], k0=1, d=1, blowup_factor=3, T=[[X0, X1, X2]]
+&gt;&gt;&gt; basefold_encode: code= [1, 1, 1, 2, 2, 2]
+&gt;&gt;&gt; basefold_encode: chunk_size= 3
+&gt;&gt;&gt; basefold_encode: chunk_num= 2
+&gt;&gt;&gt; basefold_encode: table= [X0, X1, X2]
+&gt;&gt;&gt; basefold_encode: left=[1, 1, 1], right=[2, 2, 2]
+&gt;&gt;&gt; basefold_encode: i=0, c=0, j=0
+&gt;&gt;&gt; basefold_encode: i=0, c=0, j=1
+&gt;&gt;&gt; basefold_encode: i=0, c=0, j=2
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2*X0 + 1, 2*X1 + 1, 2*X2 + 1, -2*X0 + 1, -2*X1 + 1, -2*X2 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">basefold_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">],</span> <span class="p">[</span><span class="n">Y0</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">Y2</span><span class="p">,</span> <span class="n">Y3</span><span class="p">,</span> <span class="n">Y4</span><span class="p">,</span> <span class="n">Y5</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4*X0*Y0 + 2*X0 + 3*Y0 + 1,
+ 4*X1*Y1 + 2*X1 + 3*Y1 + 1,
+ 4*X2*Y2 + 2*X2 + 3*Y2 + 1,
+ -4*X0*Y3 - 2*X0 + 3*Y3 + 1,
+ -4*X1*Y4 - 2*X1 + 3*Y4 + 1,
+ -4*X2*Y5 - 2*X2 + 3*Y5 + 1,
+ -4*X0*Y0 + 2*X0 - 3*Y0 + 1,
+ -4*X1*Y1 + 2*X1 - 3*Y1 + 1,
+ -4*X2*Y2 + 2*X2 - 3*Y2 + 1,
+ 4*X0*Y3 - 2*X0 - 3*Y3 + 1,
+ 4*X1*Y4 - 2*X1 - 3*Y4 + 1,
+ 4*X2*Y5 - 2*X2 - 3*Y5 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="basefold-iopp">
+<h1>Basefold IOPP<a class="headerlink" href="#basefold-iopp" title="Link to this heading">#</a></h1>
+<div class="math notranslate nohighlight">
+\[
+B^{(monomial)} = (1, \alpha_0)\otimes (1, \alpha_1) \otimes \cdots \otimes (1, \alpha_{k-1})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+B^{(multilinear)} = ((1-\alpha_0), \alpha_0)\otimes ((1-\alpha_1), \alpha_1) \otimes \cdots \otimes ((1-\alpha_{k-1}), \alpha_{k-1})
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">basefold_fri_monomial_basis</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;len(table) is not double len(vs), len(table) = </span><span class="si">%d</span><span class="s2">, len(vs) = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">new_vs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">vs</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">vs</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">half</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(left[i] + right[i])/2=&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(left[i] + right[i])/2=&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">new_vs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">new_vs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">basefold_fri_multilinear_basis</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;len(table) is not double len(vs), len(table) = </span><span class="si">%d</span><span class="s2">, len(vs) = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">new_vs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">vs</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">vs</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">half</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(left[i] + right[i])/2=&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(left[i] + right[i])/2=&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">new_vs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">new_vs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pi_0</span> <span class="o">=</span> <span class="n">basefold_encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X4</span><span class="p">,</span> <span class="n">X5</span><span class="p">],</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">]]);</span> <span class="n">pi_0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4*X0*X4 + 3*X0 + 2*X4 + 1,
+ 4*X1*X5 + 3*X1 + 2*X5 + 1,
+ -4*X2*X4 + 3*X2 - 2*X4 + 1,
+ -4*X3*X5 + 3*X3 - 2*X5 + 1,
+ -4*X0*X4 - 3*X0 + 2*X4 + 1,
+ -4*X1*X5 - 3*X1 + 2*X5 + 1,
+ 4*X2*X4 - 3*X2 - 2*X4 + 1,
+ 4*X3*X5 - 3*X3 - 2*X5 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pi_1</span> <span class="o">=</span> <span class="n">basefold_fri_multilinear_basis</span><span class="p">(</span><span class="n">pi_0</span><span class="p">,</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">],</span> <span class="n">A0</span><span class="p">);</span> <span class="n">pi_1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2*X4*A0 + 2*X4 + 2*A0 + 1,
+ 2*X5*A0 + 2*X5 + 2*A0 + 1,
+ -2*X4*A0 - 2*X4 + 2*A0 + 1,
+ -2*X5*A0 - 2*X5 + 2*A0 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pi_2</span> <span class="o">=</span> <span class="n">basefold_fri_multilinear_basis</span><span class="p">(</span><span class="n">pi_1</span><span class="p">,</span> <span class="p">[</span><span class="n">X4</span><span class="p">,</span> <span class="n">X5</span><span class="p">],</span> <span class="n">A1</span><span class="p">);</span> <span class="n">pi_2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2*A0 + A1 + 1, 2*A0 + A1 + 1]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="basefold-evaluation-argument">
+<h1>Basefold Evaluation Argument<a class="headerlink" href="#basefold-evaluation-argument" title="Link to this heading">#</a></h1>
+<div class="math notranslate nohighlight">
+\[
+v = f(\mathbf{z}) = \sum_{\mathbf{b}}f(\mathbf{b})\cdot \tilde{eq}_{\mathbf{z}}(\mathbf{b})
+\]</div>
+<p>by sumcheck, the statement can be reduced to</p>
+<div class="math notranslate nohighlight">
+\[
+v' \overset{?}{=} f(\mathbf{r})\cdot \tilde{eq}_{\mathbf{z}}(\mathbf{r})
+\]</div>
+<p>and we can have the following statement, since the code is linear
+$<span class="math notranslate nohighlight">\(
+\mathsf{encode}(v'/\tilde{eq}_{\mathbf{z}}(\mathbf{r})) \overset{?}{=} \mathsf{encode}\big(f(\mathbf{r})\big)
+\)</span>$</p>
+<p>Fortunately, the right hand side is exactly the result of FRI-folding, and the left hand side can be computed by verifier himself.</p>
+<section id="more-features">
+<h2>More features<a class="headerlink" href="#more-features" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Add RS code support for <code class="docutils literal notranslate"><span class="pre">G0</span></code></p></li>
+</ul>
+</section>
+<section id="todo">
+<h2>TODO<a class="headerlink" href="#todo" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Change Rnd into a transcript that absorbs messages and squeezes challenges.</p></li>
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">Proof</span></code> into a struct, dict or class</p></li>
+<li><p>Add inputs validation</p></li>
+<li><p>Add error messages for <code class="docutils literal notranslate"><span class="pre">assert</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mle2</span> <span class="kn">import</span> <span class="n">MLEPolynomial</span>
+<span class="kn">from</span> <span class="nn">merkle</span> <span class="kn">import</span> <span class="n">MerkleTree</span>
+
+<span class="k">def</span> <span class="nf">query_phase</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">first_tree</span><span class="p">:</span> <span class="n">MerkleTree</span><span class="p">,</span> <span class="n">first_oracle</span><span class="p">,</span> <span class="n">trees</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">oracles</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">num_vars</span><span class="p">,</span> <span class="n">num_verifier_queries</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">queries</span> <span class="o">=</span> <span class="p">[</span><span class="n">transcript</span><span class="o">.</span><span class="n">squeeze_byte_challenge</span><span class="p">()</span> <span class="o">%</span> <span class="n">num_vars</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_verifier_queries</span><span class="p">)]</span>
+
+    <span class="n">query_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># query paths</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+        <span class="n">num_vars_copy</span> <span class="o">=</span> <span class="n">num_vars</span>
+        <span class="n">cur_path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;=</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">q</span> <span class="o">+</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x0</span>
+        
+        <span class="n">cur_path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">first_oracle</span><span class="p">[</span><span class="n">x0</span><span class="p">],</span> <span class="n">first_oracle</span><span class="p">[</span><span class="n">x1</span><span class="p">]))</span>
+        <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">x0</span>
+        <span class="n">num_vars_copy</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">oracle</span> <span class="ow">in</span> <span class="n">oracles</span><span class="p">:</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">q</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;=</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">q</span> <span class="o">+</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">:</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x0</span>
+            
+            <span class="n">cur_path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">oracle</span><span class="p">[</span><span class="n">x0</span><span class="p">],</span> <span class="n">oracle</span><span class="p">[</span><span class="n">x1</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x0:&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="s2">&quot;x1:&quot;</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="s2">&quot;num_vars:&quot;</span><span class="p">,</span> <span class="n">num_vars_copy</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;oracle:&quot;</span><span class="p">,</span> <span class="n">oracle</span><span class="p">)</span>
+            <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">x0</span>
+            <span class="n">num_vars_copy</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+        
+        <span class="n">query_paths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cur_path</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+    <span class="c1"># merkle paths</span>
+    <span class="n">merkle_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">query_paths</span><span class="p">:</span>
+        <span class="n">cur_query_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">cur_query_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">first_tree</span><span class="o">.</span><span class="n">get_authentication_path</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mp:&quot;</span><span class="p">,</span> <span class="n">cur_query_paths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;commit:&quot;</span><span class="p">,</span> <span class="n">first_tree</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;idx:&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cur_tree</span> <span class="o">=</span> <span class="n">trees</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_tree</span><span class="p">,</span> <span class="n">MerkleTree</span><span class="p">)</span>
+                <span class="n">cur_query_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_tree</span><span class="o">.</span><span class="n">get_authentication_path</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mp:&quot;</span><span class="p">,</span> <span class="n">cur_query_paths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;commit:&quot;</span><span class="p">,</span> <span class="n">first_tree</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;idx:&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+        <span class="n">merkle_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_query_paths</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">query_paths</span><span class="p">,</span> <span class="n">merkle_paths</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">unipolynomial</span> <span class="kn">import</span> <span class="n">UniPolynomial</span>
+
+<span class="c1"># Define prove</span>
+<span class="c1"># f_code: Encode(f)</span>
+<span class="c1"># f_evals: evaluations of f</span>
+<span class="c1"># us: point</span>
+<span class="c1"># v: f(point) = v</span>
+<span class="c1"># k: number of variables, k = len(u)</span>
+<span class="c1"># T: random code table</span>
+<span class="c1"># blowup_factor: as named</span>
+<span class="c1"># transcript: as named</span>
+
+<span class="k">def</span> <span class="nf">prove_basefold_evaluation_arg_multilinear_basis</span><span class="p">(</span><span class="n">f_code</span><span class="p">,</span> <span class="n">f_evals</span><span class="p">,</span> <span class="n">us</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">blowup_factor</span><span class="p">,</span> <span class="n">commit</span><span class="p">,</span> <span class="n">num_verifier_queries</span><span class="p">,</span> <span class="n">transcript</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># TODO: check if the length of f is a power of 2</span>
+    
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_evals</span><span class="p">)</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">==</span> <span class="n">k</span><span class="p">,</span> <span class="s2">&quot;wrong table size, k=</span><span class="si">{}</span><span class="s2">, len(T)=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">f_code_copy</span> <span class="o">=</span> <span class="n">f_code</span><span class="p">[:]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">f_evals</span><span class="p">[:]</span>
+    <span class="n">eq</span> <span class="o">=</span> <span class="n">MLEPolynomial</span><span class="o">.</span><span class="n">eqs_over_hypercube</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+    
+    <span class="n">challenge_vec</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sumcheck_sum</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">h_poly_vec</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">f_code_vec</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">f_code_trees</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sumcheck round </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">f_low</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+        <span class="n">f_high</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+        <span class="n">eq_low</span> <span class="o">=</span> <span class="n">eq</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+        <span class="n">eq_high</span> <span class="o">=</span> <span class="n">eq</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+        
+        <span class="c1"># print(&quot;low={}, high={}&quot;.format(low, high))</span>
+
+        <span class="n">h_eval_at_0</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">f_low</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">eq_low</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">)])</span>
+        <span class="n">h_eval_at_1</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">f_high</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">eq_high</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">)])</span>
+        <span class="n">h_eval_at_2</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">f_high</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">f_low</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eq_high</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">eq_low</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">)])</span>
+        <span class="n">h_poly_vec</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">h_eval_at_0</span><span class="p">,</span> <span class="n">h_eval_at_1</span><span class="p">,</span> <span class="n">h_eval_at_2</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; sumcheck: h=[</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h_eval_at_0</span><span class="p">,</span> <span class="n">h_eval_at_1</span><span class="p">,</span> <span class="n">h_eval_at_2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; sumcheck: </span><span class="si">{}</span><span class="s2"> ?= </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h_eval_at_0</span> <span class="o">+</span> <span class="n">h_eval_at_1</span><span class="p">,</span> <span class="n">sumcheck_sum</span><span class="p">))</span>
+        
+        <span class="k">assert</span> <span class="n">h_eval_at_0</span> <span class="o">+</span> <span class="n">h_eval_at_1</span> <span class="o">==</span> <span class="n">sumcheck_sum</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> + </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">h_eval_at_0</span><span class="p">,</span> <span class="n">h_eval_at_1</span><span class="p">,</span> <span class="n">sumcheck_sum</span><span class="p">)</span>
+
+        <span class="c1"># Receive a random number from the verifier</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">A0</span> <span class="o">*</span> <span class="n">transcript</span><span class="o">.</span><span class="n">squeeze_byte_challenge</span><span class="p">()</span>
+        
+        <span class="n">challenge_vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+
+        <span class="c1"># fold(low, high, alpha)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">f_low</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">f_high</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">)]</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">eq_low</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">eq_high</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; sumcheck: f_folded = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; sumcheck: eq_folded = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eq</span><span class="p">))</span>
+
+        <span class="c1"># compute the new sum = h(alpha)</span>
+        <span class="n">sumcheck_sum</span> <span class="o">=</span> <span class="n">UniPolynomial</span><span class="o">.</span><span class="n">uni_eval_from_evals</span><span class="p">([</span><span class="n">h_eval_at_0</span><span class="p">,</span> <span class="n">h_eval_at_1</span><span class="p">,</span> <span class="n">h_eval_at_2</span><span class="p">],</span> <span class="n">alpha</span><span class="p">,</span> <span class="p">[</span><span class="n">Fp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; sumcheck: sumcheck_sum = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sumcheck_sum</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fri round </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+        <span class="c1"># # Basefold fri</span>
+        <span class="n">f_code</span> <span class="o">=</span> <span class="n">basefold_fri_multilinear_basis</span><span class="p">(</span><span class="n">f_code</span><span class="p">,</span> <span class="n">T</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; fri: f_code_folded=&quot;</span><span class="p">,</span> <span class="n">f_code</span><span class="p">)</span>
+        <span class="n">f_code_vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_code</span><span class="p">)</span>
+        <span class="n">f_code_trees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MerkleTree</span><span class="p">(</span><span class="n">f_code</span><span class="p">))</span>
+
+        <span class="c1"># DEBUG: consistency check (invariant)</span>
+        <span class="c1"># Enc(fold(message)) = fold(Enc(message)) </span>
+        <span class="n">debug_f_folded_code</span> <span class="o">=</span> <span class="n">basefold_encode</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">blowup_factor</span><span class="p">,</span> <span class="n">G0</span><span class="o">=</span><span class="n">rs_encode</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">[:</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt; fri: enc(</span><span class="si">{}</span><span class="s2">)=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">debug_f_folded_code</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">f_code</span> <span class="o">==</span> <span class="n">debug_f_folded_code</span><span class="p">,</span> <span class="s2">&quot;Enc(fold(message)) != fold(Enc(message))&quot;</span>
+
+        <span class="n">transcript</span><span class="o">.</span><span class="n">write_field_elements</span><span class="p">([</span><span class="n">h_eval_at_0</span><span class="p">,</span> <span class="n">h_eval_at_1</span><span class="p">,</span> <span class="n">h_eval_at_2</span><span class="p">])</span>
+        <span class="n">transcript</span><span class="o">.</span><span class="n">write_field_elements</span><span class="p">(</span><span class="n">f_code</span><span class="p">)</span>
+        
+        <span class="n">half</span> <span class="o">=</span> <span class="n">half</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+
+    <span class="c1"># DEBUG:</span>
+    <span class="n">f_eval_at_random</span> <span class="o">=</span> <span class="n">sumcheck_sum</span><span class="o">/</span><span class="n">eq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">rs_encode</span><span class="p">([</span><span class="n">f_eval_at_random</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">blowup_factor</span><span class="p">)</span> <span class="o">==</span> <span class="n">f_code</span><span class="p">,</span> <span class="s2">&quot;❌: Encode(f(rs)) != f_code_0&quot;</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;end: f_code=</span><span class="si">{}</span><span class="s2">, sum=</span><span class="si">{}</span><span class="s2">, sum/eq=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_code</span><span class="p">,</span> <span class="n">sumcheck_sum</span><span class="p">,</span> <span class="n">sumcheck_sum</span><span class="o">/</span><span class="n">eq</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🙈: fold(f_code) == encode(fold(f_eq)/fold(eq(us)))&quot;</span><span class="p">)</span>
+
+    <span class="n">query_paths</span><span class="p">,</span> <span class="n">merkle_paths</span> <span class="o">=</span> <span class="n">query_phase</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">commit</span><span class="p">,</span> <span class="n">f_code_copy</span><span class="p">,</span> <span class="n">f_code_trees</span><span class="p">,</span> <span class="n">f_code_vec</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_code_copy</span><span class="p">),</span> <span class="n">num_verifier_queries</span><span class="p">,</span> <span class="n">debug</span><span class="p">)</span>
+
+    <span class="c1"># return (h_poly_vec, challenge_vec, f_code_vec)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;h_poly_vec&#39;</span><span class="p">:</span> <span class="n">h_poly_vec</span><span class="p">,</span>
+        <span class="s1">&#39;f_code_vec&#39;</span><span class="p">:</span> <span class="n">f_code_vec</span><span class="p">,</span>
+        <span class="s1">&#39;challenge_vec&#39;</span><span class="p">:</span> <span class="n">challenge_vec</span><span class="p">,</span>
+        <span class="s1">&#39;f_code_trees&#39;</span><span class="p">:</span> <span class="n">f_code_trees</span><span class="p">,</span>
+        <span class="s1">&#39;query_paths&#39;</span><span class="p">:</span> <span class="n">query_paths</span><span class="p">,</span>
+        <span class="s1">&#39;merkle_paths&#39;</span><span class="p">:</span> <span class="n">merkle_paths</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">merkle</span> <span class="kn">import</span> <span class="n">verify_decommitment</span>
+<span class="kn">from</span> <span class="nn">transcript</span> <span class="kn">import</span> <span class="n">Transcript</span>
+
+<span class="k">def</span> <span class="nf">verify_queries</span><span class="p">(</span><span class="n">commit</span><span class="p">,</span> <span class="n">proof</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">num_vars</span><span class="p">,</span> <span class="n">num_verifier_queries</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">transcript</span> <span class="o">=</span> <span class="n">Transcript</span><span class="p">()</span>
+    <span class="n">transcript</span><span class="o">.</span><span class="n">write_field_elements</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="n">fold_challenges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">fold_challenges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A0</span> <span class="o">*</span> <span class="n">transcript</span><span class="o">.</span><span class="n">squeeze_byte_challenge</span><span class="p">())</span>
+        <span class="n">transcript</span><span class="o">.</span><span class="n">write_field_elements</span><span class="p">(</span><span class="n">proof</span><span class="p">[</span><span class="s1">&#39;h_poly_vec&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">transcript</span><span class="o">.</span><span class="n">write_field_elements</span><span class="p">(</span><span class="n">proof</span><span class="p">[</span><span class="s1">&#39;f_code_vec&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">queries</span> <span class="o">=</span> <span class="p">[</span><span class="n">transcript</span><span class="o">.</span><span class="n">squeeze_byte_challenge</span><span class="p">()</span> <span class="o">%</span> <span class="n">num_vars</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_verifier_queries</span><span class="p">)]</span>
+    <span class="c1"># query loop</span>
+    <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="p">(</span><span class="n">cur_path</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">mps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;query_paths&#39;</span><span class="p">],</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;merkle_paths&#39;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cur_path:&quot;</span><span class="p">,</span> <span class="n">cur_path</span><span class="p">)</span>
+        <span class="n">num_vars_copy</span> <span class="o">=</span> <span class="n">num_vars</span>
+        <span class="c1"># fold loop</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mps</span><span class="p">):</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">q</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">q</span> <span class="o">-</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;=</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">q</span> <span class="o">+</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">:</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x0</span>
+                
+            <span class="n">code_left</span><span class="p">,</span> <span class="n">code_right</span> <span class="o">=</span> <span class="n">cur_path</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cur_path</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;table:&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x0:&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x1:&quot;</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+                <span class="n">f_code_folded</span> <span class="o">=</span> <span class="n">cur_path</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span> <span class="k">if</span> <span class="n">x0</span> <span class="o">&lt;</span> <span class="n">num_vars_copy</span> <span class="o">/</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">alpha</span> <span class="o">=</span> <span class="n">fold_challenges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f_code_folded:&quot;</span><span class="p">,</span> <span class="n">f_code_folded</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expected:&quot;</span><span class="p">,</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span> <span class="o">+</span> <span class="n">code_right</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span> <span class="o">-</span> <span class="n">code_right</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">table</span><span class="p">[</span><span class="n">x0</span><span class="p">])))</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;code_left:&quot;</span><span class="p">,</span> <span class="n">code_left</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;code_right:&quot;</span><span class="p">,</span> <span class="n">code_right</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;alpha:&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">f_code_folded</span> <span class="o">==</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span> <span class="o">+</span> <span class="n">code_right</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span> <span class="o">-</span> <span class="n">code_right</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">table</span><span class="p">[</span><span class="n">x0</span><span class="p">])),</span> <span class="s2">&quot;failed to check multilinear base fri&quot;</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mp:&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;commit:&quot;</span><span class="p">,</span> <span class="n">commit</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;idx:&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">verify_decommitment</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">code_left</span><span class="p">,</span> <span class="n">mp</span><span class="p">,</span> <span class="n">commit</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mp:&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;commit:&quot;</span><span class="p">,</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;f_code_trees&#39;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;idx:&quot;</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">verify_decommitment</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">code_left</span><span class="p">,</span> <span class="n">mp</span><span class="p">,</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;f_code_trees&#39;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+
+            <span class="n">num_vars_copy</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">x0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">verify_basefold_evaluation_arg_multilinear_basis</span><span class="p">(</span><span class="n">f_code</span><span class="p">,</span> <span class="n">commit</span><span class="p">,</span> <span class="n">proof</span><span class="p">,</span> <span class="n">us</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">blowup_factor</span><span class="p">,</span> <span class="n">num_verifier_queries</span><span class="p">,</span> <span class="n">Rng</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># TODO: check if the length of f is a power of 2</span>
+    
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_code</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">),</span> <span class="s2">&quot;k != len(us), k = </span><span class="si">%d</span><span class="s2">, len(us) = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">k</span>
+    <span class="k">assert</span> <span class="n">N</span> <span class="o">==</span> <span class="n">n</span> <span class="o">*</span> <span class="n">blowup_factor</span><span class="p">,</span> <span class="s2">&quot;N != n * blowup_factor, N = </span><span class="si">%d</span><span class="s2">, n = </span><span class="si">%d</span><span class="s2">, blowup_factor = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">blowup_factor</span><span class="p">)</span>
+    
+    <span class="n">h_poly_vec</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;h_poly_vec&#39;</span><span class="p">]</span>
+    <span class="n">challenge_vec</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;challenge_vec&#39;</span><span class="p">]</span>
+    <span class="n">f_code_vec</span> <span class="o">=</span> <span class="n">proof</span><span class="p">[</span><span class="s1">&#39;f_code_vec&#39;</span><span class="p">]</span>
+    <span class="n">sumcheck_sum</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+    <span class="n">f_last_code</span> <span class="o">=</span> <span class="n">f_code</span>
+    <span class="n">eq_evals</span> <span class="o">=</span> <span class="n">MLEPolynomial</span><span class="o">.</span><span class="n">eqs_over_hypercube</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sumcheck round </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">h_evals</span> <span class="o">=</span> <span class="n">h_poly_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">d</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">h_evals</span><span class="p">),</span> <span class="s2">&quot;d+1 != len(h_evals), d+1 = </span><span class="si">%d</span><span class="s2">, len(h_evals) = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">h_evals</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="n">sumcheck_sum</span> <span class="o">==</span> <span class="n">h_evals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">h_evals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;sumcheck_sum != h_evals[0] + h_evals[1], sumcheck_sum = </span><span class="si">%d</span><span class="s2">, h_evals[0] = </span><span class="si">%d</span><span class="s2">, h_evals[1] = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sumcheck_sum</span><span class="p">,</span> <span class="n">h_evals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h_evals</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># print(&quot;low={}, high={}&quot;.format(low, high))</span>
+
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">challenge_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="n">sumcheck_sum</span> <span class="o">=</span> <span class="n">UniPolynomial</span><span class="o">.</span><span class="n">uni_eval_from_evals</span><span class="p">(</span><span class="n">h_evals</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="p">[</span><span class="n">Fp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+
+        <span class="n">eq_low</span> <span class="o">=</span> <span class="n">eq_evals</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+        <span class="n">eq_high</span> <span class="o">=</span> <span class="n">eq_evals</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eq_low=</span><span class="si">{}</span><span class="s2">, eq_high=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eq_low</span><span class="p">,</span> <span class="n">eq_high</span><span class="p">))</span>
+        <span class="n">eq_evals</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">eq_low</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">eq_high</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fri round </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">f_code_folded</span> <span class="o">=</span> <span class="n">f_code_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_code_folded</span><span class="p">)</span> <span class="o">==</span> <span class="n">half</span> <span class="o">*</span> <span class="n">blowup_factor</span><span class="p">,</span> <span class="s2">&quot;len(f_code_folded) != half * blowup_factor, len(f_code_folded) = </span><span class="si">%d</span><span class="s2">, half = </span><span class="si">%d</span><span class="s2">, blowup_factor = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f_code_folded</span><span class="p">),</span> <span class="n">half</span><span class="p">,</span> <span class="n">blowup_factor</span><span class="p">)</span>
+        <span class="n">code_left</span> <span class="o">=</span> <span class="n">f_last_code</span><span class="p">[:</span><span class="n">half</span><span class="o">*</span><span class="n">blowup_factor</span><span class="p">]</span>
+        <span class="n">code_right</span> <span class="o">=</span> <span class="n">f_last_code</span><span class="p">[</span><span class="n">half</span><span class="o">*</span><span class="n">blowup_factor</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;code_left=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_left</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;code_right=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_right</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f_code_folded=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_code_folded</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;alpha=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;table=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="o">*</span><span class="n">blowup_factor</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">f_code_folded</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">code_right</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">code_right</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">table</span><span class="p">[</span><span class="n">j</span><span class="p">])),</span> <span class="s2">&quot;failed to check multilinear base fri&quot;</span>
+        <span class="n">f_last_code</span> <span class="o">=</span> <span class="n">f_code_folded</span>
+        <span class="n">half</span> <span class="o">=</span> <span class="n">half</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+
+    <span class="n">verify_queries</span><span class="p">(</span><span class="n">commit</span><span class="p">,</span> <span class="n">proof</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">num_verifier_queries</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">debug</span><span class="p">)</span>
+        
+    <span class="c1"># check the final code</span>
+    <span class="n">final_code</span> <span class="o">=</span> <span class="n">f_code_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_code</span><span class="p">)</span> <span class="o">==</span> <span class="n">blowup_factor</span><span class="p">,</span> <span class="s2">&quot;len(final_code) != blowup_factor, len(final_code) = </span><span class="si">%d</span><span class="s2">, blowup_factor = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final_code</span><span class="p">),</span> <span class="n">blowup_factor</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final_code</span><span class="p">)):</span>
+        <span class="k">assert</span> <span class="n">final_code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">final_code</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;final_code is not a repetition code&quot;</span>
+    <span class="c1"># check f(alpha_vec)</span>
+    <span class="n">f_eval_at_random</span> <span class="o">=</span> <span class="n">sumcheck_sum</span><span class="o">/</span><span class="n">eq_evals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f_eval_at_random=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_eval_at_random</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rs_encode([f_eval_at_random], k0=1, c=blowup_factor)=&quot;</span><span class="p">,</span> <span class="n">rs_encode</span><span class="p">([</span><span class="n">f_eval_at_random</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">blowup_factor</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">rs_encode</span><span class="p">([</span><span class="n">f_eval_at_random</span><span class="p">],</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">blowup_factor</span><span class="p">)</span> <span class="o">==</span> <span class="n">f_code_folded</span><span class="p">,</span> <span class="s2">&quot;❌: Encode(f(rs)) != f_code_0&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅: Verified! fold(</span><span class="si">{}</span><span class="s2">) == encode(fold(f_eq)/fold(eq(us)))&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_code</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fp</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Fp</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="n">ff_code</span> <span class="o">=</span> <span class="n">basefold_encode</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">ff</span><span class="p">,</span> <span class="n">k0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">G0</span><span class="o">=</span><span class="n">rs_encode</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X4</span><span class="p">,</span> <span class="n">X5</span><span class="p">],</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">]]);</span> <span class="n">ff_code</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Field([4*X0*X4 + 3*X0 + 2*X4 + 1]),
+ Field([4*X1*X5 + 3*X1 + 2*X5 + 1]),
+ Field([-4*X2*X4 + 3*X2 - 2*X4 + 1]),
+ Field([-4*X3*X5 + 3*X3 - 2*X5 + 1]),
+ Field([-4*X0*X4 - 3*X0 + 2*X4 + 1]),
+ Field([-4*X1*X5 - 3*X1 + 2*X5 + 1]),
+ Field([4*X2*X4 - 3*X2 - 2*X4 + 1]),
+ Field([4*X3*X5 - 3*X3 - 2*X5 + 1])]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">commit</span> <span class="o">=</span> <span class="n">MerkleTree</span><span class="p">(</span><span class="n">ff_code</span><span class="p">)</span>
+<span class="n">commit</span><span class="o">.</span><span class="n">root</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;d7732ef5605e991b2909cb0219410cb35b49f23df6d5c909ecfe2ebacf64ce6d&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transcript</span> <span class="kn">import</span> <span class="n">Transcript</span>
+
+<span class="n">transcript</span> <span class="o">=</span> <span class="n">Transcript</span><span class="p">()</span>
+<span class="n">transcript</span><span class="o">.</span><span class="n">write_field_elements</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+<span class="n">proof</span> <span class="o">=</span> <span class="n">prove_basefold_evaluation_arg_multilinear_basis</span><span class="p">(</span><span class="n">ff_code</span><span class="p">,</span> <span class="n">ff</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[[</span><span class="n">X4</span><span class="p">,</span> <span class="n">X5</span><span class="p">],</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">]],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">commit</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">transcript</span><span class="p">);</span> <span class="n">proof</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;h_poly_vec&#39;: [[Field([181]), Field([24]), Field([88])],
+  [Field([72*A0^2 + 10*A0 + 6]),
+   Field([85*A0^2 + 73*A0 - 18]),
+   Field([-95*A0^2 - 21*A0 - 72])]],
+ &#39;f_code_vec&#39;: [[Field([-10*X4*A0 + 2*X4 - 10*A0 + 1]),
+   Field([-10*X5*A0 + 2*X5 - 10*A0 + 1]),
+   Field([10*X4*A0 - 2*X4 - 10*A0 + 1]),
+   Field([10*X5*A0 - 2*X5 - 10*A0 + 1])],
+  [Field([89*A0 + 1]), Field([89*A0 + 1])]],
+ &#39;challenge_vec&#39;: [-5*A0, -94*A0],
+ &#39;f_code_trees&#39;: [&lt;merkle.MerkleTree object at 0x12cf61410&gt;,
+  &lt;merkle.MerkleTree object at 0x12cf6a890&gt;],
+ &#39;query_paths&#39;: [([(Field([4*X1*X5 + 3*X1 + 2*X5 + 1]),
+     Field([-4*X1*X5 - 3*X1 + 2*X5 + 1])),
+    (Field([-10*X5*A0 + 2*X5 - 10*A0 + 1]),
+     Field([10*X5*A0 - 2*X5 - 10*A0 + 1])),
+    (Field([89*A0 + 1]), Field([89*A0 + 1]))],
+   [1, 1, 0]),
+  ([(Field([-4*X3*X5 + 3*X3 - 2*X5 + 1]), Field([4*X3*X5 - 3*X3 - 2*X5 + 1])),
+    (Field([-10*X5*A0 + 2*X5 - 10*A0 + 1]),
+     Field([10*X5*A0 - 2*X5 - 10*A0 + 1])),
+    (Field([89*A0 + 1]), Field([89*A0 + 1]))],
+   [3, 1, 0]),
+  ([(Field([4*X0*X4 + 3*X0 + 2*X4 + 1]), Field([-4*X0*X4 - 3*X0 + 2*X4 + 1])),
+    (Field([-10*X4*A0 + 2*X4 - 10*A0 + 1]),
+     Field([10*X4*A0 - 2*X4 - 10*A0 + 1])),
+    (Field([89*A0 + 1]), Field([89*A0 + 1]))],
+   [0, 0, 0]),
+  ([(Field([4*X1*X5 + 3*X1 + 2*X5 + 1]), Field([-4*X1*X5 - 3*X1 + 2*X5 + 1])),
+    (Field([-10*X5*A0 + 2*X5 - 10*A0 + 1]),
+     Field([10*X5*A0 - 2*X5 - 10*A0 + 1])),
+    (Field([89*A0 + 1]), Field([89*A0 + 1]))],
+   [1, 1, 0])],
+ &#39;merkle_paths&#39;: [[[&#39;1f2132771bb6da50636e47e8a6008fc2ecca5b006b83f6b0b2f22faa35601254&#39;,
+    &#39;ed60f9862d1b626084c46913fe5068a5ed159fca9c6f4169e5857fb16d1ef86a&#39;,
+    &#39;8113ad78ca72393d3f9f7f40d3a9cd60d98a1c21d0ecef4986ce6cd3b676dfe1&#39;],
+   [&#39;605df0f4ee68f5753a015f057133f1a4bbe84b0e5b72b866f51bcded9e707d5e&#39;,
+    &#39;f9e67d2a71295f49db627833b5c83e8a20b0b162f002f3529be018da2282a675&#39;],
+   [&#39;238b8b8cd29a360bfa2bbb1efc136051583ba54573f3211604b8ae084bdaf881&#39;]],
+  [[&#39;1f2132771bb6da50636e47e8a6008fc2ecca5b006b83f6b0b2f22faa35601254&#39;,
+    &#39;a3908fce4dba2b186c03c9ae0eab74461227e58dde51b8d1260334f857a0fb69&#39;,
+    &#39;fcdfea9754326f6c9612fc56cfd28f5857d77a9d8449d728fa4f88d901ff1d6c&#39;],
+   [&#39;605df0f4ee68f5753a015f057133f1a4bbe84b0e5b72b866f51bcded9e707d5e&#39;,
+    &#39;f9e67d2a71295f49db627833b5c83e8a20b0b162f002f3529be018da2282a675&#39;],
+   [&#39;238b8b8cd29a360bfa2bbb1efc136051583ba54573f3211604b8ae084bdaf881&#39;]],
+  [[&#39;1f2132771bb6da50636e47e8a6008fc2ecca5b006b83f6b0b2f22faa35601254&#39;,
+    &#39;ed60f9862d1b626084c46913fe5068a5ed159fca9c6f4169e5857fb16d1ef86a&#39;,
+    &#39;c59d46ec6760e72acf97cfd72202736a9b427ff36a166623842396796992a2f8&#39;],
+   [&#39;605df0f4ee68f5753a015f057133f1a4bbe84b0e5b72b866f51bcded9e707d5e&#39;,
+    &#39;cb8d4563d9bdb45da5800eb1d3a8b62e1711c0811b5e74714534fe4bccdee12b&#39;],
+   [&#39;238b8b8cd29a360bfa2bbb1efc136051583ba54573f3211604b8ae084bdaf881&#39;]],
+  [[&#39;1f2132771bb6da50636e47e8a6008fc2ecca5b006b83f6b0b2f22faa35601254&#39;,
+    &#39;ed60f9862d1b626084c46913fe5068a5ed159fca9c6f4169e5857fb16d1ef86a&#39;,
+    &#39;8113ad78ca72393d3f9f7f40d3a9cd60d98a1c21d0ecef4986ce6cd3b676dfe1&#39;],
+   [&#39;605df0f4ee68f5753a015f057133f1a4bbe84b0e5b72b866f51bcded9e707d5e&#39;,
+    &#39;f9e67d2a71295f49db627833b5c83e8a20b0b162f002f3529be018da2282a675&#39;],
+   [&#39;238b8b8cd29a360bfa2bbb1efc136051583ba54573f3211604b8ae084bdaf881&#39;]]]}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># verify_basefold_evaluation_arg_multilinear_basis(f_code, arg, us, v, d, k, T, blowup_factor, Rng):</span>
+
+<span class="n">verify_basefold_evaluation_arg_multilinear_basis</span><span class="p">(</span><span class="n">ff_code</span><span class="p">,</span> <span class="n">commit</span><span class="p">,</span> <span class="n">proof</span><span class="p">,</span> <span class="n">us</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">v</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="p">[[</span><span class="n">X4</span><span class="p">,</span> <span class="n">X5</span><span class="p">],</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">X3</span><span class="p">]],</span> <span class="n">blowup_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_verifier_queries</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">Rng</span><span class="o">=</span><span class="p">[</span><span class="n">A1</span><span class="p">,</span> <span class="n">A0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅: Verified! fold([Field([4*X0*X4 + 3*X0 + 2*X4 + 1]), Field([4*X1*X5 + 3*X1 + 2*X5 + 1]), Field([-4*X2*X4 + 3*X2 - 2*X4 + 1]), Field([-4*X3*X5 + 3*X3 - 2*X5 + 1]), Field([-4*X0*X4 - 3*X0 + 2*X4 + 1]), Field([-4*X1*X5 - 3*X1 + 2*X5 + 1]), Field([4*X2*X4 - 3*X2 - 2*X4 + 1]), Field([4*X3*X5 - 3*X3 - 2*X5 + 1])]) == encode(fold(f_eq)/fold(eq(us)))
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">field</span> <span class="kn">import</span> <span class="n">Field</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">Field</span><span class="o">.</span><span class="n">get_operation_count</span><span class="p">())</span>
+<span class="n">Field</span><span class="o">.</span><span class="n">reset_operation_count</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Field</span><span class="o">.</span><span class="n">get_operation_count</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;add&#39;: 174, &#39;sub&#39;: 97, &#39;mul&#39;: 202, &#39;div&#39;: 70}
+{&#39;add&#39;: 0, &#39;sub&#39;: 0, &#39;mul&#39;: 0, &#39;div&#39;: 0}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">Fp</span><span class="o">.</span><span class="n">Fp</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Fp</span><span class="o">.</span><span class="n">zero</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Fp</span><span class="o">.</span><span class="n">one</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Fp</span><span class="o">.</span><span class="n">primitive_element</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Field of size 193
+0
+1
+5
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "SageMath-9.8"
+        },
+        kernelOptions: {
+            name: "SageMath-9.8",
+            path: "./src"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'SageMath-9.8'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Finite Field</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#foldable-code">Foldable code</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reed-solomon-code">Reed-Solomon Code</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp">Basefold IOPP</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-evaluation-argument">Basefold Evaluation Argument</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-features">More features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#todo">TODO</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1147 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>缺失的协议 PH23-PCS（二） &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ph23/ph23-pcs-02.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="缺失的协议 PH23-PCS（四）" href="ph23-pcs-fri-01.zh.html" />
+    <link rel="prev" title="缺失的协议 PH23-PCS（一）" href="ph23-pcs-01.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../libra-pcs/libra-pcs.zh.html">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../virgo-pcs/virgo-pcs-01.zh.html">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fph23/ph23-pcs-02.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/ph23/ph23-pcs-02.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>缺失的协议 PH23-PCS（二）</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 协议框架与优化</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-x"><span class="math notranslate nohighlight">\(c^*(X)\)</span> 在多点求值的证明优化</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><span class="math notranslate nohighlight">\(c^*(X)\)</span> 多项式计算的优化</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ph23-kzg10">2. PH23+KZG10 协议（优化版）</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precomputation">Precomputation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-inputs">Common inputs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit 计算过程</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation">Evaluation 证明协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">证明表示</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">验证过程</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3. 优化性能分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ph23-pcs">
+<h1>缺失的协议 PH23-PCS（二）<a class="headerlink" href="#ph23-pcs" title="Link to this heading">#</a></h1>
+<p>本文给出 PH23-KZG10 的完整的优化协议。</p>
+<section id="id1">
+<h2>1. 协议框架与优化<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>首先回顾下 PH23+KZG10 协议的 Evaluation Argument 的简单流程，然后我们看看有哪些可以优化的地方。</p>
+<p>P: 发送 <span class="math notranslate nohighlight">\(c(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_c\)</span>
+V: 发送随机数 <span class="math notranslate nohighlight">\(\alpha\)</span> 用来聚合多个多项式的约束等式
+P: 计算公开的多项式集合 <span class="math notranslate nohighlight">\(\{s_i(X)\}\)</span>
+P: 计算聚合的约束多项式 <span class="math notranslate nohighlight">\(h(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+h(X) = G(c(X), s_0(X), s_1(X),\ldots, s_{n-1}(X), z(X), z(\omega^{-1}X), X)
+\]</div>
+<p>P: 计算商多项式 <span class="math notranslate nohighlight">\(t(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_t\)</span>, <span class="math notranslate nohighlight">\(z(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_z\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+t(X) = \frac{h(X)}{v_H(X)}
+\]</div>
+<p>V: 发送随机的求值点 <span class="math notranslate nohighlight">\(\zeta\)</span></p>
+<p>P: 计算 <span class="math notranslate nohighlight">\(c(\zeta\cdot\omega), c(\zeta\cdot\omega^2), c(\zeta\cdot\omega^4), \ldots, c(\zeta\cdot\omega^{2^{n-1}})\)</span>, <span class="math notranslate nohighlight">\(c(\zeta)\)</span> ，还有 <span class="math notranslate nohighlight">\(z(\zeta), z(\omega^{-1}\cdot\zeta)\)</span> ，<span class="math notranslate nohighlight">\(t(\zeta), a(\zeta)\)</span> ；发送上述多项式求值的 KZG10 Evaluation Arguments</p>
+<p>V: 验证所有的 KZG10 Evaluation Arguments，然后验证下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h(\zeta) \overset{?}{=} t(\zeta)\cdot v_H(\zeta) \\
+\end{split}
+\end{split}\]</div>
+<section id="c-x">
+<h3><span class="math notranslate nohighlight">\(c^*(X)\)</span> 在多点求值的证明优化<a class="headerlink" href="#c-x" title="Link to this heading">#</a></h3>
+<p>在证明中，Prover 需要证明 <span class="math notranslate nohighlight">\(c(X)\)</span> 多项式在 <span class="math notranslate nohighlight">\(n+1\)</span> 个点上的 Evaluation，即</p>
+<div class="math notranslate nohighlight">
+\[
+c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), c(\zeta)
+\]</div>
+<p>利用 [BDFG20] 论文中的技术，如果一个 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(m\)</span> 个点 <span class="math notranslate nohighlight">\(D=(z_0,z_1,\ldots,z_{m-1})\)</span> 上的 Evaluation 为 <span class="math notranslate nohighlight">\(\vec{v}=(v_0, v_1, \ldots, v_{m-1})\)</span>，定义 <span class="math notranslate nohighlight">\(f^*(X)\)</span> 是 <span class="math notranslate nohighlight">\(\vec{v}\)</span> 在 <span class="math notranslate nohighlight">\(D\)</span> 上的插值多项式，即 <span class="math notranslate nohighlight">\(\deg(f^*(X)) = m-1\)</span>，并且有 <span class="math notranslate nohighlight">\(f^*(z_i) = f(z_i), \forall i\in[0,m)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+v_D(X) = \prod_{i=0}^{m-1} (X-z_i)
+\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(f(X)\)</span> 满足下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) - f^*(X) = q(X)\cdot (X-z_0)(X-z_1)\cdots(X-z_{m-1})
+\]</div>
+<p>上面等式这个很容易验证，因为当 <span class="math notranslate nohighlight">\(X=z_i\)</span> 的时候，等式左边等于零，那么 <span class="math notranslate nohighlight">\(f(X)-f^*(X)\)</span> 可以被 <span class="math notranslate nohighlight">\((X-z_i)\)</span> 整除。那么对于所有的 <span class="math notranslate nohighlight">\(i=0,1,\ldots,m-1\)</span>，<span class="math notranslate nohighlight">\(f(X)-f^*(X)\)</span> 可以被 <span class="math notranslate nohighlight">\(v_D(X)\)</span> 整除，</p>
+<div class="math notranslate nohighlight">
+\[
+v_D(X) = \prod_{i=0}^{m-1} (X-z_i)
+\]</div>
+<p>这样一来，Prover 只要向 Verifier 证明存在 <span class="math notranslate nohighlight">\(q(X)\)</span>，使得 <span class="math notranslate nohighlight">\(f(X) - f^*(X) = q(X)\cdot v_D(X)\)</span>，那么 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(D\)</span> 上的 Evaluation 就等于 <span class="math notranslate nohighlight">\(\vec{v}\)</span>。而这个等式又可以通过 Verifier 提供一个随机挑战点  <span class="math notranslate nohighlight">\(X=\xi\)</span> 来验证，其中 <span class="math notranslate nohighlight">\(v_D(\xi)\)</span> 与 <span class="math notranslate nohighlight">\(f^*(\xi)\)</span> 可以由 Verifier 自行计算，而 <span class="math notranslate nohighlight">\(f(\xi)\)</span> 与 <span class="math notranslate nohighlight">\(q(\xi)\)</span> 可以通过 KZG10 的 Evaluation Argument 来证明。</p>
+</section>
+<section id="id2">
+<h3><span class="math notranslate nohighlight">\(c^*(X)\)</span> 多项式计算的优化<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>Prover 可以构造多项式 <span class="math notranslate nohighlight">\(c^*(X)\)</span>，它是下面向量在 <span class="math notranslate nohighlight">\(\zeta D\)</span> 上的插值多项式。这样做的优势是可以让 Prover 一次证明 <span class="math notranslate nohighlight">\(c(X)\)</span> 的多个不同点的 Evaluation，记为 <span class="math notranslate nohighlight">\(\vec{c^*}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), c(\zeta)
+\]</div>
+<p>我们引入 <span class="math notranslate nohighlight">\(D\)</span> 满足  <span class="math notranslate nohighlight">\(|D|=n+1\)</span> ，其定义为</p>
+<div class="math notranslate nohighlight">
+\[
+D = \big(\omega,\ \omega^2,\ \omega^4,\ \ldots,\ \omega^{2^{n-1}}, \omega^{2^n}=1\big)
+\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(c^*(X)\)</span> 的 Evaluation 的 Domain 就可以表示为 <span class="math notranslate nohighlight">\(\zeta D\)</span>，</p>
+<div class="math notranslate nohighlight">
+\[
+D'=D\zeta = \big(\omega\cdot\zeta,\ \omega^2\cdot\zeta,\ \omega^4\cdot\zeta,\ \ldots,\ \omega^{2^{n-1}}\cdot\zeta,\ \zeta\big)
+\]</div>
+<p>其 Vanishing 多项式 <span class="math notranslate nohighlight">\(v_{D'}(X)\)</span> 定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+v_{D'}(X) = (X-\omega\zeta)(X-\omega^2\zeta)(X-\omega^4\zeta)\cdots(X-\omega^{2^n}\zeta)
+\]</div>
+<p>对于 <span class="math notranslate nohighlight">\(D'\)</span> 上的 Lagrange 多项式 可以定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+L^{D'}_j(X) = \hat{d}_j\cdot\frac{v_{D'}(X)}{X-\omega^{2^j}\zeta}, \qquad j=0,1,\ldots, n
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\hat{d}_j\)</span> 是 <span class="math notranslate nohighlight">\(D'\)</span> 上的 Bary-Centric Weights，定义为</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{d}_j = \prod_{l\neq j} \frac{1}{\zeta\cdot\omega^{2^j} - \zeta\cdot\omega^{2^l}} = \frac{1}{\zeta^n}\cdot\prod_{l\neq j} \frac{1}{\omega^{2^j} - \omega^{2^l}} = \frac{1}{\zeta^n}\cdot\hat{w}_j
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\hat{w}_j\)</span> 是 <span class="math notranslate nohighlight">\(D\)</span> 上的 Bary-Centric Weights，并且它的定义只与 <span class="math notranslate nohighlight">\(D\)</span> 相关，和 <span class="math notranslate nohighlight">\(\zeta\)</span> 无关。因此，我们可以事先预计算 <span class="math notranslate nohighlight">\(\hat{w}_j\)</span> ，然后利用 <span class="math notranslate nohighlight">\(\hat{w}_j\)</span> 来计算 <span class="math notranslate nohighlight">\(c^*(X)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = c^*_0 \cdot L^{D'}_0(X) + c^*_1 \cdot L^{D'}_1(X) + \cdots + c^*_n \cdot L^{D'}_n(X)
+\]</div>
+<p>上面的等式可以进一步优化，等式右边除以一个常数项多项式 <span class="math notranslate nohighlight">\(g(X)=1\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = 1 \cdot L^{D'}_0(X) + 1 \cdot L^{D'}_1(X) + \cdots + 1 \cdot L^{D'}_n(X)
+\]</div>
+<p>可以得到：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+c^*(X) = \frac{c^*(X)}{g(X)} = \frac{c^*_0 \cdot L^{D'}_0(X) + c^*_1 \cdot L^{D'}_1(X) + \cdots + c^*_n \cdot L^{D'}_n(X)}{g(X)} \\
+\end{split}\]</div>
+<p>展开 <span class="math notranslate nohighlight">\(g(X)\)</span> 与 <span class="math notranslate nohighlight">\(L^{D'}_i(X)\)</span> ，可以得到：</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = \frac{c^*_0 \cdot \hat{d}_0 \cdot \frac{z_{D'}(X)}{X-\omega\zeta} + c^*_1 \cdot \hat{d}_1 \cdot \frac{z_{D'}(X)}{X-\omega^{2}\zeta} + \cdots + c^*_n \cdot \hat{d}_n \cdot \frac{z_{D'}(X)}{X-\omega^{2^n}\zeta}}{
+  1 \cdot \hat{d}_0 \cdot \frac{z_{D'}(X)}{X-\omega\zeta} + 1 \cdot \hat{d}_1 \cdot \frac{z_{D'}(X)}{X-\omega^2\zeta} + \cdots + 1 \cdot \hat{d}_n \cdot \frac{z_{D'}(X)}{X-\omega^{2^n}\zeta}
+  }
+\]</div>
+<p>分子分母同时消去 <span class="math notranslate nohighlight">\(z_{D'}(X)\)</span>，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = \frac{c^*_0 \cdot \hat{d}_0 \cdot \frac{1}{X-\omega\zeta} + c^*_1 \cdot \hat{d}_1 \cdot \frac{1}{X-\omega^{2}\zeta} + \cdots + c^*_n \cdot \hat{d}_n \cdot \frac{1}{X-\omega^{2^n}\zeta}}{
+  1 \cdot \hat{d}_0 \cdot \frac{1}{X-\omega\zeta} + 1 \cdot \hat{d}_1 \cdot \frac{1}{X-\omega^2\zeta} + \cdots + 1 \cdot \hat{d}_n \cdot \frac{1}{X-\omega^{2^n}\zeta}
+  }
+\]</div>
+<p>再展开 <span class="math notranslate nohighlight">\(\hat{d}_i\)</span> 的定义，并且分子分母同时消去 <span class="math notranslate nohighlight">\(\frac{1}{\zeta^n}\)</span> ，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = \frac{c^*_0 \cdot \frac{\hat{w}_0}{X-\omega\zeta} + c^*_1 \cdot \frac{\hat{w}_1}{X-\omega^{2}\zeta} + \cdots + c^*_n \cdot \frac{\hat{w}_n}{X-\omega^{2^n}\zeta}}{
+   \frac{\hat{w}_0}{X-\omega\zeta} + \frac{\hat{w}_1}{X-\omega^2\zeta} + \cdots + \frac{\hat{w}_n}{X-\omega^{2^n}\zeta}
+  }
+\]</div>
+<p>Prover 可以利用事先预计算的 <span class="math notranslate nohighlight">\(D\)</span> 上的Bary-Centric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span> 来快速计算 <span class="math notranslate nohighlight">\(c^*(X)\)</span>，如果 <span class="math notranslate nohighlight">\(n\)</span> 是固定的。 尽管如此，<span class="math notranslate nohighlight">\(c^*(X)\)</span> 的计算复杂度仍为 <span class="math notranslate nohighlight">\(O(n\log^2(n))\)</span>。不过考虑到 <span class="math notranslate nohighlight">\(n=\log(N)\)</span>，所以 <span class="math notranslate nohighlight">\(c^*(X)\)</span> 的计算复杂度是对数级别的。</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = \sum_{j=0}^{n-1} \frac{{\hat{w}}_j}{\zeta^n} \cdot \frac{z_{D_\zeta}(X)}{X-\zeta\cdot\omega^{2^j}}
+\]</div>
+<p>预计算的 <span class="math notranslate nohighlight">\(\hat{w}_j\)</span> 的定义为</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_j = \prod_{l\neq j} \frac{1}{\omega^{2^j} - \omega^{2^l}}
+\]</div>
+<p>不仅如此，Verifier 需要计算 <span class="math notranslate nohighlight">\(c^*(X)\)</span> 在某个挑战点上的取值 ，比如 <span class="math notranslate nohighlight">\(X=\xi\)</span>， Verifier 可以通过上面的等式，以 <span class="math notranslate nohighlight">\(O(\log{N})\)</span> 时间复杂度根据 Prover 提供的 <span class="math notranslate nohighlight">\(\vec{c^*}\)</span> 来计算 <span class="math notranslate nohighlight">\(c^*(\xi)\)</span>。</p>
+</section>
+</section>
+<section id="ph23-kzg10">
+<h2>2. PH23+KZG10 协议（优化版）<a class="headerlink" href="#ph23-kzg10" title="Link to this heading">#</a></h2>
+<p>对于 KZG10 协议，因为其 Commitment 具有加法同态性。</p>
+<section id="precomputation">
+<h3>Precomputation<a class="headerlink" href="#precomputation" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>预计算 <span class="math notranslate nohighlight">\(s_0(X),\ldots, s_{n-1}(X)\)</span> and <span class="math notranslate nohighlight">\(v_H(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+v_H(X) = X^N -1 
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+s_i(X) = \frac{v_H(X)}{v_{H_i}(X)} = \frac{X^N-1}{X^{2^i}-1}
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>预计算 <span class="math notranslate nohighlight">\(D=(1, \omega, \omega^2, \ldots, \omega^{2^{n-1}})\)</span> 上的 Bary-Centric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span>。这个可以加速</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_j = \prod_{l\neq j} \frac{1}{\omega^{2^j} - \omega^{2^l}}
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>预计算 Lagrange Basis 的 KZG10 SRS <span class="math notranslate nohighlight">\(A_0 =[L_0(\tau)]_1, A_1= [L_1(\tau)]_1, A_2=[L_2(\tau)]_1, \ldots, A_{N-1} = [L_{2^{n-1}}(\tau)]_1\)</span></p></li>
+</ol>
+</section>
+<section id="common-inputs">
+<h3>Common inputs<a class="headerlink" href="#common-inputs" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_a=[\hat{f}(\tau)]_1\)</span>:  the (uni-variate) commitment of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, \ldots, u_{n-1})\)</span>: 求值点</p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(u_0,u_1,\ldots, u_{n-1})\)</span>: MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在 <span class="math notranslate nohighlight">\(\vec{X}=\vec{u}\)</span> 处的运算值</p></li>
+</ol>
+</section>
+<section id="commit">
+<h3>Commit 计算过程<a class="headerlink" href="#commit" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Prover 构造一元多项式 <span class="math notranslate nohighlight">\(a(X)\)</span>，使其 Evaluation form 等于 <span class="math notranslate nohighlight">\(\vec{a}=(a_0, a_1, \ldots, a_{N-1})\)</span>，其中 <span class="math notranslate nohighlight">\(a_i = \tilde{f}(\mathsf{bits}(i))\)</span>, 为 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在 Boolean Hypercube <span class="math notranslate nohighlight">\(\{0,1\}^n\)</span> 上的取值。</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+a(X) = a_0\cdot L_0(X) + a_1\cdot L_1(X) + a_2\cdot L_2(X)
++ \cdots + a_{N-1}\cdot L_{N-1}(X)
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(\hat{f}(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_a\)</span>，并发送 <span class="math notranslate nohighlight">\(C_a\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{a} = a_0\cdot A_0 + a_1\cdot A_1 + a_2\cdot A_2 + \cdots + a_{N-1}\cdot A_{N-1} = [\hat{f}(\tau)]_1
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(A_0 =[L_0(\tau)]_1, A_1= [L_1(\tau)]_1, A_2=[L_2(\tau)]_1, \ldots, A_{N-1} = [L_{2^{n-1}}(\tau)]_1\)</span> ，在预计算过程中已经得到。</p>
+</section>
+<section id="evaluation">
+<h3>Evaluation 证明协议<a class="headerlink" href="#evaluation" title="Link to this heading">#</a></h3>
+<p>回忆下证明的多项式运算的约束：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, u_2, \ldots, u_{n-1}) = v
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, u_2, \ldots, u_{n-1})\)</span> 是一个公开的挑战点。</p>
+<section id="round-1">
+<h4>Round 1.<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h4>
+<p>Prover:</p>
+<ol class="arabic simple">
+<li><p>计算向量 <span class="math notranslate nohighlight">\(\vec{c}\)</span>，其中每个元素 <span class="math notranslate nohighlight">\(c_i=\overset{\sim}{eq}(\mathsf{bits}(i), \vec{u})\)</span></p></li>
+<li><p>构造多项式 <span class="math notranslate nohighlight">\(c(X)\)</span>，其在 <span class="math notranslate nohighlight">\(H\)</span> 上的运算结果恰好是 <span class="math notranslate nohighlight">\(\vec{c}\)</span> 。</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+c(X) = \sum_{i=0}^{N-1} c_i \cdot L_i(X)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>计算 <span class="math notranslate nohighlight">\(c(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_c= [c(\tau)]_1\)</span>，并发送 <span class="math notranslate nohighlight">\(C_c\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_c = \mathsf{KZG10.Commit}(\vec{c})  =  [c(\tau)]_1 
+\]</div>
+</section>
+<section id="round-2">
+<h4>Round 2.<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h4>
+<p>Verifier: 发送挑战数 <span class="math notranslate nohighlight">\(\alpha\leftarrow_{\$}\mathbb{F}_p\)</span></p>
+<p>Prover:</p>
+<ol class="arabic simple">
+<li><p>构造关于 <span class="math notranslate nohighlight">\(\vec{c}\)</span> 的约束多项式 <span class="math notranslate nohighlight">\(p_0(X),\ldots, p_{n}(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+p_0(X) &amp;= s_0(X) \cdot \Big( c(X) - (1-u_0)(1-u_1)...(1-u_{n-1}) \Big) \\
+p_k(X) &amp;= s_{k-1}(X) \cdot \Big( u_{n-k}\cdot c(X) - (1-u_{n-k})\cdot c(\omega^{2^{n-k}}\cdot X)\Big) , \quad k=1\ldots n
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>把 <span class="math notranslate nohighlight">\(\{p_i(X)\}\)</span> 聚合为一个多项式 <span class="math notranslate nohighlight">\(p(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+p(X) = p_0(X) + \alpha\cdot p_1(X) + \alpha^2\cdot p_2(X) + \cdots + \alpha^{n}\cdot p_{n}(X)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>构造累加多项式 <span class="math notranslate nohighlight">\(z(X)\)</span>，满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+z(1) &amp;= a_0\cdot c_0 \\
+z(\omega_{i}) - z(\omega_{i-1}) &amp;=  a(\omega_{i})\cdot c(\omega_{i}), \quad i=1,\ldots, N-1 \\ 
+z(\omega^{N-1}) &amp;= v \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="4">
+<li><p>构造约束多项式 <span class="math notranslate nohighlight">\(h_0(X), h_1(X), h_2(X)\)</span>，满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h_0(X) &amp;= L_0(X)\cdot\big(z(X) - c_0\cdot a(X) \big) \\
+h_1(X) &amp;= (X-1)\cdot\big(z(X)-z(\omega^{-1}\cdot X)-a(X)\cdot c(X)) \\
+h_2(X) &amp; = L_{N-1}(X)\cdot\big( z(X) - v \big) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="5">
+<li><p>把 <span class="math notranslate nohighlight">\(p(X)\)</span> 和 <span class="math notranslate nohighlight">\(h_0(X), h_1(X), h_2(X)\)</span> 聚合为一个多项式 <span class="math notranslate nohighlight">\(h(X)\)</span>，满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\begin{split}
+h(X) &amp;= p(X) + \alpha^{n+1} \cdot h_0(X) + \alpha^{n+2} \cdot h_1(X) + \alpha^{n+3} \cdot h_2(X)
+\end{split}
+\]</div>
+<ol class="arabic simple" start="6">
+<li><p>计算 Quotient 多项式 <span class="math notranslate nohighlight">\(t(X)\)</span>，满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) =t(X)\cdot v_H(X)
+\]</div>
+<ol class="arabic simple" start="7">
+<li><p>计算 <span class="math notranslate nohighlight">\(C_t=[t(\tau)]_1\)</span>， <span class="math notranslate nohighlight">\(C_z=[z(\tau)]_1\)</span>，并发送 <span class="math notranslate nohighlight">\(C_t\)</span> 和 <span class="math notranslate nohighlight">\(C_z\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+C_t &amp;= \mathsf{KZG10.Commit}(t(X)) = [t(\tau)]_1 \\
+C_z &amp;= \mathsf{KZG10.Commit}(z(X)) = [z(\tau)]_1
+\end{split}
+\end{split}\]</div>
+</section>
+<section id="round-3">
+<h4>Round 3.<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h4>
+<p>Verifier: 发送随机求值点 <span class="math notranslate nohighlight">\(\zeta\leftarrow_{\$}\mathbb{F}_p\)</span></p>
+<p>Prover:</p>
+<ol class="arabic simple">
+<li><p>计算 <span class="math notranslate nohighlight">\(s_i(X)\)</span> 在 <span class="math notranslate nohighlight">\(\zeta\)</span> 处的取值：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+s_0(\zeta), s_1(\zeta), \ldots, s_{n-1}(\zeta)
+\]</div>
+<p>这里 Prover 可以高效计算 <span class="math notranslate nohighlight">\(s_i(\zeta)\)</span> ，由 <span class="math notranslate nohighlight">\(s_i(X)\)</span> 的公式得</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  s_i(\zeta) &amp; = \frac{\zeta^N - 1}{\zeta^{2^i} - 1} \\
+  &amp; = \frac{(\zeta^N - 1)(\zeta^{2^i} +1)}{(\zeta^{2^i} - 1)(\zeta^{2^i} +1)} \\
+  &amp; = \frac{\zeta^N - 1}{\zeta^{2^{i + 1}} - 1} \cdot (\zeta^{2^i} +1) \\
+  &amp; = s_{i + 1}(\zeta) \cdot (\zeta^{2^i} +1)
+\end{aligned} 
+\end{split}\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(s_i(\zeta)\)</span> 的值可以通过 <span class="math notranslate nohighlight">\(s_{i + 1}(\zeta)\)</span> 计算得到，而</p>
+<div class="math notranslate nohighlight">
+\[
+s_{n-1}(\zeta) = \frac{\zeta^N - 1}{\zeta^{2^{n-1}} - 1} = \zeta^{2^{n-1}} + 1
+\]</div>
+<p>因此可以得到一个 <span class="math notranslate nohighlight">\(O(n)\)</span> 的算法来计算 <span class="math notranslate nohighlight">\(s_i(\zeta)\)</span> ，并且这里不含除法运算。计算过程是：<span class="math notranslate nohighlight">\(s_{n-1}(\zeta) \rightarrow s_{n-2}(\zeta) \rightarrow \cdots \rightarrow s_0(\zeta)\)</span> 。</p>
+<ol class="arabic simple" start="2">
+<li><p>定义求值 Domain <span class="math notranslate nohighlight">\(D'\)</span>，包含 <span class="math notranslate nohighlight">\(n+1\)</span> 个元素：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+D'=D\zeta = \{\zeta, \omega\zeta, \omega^2\zeta,\omega^4\zeta, \ldots, \omega^{2^{n-1}}\zeta\}
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>计算并发送 <span class="math notranslate nohighlight">\(c(X)\)</span> 在 <span class="math notranslate nohighlight">\(D'\)</span> 上的取值</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+c(\zeta), c(\zeta\cdot\omega), c(\zeta\cdot\omega^2), c(\zeta\cdot\omega^4), \ldots, c(\zeta\cdot\omega^{2^{n-1}})
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>计算并发送 <span class="math notranslate nohighlight">\(z(\omega^{-1}\cdot\zeta)\)</span></p></li>
+<li><p>计算 Linearized Polynomial <span class="math notranslate nohighlight">\(l_\zeta(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+l_\zeta(X) =&amp; \Big(s_0(\zeta) \cdot (c(\zeta) - c_0) \\
+&amp; + \alpha\cdot s_0(\zeta) \cdot (u_{n-1}\cdot c(\zeta) - (1-u_{n-1})\cdot c(\omega^{2^{n-1}}\cdot\zeta))\\
+  &amp; + \alpha^2\cdot s_1(\zeta) \cdot (u_{n-2}\cdot c(\zeta) - (1-u_{n-2})\cdot c(\omega^{2^{n-2}}\cdot\zeta)) \\
+  &amp; + \cdots \\
+  &amp; + \alpha^{n-1}\cdot s_{n-2}(\zeta)\cdot (u_{1}\cdot c(\zeta) - (1-u_{1})\cdot c(\omega^2\cdot\zeta))\\
+  &amp; + \alpha^n\cdot s_{n-1}(\zeta)\cdot (u_{0}\cdot c(\zeta) - (1-u_{0})\cdot c(\omega\cdot\zeta)) \\
+  &amp; + \alpha^{n+1}\cdot (L_0(\zeta)\cdot\big(z(X) - c_0\cdot a(X))\\
+  &amp; + \alpha^{n+2}\cdot (\zeta - 1)\cdot\big(z(X)-z(\omega^{-1}\cdot\zeta)-c(\zeta)\cdot a(X) ) \\
+  &amp; + \alpha^{n+3}\cdot L_{N-1}(\zeta)\cdot(z(X) - v) \\
+  &amp; - v_H(\zeta)\cdot t(X)\ \Big)
+\end{split}
+\end{split}\]</div>
+<p>显然，<span class="math notranslate nohighlight">\(l_\zeta(\zeta)= 0\)</span>，因此这个运算值不需要发给 Verifier，并且 <span class="math notranslate nohighlight">\([l_\zeta(\tau)]_1\)</span> 可以由 Verifier 自行构造。</p>
+<ol class="arabic simple" start="6">
+<li><p>构造多项式 <span class="math notranslate nohighlight">\(c^*(X)\)</span>，它是下面向量在 <span class="math notranslate nohighlight">\(D\zeta\)</span> 上的插值多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\vec{c^*}= \Big(c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), c(\zeta)\Big)
+\]</div>
+<p>Prover 可以利用事先预计算的 <span class="math notranslate nohighlight">\(D\)</span> 上的Bary-Centric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span> 来快速计算 <span class="math notranslate nohighlight">\(c^*(X)\)</span>，</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = \frac{c^*_0 \cdot \frac{\hat{w}_0}{X-\omega\zeta} + c^*_1 \cdot \frac{\hat{w}_1}{X-\omega^{2}\zeta} + \cdots + c^*_n \cdot \frac{\hat{w}_n}{X-\omega^{2^n}\zeta}}{
+   \frac{\hat{w}_0}{X-\omega\zeta} + \frac{\hat{w}_1}{X-\omega^2\zeta} + \cdots + \frac{\hat{w}_n}{X-\omega^{2^n}\zeta}
+  }
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\hat{w}_j\)</span> 为预计算的值：</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_j = \prod_{l\neq j} \frac{1}{\omega^{2^j} - \omega^{2^l}}
+\]</div>
+<ol class="arabic simple" start="7">
+<li><p>因为 <span class="math notranslate nohighlight">\(l_\zeta(\zeta)= 0\)</span>，所以存在 Quotient 多项式 <span class="math notranslate nohighlight">\(q_\zeta(X)\)</span> 满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_\zeta(X) = \frac{1}{X-\zeta}\cdot l_\zeta(X)
+\]</div>
+<ol class="arabic simple" start="8">
+<li><p>构造 <span class="math notranslate nohighlight">\(D\zeta\)</span> 上的消失多项式 <span class="math notranslate nohighlight">\(z_{D_{\zeta}}(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+z_{D_{\zeta}}(X) = (X-\zeta\omega)\cdots (X-\zeta\omega^{2^{n-1}})(X-\zeta)
+\]</div>
+<ol class="arabic simple" start="9">
+<li><p>构造 Quotient 多项式  <span class="math notranslate nohighlight">\(q_c(X)\)</span> :</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_c(X) = \frac{(c(X) - c^*(X))}{(X-\zeta)(X-\omega\zeta)(X-\omega^2\zeta)\cdots(X-\omega^{2^{n-1}}\zeta)}
+\]</div>
+<ol class="arabic simple" start="10">
+<li><p>构造 Quotient 多项式 <span class="math notranslate nohighlight">\(q_{\omega\zeta}(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_{\omega\zeta}(X) = \frac{z(X) - z(\omega^{-1}\cdot\zeta)}{X - \omega^{-1}\cdot\zeta}
+\]</div>
+<ol class="arabic simple" start="11">
+<li><p>发送 <span class="math notranslate nohighlight">\(\big(Q_c = [q_c(\tau)]_1, Q_\zeta=[q_\zeta(\tau)]_1, Q_{\omega\zeta}=[q_{\omega\zeta}(\tau)]_1,  \big)\)</span></p></li>
+</ol>
+</section>
+<section id="round-4">
+<h4>Round 4.<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 发送第二个随机挑战点 <span class="math notranslate nohighlight">\(\xi\leftarrow_{\$}\mathbb{F}_p\)</span></p></li>
+<li><p>Prover 构造第三个 Quotient 多项式 <span class="math notranslate nohighlight">\(q_\xi(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_\xi(X) = \frac{c(X) - c^*(\xi) - z_{D_\zeta}(\xi)\cdot q_c(X)}{X-\xi}
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(Q_\xi\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+Q_\xi = \mathsf{KZG10.Commit}(q_\xi(X)) = [q_\xi(\tau)]_1
+\]</div>
+</section>
+</section>
+<section id="id3">
+<h3>证明表示<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p><span class="math notranslate nohighlight">\(7\cdot\mathbb{G}_1\)</span>, <span class="math notranslate nohighlight">\((n+1)\cdot\mathbb{F}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\pi_{eval} &amp;= \big(z(\omega^{-1}\cdot\zeta), c(\zeta)，c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), \\
+&amp; \qquad C_{c}, C_{t}, C_{z}, Q_c, Q_\zeta, Q_\xi, Q_{\omega\zeta}\big)
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="id4">
+<h3>验证过程<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Verifier 计算 <span class="math notranslate nohighlight">\(c^*(\xi)\)</span> 使用预计算的 Barycentric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+c^*(\xi)=\frac{\sum_i c_i^*\frac{\hat{w}_i}{\xi-x_i}}{\sum_i \frac{\hat{w}_i}{\xi-x_i}}
+\]</div>
+<p>再计算对应的承诺 <span class="math notranslate nohighlight">\(C^*(\xi)=[c^*(\xi)]_1\)</span> 。</p>
+<ol class="arabic simple" start="2">
+<li><p>Verifier 计算 <span class="math notranslate nohighlight">\(v_H(\zeta), L_0(\zeta), L_{N-1}(\zeta)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+v_H(\zeta) = \zeta^N - 1
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+L_0(\zeta) = \frac{1}{N}\cdot \frac{v_{H}(\zeta)}{\zeta-1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+L_{N-1}(\zeta) = \frac{\omega^{N-1}}{N}\cdot \frac{v_{H}(\zeta)}{\zeta-\omega^{N-1}}
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Verifier 计算 <span class="math notranslate nohighlight">\(s_0(\zeta), \ldots, s_{n-1}(\zeta)\)</span> ，其计算方法可以采用前文提到的递推方式进行计算。</p></li>
+<li><p>Verifier 计算 <span class="math notranslate nohighlight">\(z_{D_\zeta}(\xi)\)</span> ，</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+z_{D_{\zeta}}(\xi) = (\xi-\zeta\omega)\cdots (\xi-\zeta\omega^{2^{n-1}})(\xi-\zeta)
+\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Verifier 计算线性化多项式的承诺 <span class="math notranslate nohighlight">\(C_l\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+C_l &amp; = 
+\Big( \Big((c(\zeta) - c_0)s_0(\zeta) \\
+&amp; + \alpha \cdot (u_{n-1}\cdot c(\zeta) - (1-u_{n-1})\cdot c(\omega^{2^{n-1}}\cdot\zeta))\cdot s_0(\zeta)\\
+  &amp; + \alpha^2\cdot (u_{n-2}\cdot c(\zeta) - (1-u_{n-2})\cdot c(\omega^{2^{n-2}}\cdot\zeta))\cdot s_1(\zeta)  \\
+  &amp; + \cdots \\
+  &amp; + \alpha^{n-1}\cdot (u_{1}\cdot c(\zeta) - (1-u_{1})\cdot c(\omega^2\cdot\zeta))\cdot s_{n-2}(\zeta)\\
+  &amp; + \alpha^n\cdot (u_{0}\cdot c(\zeta) - (1-u_{0})\cdot c(\omega\cdot\zeta))\cdot s_{n-1}(\zeta) \Big) \cdot [1]_1 \\
+  &amp; + \alpha^{n+1}\cdot L_0(\zeta)\cdot(C_z - c_0\cdot C_a)\\
+  &amp; + \alpha^{n+2}\cdot (\zeta-1)\cdot\big(C_z - z(\omega^{-1}\cdot \zeta) \cdot [1]_1 -c(\zeta)\cdot C_{a} ) \\
+  &amp; + \alpha^{n+3}\cdot L_{N-1}(\zeta)\cdot(C_z - v \cdot [1]_1) \\
+  &amp; - v_H(\zeta)\cdot C_t \Big)
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="6">
+<li><p>Verifier 产生随机数 <span class="math notranslate nohighlight">\(\eta\)</span> 来合并下面的 Pairing 验证：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+e(C_l + \zeta\cdot Q_\zeta, [1]_2)\overset{?}{=}e(Q_\zeta, [\tau]_2)\\
+e(C_c - C^*(\xi) - z_{D_\zeta}(\xi)\cdot Q_c + \xi\cdot Q_\xi, [1]_2) \overset{?}{=} e(Q_\xi, [\tau]_2)\\
+e(C_z + \zeta\cdot Q_{\omega\zeta} - z(\omega^{-1}\cdot\zeta)\cdot[1]_1, [1]_2) \overset{?}{=} e(Q_{\omega\zeta}, [\tau]_2)\\
+\end{split}
+\end{split}\]</div>
+<p>合并后的验证只需要两个 Pairing 运算。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+P &amp;= \Big(C_l + \zeta\cdot Q_\zeta\Big) \\
+&amp; + \eta\cdot \Big(C_c - C^*(\xi) - z_{D_\zeta}(\xi)\cdot Q_c + \xi\cdot Q_\xi\Big) \\
+&amp; + \eta^2\cdot\Big(C_z + \zeta\cdot Q_{\omega\zeta} - z(\omega^{-1}\cdot\zeta)\cdot[1]_1\Big)
+\end{split}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+e\Big(P, [1]_2\Big) \overset{?}{=} e\Big(Q_\zeta + \eta\cdot Q_\xi + \eta^2\cdot Q_{\omega\zeta}, [\tau]_2\Big)
+\]</div>
+</section>
+</section>
+<section id="id5">
+<h2>3. 优化性能分析<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>Proof size:  <span class="math notranslate nohighlight">\(7~\mathbb{G}_1 + (n+1)~\mathbb{F}\)</span></p>
+<p>Prover’s cost</p>
+<ul class="simple">
+<li><p>Commit 阶段：<span class="math notranslate nohighlight">\(O(N\log N)~\mathbb{F}\)</span> + <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span></p></li>
+<li><p>Evaluation 阶段：<span class="math notranslate nohighlight">\(O(N\log N)~\mathbb{F}\)</span> + <span class="math notranslate nohighlight">\(7~\mathbb{G}_1\)</span></p></li>
+</ul>
+<p>Verifier’s cost: <span class="math notranslate nohighlight">\(4~\mathbb{F} + O(n)~\mathbb{F}+ 3~\mathbb{G}_1 + 2~P\)</span></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BDFG20] Dan Boneh, Justin Drake, Ben Fisch, and Ariel Gabizon. “Efficient polynomial commitment schemes for multiple points and polynomials”. Cryptology {ePrint} Archive, Paper 2020/081. <a class="reference external" href="https://eprint.iacr.org/2020/081">https://eprint.iacr.org/2020/081</a>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./ph23"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ph23-pcs-01.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">缺失的协议 PH23-PCS（一）</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ph23-pcs-fri-01.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">缺失的协议 PH23-PCS（四）</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 协议框架与优化</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-x"><span class="math notranslate nohighlight">\(c^*(X)\)</span> 在多点求值的证明优化</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><span class="math notranslate nohighlight">\(c^*(X)\)</span> 多项式计算的优化</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ph23-kzg10">2. PH23+KZG10 协议（优化版）</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precomputation">Precomputation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-inputs">Common inputs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit 计算过程</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation">Evaluation 证明协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">证明表示</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">验证过程</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3. 优化性能分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

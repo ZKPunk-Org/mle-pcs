@@ -1,0 +1,1480 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dive into BCIKS20-FRI Soundness &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/BCIKS20-proximity-gaps';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/BCIKS20-proximity-gaps.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/BCIKS20-proximity-gaps.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Dive into BCIKS20-FRI Soundness</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximity-gaps">Proximity Gaps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreements">Correlated agreements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-weighted-agreement">Correlated Weighted Agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri-protocol">FRI Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batching">Batching</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-batched-fri-query-phase">The (batched) FRI QUERY phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-single-invocation-of-the-fri-query-phase">A single invocation of the FRI QUERY phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-the-batched-fri-protocol">Summary of the batched FRI protocol</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">Soundness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-lemma-8-2">Proof of Lemma 8.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dive-into-bciks20-fri-soundness">
+<h1>Dive into BCIKS20-FRI Soundness<a class="headerlink" href="#dive-into-bciks20-fri-soundness" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo  <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>The paper [BCIKS20] improves the soundness of the FRI protocol in [BBHR18], mainly analyzing the case of batched FRI. This article will provide a detailed analysis of the content related to batched FRI soundness in the [BCIKS20] paper.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>In the context of interactive proofs, distributed storage, and cryptography, various protocols have emerged that raise questions about the proximity of a linear code <span class="math notranslate nohighlight">\(V \subset \mathbb{F}_q^n\)</span>, where <span class="math notranslate nohighlight">\(\mathbb{F}_q\)</span> is a finite field and <span class="math notranslate nohighlight">\(V\)</span> has minimum relative distance <span class="math notranslate nohighlight">\(\delta_V\)</span>. These protocols assume access to oracles for a batch of vectors <span class="math notranslate nohighlight">\(\textbf{u} = \{u_0, \cdots, u_l \} \subset \mathbb{F}_q^n\)</span>, and their soundness requires each vector <span class="math notranslate nohighlight">\(u_i\)</span> to be close to <span class="math notranslate nohighlight">\(V\)</span> in relative Hamming distance. Furthermore, soundness deteriorates as a function of the largest distance between some vector <span class="math notranslate nohighlight">\(u_i\)</span> and the code <span class="math notranslate nohighlight">\(V\)</span>. Therefore, we aim to find protocols that minimize the number of queries to elements of <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> while maximizing the probability of identifying when some vector <span class="math notranslate nohighlight">\(u_i\)</span> is far from <span class="math notranslate nohighlight">\(V\)</span>.</p>
+<blockquote>
+<div><p>❓ <strong>Questions</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How to understand the following sentence?
+Furthermore, soundness deteriorates as a function of the largest distance between some vector ui and the code V.
+Does soundness decrease as the maximum distance between some vectors <span class="math notranslate nohighlight">\(u_i\)</span> and code <span class="math notranslate nohighlight">\(V\)</span> increases, meaning that the probability of the Verifier rejecting decreases?</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How to clearly explain the decrease in soundness?</p></li>
+</ul>
+</div></blockquote>
+<p>Due to the linearity of <span class="math notranslate nohighlight">\(V\)</span>, a natural approach ([RVW13]) is to randomly sample a vector <span class="math notranslate nohighlight">\(u'\)</span> uniformly from span(<span class="math notranslate nohighlight">\(\textbf{u}\)</span>) (i.e., linear combinations of elements in <span class="math notranslate nohighlight">\(\textbf{u}\)</span>), and treat the distance <span class="math notranslate nohighlight">\(\Delta(u', V)\)</span> between <span class="math notranslate nohighlight">\(u'\)</span> and <span class="math notranslate nohighlight">\(V\)</span> as a proxy for the maximum distance between some elements of <span class="math notranslate nohighlight">\(\textbf{u}\)</span> and <span class="math notranslate nohighlight">\(V\)</span>. To prove soundness, we want that even if only one <span class="math notranslate nohighlight">\(u_i\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from all elements in <span class="math notranslate nohighlight">\(V\)</span>, the randomly chosen <span class="math notranslate nohighlight">\(u'\)</span> is also far from <span class="math notranslate nohighlight">\(V\)</span>.</p>
+<p>In the following, <span class="math notranslate nohighlight">\(\Delta\)</span> represents the relative Hamming distance. When <span class="math notranslate nohighlight">\(\Delta(u, v) \le \delta\)</span> holds for some <span class="math notranslate nohighlight">\(v \in V\)</span>, we say “<span class="math notranslate nohighlight">\(u\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-close to <span class="math notranslate nohighlight">\(V\)</span>”, denoted as <span class="math notranslate nohighlight">\(\Delta(u, V) \le \delta\)</span>; otherwise, we say “<span class="math notranslate nohighlight">\(u\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(V\)</span>”, denoted as <span class="math notranslate nohighlight">\(\Delta(u, V) &gt; \delta\)</span>.</p>
+<p>Regarding this problem, some research results are:</p>
+<ol class="arabic simple">
+<li><p>[AHIV17] If <span class="math notranslate nohighlight">\(\delta &lt; \delta_V /4\)</span>, almost all <span class="math notranslate nohighlight">\(u' \in \text{span}(\mathbf{u})\)</span> are <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(V\)</span>.</p></li>
+<li><p>[RZ18] Improved the above result to <span class="math notranslate nohighlight">\(\delta &lt; \delta_V /3\)</span>.</p></li>
+<li><p>[BKS18] Improved to <span class="math notranslate nohighlight">\(\delta &lt; 1 - \sqrt[4]{1 - \delta_V}\)</span>.</p></li>
+<li><p>[BGKS20] Improved to <span class="math notranslate nohighlight">\(\delta &lt; 1 - \sqrt[3]{1 - \delta_V}\)</span>, but this bound is tight for RS codes, as it can be achieved when <span class="math notranslate nohighlight">\(n = q\)</span>.</p></li>
+</ol>
+<blockquote>
+<div><p>🤔 <strong>Thoughts</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Why is the focus of research on increasing the upper bound of this <span class="math notranslate nohighlight">\(\delta\)</span>? Regarding this question, my current thoughts are:
+The upper bound of <span class="math notranslate nohighlight">\(\delta\)</span> here is related to <span class="math notranslate nohighlight">\(\delta_V\)</span>, and for RS code, <span class="math notranslate nohighlight">\(\delta_V = 1 - \rho\)</span>, which is essentially related to the code rate. So increasing the upper bound means lowering the code rate, which implies more redundancy. If with the same security or the same high probability of rejecting errors, fewer queries are needed. Or to put it another way, if for the same protocol, the number of queries is fixed, the larger <span class="math notranslate nohighlight">\(\delta\)</span> is, the higher the probability of rejection, thus improving soundness.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> The second point of the above analysis seems to contradict “Furthermore, soundness deteriorates as a function of the largest distance between some vector <span class="math notranslate nohighlight">\(u_i\)</span> and the code V.” This sentence says that the larger <span class="math notranslate nohighlight">\(\delta\)</span> is, the smaller the soundness? How should this be understood?</p></li>
+</ul>
+</div></blockquote>
+<p>One question we are currently concerned with is: For which codes and what range of <span class="math notranslate nohighlight">\(\delta\)</span> does the following statement hold?</p>
+<p>If some <span class="math notranslate nohighlight">\(u^* \in \text{span}(\mathbf{u})\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(V\)</span>, then for almost all <span class="math notranslate nohighlight">\(u' \in \text{span}(\mathbf{u})\)</span>, <span class="math notranslate nohighlight">\(u'\)</span> is also <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(V\)</span>.</p>
+<p>One of the main conclusions of the [BCIKS20] paper shows that when <span class="math notranslate nohighlight">\(V\)</span> is an RS code over a sufficiently large field (the field size is polynomially related to the block length of the code) and <span class="math notranslate nohighlight">\(\delta\)</span> is less than the Johnson/Guruswami-Sudan list decoding bound, the above statement holds. Next, we call this a proximity gap.</p>
+</section>
+<section id="proximity-gaps">
+<h2>Proximity Gaps<a class="headerlink" href="#proximity-gaps" title="Link to this heading">#</a></h2>
+<p>First, let’s give the definition of Proximity Gaps.</p>
+<p>Definition 1.1 [BCIKS20, Definition 1.1] (Proximity gap). Let <span class="math notranslate nohighlight">\(P \subset \Sigma^n\)</span> be a property and <span class="math notranslate nohighlight">\(C \subset 2^{\Sigma^n}\)</span> be a collection of sets. Let <span class="math notranslate nohighlight">\(\Delta\)</span> be a distance measure on <span class="math notranslate nohighlight">\(\Sigma^n\)</span>. We say that <span class="math notranslate nohighlight">\(C\)</span> displays a <span class="math notranslate nohighlight">\((\delta, \epsilon)\)</span>-proximity gap with respect to <span class="math notranslate nohighlight">\(P\)</span> under <span class="math notranslate nohighlight">\(\Delta\)</span> if every <span class="math notranslate nohighlight">\(S \in C\)</span> satisfies exactly one of the following:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\Pr_{s \in S} [\Delta(s, P) \le \delta] = 1\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pr_{s \in S} [\Delta(s, P) \le \delta] \le \epsilon\)</span>.</p></li>
+</ol>
+<p>We call <span class="math notranslate nohighlight">\(\delta\)</span> the proximity parameter and <span class="math notranslate nohighlight">\(\epsilon\)</span> is the error parameter. By default, <span class="math notranslate nohighlight">\(\Delta\)</span> denotes the relative Hamming distance measure.</p>
+<p>For RS code, if <span class="math notranslate nohighlight">\(V \subset \mathbb{F}^n\)</span> is an RS encoding, corresponding to <span class="math notranslate nohighlight">\(P\)</span> in the above definition, and <span class="math notranslate nohighlight">\(A \subset \mathbb{F}^n\)</span> is an affine space, corresponding to <span class="math notranslate nohighlight">\(S\)</span> in the above definition, then either all elements in <span class="math notranslate nohighlight">\(A\)</span> are <span class="math notranslate nohighlight">\(\delta\)</span>-close to <span class="math notranslate nohighlight">\(V\)</span>, or almost all elements in <span class="math notranslate nohighlight">\(A\)</span> are <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(V\)</span>. In other words, there is no such affine space <span class="math notranslate nohighlight">\(A\)</span> where about half of the elements are close to <span class="math notranslate nohighlight">\(V\)</span>, but at the same time, the other half are far from <span class="math notranslate nohighlight">\(V\)</span>.</p>
+<p>As shown in the figure below, <span class="math notranslate nohighlight">\(A\)</span> is an affine space, represented here by a line, and elements in the encoding space <span class="math notranslate nohighlight">\(V\)</span> are represented by black dots. Circles are drawn with these points as centers and <span class="math notranslate nohighlight">\(\delta\)</span> as the radius. Then there are only two situations:</p>
+<ol class="arabic simple">
+<li><p>All elements on line <span class="math notranslate nohighlight">\(A\)</span> fall within the green circular area.
+<img alt="" src="../_images/BCIKS20-proximity-gaps-within.svg" /></p></li>
+<li><p>Only a few elements on the line fall within the green circular area.
+<img alt="" src="../_images/BCIKS20-proximity-gaps-several.svg" />
+The elements in <span class="math notranslate nohighlight">\(A\)</span> cannot be half inside the circular area and half outside, which is also the meaning of gap. It divides all the elements in <span class="math notranslate nohighlight">\(A\)</span> into exactly two cases, and these two cases form a huge gap based on the relative Hamming distance.</p></li>
+</ol>
+<p>In the following, we use <span class="math notranslate nohighlight">\(\mathbb{F}_q\)</span> to represent a finite field of size <span class="math notranslate nohighlight">\(q\)</span>, and <span class="math notranslate nohighlight">\(\text{RS}[\mathbb{F}_q,\mathcal{D},k]\)</span> to represent an RS code with dimension <span class="math notranslate nohighlight">\(k+1\)</span> and blocklength <span class="math notranslate nohighlight">\(n = |\mathcal{D}|\)</span>, whose codewords are evaluated on <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> and are polynomials of degree <span class="math notranslate nohighlight">\(\le k\)</span>. We use <span class="math notranslate nohighlight">\(\rho\)</span> to represent the code rate, so <span class="math notranslate nohighlight">\(\rho = \frac{k+1}{n}\)</span>. <span class="math notranslate nohighlight">\(\delta\)</span> represents the relative Hamming distance relative to the RS code, and <span class="math notranslate nohighlight">\(\epsilon\)</span> represents the error parameter, which is the probability of a “bad event” occurring.</p>
+<p>Below is the Proximity gaps theorem for RS code.</p>
+<p><strong>Theorem 1.2</strong> [BCIKS20, Theorem 1.2] (Proximity gap for RS codes). The collection <span class="math notranslate nohighlight">\(C_{\text{Affine}}\)</span> of affine spaces in <span class="math notranslate nohighlight">\(\mathbb{F}_q^n\)</span> displays a <span class="math notranslate nohighlight">\((\delta, \epsilon)\)</span>-proximity gap with respect to the RS code <span class="math notranslate nohighlight">\(V := \text{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span> of blocklength <span class="math notranslate nohighlight">\(n\)</span> and rate <span class="math notranslate nohighlight">\(\rho = \frac{k+1}{n}\)</span>, for any <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span>, and <span class="math notranslate nohighlight">\(\epsilon = \epsilon(q, n, \rho, \delta)\)</span> defined as the following piecewise function:</p>
+<ul class="simple">
+<li><p>Unique decoding bound: For <span class="math notranslate nohighlight">\(\delta \in [0,\frac{1 - \rho}{2})\)</span>, the error parameter <span class="math notranslate nohighlight">\(\epsilon\)</span> is</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\epsilon = \epsilon_\text{U} = \epsilon_\text{U}(q, n) := \frac{n}{q} \tag{1.1}
+\]</div>
+<ul class="simple">
+<li><p>List decoding bound: For <span class="math notranslate nohighlight">\(\delta \in (\frac{1 - \rho}{2}, 1 - \sqrt{\rho})\)</span>, setting <span class="math notranslate nohighlight">\(\eta := 1 - \sqrt{\rho} - \delta\)</span>, the error parameter <span class="math notranslate nohighlight">\(\epsilon\)</span> is</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\epsilon = \epsilon_\text{J} = \epsilon_\text{J}(q, n, \rho, \delta) := \frac{(k+1)^2}{\left(2 \min \left(\eta, \frac{\sqrt{\rho}}{20}\right)^7\right)q} = O \left(\frac{1}{(\eta \rho)^{O(1)}} \cdot \frac{n^2}{q} \right) \tag{1.2}
+\]</div>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> The larger <span class="math notranslate nohighlight">\(\delta\)</span> is, the more elements may fall into the circular area, so <span class="math notranslate nohighlight">\(\epsilon_{\text{J}}\)</span> is larger than <span class="math notranslate nohighlight">\(\epsilon_{\text{U}}\)</span>. Is this the reason?</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="correlated-agreements">
+<h2>Correlated agreements<a class="headerlink" href="#correlated-agreements" title="Link to this heading">#</a></h2>
+<p>The main theorem proved in the paper is correlated agreement. For two vectors <span class="math notranslate nohighlight">\(u_0, u_1 \in \mathbb{F}^{\mathcal{D}}\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}^{\mathcal{D}}\)</span>, we choose a random number <span class="math notranslate nohighlight">\(z\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, and we are concerned with the distance between the space formed by <span class="math notranslate nohighlight">\(u_0 + zu_1\)</span> after linear combination with <span class="math notranslate nohighlight">\(z\)</span> and <span class="math notranslate nohighlight">\(V\)</span>, that is, the one-dimensional affine space <span class="math notranslate nohighlight">\(A = \{u_0 + z u_1 : z \in \mathbb{F}\}\)</span>. The correlated agreement conclusion states that if there are enough elements in <span class="math notranslate nohighlight">\(A\)</span> that are close enough to the RS code space <span class="math notranslate nohighlight">\(V\)</span> (<span class="math notranslate nohighlight">\(\delta\)</span>-close), then there must exist a non-trivial subdomain <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span>, whose size is at least <span class="math notranslate nohighlight">\(1 - \delta\)</span> times the size of <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, such that restricting <span class="math notranslate nohighlight">\(u_0, u_1\)</span> to <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>, there are valid RS codes <span class="math notranslate nohighlight">\(v_0, v_1\)</span> that agree with <span class="math notranslate nohighlight">\(u_0, u_1\)</span> respectively on <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>. We say that such a <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> has the correlated agreement property, meaning that <span class="math notranslate nohighlight">\(u_0, u_1\)</span> and elements in <span class="math notranslate nohighlight">\(A\)</span> not only have a large agreement with RS code respectively, but also share a common large agreement set. This result has two parameter ranges, one is the proximity parameter within the unique decoding range, and the other is the proximity parameter within the list decoding range.</p>
+<p>The following presents correlated agreements for three situations. Combined with other conclusions about correlated agreement in the paper, they are shown in the table below.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Space <span class="math notranslate nohighlight">\(U\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\Delta_u(u,V)\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\Delta_u(u,V)\)</span> unique decoding</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\Delta_u(u,V)\)</span> list decoding</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\text{agree}_{\mu}(u,V)\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lines</p></td>
+<td><p><span class="math notranslate nohighlight">\(\{u_0 + z u_1 : z \in \mathbb{F}\}\)</span></p></td>
+<td><p>Theorem 1.4</p></td>
+<td><p>Theorem 4.1</p></td>
+<td><p>Theorem 5.1 &amp; Theorem 5.2</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>low-degree parameterized curves</p></td>
+<td><p><span class="math notranslate nohighlight">\(\text{curve}(\mathbf{u}) = \left\{u_z: = \sum_{i = 0}^{l}z^i \cdot u_i  | z \in \mathbb{F}_q   \right\}\)</span></p></td>
+<td><p>Theorem 1.5</p></td>
+<td><p>Theorem 6.1</p></td>
+<td><p>Theorem 6.2</p></td>
+<td><p>Theorem 7.1 &amp; Theorem 7.2 (More precise version of the Johnson bound)</p></td>
+</tr>
+<tr class="row-even"><td><p>affine spaces</p></td>
+<td><p><span class="math notranslate nohighlight">\(u_0 + \text{span}\{u_1, \cdots, u_l\}\)</span></p></td>
+<td><p>Theorem 1.6</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Theorem 7.3 &amp; Theorem 7.4 (More precise version of the Johnson bound)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The following three theorems correspond to the correlated agreement theorems for lines, low-degree parameterized curves, and affine spaces, respectively.</p>
+<p><strong>Theorem 1.4</strong>  [BSCIK20, Theorem 1.4]  (Main Theorem - Correlated agreement over lines). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. For <span class="math notranslate nohighlight">\(u_0, u_1 \in \mathbb{F}_q^{\mathcal{D}}\)</span>, if <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{z \in \mathbb{F}_q} [\Delta(u_0 + z \cdot u_1, V) \le \delta] &gt; \epsilon, 
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is as defined in Theorem 1.2, then there exist <span class="math notranslate nohighlight">\(D' \subset D\)</span> and <span class="math notranslate nohighlight">\(v_0, v_1 \in V\)</span> satisfying</p>
+<ul class="simple">
+<li><p><strong>Density</strong>: <span class="math notranslate nohighlight">\(|D'|/|D| \ge 1 - \delta\)</span>, and</p></li>
+<li><p><strong>Agreement</strong>: <span class="math notranslate nohighlight">\(v_0\)</span> agrees with <span class="math notranslate nohighlight">\(u_0\)</span> and <span class="math notranslate nohighlight">\(v_1\)</span> agrees with <span class="math notranslate nohighlight">\(u_1\)</span> on all of <span class="math notranslate nohighlight">\(D'\)</span>.</p></li>
+</ul>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \ldots, u_l \} \subset \mathbb{F}_q^{\mathcal{D}}\)</span>, then a parameterized curve of degree <span class="math notranslate nohighlight">\(l\)</span> is the set of vectors in <span class="math notranslate nohighlight">\(\mathbb{F}_q^{\mathcal{D}}\)</span> generated by <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> as follows,</p>
+<div class="math notranslate nohighlight">
+\[
+\text{curve}(\mathbf{u}) := \left\{u_z: = \sum_{i = 0}^{l}z^i \cdot u_i \Bigg| z \in \mathbb{F}_q   \right\} 
+\]</div>
+<p><strong>Theorem 1.5</strong> [BSCIK20, Theorem 1.5] (Correlated agreement for low-degree parameterized curves). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span>. If <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in \text{curve}(u)} [\Delta(\mathbf{u}, V) \le \delta] &gt; l \cdot \epsilon,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is as defined in Theorem 1.2, then there exist <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> and <span class="math notranslate nohighlight">\(v_0, \cdots, v_l \in V\)</span> satisfying</p>
+<ul class="simple">
+<li><p><strong>Density</strong>: <span class="math notranslate nohighlight">\(|\mathcal{D}'|/|\mathcal{D}| \ge 1 - \delta\)</span>, and</p></li>
+<li><p><strong>Agreement</strong>: for all <span class="math notranslate nohighlight">\(i \in \{0, \cdots, l\}\)</span>, the functions <span class="math notranslate nohighlight">\(u_i\)</span> and <span class="math notranslate nohighlight">\(v_i\)</span> agree on all of <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>.</p></li>
+</ul>
+<p><strong>Theorem 1.6</strong> [BSCIK20, Theorem 1.6] (Correlated agreement over affine spaces). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. For <span class="math notranslate nohighlight">\(u_0, u_1, \cdots, u_l \in \mathbb{F}_q^{\mathcal{D}}\)</span> let <span class="math notranslate nohighlight">\(U = u_0 + \text{span}\{u_1, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> be an affine subspace. If <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in U} [\Delta(u, V) \le \delta] &gt; \epsilon,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is as defined in Theorem 1.2, then there exist <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> and <span class="math notranslate nohighlight">\(v_0, \cdots, v_l \in V\)</span> satisfying</p>
+<ul class="simple">
+<li><p><strong>Density</strong>: <span class="math notranslate nohighlight">\(|\mathcal{D}'|/|\mathcal{D}| \ge 1 - \delta\)</span>, and</p></li>
+<li><p><strong>Agreement</strong>: for all <span class="math notranslate nohighlight">\(i \in \{0, \cdots, l\}\)</span>, the functions <span class="math notranslate nohighlight">\(u_i\)</span> and <span class="math notranslate nohighlight">\(v_i\)</span> agree on all of <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>.</p></li>
+</ul>
+<p>Furthermore, in the unique decoding regime <span class="math notranslate nohighlight">\(\delta \in \left(0, \frac{1 - \rho}{2}\right]\)</span>, there exists a unique maximal <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> satisfying the above, with unique <span class="math notranslate nohighlight">\(v_i\)</span>.</p>
+</section>
+<section id="correlated-weighted-agreement">
+<h2>Correlated Weighted Agreement<a class="headerlink" href="#correlated-weighted-agreement" title="Link to this heading">#</a></h2>
+<p>To analyze the soundness of the FRI protocol, we need a weighted version of Theorem 1.5.</p>
+<p>For a given weight vector <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span>, the (relative) <span class="math notranslate nohighlight">\(\mu\)</span>-agreement between <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu}(u,v) := \frac{1}{|\mathcal{D}|} \sum_{x:u(x) = v(x)} \mu(x).
+\]</div>
+<p>That is, it looks at the proportion of agreement between <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> on <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> under the weight <span class="math notranslate nohighlight">\(\mu\)</span>. If we let <span class="math notranslate nohighlight">\(\mu \equiv 1\)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu}(u,v) = \frac{1}{|\mathcal{D}|} \sum_{x:u(x) = v(x)} 1 = 1 - \frac{1}{|\mathcal{D}|} \sum_{x:u(x) \neq v(x)} 1 = 1 - \Delta(u,v).
+\]</div>
+<p>The agreement between a word <span class="math notranslate nohighlight">\(u\)</span> and a linear code <span class="math notranslate nohighlight">\(V\)</span> is the maximum agreement between <span class="math notranslate nohighlight">\(u\)</span> and a codeword in <span class="math notranslate nohighlight">\(V\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu}(u,V) := \max_{v \in V} \text{agree}_{\mu}(u,v).
+\]</div>
+<p>The weighted size of a subdomain <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(\mathcal{D}') := \frac{1}{|\mathcal{D}|}\sum_{x \in \mathcal{D}'} \mu(x).
+\]</div>
+<p>If we define <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> in the above definition as <span class="math notranslate nohighlight">\(\{x \in \mathcal{D}: u(x) = v(x)\}\)</span>, then the agreement satisfies <span class="math notranslate nohighlight">\(\text{agree}_{\mu}(u,v) = \mu(\{x \in \mathcal{D}: u(x) = v(x)\})\)</span>.</p>
+<p>Finally, for <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\}\)</span>, where <span class="math notranslate nohighlight">\(u_i \in \mathbb{F}_q^{\mathcal{D}}\)</span> is a group of words, the <span class="math notranslate nohighlight">\(\mu\)</span>-weighted correlated agreement is the maximum <span class="math notranslate nohighlight">\(\mu\)</span>-weighted size of a subdomain <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span>, such that the restriction of <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> to <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> belongs to <span class="math notranslate nohighlight">\(V|_{\mathcal{D}'}\)</span>, i.e., for each <span class="math notranslate nohighlight">\(i = 0, \cdots, l\)</span>, there exists <span class="math notranslate nohighlight">\(v_i \in V\)</span> such that <span class="math notranslate nohighlight">\(u_i|_{\mathcal{D}'} = v_i|_{\mathcal{D}'}\)</span>. When <span class="math notranslate nohighlight">\(\mu\)</span> is not specified, it is set to the constant weight function 1, which recovers the notion of correlated agreement metric discussed earlier.</p>
+<p>Next, we assume that the weight function <span class="math notranslate nohighlight">\(\mu\)</span> has some structure, specifically, all weights <span class="math notranslate nohighlight">\(\mu(x)\)</span> are of the form <span class="math notranslate nohighlight">\(\mu(x) = \frac{a_x}{M}\)</span>, where <span class="math notranslate nohighlight">\(a_x\)</span> are varying integers with a common denominator <span class="math notranslate nohighlight">\(M\)</span>. For the special case of FRI soundness (where <span class="math notranslate nohighlight">\(M\)</span> equals the blocklength of the RS code to which the FRI protocol is applied), this assumption indeed holds. The following is a weighted generalization of Theorem 1.5.</p>
+<p><strong>Theorem 7.1</strong> [BSCIK20, Theorem 7.1] (Weighted correlated agreement over curves – Version I). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span>. Let <span class="math notranslate nohighlight">\(\alpha \in (\sqrt{\rho}, 1)\)</span> and let <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span> be a vector of weights, whose values all have denominator <span class="math notranslate nohighlight">\(M\)</span>. Suppose</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in \text{curve}(\mathbf{u})} [\text{agree}_{\mu}(u,V) \ge \alpha] &gt; l \cdot \epsilon,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is as defined in Theorem 1.2 (with <span class="math notranslate nohighlight">\(\eta = \min(\alpha - \sqrt{\rho}, \frac{\sqrt{\rho}}{20})\)</span>), and additionally suppose</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in \text{curve}(\mathbf{u})} [\text{agree}_{\mu}(u,V) \ge \alpha] \ge \frac{l(M|\mathcal{D}|+1)}{q} \left(\frac{1}{\eta} + \frac{3}{\sqrt{\rho}}\right) .
+\]</div>
+<p>Then there exists <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> and <span class="math notranslate nohighlight">\(v_0, \cdots, v_l \in V\)</span> satisfying</p>
+<ul class="simple">
+<li><p><strong>Density</strong>: <span class="math notranslate nohighlight">\(\mu(\mathcal{D}') \ge \alpha\)</span>, and</p></li>
+<li><p><strong>Agreement</strong>: for all <span class="math notranslate nohighlight">\(i \in \{0, \cdots, l\}\)</span>, the functions <span class="math notranslate nohighlight">\(u_i\)</span> and <span class="math notranslate nohighlight">\(v_i\)</span> agree on all of <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>.</p></li>
+</ul>
+<p>A more precise form that only applies to the Johnson bound range is as follows.</p>
+<p><strong>Theorem 7.2</strong> [BSCIK20, Theorem 7.2] (Weighted correlated agreement over curves – Version II). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span>. Let <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span> be a vector of weights, whose values all have denominator <span class="math notranslate nohighlight">\(M\)</span>. Let <span class="math notranslate nohighlight">\(m \ge 3\)</span> and let</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha \ge \alpha_0(\rho, m) := \sqrt{\rho} + \frac{\rho}{2m}.
+\]</div>
+<p>Let</p>
+<div class="math notranslate nohighlight">
+\[
+S = \{z \in \mathbb{F}_q : \text{agree}_{\mu}(u_0 + zu_1 + \cdots + z^lu_l, V) \ge \alpha\}
+\]</div>
+<p>and suppose</p>
+<div class="math notranslate nohighlight">
+\[
+|S| &gt; \max\left(\frac{(1 + \frac{1}{2m})^7 m^7}{3 \rho^{3/2}}n^2 l,  \frac{2m + 1}{\sqrt{\rho}}(M \cdot n + 1)l \right) . \tag{7.1}
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(u_0, \ldots, u_l\)</span> have at least <span class="math notranslate nohighlight">\(\alpha\)</span> correlated <span class="math notranslate nohighlight">\(\mu\)</span>-agreement with <span class="math notranslate nohighlight">\(V\)</span>, i.e. <span class="math notranslate nohighlight">\(\exists v_0, \cdots, v_l \in V\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(\{x \in \mathcal{D}: \forall 0 \le i \le l, u_i(x) = v_i(x)\}) \ge \alpha .
+\]</div>
+<p><strong>Theorem 7.3</strong> [BSCIK20, Theorem 7.3] (Weighted correlated agreement over affine spaces). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> and let <span class="math notranslate nohighlight">\(U = u_0 + \text{span}\{u_1, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> be an affine subspace. Let <span class="math notranslate nohighlight">\(\alpha \in (\sqrt{\rho}, 1)\)</span> and let <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span> be a vector of weights, whose values all have denominator <span class="math notranslate nohighlight">\(M\)</span>. Suppose</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in U} [\text{agree}_{\mu}(u,V) \ge \alpha] &gt; \epsilon,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is as defined in Theorem 1.2 (with <span class="math notranslate nohighlight">\(\eta = \min(\alpha - \sqrt{\rho}, \frac{\sqrt{\rho}}{20})\)</span>), and additionally suppose</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in U} [\text{agree}_{\mu}(u,V) \ge \alpha] \ge \frac{M|\mathcal{D}| + 1}{q} \left(\frac{1}{\eta} + \frac{3}{\sqrt{\rho}}\right) .
+\]</div>
+<p>Then there exist <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> and <span class="math notranslate nohighlight">\(v_0, \cdots, v_l \in V\)</span> satisfying</p>
+<ul class="simple">
+<li><p><strong><span class="math notranslate nohighlight">\(\mu\)</span>-Density</strong>: <span class="math notranslate nohighlight">\(\mu(\mathcal{D}') \ge \alpha\)</span>, and</p></li>
+<li><p><strong>Agreement</strong>: for all <span class="math notranslate nohighlight">\(i \in \{0, \cdots, l\}\)</span>, the functions <span class="math notranslate nohighlight">\(u_i\)</span> and <span class="math notranslate nohighlight">\(v_i\)</span> agree on all of <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>.</p></li>
+</ul>
+<p>Similarly, there is a more precise form for Theorem 7.3 regarding the Johnson bound.</p>
+<p><strong>Theorem 7.4</strong> [BSCIK20, Theorem 7.4] (Weighted correlated agreement over affine spaces – Version II). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> and let <span class="math notranslate nohighlight">\(U = u_0 + \text{span}\{u_1, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> be an affine subspace. Let <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span> be a vector of weights, whose values all have denominator <span class="math notranslate nohighlight">\(M\)</span>. Let <span class="math notranslate nohighlight">\(m \ge 3\)</span> and let</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha \ge \alpha_0(\rho, m) := \sqrt{\rho} +  \frac{\sqrt{\rho}}{2m} .
+\]</div>
+<p>Suppose</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{u \in U} [\text{agree}_{\mu}(u,V) \ge \alpha] &gt; \max \left( \frac{(1 + \frac{1}{2m})^7m^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}, \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{M \cdot n + 1}{q} \right) . \tag{7.2}
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(u_0, \ldots, u_l\)</span> have at least <span class="math notranslate nohighlight">\(\alpha\)</span> correlated <span class="math notranslate nohighlight">\(\mu\)</span>-agreement with <span class="math notranslate nohighlight">\(V\)</span>, i.e. <span class="math notranslate nohighlight">\(\exists v_0, \cdots, v_l \in V\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\mu \left(\{x \in \mathcal{D} : \forall 0 \le i \le l, u_i(x) = v_i(x)\}\right) \ge \alpha .
+\]</div>
+</section>
+<section id="fri-protocol">
+<h2>FRI Protocol<a class="headerlink" href="#fri-protocol" title="Link to this heading">#</a></h2>
+<p>The purpose of the FRI protocol is to solve the Reed-Solomon proximity testing problem in the IOP model, that is, for a received word <span class="math notranslate nohighlight">\(f^{(0)}: \mathcal{D}^{(0)} \rightarrow \mathbb{F}\)</span>, verify its proximity to <span class="math notranslate nohighlight">\(V^{(0)} := \text{RS}[\mathbb{F}, \mathcal{D}^{(0)}, k^{(0)}]\)</span>. If <span class="math notranslate nohighlight">\(f^{(0)}\)</span> belongs to <span class="math notranslate nohighlight">\(V^{(0)}\)</span>, accept; if it is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(V^{(0)}\)</span>, reject. The FRI protocol applies to any case where the evaluation domain <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)}\)</span> is a coset of a <em>2-smooth group</em>, i.e., for any <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)}\)</span>, it is a coset of an (additive or multiplicative) group of size <span class="math notranslate nohighlight">\(2^s\)</span>, where <span class="math notranslate nohighlight">\(s\)</span> is an integer. Therefore, for simplicity, we assume that the group <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)}\)</span> is multiplicative. The FRI protocol has two phases: the COMMIT phase and the QUERY phase.</p>
+<p>In the COMMIT phase, after a finite number of <span class="math notranslate nohighlight">\(r\)</span> rounds of interaction, a series of functions <span class="math notranslate nohighlight">\(f^{(1)}: \mathcal{D}^{(1)} \rightarrow \mathbb{F}, f^{(2)}: \mathcal{D}^{(2)} \rightarrow \mathbb{F}, \cdots,f^{(r)}: \mathcal{D}^{(r)} \rightarrow \mathbb{F}\)</span> will be generated. In each iteration, the size of the domain <span class="math notranslate nohighlight">\(|\mathcal{D}^{(i)}|\)</span> decreases. Assuming that for an honest prover, <span class="math notranslate nohighlight">\(f^{(0)}\)</span> is low-degree, then for each <span class="math notranslate nohighlight">\(f^{(i)}\)</span>, they will all be low-degree (see Proposition 1). At the beginning of the <span class="math notranslate nohighlight">\(i\)</span>-th round, the prover’s message <span class="math notranslate nohighlight">\(f^{(i)}: \mathcal{D}^{(i)} \rightarrow \mathbb{F}\)</span> has been generated, and the verifier can access the oracle of this message. The Verifier now sends a uniformly random <span class="math notranslate nohighlight">\(z^{(i)} \in \mathbb{F}\)</span>, and then the prover replies with a new function <span class="math notranslate nohighlight">\(f^{(i+1)}: \mathcal{D}^{(i+1)} \rightarrow \mathbb{F}\)</span>, where <span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span> is a (2-smooth) strict subgroup of <span class="math notranslate nohighlight">\(\mathcal{D}^{(i)}\)</span>, meaning that <span class="math notranslate nohighlight">\(\mathcal{D}^{(i)}\)</span> is not only a subgroup of <span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span>, but also its proper subset.</p>
+<p><span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span> divides <span class="math notranslate nohighlight">\(\mathcal{D}^{(i)}\)</span> into cosets of size <span class="math notranslate nohighlight">\(l^{(i)} := |\mathcal{D}^{(i)}|/|\mathcal{D}^{(i+1)}|\)</span>. Let <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span> represent the coset corresponding to <span class="math notranslate nohighlight">\(g \in \mathcal{D}^{(i+1)}\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+    C_g^{(i)} := \{g' \in \mathcal{D}^{(i)} \mid (g')^{l^{(i)}} = g\}. \tag{8.1}
+\end{equation}
+\]</div>
+<p>This means selecting those elements in <span class="math notranslate nohighlight">\(\mathcal{D}^{(i)}\)</span> that can be mapped to <span class="math notranslate nohighlight">\(g\)</span> in <span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span> through the mapping <span class="math notranslate nohighlight">\(q(x) = x^{l^{(i)}}\)</span>, and these elements form the set <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, which is also a coset.</p>
+<p>For each coset <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, the <em>interpolation map</em> <span class="math notranslate nohighlight">\(M_g^{(i)}\)</span> is an invertible linear map <span class="math notranslate nohighlight">\(M_g^{(i)}: \mathbb{F}^{C_g^{(i)}} \rightarrow \mathbb{F}^{l^{(i)}}\)</span>, which maps <span class="math notranslate nohighlight">\(f^{(i)}|_{C_g^{(i)}}: C_g^{(i)} \rightarrow \mathbb{F}\)</span> (i.e., restricting <span class="math notranslate nohighlight">\(f^{(i)}\)</span> to the domain <span class="math notranslate nohighlight">\(C_g^{(i)} \subset \mathcal{D}^{(i)}\)</span>) to the coefficient vector <span class="math notranslate nohighlight">\(\mathbf{u}^{(i)}(g) = (u_0^{(i)}(g), \ldots, u_{l^{(i)}-1}^{(i)}(g))^{\intercal}\)</span> of the polynomial <span class="math notranslate nohighlight">\(P_{\mathbf{u}^{(i)}(g)}^{(i)}(Z) = \sum_{j&lt;l^{(i)}} u_j^{(i)}(g) Z^j\)</span>, where <span class="math notranslate nohighlight">\(P_{\mathbf{u}^{(i)}(g)}^{(i)}(Z)\)</span> is the polynomial interpolating <span class="math notranslate nohighlight">\(f^{(i)}|_{C_g^{(i)}}\)</span>. In other words, <span class="math notranslate nohighlight">\(M_g^{(i)}\)</span> is the inverse of the Vandermonde matrix generated by <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, which means that <span class="math notranslate nohighlight">\(\left(M_g^{(i)}\right)^{-1} \cdot {\color{}(u_0, \ldots, u_{l^{(i)}-1})^{\intercal}}\)</span> is the evaluation of the polynomial <span class="math notranslate nohighlight">\(P_{\mathbf{u}}(X) = \sum_{i&lt;l^{(i)}} u_i X^i\)</span> on the coset <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>.</p>
+<blockquote>
+<div><p>👀 <strong>Notice</strong>
+To maintain consistency throughout this article, we use <span class="math notranslate nohighlight">\((x_0, \ldots, x_n)\)</span> to represent a row vector, and <span class="math notranslate nohighlight">\((x_0, \ldots, x_n)^{\intercal}\)</span> to represent a column vector, which can also be written as:
+$<span class="math notranslate nohighlight">\(
+\begin{bmatrix}
+x_0\\
+x_1\\
+\vdots\\
+x_n
+\end{bmatrix}
+\)</span>$</p>
+</div></blockquote>
+<p>Let’s explain the description of the interpolation map above in more detail. According to the definition of <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, we know that it contains <span class="math notranslate nohighlight">\(l^{(i)}\)</span> elements. Let <span class="math notranslate nohighlight">\(C_g^{(i)} =\{g'_1, \cdots, g'_{l^{(i)}}\}\)</span>, we can write out the Vandermonde matrix generated by <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+V_{C_g^{(i)}}=
+    \begin{bmatrix}
+        1 &amp; g'_1 &amp; (g'_1)^2 &amp; \cdots &amp; (g'_1)^{l^{(i)}-1} \\
+        1 &amp; g'_2 &amp; (g'_2)^2 &amp; \cdots &amp; (g'_2)^{l^{(i)}-1} \\
+        \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+        1 &amp; g'_{l^{(i)}} &amp; (g'_{l^{(i)}})^2 &amp; \cdots &amp; (g'_{l^{(i)}})^{l^{(i)}-1}
+    \end{bmatrix}
+\end{split}\]</div>
+<p>Then <span class="math notranslate nohighlight">\(M_g^{(i)} = V_{C_g^{(i)}}^{-1}\)</span>, which is the inverse of the Vandermonde matrix generated by <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \left(M_g^{(i)}\right)^{-1} \cdot (u_0, \ldots, u_{l^{(i)}-1})^{\intercal} &amp; = \left(V_{C_g^{(i)}}^{-1}\right)^{-1} \cdot (u_0, \ldots, u_{l^{(i)}-1})^{\intercal} \\
+    &amp; = V_{C_g^{(i)}} \cdot (u_0, \ldots, u_{l^{(i)}-1})^{\intercal} \\
+    &amp; = 
+    \begin{bmatrix}
+        1 &amp; g'_1 &amp; (g'_1)^2 &amp; \cdots &amp; (g'_1)^{l^{(i)}-1} \\
+        1 &amp; g'_2 &amp; (g'_2)^2 &amp; \cdots &amp; (g'_2)^{l^{(i)}-1} \\
+        \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+        1 &amp; g'_{l^{(i)}} &amp; (g'_{l^{(i)}})^2 &amp; \cdots &amp; (g'_{l^{(i)}})^{l^{(i)}-1}
+    \end{bmatrix}
+    \begin{bmatrix}
+        u_0\\
+        u_1\\
+        \vdots\\
+        u_{l^{(i)}-1}
+    \end{bmatrix} \\
+    &amp; = \begin{bmatrix}
+        u_0 + u_1 g'_1 + u_2 (g'_1)^2 + \cdots + u_{l^{(i)}-1} (g'_1)^{l^{(i)}-1}\\
+        u_0 + u_1 g'_2 + u_2 (g'_2)^2 + \cdots + u_{l^{(i)}-1} (g'_2)^{l^{(i)}-1}\\
+        \vdots \\
+        u_0 + u_1 g'_{l^{(i)}} + u_2 (g'_{l^{(i)}})^2 + \cdots + u_{l^{(i)}-1} (g'_{l^{(i)}})^{l^{(i)}-1}
+    \end{bmatrix} \\
+    &amp; = \begin{bmatrix}
+        P_{\mathbf{u}}(g'_1)\\
+        P_{\mathbf{u}}(g'_2)\\
+        \vdots \\
+        P_{\mathbf{u}}(g'_{l^{(i)}})
+    \end{bmatrix}
+\end{aligned}
+\end{split}\]</div>
+<p>From the above derivation, we can see that <span class="math notranslate nohighlight">\(\left(P_{\mathbf{u}}(g'_1),  P_{\mathbf{u}}(g'_2) \cdots, P_{\mathbf{u}}(g'_{l^{(i)}}) \right)^{\intercal}\)</span> is the evaluation of the polynomial <span class="math notranslate nohighlight">\(P_{\mathbf{u}}(X) = \sum_{i&lt;l^{(i)}} u_i X^i\)</span> on the coset <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, so <span class="math notranslate nohighlight">\(\left(M_g^{(i)}\right)^{-1} \cdot (u_0, \ldots, u_{l^{(i)}-1})^{\intercal}\)</span> is the evaluation of the polynomial <span class="math notranslate nohighlight">\(P_{\mathbf{u}}(X) = \sum_{i&lt;l^{(i)}} u_i X^i\)</span> on the coset <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>.</p>
+<p>The following proposition uses the above notation and restates [BBHR18, Section 4.1], differing from [BBHR18, Section 4.1] in that it is done over a multiplicative group rather than an additive group. This proposition describes the property of maintaining low-degree.</p>
+<p><strong>Claim 1</strong> [BCIKS20, Claim 8.1]. Suppose that <span class="math notranslate nohighlight">\(f^{(i)} \in \text{RS}[\mathbb{F}, \mathcal{D}^{(i)}, k^{(i)}]\)</span> where <span class="math notranslate nohighlight">\(k^{(i)} + 1\)</span> is an integral power of <span class="math notranslate nohighlight">\(2\)</span>. Then, for any <span class="math notranslate nohighlight">\(z^{(i)} \in \mathbb{F}\)</span>, letting <span class="math notranslate nohighlight">\(\mathbf{z}^{(i)} = \left(\left(z^{(i)}\right)^0, \left(z^{(i)}\right)^1, \ldots, \left(z^{(i)}\right)^{l^{(i)}-1}\right)^{\intercal}\)</span>, the function <span class="math notranslate nohighlight">\(f_{f^{(i)},z^{(i)}}^{(i+1)}: \mathcal{D}^{(i+1)} \rightarrow \mathbb{F}\)</span> defined on <span class="math notranslate nohighlight">\(g \in \mathcal{D}^{(i+1)}\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+    f_{f^{(i)},z^{(i)}}^{(i+1)}(g) := {\color{}\left(\mathbf{z}^{(i)}\right)^{\intercal}  \cdot \mathbf{u}^{(i)}(g) = \left(\mathbf{z}^{(i)}\right)^{\intercal} \cdot M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}}} \tag{2}
+\end{equation}
+\]</div>
+<p>is a valid codeword of <span class="math notranslate nohighlight">\(V^{(i+1)} := \text{RS}[\mathbb{F}, \mathcal{D}^{(i+1)}, k^{(i+1)}]\)</span> where <span class="math notranslate nohighlight">\(k^{(i+1)} := \frac{k^{(i)}+1}{l^{(i)}} - 1\)</span>.</p>
+<p>According to [BBHR18] and the above notation, in the COMMIT phase of the FRI protocol, fixing a <span class="math notranslate nohighlight">\(g \in \mathcal{D}^{(i+1)}\)</span>, the next step constructs <span class="math notranslate nohighlight">\(f_{f^{(i)},z^{(i)}}^{(i+1)}(g) := P_{\mathbf{u}^{(i)}(g)}^{(i)}(z^{(i)})\)</span>. Let’s understand the construction formula above.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f_{f^{(i)},z^{(i)}}^{(i+1)}(g) &amp; = P_{\mathbf{u}^{(i)}(g)}^{(i)}(z^{(i)}) \\
+    &amp; = \sum_{j&lt;l^{(i)}} u_j^{(i)}(g) \cdot (z^{(i)})^j \\
+    &amp; = \left(z^{(i)}\right)^0  \cdot u_0^{(i)}(g) + \left(z^{(i)}\right)^1 \cdot u_1^{(i)}(g) + \cdots + \left(z^{(i)}\right)^{l^{(i)}-1} \cdot u_{l^{(i)}-1}^{(i)}(g) \\
+    &amp; = \begin{bmatrix}
+        \left(z^{(i)}\right)^0 &amp; \left(z^{(i)}\right)^1 &amp; \cdots &amp; \left(z^{(i)}\right)^{l^{(i)}-1}
+    \end{bmatrix} \cdot
+    \begin{bmatrix}
+        u_0^{(i)}(g)\\
+        u_1^{(i)}(g)\\
+        \vdots\\
+        u_{l^{(i)}-1}^{(i)}(g)
+    \end{bmatrix} \\
+    &amp; = \left(\mathbf{z}^{(i)}\right)^{\intercal}  \cdot \mathbf{u}^{(i)}(g)
+\end{aligned}
+\end{split}\]</div>
+<p>Let’s explain the second equation given in Proposition 1, i.e., <span class="math notranslate nohighlight">\(\mathbf{u}^{(i)}(g) = M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}}\)</span>. According to the previous analysis, for the Vandermonde matrix generated by <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+V_{C_g^{(i)}} \cdot
+\begin{bmatrix}
+    u_0^{(i)}\\
+    u_1^{(i)}\\
+    \vdots\\
+    u_{l^{(i)}-1}^{(i)}
+\end{bmatrix}
+= \begin{bmatrix}
+        P_{\mathbf{u}}(g'_1)\\
+        P_{\mathbf{u}}(g'_2)\\
+        \vdots \\
+        P_{\mathbf{u}}(g'_{l^{(i)}})
+\end{bmatrix}
+= \begin{bmatrix}
+        f^{(i)}|_{C_g^{(i)}}(g'_1)\\
+        f^{(i)}|_{C_g^{(i)}}(g'_2)\\
+        \vdots \\
+        f^{(i)}|_{C_g^{(i)}}(g'_{l^{(i)}})
+\end{bmatrix}
+\end{split}\]</div>
+<p>Therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+    u_0^{(i)}\\
+    u_1^{(i)}\\
+    \vdots\\
+    u_{l^{(i)}-1}^{(i)}
+\end{bmatrix}
+= 
+\left(V_{C_g^{(i)}}\right)^{-1} \cdot 
+\begin{bmatrix}
+        f^{(i)}|_{C_g^{(i)}}(g'_1)\\
+        f^{(i)}|_{C_g^{(i)}}(g'_2)\\
+        \vdots \\
+        f^{(i)}|_{C_g^{(i)}}(g'_{l^{(i)}})
+\end{bmatrix}
+= M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}}
+\end{split}\]</div>
+<p>This gives us <span class="math notranslate nohighlight">\(\left(\mathbf{u}^{(i)}(g)\right)^{\intercal}  = M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}}\)</span>.</p>
+</section>
+<section id="batching">
+<h2>Batching<a class="headerlink" href="#batching" title="Link to this heading">#</a></h2>
+<p>In some cases, the first prover’s oracle <span class="math notranslate nohighlight">\(f^{(0)}\)</span> is sampled from functions in an affine space <span class="math notranslate nohighlight">\(F \subset \mathbb{F}^{\mathcal{D}^{(0)}}\)</span>, which serves as our input,</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+    F = \left\{ f_0^{(0)} + \sum_{i=1}^{t} x_i \cdot f_i^{(0)} \mid x_i \in \mathbb{F}, f_i : \mathcal{D}^{(0)} \to \mathbb{F} \right\} \tag{3}
+\end{equation} 
+\]</div>
+<p>When using the FRI protocol to “batch” multiple instances of different low degree testing problems, we combine them all together through random linear combinations, i.e., <span class="math notranslate nohighlight">\(f_0^{(0)} + x_1 f_1^{(0)} + \cdots +x_t f_t^{(0)}\)</span> in the above formula. In this batching setting, we assume that the prover has already committed to <span class="math notranslate nohighlight">\(f_1^{(0)}, \ldots, f_t^{(0)}\)</span> (note that in this case we set <span class="math notranslate nohighlight">\(f_0^{(0)} = 0\)</span>), and the verifier of the batched FRI uniformly randomly samples <span class="math notranslate nohighlight">\(x_1, \ldots, x_t \in \mathbb{F}\)</span>, the prover replies with <span class="math notranslate nohighlight">\(f^{(0)}\)</span>, which should equal <span class="math notranslate nohighlight">\(f_0^{(0)} + \sum_{i=1}^{t} x_i \cdot f_i^{(0)}\)</span>, and now the FRI protocol is applied to <span class="math notranslate nohighlight">\(f^{(0)}\)</span>. Correspondingly, the QUERY phase of the batched FRI is also extended, so that each time a query for <span class="math notranslate nohighlight">\(f^{(0)}(g)\)</span> is requested, the verifier also queries <span class="math notranslate nohighlight">\(f_0^{(0)}(g), \ldots, f^{(0)}_t(g)\)</span> and verifies <span class="math notranslate nohighlight">\(f^{(0)}(g) = f_0^{(0)}(g) + \sum_{i=1}^{t} {\color{orange}x_i} \cdot f^{(0)}_i(g)\)</span>.</p>
+<blockquote>
+<div><p>🐞 <strong>Fix</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> The formula in the paper here is <span class="math notranslate nohighlight">\(f^{(0)}(g) = f_0^{(0)}(g) + \sum_{i=1}^{t} f^{(0)}_i(g)\)</span>. I think it’s missing the coefficient <span class="math notranslate nohighlight">\(x_i\)</span> from before, and should be <span class="math notranslate nohighlight">\(f^{(0)}(g) = f_0^{(0)}(g) + \sum_{i=1}^{t} x_i \cdot f^{(0)}_i(g)\)</span>.</p></li>
+</ul>
+</div></blockquote>
+<section id="the-batched-fri-query-phase">
+<h3>The (batched) FRI QUERY phase<a class="headerlink" href="#the-batched-fri-query-phase" title="Link to this heading">#</a></h3>
+<p>Proposition 1 shows that for an honest prover, for any value <span class="math notranslate nohighlight">\(z^{(i)}\)</span> chosen by the verifier, for each <span class="math notranslate nohighlight">\(y \in D^{(i+1)}\)</span>, the prover can construct a new codeword <span class="math notranslate nohighlight">\(f^{(i+1)} \in V^{(i+1)}\)</span> from a codeword <span class="math notranslate nohighlight">\(f^{(i)} \in V^{(i)}\)</span> by calculating equation (2). Therefore, we will always assume that <span class="math notranslate nohighlight">\(f^{(r)} \in V^{(r)}\)</span>, for example, by assuming that the verifier always queries the first <span class="math notranslate nohighlight">\(k^{(r)}\)</span> elements of <span class="math notranslate nohighlight">\(f^{(r)}\)</span> (in some canonical order) and compares <span class="math notranslate nohighlight">\(f^{(r)}\)</span> with the interpolation polynomial of this function.</p>
+<p>Proposition 1 provides a very natural testing method to check the consistency between <span class="math notranslate nohighlight">\(f^{(i)}\)</span> and <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span>, and the query phase of FRI follows this process by iteratively applying this natural test from the “top” (<span class="math notranslate nohighlight">\(f^{(r)}\)</span>) to the “bottom” (<span class="math notranslate nohighlight">\(f^{(0)}\)</span>).</p>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> How to better explain this natural testing method here?</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="a-single-invocation-of-the-fri-query-phase">
+<h3>A single invocation of the FRI QUERY phase<a class="headerlink" href="#a-single-invocation-of-the-fri-query-phase" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Choose <span class="math notranslate nohighlight">\(g^{(r)}\)</span> uniformly randomly from <span class="math notranslate nohighlight">\(\mathcal{D}^{(r)}\)</span>. For <span class="math notranslate nohighlight">\(i = r, \cdots, 1\)</span>, choose <span class="math notranslate nohighlight">\(g^{(i-1)}\)</span> uniformly randomly from the coset <span class="math notranslate nohighlight">\(C_{g^{(i)}}^{(i-1)}\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(f^{(0)}(g^{(0)}) \neq f_0^{(0)}(g^{(0)}) + \sum_{i = 1}^{t}x_i \cdot f_i^{(0)}(g^{(0)})\)</span>, then reject.</p></li>
+<li><p>If, for any <span class="math notranslate nohighlight">\(i \in \{0, \cdots, r - 1\}\)</span>, <span class="math notranslate nohighlight">\(f^{(i+1)}(g^{(i+1)}) \neq \left(\mathbf{z}^{(i)}\right)^{\intercal} \cdot M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}}\)</span>, then reject.</p></li>
+<li><p>Otherwise — if all equations in the above conditions hold, then accept.</p></li>
+</ol>
+<p>The above QUERY process differs from the QUERY process of FRI in [BBHR18] in that the random number selection starts from the last <span class="math notranslate nohighlight">\(\mathcal{D}^{(r)}\)</span> instead of from the initial <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)}\)</span>. Compared to the QUERY phase in [BBHR18], here we also want to verify whether the batch is correct at step 0, that is, <span class="math notranslate nohighlight">\(f^{(0)}(g^{(0)}) \neq f_0^{(0)}(g^{(0)}) + \sum_{i = 1}^{t}x_i \cdot f_i^{(0)}(g^{(0)})\)</span>.</p>
+</section>
+<section id="summary-of-the-batched-fri-protocol">
+<h3>Summary of the batched FRI protocol<a class="headerlink" href="#summary-of-the-batched-fri-protocol" title="Link to this heading">#</a></h3>
+<p>Let’s summarize the important properties mentioned so far, which will be used in the following soundness analysis.</p>
+<ol class="arabic simple">
+<li><p>At the end of the COMMIT phase of the protocol, the verifier can access through oracles a series of functions <span class="math notranslate nohighlight">\(f^{(0)}: \mathcal{D}^{(0)} \rightarrow \mathbb{F}, \ldots, f^{(r)}: \mathcal{D}^{(r)} \rightarrow \mathbb{F}\)</span>, where <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)} \supsetneq  \ldots \supsetneq \mathcal{D}^{(r)}\)</span> is a series of <span class="math notranslate nohighlight">\(2\)</span>-smooth groups, and <span class="math notranslate nohighlight">\(f^{(i)}\)</span> arbitrarily depends on <span class="math notranslate nohighlight">\(z^{(0)}, \ldots, z^{(i)}\)</span> (and <span class="math notranslate nohighlight">\(f^{(0)}, \ldots, f^{(i-1)}\)</span>). We assume <span class="math notranslate nohighlight">\(f^{(r)} \in V^{(r)}\)</span>.</p></li>
+<li><p>There exists a set of <span class="math notranslate nohighlight">\(l^{(i)} \times l^{(i)}\)</span> invertible matrices <span class="math notranslate nohighlight">\(\{M_{g^{(i+1)}}^{(i)} : g^{(i+1)} \in D^{(i+1)}\}\)</span>, so that applying <span class="math notranslate nohighlight">\(M_{g^{(i+1)}}^{(i)}\)</span> to <span class="math notranslate nohighlight">\(f^{(i)}|_{C_{g(i+1)}^{(i)}}\)</span> maps <span class="math notranslate nohighlight">\(f^{(i)}\)</span> to a sequence of vectors <span class="math notranslate nohighlight">\(\mathbf{u} = \mathbf{u}^{(i)} = \{u_0^{(i)}, \ldots, u_{l(i)}^{(i)}\} \subset \mathbb{F}^{D^{(i+1)}}\)</span>, where</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{u}^{(i)}\left(g^{(i+1)}\right)  = \left(u_0^{(i)}\left(g^{(i+1)}\right), \cdots, u_{l^{(i)}-1}^{(i)}\left(g^{(i+1)}\right) \right) = {\color{}M_{g^{(i+1)}}^{(i)} \cdot f^{(i)}|_{C_{g(i+1)}^{(i)}}}. \tag{4}
+\]</div>
+<p>Certainly. I’ll translate the text into English while maintaining all formulas and markdown formats. Here’s the translation:</p>
+<p>Moreover, if <span class="math notranslate nohighlight">\(f^{(i)}\)</span> is a valid RS codeword with rate <span class="math notranslate nohighlight">\(\rho\)</span> on <span class="math notranslate nohighlight">\(D^{(i)}\)</span>, then each vector on the parametric curve through <span class="math notranslate nohighlight">\(\mathbf{u}^{(i)}\)</span> is also a valid RS codeword with rate <span class="math notranslate nohighlight">\(\rho\)</span> on <span class="math notranslate nohighlight">\(D^{(i+1)}\)</span>.</p>
+<ol class="arabic simple">
+<li><p>In each iteration of the QUERY phase, it checks whether <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> is constructed from <span class="math notranslate nohighlight">\(f^{(i)}\)</span> through equation <span class="math notranslate nohighlight">\((2)\)</span>, and (in the batched case) checks whether <span class="math notranslate nohighlight">\(f^{(0)}\)</span> is correctly calculated through equation <span class="math notranslate nohighlight">\((3)\)</span>.</p></li>
+</ol>
+</section>
+</section>
+<section id="soundness">
+<h2>Soundness<a class="headerlink" href="#soundness" title="Link to this heading">#</a></h2>
+<p><strong>Lemma 8.2</strong> [BSCIK20, Lemma 8.2] (batched FRI error bound). Let <span class="math notranslate nohighlight">\(V^{(0)} = \text{RS}[\mathbb{F}, \mathcal{D}^{(0)}, k^{(0)}]\)</span> where <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)}\)</span> is a coset of a <span class="math notranslate nohighlight">\(2\)</span>-smooth multiplicative group, and <span class="math notranslate nohighlight">\(k^{(0)} + 1\)</span> is a power of <span class="math notranslate nohighlight">\(2\)</span>; set <span class="math notranslate nohighlight">\(\rho = (k^{(0)} + 1)/|\mathcal{D}^{(0)}|\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(F \subseteq \mathbb{F}^{\mathcal{D}^{(0)}}\)</span> be a space of functions as defined in Eq. <span class="math notranslate nohighlight">\((3)\)</span> whose correlated agreement density with <span class="math notranslate nohighlight">\(V^{(0)}\)</span> is <span class="math notranslate nohighlight">\(\alpha\)</span>. For integer <span class="math notranslate nohighlight">\(m \ge 3\)</span>, let</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha^{(0)}(\rho, m) = \max\left\{ \alpha, \sqrt{\rho}(1 + 1/2m) \right\}.
+\]</div>
+<p>Assume the FRI protocol is used with <span class="math notranslate nohighlight">\(r\)</span> rounds, and let <span class="math notranslate nohighlight">\(l^{(i)} = |\mathcal{D}^{(i)}|/|\mathcal{D}^{(i+1)}|\)</span> denote the ratio between prover messages (oracles) <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(i + 1\)</span>. Let <span class="math notranslate nohighlight">\(\epsilon_Q\)</span> denote the probability that the verifier accepts a single FRI QUERY invocation. Then,</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x_1, \ldots, x_t, z^{(0)}, \ldots, z^{(r-1)}}\left[ \epsilon_Q &gt; \alpha^{(0)}(\rho, m) \right] \le \epsilon_{\text{C}}, \tag{8.5}
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon_{\text{C}} = \frac{\left(m + \frac{1}{2}\right)^7 \cdot \vert \mathcal{D}^{(0)}\vert^2}{2 \rho^{3/2} \vert \mathbb{F} \vert} + \frac{(2m+1) \cdot (\vert \mathcal{D}^{(0)}\vert + 1)}{\sqrt{\rho}} \cdot \frac{\sum_{i = 0}^{r - 1} l^{(i)}}{\vert \mathbb{F} \vert}.
+\]</div>
+<p>In words: For any interactive FRI prover <span class="math notranslate nohighlight">\(P^*\)</span>, the probability that the oracles <span class="math notranslate nohighlight">\(f^{(0)}, \ldots, f^{(r)}\)</span> sent by <span class="math notranslate nohighlight">\(P^*\)</span> will pass a single invocation of the batched FRI QUERY test with probability greater than <span class="math notranslate nohighlight">\(\alpha^{(0)}(\rho, m)\)</span>, is smaller than <span class="math notranslate nohighlight">\(\epsilon_{\text{C}}\)</span>. The probability is over the random variables <span class="math notranslate nohighlight">\(x_1, \ldots, x_t\)</span> used to sample <span class="math notranslate nohighlight">\(f^{(0)}\)</span> from <span class="math notranslate nohighlight">\(F\)</span> and over the random messages <span class="math notranslate nohighlight">\(z^{(0)}, \ldots, z^{(r-1)}\)</span> sent by the verifier during the COMMIT phase.</p>
+<p><strong>Theorem 8.3</strong>  [BSCIK20, Theorem 8.3]  (Batched FRI Soundness). Let <span class="math notranslate nohighlight">\(f_0^{(0)}, \ldots, f_t^{(r)}: \mathcal{D}^{(0)} \rightarrow \mathbb{F}\)</span> be a sequence of functions and let <span class="math notranslate nohighlight">\(V^{(0)} = \text{RS}[\mathbb{F}, \mathcal{D}^{(0)}, k^{(0)}]\)</span> where <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)}\)</span> is a coset of a <span class="math notranslate nohighlight">\(2\)</span>-smooth group of size <span class="math notranslate nohighlight">\(n^{(0)} = |\mathcal{D}^{(0)}|\)</span>, and <span class="math notranslate nohighlight">\(\rho = \frac{k^{(0)} + 1}{n^{(0)}}\)</span> satisfies <span class="math notranslate nohighlight">\(\rho = 2^{-\text{R}}\)</span> for positive integer <span class="math notranslate nohighlight">\(\text{R}\)</span>. Let <span class="math notranslate nohighlight">\(\alpha = \sqrt{\rho}(1 + 1/2m)\)</span> for integer <span class="math notranslate nohighlight">\(m \ge 3\)</span> and <span class="math notranslate nohighlight">\(\epsilon_{\text{C}}\)</span> be as defined in Lemma 8.2.</p>
+<p>Assume the FRI protocol is used with <span class="math notranslate nohighlight">\(r\)</span> rounds. Let <span class="math notranslate nohighlight">\(l^{(i)} = |\mathcal{D}^{(i)}|/|\mathcal{D}^{(i+1)}|\)</span> denote the ratio between prover messages (oracles) <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(i + 1\)</span>. Assume furthermore that <span class="math notranslate nohighlight">\(s\)</span> is the number of invocations of the FRI QUERY step.</p>
+<p>Suppose there exists a batched FRI prover <span class="math notranslate nohighlight">\(P^*\)</span> that interacts with the batched FRI verifier and causes it to output “accept” with probability greater than</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon_{\text{FRI}} := \epsilon_{\text{C}} + \alpha^s = \frac{\left(m + \frac{1}{2}\right)^7 \cdot \vert \mathcal{D}^{(0)}\vert^2}{2 \rho^{3/2} \vert \mathbb{F} \vert} + \frac{(2m+1) \cdot (\vert \mathcal{D}^{(0)}\vert + 1)}{\sqrt{\rho}} \cdot \frac{\sum_{i = 0}^{r - 1} l^{(i)}}{\vert \mathbb{F} \vert} + \left(\sqrt{\rho} \cdot \left( 1 + \frac{1}{2m} \right)  \right)^s .
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(f_0^{(0)}, \ldots, f_t^{(0)}\)</span> have correlated agreement with <span class="math notranslate nohighlight">\(V^{(0)}\)</span> on a domain <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}^{(0)}\)</span> of density at least <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+<p><em><strong>Proof of Theorem 8.3</strong></em>: By contradiction, then directly prove through Lemma 8.2. Assume that the maximum correlated agreement of <span class="math notranslate nohighlight">\(f_0^{(0)}, \ldots, f_t^{(0)}\)</span> with <span class="math notranslate nohighlight">\(V^{(0)}\)</span> is less than <span class="math notranslate nohighlight">\(\alpha^{(0)}(\rho, m) = \sqrt{\rho}(1 + 1/2m)\)</span>, but at the same time, the acceptance probability is greater than <span class="math notranslate nohighlight">\(\epsilon_{\text{C}} + (\alpha^{(0)}(\rho, m))^s\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(E\)</span> be the event that the acceptance probability in each FRI QUERY phase is greater than <span class="math notranslate nohighlight">\(\alpha^{(0)}(\rho, m)\)</span>. This event depends on <span class="math notranslate nohighlight">\(x_1, \ldots, x_t, f^{(0)}, z^{(0)}, \ldots, z^{(r-1)}, f^{(r)}\)</span>, where each <span class="math notranslate nohighlight">\(f^{(i)}\)</span> is generated by <span class="math notranslate nohighlight">\(P^*\)</span> based on the previous messages from the Verifier. According to Lemma 8.2, for any Prover <span class="math notranslate nohighlight">\(P^*\)</span>, the probability of event <span class="math notranslate nohighlight">\(E\)</span> occurring does not exceed <span class="math notranslate nohighlight">\(\epsilon_{\text{C}}\)</span>. When event <span class="math notranslate nohighlight">\(E\)</span> does not hold, the probability that <span class="math notranslate nohighlight">\(s\)</span> independent invocations of FRI QUERY all return “accept” does not exceed <span class="math notranslate nohighlight">\((\alpha^{(0)}(\rho, m))^s\)</span>.</p>
+<p>Therefore, the probability that the FRI Verifier accepts does not exceed <span class="math notranslate nohighlight">\(\epsilon_{\text{C}} + (\alpha^{(0)}(\rho, m))^s\)</span>, which contradicts the assumption. <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<blockquote>
+<div><p>❓ <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Here, for the event <span class="math notranslate nohighlight">\(E\)</span> where the acceptance probability is greater than <span class="math notranslate nohighlight">\(\alpha^{(0)}(\rho, m)\)</span> in each FRI QUERY phase, how is it still not exceeding <span class="math notranslate nohighlight">\(\epsilon_{\text{C}}\)</span> when called <span class="math notranslate nohighlight">\(s\)</span> times? Why isn’t it <span class="math notranslate nohighlight">\((\epsilon_{\text{C}})^s\)</span>?</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="proof-of-lemma-8-2">
+<h2>Proof of Lemma 8.2<a class="headerlink" href="#proof-of-lemma-8-2" title="Link to this heading">#</a></h2>
+<p>Before proving Lemma 8.2, let’s introduce a method to track whether the verifier’s consistency check passes. Specifically, the Prover will construct function <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> based on the random number <span class="math notranslate nohighlight">\(z^{(i)}\)</span> sent by the Verifier, and then respond to the Verifier with function <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span>. In the QUERY phase of FRI, the Verifier will check the consistency between function <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> and function <span class="math notranslate nohighlight">\(f^{(i)}\)</span>.</p>
+<p>Define a series of weight functions, <span class="math notranslate nohighlight">\(\mu^{(i)}:\mathcal{D}^{(i)} \rightarrow [0,1]\)</span> and <span class="math notranslate nohighlight">\(\nu^{(i)}:\mathcal{D}^{(i)} \rightarrow [0,1]\)</span>, where <span class="math notranslate nohighlight">\(i = 0, \ldots, r\)</span>. These weight functions are defined by induction. When <span class="math notranslate nohighlight">\(i = 0\)</span>, use <span class="math notranslate nohighlight">\(\{0,1\}\)</span> weights to indicate whether <span class="math notranslate nohighlight">\(f^{(0)}(g)\)</span> is calculated correctly:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mu^{(0)}(g) =
+\begin{cases}
+ 1 &amp; f^{(0)}(g) = f_0^{(0)}(g) + \sum_{i = 1}^t x_i f_i^{(0)}(g) \\
+ 0 &amp; \text{otherwise}
+\end{cases}
+\end{split}\]</div>
+<p>Now, <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span> obtained by induction can be used to define an auxiliary weight function <span class="math notranslate nohighlight">\(\nu^{(i+1)}: \mathcal{D}^{(i+1)} \rightarrow [0,1]\)</span>. By taking an element <span class="math notranslate nohighlight">\(g\)</span> in <span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span>, we can get a coset <span class="math notranslate nohighlight">\(C_g^{(i)} \subset \mathcal{D}^{(i)}\)</span>, which is composed of all elements in <span class="math notranslate nohighlight">\(\mathcal{D}^{(i)}\)</span> that can be mapped to <span class="math notranslate nohighlight">\(g\)</span> through the mapping <span class="math notranslate nohighlight">\(q^{(i)}(x) = x^{l^{(i)}}\)</span>, as shown in <span class="math notranslate nohighlight">\((8.1)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+C_g^{(i)} := \{g' \in \mathcal{D}^{(i)} \mid (g')^{l^{(i)}} = g\}.
+\]</div>
+<p>Then the definition of <span class="math notranslate nohighlight">\(\nu^{(i+1)}\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\nu^{(i+1)}(g) = \mathbb{E}_{g' \in C_g^{(i)}}\left[ \mu^{(i)}(g') \right]. \tag{8.6}
+\]</div>
+<p>In other words, <span class="math notranslate nohighlight">\(\nu^{(i+1)}(g)\)</span> is the expected value of the <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span> weights of all elements in the coset <span class="math notranslate nohighlight">\(C_g^{(i)}\)</span>. Finally, define the function <span class="math notranslate nohighlight">\(\mu^{(i+1)}\)</span>, for each <span class="math notranslate nohighlight">\(g \in \mathcal{D}^{(i+1)}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mu^{(i+1)}(g) = 
+\begin{cases}
+    \nu^{(i+1)}(g) &amp; f^{(i+1)}(g) = f_{f^{(i)}, z^{(i)}}^{(i+1)}(g) \\
+    0 &amp; \text{otherwise}
+\end{cases}
+\end{split}\]</div>
+<p>Regarding the definition of <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span>, an important property is that <span class="math notranslate nohighlight">\(\mu^{(i)}(g)\)</span> is a measure of the probability of success in the FRI QUERY phase, conditional on querying <span class="math notranslate nohighlight">\(g\)</span> from <span class="math notranslate nohighlight">\(f^{(i)}\)</span>, which is an important reason for the following proposition to hold.</p>
+<p><strong>Claim 8.5.</strong> The probability <span class="math notranslate nohighlight">\(\epsilon_{\text{Q}}\)</span> that a single invocation of the batched FRI QUERY accepts <span class="math notranslate nohighlight">\(f^{(0)}, \ldots, f^{(r)}\)</span>, where <span class="math notranslate nohighlight">\(f^{(r)} \in \text{RS}[\mathbb{F},\mathcal{D}^{(r)},k^{(r)}]\)</span>, satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon_{\text{Q}} = \mathbb{E}_{g^{(r)} \in \mathcal{D}^{(r)}}\left[ \mu^{(r)}(g^{(r)}) \right].
+\]</div>
+<p><em><strong>Proof</strong></em>: Recall the invocation of FRI QUERY, a series of random <span class="math notranslate nohighlight">\(g^{(r)}, \ldots, g^{(0)}\)</span> will be selected, where <span class="math notranslate nohighlight">\(g^{(i-1)}\)</span> is uniformly randomly selected from the coset <span class="math notranslate nohighlight">\(C_{g^{(i)}}^{(i-1)}\)</span>. We will prove by induction that for <span class="math notranslate nohighlight">\(i = 0, \ldots, r\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+ \mathbb{E}_{g^{(i)} \in \mathcal{D}^{(i)}}\left[ \mu^{(i)}(g^{(i)}) \right]
+\]</div>
+<p>equals the probability that when <span class="math notranslate nohighlight">\(g^{(i)}\)</span> is uniformly randomly selected, and it is generated from a random sequence <span class="math notranslate nohighlight">\(g^{(i-1)} \in C_{g^{(i)}}^{(i-1)}, \ldots, g^{(0)} \in C_{g^{(1)}}^{(0)}\)</span>, all tests related to <span class="math notranslate nohighlight">\(g^{(i)}\)</span> and its induced tests pass.</p>
+<p>The idea of the induction proof is as follows:</p>
+<ol class="arabic simple">
+<li><p>Prove that <span class="math notranslate nohighlight">\(\mu^{(0)}\)</span> holds for the most basic case when <span class="math notranslate nohighlight">\(i = 0\)</span></p></li>
+<li><p>Assume <span class="math notranslate nohighlight">\(\mu^{(i-1)}\)</span> holds for <span class="math notranslate nohighlight">\(i - 1\)</span>, prove that <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span> holds for <span class="math notranslate nohighlight">\(i\)</span></p></li>
+</ol>
+<p>This will prove the proposition.</p>
+<p>When <span class="math notranslate nohighlight">\(i = 0\)</span>, by the definition of <span class="math notranslate nohighlight">\(\mu^{(0)}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mu^{(0)}(g^{(0)}) =
+\begin{cases}
+ 1 &amp; f^{(0)}(g^{(0)}) = f_0^{(0)}(g^{(0)}) + \sum_{i = 1}^t x_i f_i^{(0)}(g^{(0)}) \\
+ 0 &amp; \text{otherwise}
+\end{cases}
+\end{split}\]</div>
+<p>The probability of FRI QUERY passing naturally equals <span class="math notranslate nohighlight">\(\mathbb{E}_{g^{(0)} \in \mathcal{D}^{(0)}}\left[ \mu^{(0)}(g^{(0)}) \right]\)</span>.</p>
+<p>Assuming <span class="math notranslate nohighlight">\(\mu^{(i-1)}\)</span> holds for <span class="math notranslate nohighlight">\(i - 1\)</span>, now analyze <span class="math notranslate nohighlight">\(\mu^{(i)}(g^{(i)})\)</span>. If <span class="math notranslate nohighlight">\(f^{(i)}(g^{(i)})\)</span> is not calculated correctly according to equation <span class="math notranslate nohighlight">\((8.2)\)</span>, then <span class="math notranslate nohighlight">\(\mu^{(i)}(g^{(i)}) = 0\)</span>, otherwise, according to the definition</p>
+<div class="math notranslate nohighlight">
+\[
+\mu^{(i)}(g^{(i)}) = \nu^{(i)}(g^{(i)}) = \mathbb{E}_{g^{(i-1)} \in C_{g^{(i)}}^{(i-1)}}\left[ \mu^{(i-1)}(g^{(i-1)}) \right].
+\]</div>
+<p>This indicates that <span class="math notranslate nohighlight">\(\mu^{(i)}(g^{(i)})\)</span> is the average of the values of <span class="math notranslate nohighlight">\(\mu^{(i-1)}\)</span> on the coset <span class="math notranslate nohighlight">\(C_{g^{(i)}}^{(i-1)} \subseteq \mathcal{D}^{(i-1)}\)</span>. By the induction hypothesis, it is the probability that all tests related to <span class="math notranslate nohighlight">\(g^{(i-1)}, \ldots, g^{(0)}\)</span> pass, therefore <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span> holds for <span class="math notranslate nohighlight">\(i\)</span>. <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<p>Lemma 8.2 needs to estimate the probability in the FRI QUERY phase. Recall the protocol of the batched FRI QUERY phase, there are two places involving random numbers:</p>
+<ol class="arabic simple">
+<li><p>In step 2 of the protocol, use <span class="math notranslate nohighlight">\(t\)</span> random numbers <span class="math notranslate nohighlight">\(x_1, \ldots , x_t\)</span> to batch <span class="math notranslate nohighlight">\(f_1^{(0)}, f_2^{(0)}, \ldots ,f_t^{(0)}\)</span>, which corresponds to the case of affine space, and will use the conclusion corresponding to Theorem 7.4.</p></li>
+<li><p>In step 3 of the protocol, use <span class="math notranslate nohighlight">\(\mathbf{z}^{(i)} = \left(\left(z^{(i)}\right)^0, \left(z^{(i)}\right)^1, \ldots, \left(z^{(i)}\right)^{l^{(i)}-1}\right)\)</span> for batching, corresponding to the case of curves, and will use the conclusion of Theorem 7.2.</p></li>
+</ol>
+<p><em><strong>Proof of Lemma 8.2</strong></em>: Now we need to prove Lemma 8.2. By Proposition 8.5, we only need to prove that in the verifier’s random selection, with probability greater than <span class="math notranslate nohighlight">\(1 - \epsilon_C\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{g \in \mathcal{D}^{(r)}}\left[ \mu^{(r)}(g) \right] \le \alpha^{(0)}(\rho, m). \tag{8.7}
+\]</div>
+<p>If we prove the above holds, it means that when selecting random numbers in <span class="math notranslate nohighlight">\(\mathbb{F}_q\)</span>, if <span class="math notranslate nohighlight">\(\epsilon_Q &gt; \alpha^{(0)}(\rho, m)\)</span>, then its probability is less than or equal to <span class="math notranslate nohighlight">\(\epsilon_C\)</span>, which proves Lemma 8.2.</p>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Why isn’t it “with probability greater than <span class="math notranslate nohighlight">\(1 - \epsilon_C\)</span>” here?</p></li>
+</ul>
+</div></blockquote>
+<p>The proof idea is to first define a series of bad events <span class="math notranslate nohighlight">\(E^{(0)}, \ldots, E^{(r)}\)</span>, where the probability of some events occurring is the sum of the probabilities of each event occurring, proving that this probability is less than or equal to <span class="math notranslate nohighlight">\(\epsilon_C\)</span>. Then assuming that no bad events occur, prove that equation <span class="math notranslate nohighlight">\((8.7)\)</span> holds.</p>
+<p>Let <span class="math notranslate nohighlight">\(E^{(0)}\)</span> be the event</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu^{(0)}} \left(f^{(0)}, V^{(0)}\right) &gt; \alpha^{(0)}(\rho, m).
+\]</div>
+<p>By the definition of <span class="math notranslate nohighlight">\(\mu^{(0)}\)</span>, event <span class="math notranslate nohighlight">\(E^{(0)}\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree} \left(f_0^{(0)} + \sum_{i=1}^{t} x_i f_i^{(0)} , V^{(0)}\right) &gt; \alpha^{(0)}(\rho, m) = \max\left\{ \alpha, \sqrt{\rho}(1 + 1/2m) \right\}.
+\]</div>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> What exactly does <span class="math notranslate nohighlight">\(\text{agree}\)</span> mean here? What’s the difference between it and <span class="math notranslate nohighlight">\(\text{agree}_{\mu^{(0)}}\)</span>? Does it represent the constant 1?</p></li>
+</ul>
+</div></blockquote>
+<p>Therefore, this event <span class="math notranslate nohighlight">\(E^{(0)}\)</span> mainly depends on the random numbers <span class="math notranslate nohighlight">\(x_1, \ldots, x_t\)</span>. According to the assumption in the lemma, the maximum correlated agreement density of <span class="math notranslate nohighlight">\((f_0^{(0)}, \ldots, f_t^{(0)})\)</span> with <span class="math notranslate nohighlight">\(V^{(0)}\)</span> does not exceed <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
+<blockquote>
+<div><p>Recall Theorem 7.4:
+<strong>Theorem 7.4</strong> (Weighted correlated agreement over affine spaces – Version II). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> and let <span class="math notranslate nohighlight">\(U = u_0 + \text{span}\{u_1, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> be an affine subspace. Let <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span> be a vector of weights, whose values all have denominator <span class="math notranslate nohighlight">\(M\)</span> . Let <span class="math notranslate nohighlight">\(m \ge 3\)</span> and let</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \alpha \ge \alpha_0(\rho, m) := \sqrt{\rho} +  \frac{\sqrt{\rho}}{2m} .
+&gt; \]</div>
+<p>Suppose</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \Pr_{u \in U} [\text{agree}_{\mu}(u,V) \ge \alpha] &gt; \max \left( \frac{(1 + \frac{1}{2m})^7m^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}, \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{M \cdot n + 1}{q} \right) . \tag{7.2}
+&gt; \]</div>
+<p>Then <span class="math notranslate nohighlight">\(u_0, \ldots, u_l\)</span> have at least <span class="math notranslate nohighlight">\(\alpha\)</span> correlated <span class="math notranslate nohighlight">\(\mu\)</span> -agreement with <span class="math notranslate nohighlight">\(V\)</span> , i.e. <span class="math notranslate nohighlight">\(\exists v_0, \cdots, v_l \in V\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \mu \left(\{x \in \mathcal{D} : \forall 0 \le i \le l, u_i(x) = v_i(x)\}\right) \ge \alpha .
+&gt; \]</div>
+<p>Its contrapositive is: If <span class="math notranslate nohighlight">\(u_0, \ldots, u_l\)</span> have at most <span class="math notranslate nohighlight">\(\alpha\)</span> correlated <span class="math notranslate nohighlight">\(\mu\)</span> -agreement with <span class="math notranslate nohighlight">\(V\)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \Pr_{u \in U} [\text{agree}_{\mu}(u,V) \ge \alpha] \le \max \left( \frac{(1 + \frac{1}{2m})^7m^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}, \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{M \cdot n + 1}{q} \right) . 
+&gt; \]</div>
+</div></blockquote>
+<p>By the contrapositive of Theorem 7.4, taking <span class="math notranslate nohighlight">\(\alpha = \alpha^{(0)}(\rho, m)\)</span>, <span class="math notranslate nohighlight">\(\mu \equiv 1\)</span> and <span class="math notranslate nohighlight">\(M = 1\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr_{x_1, \ldots, x_t} [E^{(0)}] &amp; = \Pr_{u \in U} [\text{agree}_{\mu}(u,V) &gt; \alpha^{(0)}(\rho, m)] \\
+    &amp; {\color{orange}\text{(Why can the parentheses here be directly changed to strictly $&gt;$?)}} \\
+    &amp; \le \max \left( \frac{(1 + \frac{1}{2m})^7m^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}, \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{M \cdot n + 1}{q} \right) \\
+    &amp; = \max \left( \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}, \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{n + 1}{q} \right)
+\end{aligned}
+\end{split}\]</div>
+<p>Note that according to Theorem 7.4 and Theorem 1.2, <span class="math notranslate nohighlight">\(V = \mathsf{RS}[\mathbb{F}_q, \mathcal{D}^{(0)}, k^{(0)}]\)</span>, <span class="math notranslate nohighlight">\(n = |\mathcal{D}^{(0)}|\)</span>, <span class="math notranslate nohighlight">\(\rho = \frac{k^{(0)} + 1}{n}\)</span>.</p>
+<p>Let’s derive</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q} &gt; \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{n + 1}{q}
+\]</div>
+<p>Since</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; \frac{(m+\frac{1}{2})^7}{3} \ge 2m + 1 \\
+    \Rightarrow &amp; \frac{(2m + 1)^7}{3 \times 2^7} \ge 2m + 1 \\
+    \Rightarrow &amp;  (2m + 1)^6 \ge 3 \times 2^7 \\
+\end{aligned}
+\end{split}\]</div>
+<p>By the condition <span class="math notranslate nohighlight">\(m \ge 3\)</span> in the theorem, <span class="math notranslate nohighlight">\((2m + 1)^6\)</span> is an increasing function when <span class="math notranslate nohighlight">\(m \ge 3\)</span>, so <span class="math notranslate nohighlight">\((2m + 1)^6 \ge (2 \times 3 + 1)^6 = 7^6 = 117649\)</span>, while the right side of the above equation <span class="math notranslate nohighlight">\(3 \times 2^7 = 384\)</span>, satisfying <span class="math notranslate nohighlight">\((2m + 1)^6 \ge 117649 &gt; 3 \times 2^7\)</span>. From this, we get that <span class="math notranslate nohighlight">\(\frac{(m+\frac{1}{2})^7}{3} &gt; 2m + 1\)</span> (not equal) holds. Then</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q} &amp; &gt; \frac{2m + 1}{\rho^{3/2}} \cdot \frac{n^2}{q} \\
+    &amp; = \frac{2m + 1}{\rho \cdot \rho^{1/2}} \cdot \frac{n^2}{q} \\
+    &amp; {\color{blue}{\text{(Since $\rho &lt; 1$)}}} \\
+    &amp; &gt; \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{n^2}{q} \\
+    &amp; {\color{blue}{\text{(Since $n^2 &gt; n + 1$ when $n \ge 2$)}}} \\
+    &amp; &gt; \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{n + 1}{q}
+\end{aligned}
+\end{split}\]</div>
+<p>Thus</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr_{x_1, \ldots, x_t} [E^{(0)}] &amp; \le \max \left( \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}, \frac{2m + 1}{\sqrt{\rho}} \cdot \frac{n + 1}{q} \right) \\
+    &amp; = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q}
+\end{aligned}
+\end{split}\]</div>
+<p>Let</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{n^2}{q} {\color{blue}\quad {\text{(Note that here $n = |\mathcal{D}^{(0)}|$)}}}
+\]</div>
+<p>We get</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x_1, \ldots, x_t} [E^{(0)}] \le \epsilon \tag{8.8}
+\]</div>
+<p>Now fix <span class="math notranslate nohighlight">\(i \in \{0, \ldots, r - 1\}\)</span>. Define event <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\nu^{(i+1)}} \left(f_{f^{(i)},z^{(i)}}^{(i+1)}, V^{(i+1)}\right) &gt; \max \left( \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right), \sqrt{\rho}(1 + 1/2m) \right) . \tag{8.9}
+\]</div>
+<blockquote>
+<div><p>📖 <strong>Notes</strong>
+Understand event <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span>. According to the definition</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; \begin{aligned}
+&gt;   \text{agree}_{\nu^{(i+1)}} \left(f_{f^{(i)},z^{(i)}}^{(i+1)}, V^{(i+1)}\right) &amp; = \max_{g^{(i+1)} \in V^{(i+1)}} \text{agree}_{\nu^{(i+1)}} \left(f_{f^{(i)},z^{(i)}}^{(i+1)}, g^{(i+1)} \right)  \\   
+&gt;   &amp; = \max_{g^{(i+1)} \in V^{(i+1)}} \frac{1}{|\mathcal{D}^{(i+1)}|} \sum_{x:f_{f^{(i)},z^{(i)}}^{(i+1)}(x) = g^{(i+1)}(x)} \nu^{(i+1)}(x)\\ 
+&gt;   &amp; = \max_{g^{(i+1)} \in V^{(i+1)}} \frac{1}{|\mathcal{D}^{(i+1)}|} \sum_{x:f_{f^{(i)},z^{(i)}}^{(i+1)}(x) = g^{(i+1)}(x)} \mathbb{E}_{g' \in C_x^{(i)}} \left[ \mu^{(i)}(g') \right] \\
+&gt; \end{aligned}
+&gt; \end{split}\]</div>
+<p>It measures, after constructing <span class="math notranslate nohighlight">\(f_{f^{(i)},z^{(i)}}^{(i+1)}\)</span> from <span class="math notranslate nohighlight">\(f^{(i)}\)</span> and random number <span class="math notranslate nohighlight">\(z^{(i)}\)</span>, finding <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span> that make <span class="math notranslate nohighlight">\(f_{f^{(i)},z^{(i)}}^{(i+1)}\)</span> consistent with a polynomial <span class="math notranslate nohighlight">\(g^{(i+1)}\)</span> in <span class="math notranslate nohighlight">\(V^{(i+1)}\)</span>, then calculating the sum of the expected values of the <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span> weights of the elements in the corresponding cosets in <span class="math notranslate nohighlight">\(\mathcal{D}^{(i)}\)</span> for these <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>On the right side of equation <span class="math notranslate nohighlight">\((8.9)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \begin{aligned}
+&gt;    \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right) &amp; = \max_{g^{(i)} \in V^{(i)}} \frac{1}{|\mathcal{D}^{(i)}|} \sum_{x:f^{(i)}(x) = g^{(i)}(x)} \mu^{(i)}(x)
+&gt; \end{aligned}
+&gt; \]</div>
+<p><span class="math notranslate nohighlight">\(\mu^{(i)}(x)\)</span> measures the probability of passing in the FRI QUERY phase when querying <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(f^{(i)}\)</span>.</p>
+<p>Event <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span> aims to define such events: for <span class="math notranslate nohighlight">\(f_{f^{(i)},z^{(i)}}^{(i+1)}\)</span> constructed from <span class="math notranslate nohighlight">\(f^{(i)}\)</span> and <span class="math notranslate nohighlight">\(z^{(i)}\)</span>, for a polynomial <span class="math notranslate nohighlight">\(g^{(i+1)}\)</span> in <span class="math notranslate nohighlight">\(V^{(i+1)}\)</span>, take out the set of points <span class="math notranslate nohighlight">\(x\)</span> that make their values equal, calculate the sum of the expected <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span> weights of the cosets corresponding to these points, and the ratio to the size of <span class="math notranslate nohighlight">\(\mathcal{D}^{(i+1)}\)</span>.</p>
+</div></blockquote>
+<p>Fix <span class="math notranslate nohighlight">\(f^{(i)}\)</span> and <span class="math notranslate nohighlight">\(\mu^{(i)}\)</span>, then event <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span> is determined by the random number <span class="math notranslate nohighlight">\(z^{(i)}\)</span>. According to the definition of <span class="math notranslate nohighlight">\(\mu^{(i+1)}\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mu^{(i+1)}(g) = 
+\begin{cases}
+    \nu^{(i+1)}(g) &amp; f^{(i+1)}(g) = f_{f^{(i)}, z^{(i)}}^{(i+1)}(g) \\
+    0 &amp; \text{otherwise}
+\end{cases}
+\end{split}\]</div>
+<p>Only when the condition <span class="math notranslate nohighlight">\(f^{(i+1)}(g) = f_{f^{(i)}, z^{(i)}}^{(i+1)}(g)\)</span> is satisfied, <span class="math notranslate nohighlight">\(\mu^{(i+1)}(g)\)</span> will be equal to <span class="math notranslate nohighlight">\(\nu^{(i+1)}(g)\)</span>. Naturally, we can get</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu^{(i+1)}} \left(f^{(i+1)}, V^{(i+1)}\right) \le \text{agree}_{\nu^{(i+1)}} \left(f_{f^{(i)},z^{(i)}}^{(i+1)}, V^{(i+1)}\right)
+\]</div>
+<p>Therefore, if event <span class="math notranslate nohighlight">\(E^{i+1}\)</span> does not occur, then according to equation <span class="math notranslate nohighlight">\((8.9)\)</span>, we can get</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu^{(i+1)}} \left(f^{(i+1)}, V^{(i+1)}\right) \le \text{agree}_{\nu^{(i+1)}} \left(f_{f^{(i)},z^{(i)}}^{(i+1)}, V^{(i+1)}\right) \le  \max \left( \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right), \sqrt{\rho}(1 + 1/2m) \right)
+\]</div>
+<p>Then</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu^{(i+1)}} \left(f^{(i+1)}, V^{(i+1)}\right) \le \max \left( \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right), \sqrt{\rho}(1 + 1/2m) \right) \tag{8.10}
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\alpha = \max \left( \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right), \sqrt{\rho}(1 + 1/2m) \right)\)</span>. According to the definition, expanding <span class="math notranslate nohighlight">\(f_{f^{(i)},z^{(i)}}^{(i+1)}\)</span>, we get that event <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\nu^{(i+1)}} \left(u_0 + z^{(i)}u_1 + \ldots + (z^{(i)})^{l^{(i)} -1} u_{l^{(i)} -1}, V^{(i+1)}\right) &gt; \alpha,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(u_0, \ldots, u_{l^{(i)} - 1}: \mathcal{D}^{(i+1)} \rightarrow \mathbb{F}\)</span> are the functions obtained from <span class="math notranslate nohighlight">\(f^{(i)}\)</span> as defined in the FRI protocol (see Proposition 8.1). This is exactly the case handled by Theorem 7.2.</p>
+<blockquote>
+<div><p>📖 <strong>Recall Theorem 7.2</strong></p>
+<p><strong>Theorem 7.2</strong> (Weighted correlated agreement over curves – Version II). Let <span class="math notranslate nohighlight">\(V, q, n, k\)</span> and <span class="math notranslate nohighlight">\(\rho\)</span> be as defined in Theorem 1.2. Let <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_l\} \subset \mathbb{F}_q^{\mathcal{D}}\)</span> . Let <span class="math notranslate nohighlight">\(\mu : \mathcal{D} \rightarrow [0,1]\)</span> be a vector of weights, whose values all have denominator <span class="math notranslate nohighlight">\(M\)</span> . Let <span class="math notranslate nohighlight">\(m \ge 3\)</span> and let</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \alpha \ge \alpha_0(\rho, m) := \sqrt{\rho} + \frac{\rho}{2m}.
+&gt; \]</div>
+<p>Let</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; S = \{z \in \mathbb{F}_q : \text{agree}_{\mu}(u_0 + zu_1 + \cdots + z^lu_l, V) \ge \alpha\}
+&gt; \]</div>
+<p>and suppose</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; |S| &gt; \max\left(\frac{(1 + \frac{1}{2m})^7 m^7}{3 \rho^{3/2}}n^2 l,  \frac{2m + 1}{\sqrt{\rho}}(M \cdot n + 1)l \right) . \tag{7.1}
+&gt; \]</div>
+<p>Then <span class="math notranslate nohighlight">\(u_0, \ldots, u_l\)</span> have at least <span class="math notranslate nohighlight">\(\alpha\)</span> correlated <span class="math notranslate nohighlight">\(\mu\)</span> -agreement with <span class="math notranslate nohighlight">\(V\)</span> , i.e. <span class="math notranslate nohighlight">\(\exists v_0, \cdots, v_l \in V\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \mu(\{x \in \mathcal{D}: \forall 0 \le i \le l, u_i(x) = v_i(x)\}) \ge \alpha .
+&gt; \]</div>
+</div></blockquote>
+<p>In Theorem 7.2, take <span class="math notranslate nohighlight">\(M = |\mathcal{D}^{(0)}|/|\mathcal{D}^{(i+1)}|\)</span>. At this time, we are analyzing the case of <span class="math notranslate nohighlight">\(i + 1\)</span>, so <span class="math notranslate nohighlight">\(n = |\mathcal{D}^{i+1}|\)</span> in the theorem, then <span class="math notranslate nohighlight">\(M \cdot n = |\mathcal{D}^{(0)}|\)</span>. Since we are analyzing <span class="math notranslate nohighlight">\(\mathbf{u} = \{u_0, \cdots, u_{l^{(i)} - 1}\}\)</span>, <span class="math notranslate nohighlight">\(l = l^{(i)} - 1\)</span> in equation <span class="math notranslate nohighlight">\((7.1)\)</span>. According to Theorem 7.2, if</p>
+<div class="math notranslate nohighlight">
+\[
+ \Pr_{z^{(i)}}\left[E^{(i+1)}\right] \ge (l^{(i)} - 1) \cdot \left(\epsilon^{(i)} + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \right) 
+\]</div>
+<p>where,</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon^{(i)} = \frac{|\mathcal{D}^{(i+1)}|^2}{|\mathcal{D}^{(0)}|^2} \epsilon = \frac{\epsilon}{(l^{(0)}\cdots l^{(i)})^2} = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{|\mathcal{D}^{(0)}|^2}{q} \cdot \frac{1}{(l^{(0)}\cdots l^{(i)})^2}
+\]</div>
+<p>If the above condition is satisfied, referring to Theorem 7.2, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    |S| &amp; \ge |\mathbb{F}| \cdot (l^{(i)} - 1) \cdot \left(\epsilon^{(i)} + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{\mathbb{F}} \right) \\
+    &amp; = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{|\mathcal{D}^{(0)}|^2}{q} \cdot \frac{|\mathcal{D}^{(i+1)}|^2}{|\mathcal{D}^{(0)}|^2} \cdot |\mathbb{F}|  \cdot (l^{(i)} - 1) + \frac{2m + 1}{\sqrt{\rho}}\cdot (|\mathcal{D}^{(0)}| + 1) \cdot (l^{(i)} - 1) \\
+    &amp; = \frac{(1 + \frac{1}{2m})^7 m^7}{3 \rho^{3/2}}  \cdot |\mathcal{D}^{(i+1)}|^2 \cdot (l^{(i)} - 1) + \frac{2m + 1}{\sqrt{\rho}}\cdot (M \cdot n + 1) \cdot (l^{(i)} - 1) \\
+    &amp; = \frac{(1 + \frac{1}{2m})^7 m^7}{3 \rho^{3/2}}  \cdot n^2 \cdot (l^{(i)} - 1) + \frac{2m + 1}{\sqrt{\rho}}\cdot (M \cdot n + 1) \cdot (l^{(i)} - 1) \\
+    &amp; &gt; \max\left(\frac{(1 + \frac{1}{2m})^7 m^7}{3 \rho^{3/2}}n^2 l,  \frac{2m + 1}{\sqrt{\rho}}(M \cdot n + 1)l \right)
+\end{aligned}
+\end{split}\]</div>
+<p>Satisfying equation <span class="math notranslate nohighlight">\((7.1)\)</span>, therefore by Theorem 7.2, there exists a set <span class="math notranslate nohighlight">\(S \subseteq \mathcal{D}^{(i+1)}\)</span>, and codewords <span class="math notranslate nohighlight">\(v_0, \ldots, v_{l^{(i)} - 1} \in V\)</span>, such that <span class="math notranslate nohighlight">\(u_i\)</span> and <span class="math notranslate nohighlight">\(v_i\)</span> are consistent on <span class="math notranslate nohighlight">\(S\)</span>, and <span class="math notranslate nohighlight">\(\nu^{(i+1)}(S) &gt; \alpha\)</span>. Recalling equation <span class="math notranslate nohighlight">\((8.4)\)</span>, we know</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{u}^{(i)}\left(g^{(i+1)}\right) = {\color{}M_{g^{(i+1)}}^{(i)} \cdot f^{(i)}|_{C_{g(i+1)}^{(i)}}}
+\]</div>
+<p>The invertible interpolation mapping <span class="math notranslate nohighlight">\(M_{g^{(i+1)}}^{(i)}\)</span> maps <span class="math notranslate nohighlight">\(f^{(i)}|_{C_{g(i+1)}^{(i)}}\)</span> to <span class="math notranslate nohighlight">\(\mathbf{u}^{(i)}\left(g^{(i+1)}\right)\)</span>. Using its inverse mapping, i.e., the evaluation mapping, for each <span class="math notranslate nohighlight">\(g^{(i+1)} \in \mathcal{D}^{(i+1)}\)</span>, apply this inverse mapping to <span class="math notranslate nohighlight">\(v_0(g^{(i+1)}), \ldots, v_{l^{(i)}-1}(g^{(i+1)})\)</span>. Let <span class="math notranslate nohighlight">\(C_{g^{(i+1)}}^{(i)} =\{g'_0, \cdots, g'_{l^{(i)}-1}\}\)</span>, then the result after application is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \left(M_{g^{(i+1)}}^{(i)}\right)^{-1}  \cdot \begin{bmatrix}
+        v_0(g^{(i+1)}) \\
+        v_1(g^{(i+1)}) \\
+        \vdots \\
+        v_{l^{(i)}-1}(g^{(i+1)})
+    \end{bmatrix} &amp; = V_{C_{g^{(i+1)}}^{(i)}} \cdot \begin{bmatrix}
+        v_0(g^{(i+1)}) \\
+        v_1(g^{(i+1)}) \\
+        \vdots \\
+        v_{l^{(i)}-1}(g^{(i+1)})
+    \end{bmatrix} \\
+    &amp; =  
+    \begin{bmatrix}
+        1 &amp; g'_0 &amp; (g'_0)^2 &amp; \cdots &amp; (g'_0)^{l^{(i)}-1} \\
+        1 &amp; g'_1 &amp; (g'_1)^2 &amp; \cdots &amp; (g'_1)^{l^{(i)}-1} \\
+        \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+        1 &amp; g'_{l^{(i)-1}} &amp; (g'_{l^{(i)}-1})^2 &amp; \cdots &amp; (g'_{l^{(i)}-1})^{l^{(i)}-1}
+    \end{bmatrix}
+    \begin{bmatrix}
+        v_0(g^{(i+1)}) \\
+        v_1(g^{(i+1)}) \\
+        \vdots \\
+        v_{l^{(i)}-1}(g^{(i+1)})
+    \end{bmatrix} \\
+    &amp; = \begin{bmatrix}
+        v_0(g^{(i+1)}) + v_1(g^{(i+1)}) g'_0 + u_2 (g'_0)^2 + \cdots + v_{l^{(i)}-1}(g^{(i+1)}) (g'_0)^{l^{(i)}-1}\\
+        v_0(g^{(i+1)}) + v_1(g^{(i+1)}) g'_1 + u_2 (g'_1)^2 + \cdots + v_{l^{(i)}-1}(g^{(i+1)}) (g'_1)^{l^{(i)}-1}\\
+        \vdots \\
+        v_0(g^{(i+1)}) + v_1(g^{(i+1)}) g'_{l^{(i)-1}} + u_2 (g'_{l^{(i)}-1})^2 + \cdots + v_{l^{(i)}-1}(g^{(i+1)}) (g'_{l^{(i)}-1})^{l^{(i)}-1}
+    \end{bmatrix} \\
+    &amp; = \begin{bmatrix}
+        h^{(i)}(g'_0)\\
+        h^{(i)}(g'_1)\\
+        \vdots \\
+        h^{(i)}(g'_{l^{(i)}-1})
+    \end{bmatrix}
+\end{aligned} 
+\end{split}\]</div>
+<p>We can get function <span class="math notranslate nohighlight">\(h^{(i)}: \mathcal{D}^{(i)} \rightarrow \mathbb{F}\)</span>, for each <span class="math notranslate nohighlight">\(g^{(i)} \in C_{g^{(i+1)}}^{(i)}\)</span> we have</p>
+<div class="math notranslate nohighlight">
+\[
+h^{(i)}(g^{(i)}) = \sum_{j = 0}^{l^{(i)}-1} \left(g^{(i)}\right)^j \cdot v_j\left({\color{blue}{g^{(i+1)}}}\right) =  \sum_{j = 0}^{l^{(i)}-1} \left(g^{(i)}\right)^j \cdot v_j   \left( {\color{blue}{\left(g^{(i)}\right)^{l^{(i)}}}}   \right).
+\]</div>
+<p>Therefore, since <span class="math notranslate nohighlight">\(v_j \in V^{(i+1)}\)</span>, we have <span class="math notranslate nohighlight">\(h^{(i)} \in V^{(i)}\)</span>. Moreover, according to the definition</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \text{agree}_{\mu^{(i)}}\left( f^{(i)}, V^{(i)} \right) &amp; = \max_{v \in V^{(i)}} \text{agree}_{\mu^{(i)}}\left( f^{(i)}, v \right)\\
+    &amp; \ge \text{agree}_{\mu^{(i)}}\left( f^{(i)}, h^{(i)} \right) \\
+    &amp; = \frac{1}{|\mathcal{D}^{(i)}|} \sum_{x: f^{(i)}(x) = h^{(i)}(x)} \mu^{(i)}(x) \\
+    &amp; = \nu^{(i+1)}(S) \\
+    &amp; &gt; \alpha,
+\end{aligned}
+\end{split}\]</div>
+<p>This contradicts the definition of <span class="math notranslate nohighlight">\(\alpha\)</span>: <span class="math notranslate nohighlight">\(\alpha = \max \left( \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right), \sqrt{\rho}(1 + 1/2m) \right)\)</span>. This means that the assumption we made when applying Theorem 7.2 does not hold, that is, the following equation holds:</p>
+<div class="math notranslate nohighlight">
+\[
+ \Pr_{z^{(i)}}\left[E^{(i+1)}\right] &lt; (l^{(i)} - 1) \cdot \left(\epsilon^{(i)} + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \right) .
+\]</div>
+<p>Therefore, if event <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span> does not occur, according to equation <span class="math notranslate nohighlight">\((8.10)\)</span>, for all <span class="math notranslate nohighlight">\(i \in 0, 1, \ldots, r - 1\)</span> we have:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{agree}_{\mu^{(i+1)}} \left(f^{(i+1)}, V^{(i+1)}\right) \le \max \left( \text{agree}_{\mu^{(i)}} \left(f^{(i)}, V^{(i)}\right), \sqrt{\rho}(1 + 1/2m) \right)
+\]</div>
+<p>According to equation <span class="math notranslate nohighlight">\((8.8)\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x_1, \ldots, x_t} [E^{(0)}] \le \epsilon , \quad \text{where} \epsilon = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{{|\mathcal{D}^{(0)}|}^2}{q} {\color{blue}}.
+\]</div>
+<p>If the probability of event <span class="math notranslate nohighlight">\(E^{(0)}\)</span> or some <span class="math notranslate nohighlight">\(E^{(i+1)}\)</span> occurring is estimated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr_{x_1,\ldots, x_t} \left[E^{(0)}\right] + \sum_{i=0}^{r-1} \Pr_{z^{(i)}} \left[E^{(i+1)}\right] &amp; \le \epsilon + \sum_{i=0}^{r-1} \left( (l^{(i)} - 1) \cdot \left(\epsilon^{(i)} + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \right) \right) \\
+    &amp; = \epsilon + \sum_{i=0}^{r-1} (l^{(i)} - 1) \cdot \epsilon^{(i)} + \sum_{i=0}^{r-1} \left((l^{(i)} - 1) \cdot \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|}\right)  \\
+    &amp; = \left(1 + \sum_{i=0}^{r-1} \frac{l^{(i)} - 1}{(l^{(0)}\cdots l^{(i)})^2} \right) \epsilon + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \cdot \sum_{i=0}^{r-1} (l^{(i)} - 1)
+\end{aligned}
+\end{split}\]</div>
+<p>Let’s estimate <span class="math notranslate nohighlight">\(\sum_{i=0}^{r-1} \frac{l^{(i)} - 1}{(l^{(0)}\cdots l^{(i)})^2}\)</span>. Since for <span class="math notranslate nohighlight">\(i \in \{0, \ldots, r - 1\}\)</span> we have <span class="math notranslate nohighlight">\(l^{(i)} \ge 2\)</span>, therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \sum_{i=0}^{r-1} \frac{l^{(i)} - 1}{(l^{(0)}\cdots l^{(i)})^2} &amp; = \sum_{i=0}^{r-1} \left(\frac{l^{(i)}}{(l^{(0)}\cdots l^{(i)})^2} - \frac{1}{(l^{(0)}\cdots l^{(i)})^2}\right) \\
+    &amp; = \sum_{i=0}^{r-1} \left(\frac{1}{(l^{(0)}\cdots l^{(i-1)})^2 l^{(i)}} - \frac{1}{(l^{(0)}\cdots l^{(i)})^2}\right) \\
+    &amp; = \frac{1}{l^{(0)}} + \left(- \frac{1}{(l^{(0)})^2} + \frac{1}{(l^{(0)})^2l^{(1)}}\right)  + \left(- \frac{1}{(l^{(0)}l^{(1)})^2} + \frac{1}{(l^{(0)}l^{(1)})^2l^{(2)}} \right)\\
+    &amp; \quad + \ldots + \left(- \frac{1}{(l^{(0)}\cdots l^{(r-2)})^2} + \frac{1}{(l^{(0)}\cdots l^{(r-2)})^2l^{(r-1)}} \right) - \frac{1}{(l^{(0)}\cdots l^{(r-1)})^2} \\
+    &amp; \le \frac{1}{l^{(0)}} + \left(- \frac{1}{(l^{(0)})^2} + \frac{1}{(l^{(0)})^2 \cdot 2}\right)  + \left(- \frac{1}{(l^{(0)}l^{(1)})^2} + \frac{1}{(l^{(0)}l^{(1)})^2 \cdot 2} \right)\\
+    &amp; \quad + \ldots + \left(- \frac{1}{(l^{(0)}\cdots l^{(r-2)})^2} + \frac{1}{(l^{(0)}\cdots l^{(r-2)})^2 \cdot 2} \right) - \frac{1}{(l^{(0)}\cdots l^{(r-1)})^2} \\
+    &amp; = \frac{1}{l^{(0)}} - \frac{1}{(l^{(0)})^2 \cdot 2}  - \frac{1}{(l^{(0)}l^{(1)})^2 \cdot 2} - \ldots - \frac{1}{(l^{(0)}\cdots l^{(r-2)})^2 \cdot 2}\\
+    &amp; \quad  - \frac{1}{(l^{(0)}\cdots l^{(r-1)})^2} \\
+    &amp; &lt; \frac{1}{l^{(0)}} \\
+    &amp; &lt; \frac{1}{2}
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>📖 <strong>Another proof method: using geometric series summation</strong>
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+   \sum_{i=0}^{r-1} \frac{l^{(i)} - 1}{(l^{(0)}\cdots l^{(i)})^2} &amp; = \sum_{i=0}^{r-1} \left(\frac{l^{(i)}}{(l^{(0)}\cdots l^{(i)})^2} - \frac{1}{(l^{(0)}\cdots l^{(i)})^2}\right) \\
+   &amp; = \sum_{i=0}^{r-1} \left(\frac{1}{(l^{(0)}\cdots l^{(i-1)})^2 l^{(i)}} - \frac{1}{(l^{(0)}\cdots l^{(i)})^2}\right) \\
+   &amp; &lt; \sum_{i=0}^{r-1} \frac{1}{(l^{(0)}\cdots l^{(i-1)})^2 l^{(i)}} \\
+   &amp; {\color{blue}(\text{Because } \frac{1}{(l^{(0)}\cdots l^{(i)})^2} &gt; 0)} \\
+   &amp; &lt; \sum_{i=0}^{r-1} \frac{1}{l^{(0)}\cdots l^{(i-1)} l^{(i)}} \\
+   &amp; {\color{blue}(\text{Because } l^{(i)} \ge 2, \text{so } {l^{(i)}}^2 &gt; l^{(i)} )} \\
+   &amp; &lt; \sum_{i=0}^{r-1} \left(\frac{1}{2}\right) ^{i+1} \\
+   &amp; = \frac{1}{2}\sum_{i=0}^{r-1} \left(\frac{1}{2}\right) ^{i} \\
+   &amp; &lt; \frac{1}{2} \cdot \frac{1}{2} \\
+   &amp; &lt; \frac{1}{2}
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox">  Is there a more concise way for the above proof?</p></li>
+</ul>
+</div></blockquote>
+<p>Therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr_{x_1,\ldots, x_t} \left[E^{(0)}\right] + \sum_{i=0}^{r-1} \Pr_{z^{(i)}} \left[E^{(i+1)}\right] &amp; \le \left(1 + \sum_{i=0}^{r-1} \frac{l^{(i)} - 1}{(l^{(0)}\cdots l^{(i)})^2} \right) \epsilon + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \cdot \sum_{i=0}^{r-1} (l^{(i)} - 1) \\
+    &amp; &lt; \left(1 + \frac{1}{2} \right) \epsilon + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \cdot \sum_{i=0}^{r-1} (l^{(i)} - 1) \\
+    &amp; &lt; \frac{3}{2} \epsilon + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \cdot \sum_{i=0}^{r-1} l^{(i)}.
+\end{aligned}
+\end{split}\]</div>
+<p>In summary, we have obtained that when some bad events <span class="math notranslate nohighlight">\(E^{(i)}\)</span> occur, their probability is strictly less than</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{3}{2} \epsilon + \frac{2m + 1}{\sqrt{\rho}}\cdot \frac{|\mathcal{D}^{(0)}| + 1}{|\mathbb{F}|} \cdot \sum_{i=0}^{r-1} l^{(i)} = \epsilon_C,
+\]</div>
+<p>When no bad events occur, the following equation holds</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \text{agree}_{\mu^{(r)}} \left(f^{(r)}, V^{(r)}\right) &amp; =  \mathbb{E}_{g^{(r)} \in \mathcal{D}^{(r)}}\left[ \mu^{(r)}(g^{(r)}) \right] \\
+  &amp; \color{blue}{(\text{Because } f^{(r)} \in V^{(r)})} \\
+  &amp; \le \max \left( \text{agree}_{\mu^{(r - 1)}} \left(f^{(r - 1)}, V^{(r - 1)}\right), \sqrt{\rho}(1 + 1/2m) \right) \\
+  &amp; \color{blue}{(\text{According to the definition of event } E^{(i+1)}, \text{see equation } (8.9))} \\
+  &amp; \le \max \left( \text{agree}_{\mu^{(r - 2)}} \left(f^{(r - 2)}, V^{(r - 2)}\right), \sqrt{\rho}(1 + 1/2m) \right) \\
+  &amp; \le \ldots \\
+  &amp; \le \max \left( \text{agree}_{\mu^{(0)}} \left(f^{(0)}, V^{(0)}\right), \sqrt{\rho}(1 + 1/2m) \right) \\
+  &amp; = \max \left( \alpha, \sqrt{\rho}(1 + 1/2m) \right) \\
+  &amp; = \alpha^{(0)}(\rho, m)
+\end{aligned}.
+\end{split}\]</div>
+<p>At this point, we have proved that equation <span class="math notranslate nohighlight">\((8.7)\)</span> holds, thus proving Lemma 8.2. <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BBHR18] Eli Ben-Sasson, Iddo Bentov, Yinon Horesh, and Michael Riabzev. “Fast Reed–Solomon Interactive Oracle Proofs of Proximity”. In: <em>Proceedings of the 45th International Colloquium on Automata, Languages and Programming (ICALP)</em>, 2018.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[RVW13] Guy N. Rothblum, Salil Vadhan, and Avi Wigderson. Interactive proofs of proximity: delegating computation in sublinear time. In <em>Proceedings of the forty-fifth annual ACM symposium on Theory of computing</em>, pages 793–802. ACM, 2013.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximity-gaps">Proximity Gaps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreements">Correlated agreements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-weighted-agreement">Correlated Weighted Agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri-protocol">FRI Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batching">Batching</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-batched-fri-query-phase">The (batched) FRI QUERY phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-single-invocation-of-the-fri-query-phase">A single invocation of the FRI QUERY phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-the-batched-fri-protocol">Summary of the batched FRI protocol</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">Soundness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-lemma-8-2">Proof of Lemma 8.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

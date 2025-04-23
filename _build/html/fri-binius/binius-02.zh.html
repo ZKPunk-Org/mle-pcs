@@ -1,0 +1,998 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Binius (Part II): Subspace Polynomial &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri-binius/binius-02.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ZeroMorph 笔记" href="../zeromorph/zeromorph.zh.html" />
+    <link rel="prev" title="Notes on FRI-Binius (Part I): Binary Towers" href="binius-01.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri-binius/binius-02.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri-binius/binius-02.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Binius (Part II): Subspace Polynomial</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subspace-polynomial">线性子空间多项式 Subspace Polynomial</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linearized-polynomial">Linearized Polynomial</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">线性性质</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">子空间多项式的递推式</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">子空间上的同态映射</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">映射构成的链</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s-1"><span class="math notranslate nohighlight">\({s}_1\)</span> 映射的复合</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomial-basis">多项式的 Polynomial Basis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-fft">Additive FFT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-binius-part-ii-subspace-polynomial">
+<h1>Notes on Binius (Part II): Subspace Polynomial<a class="headerlink" href="#notes-on-binius-part-ii-subspace-polynomial" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>FRI-Binus 论文 [DP24] 中讨论了基于 Subspace Polynomial 的 Additive FFT 算法，并给出了用奇偶项分解的视角来理解 [LCH14] 中的基于 Novel Polynomial Basis 的 Additive FFT 算法。本文直接介绍子空间多项式 Subspace Polynomial，然后据此介绍奇偶项分解视角的 Additive FFT 算法。本文省去了 Normalized Subspace Polynomial 的定义，方便读者理解。Normalization 只是影响 FFT 算法的性能，和本文介绍的简化版算法并没有本质的区别。</p>
+<p>由于 Additive FFT 依赖的代数结构和素数域上的 Multiplicative FFT 非常相似，因此关于 Multiplicative FFT 的知识将有助于理解本文的内容。</p>
+<section id="subspace-polynomial">
+<h2>线性子空间多项式 Subspace Polynomial<a class="headerlink" href="#subspace-polynomial" title="Link to this heading">#</a></h2>
+<p>我们继续探索基于 <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span> 上的 Extension Field，<span class="math notranslate nohighlight">\(\mathbb{F}_{2^m}\)</span> 。不管是用何种方式构造的 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^m}\)</span>，所有的元素构成了一个向量空间，记为 <span class="math notranslate nohighlight">\(V_m\)</span> ，并且存在一组 Basis <span class="math notranslate nohighlight">\((\beta_0, \beta_1, \ldots, \beta_{m-1})\)</span> ，张成这个向量空间，记为 <span class="math notranslate nohighlight">\(V_m=\mathsf{Span}(\beta_0, \beta_1, \ldots, \beta_{m-1})\)</span>，或者用符号 <span class="math notranslate nohighlight">\(\langle \cdots \rangle\)</span> 表示：</p>
+<div class="math notranslate nohighlight">
+\[
+V_m = \langle \beta_0, \beta_1, \ldots, \beta_{m-1} \rangle
+\]</div>
+<p>这样任意一个元素 <span class="math notranslate nohighlight">\(\theta\in\mathbb{F}_{2^m}\)</span> ，可以写为 Basis 分量的线性组合：</p>
+<div class="math notranslate nohighlight">
+\[
+\theta = c_0\cdot \beta_0 + c_1\cdot \beta_1 + \ldots + c_{m-1}\cdot \beta_{m-1}, \text{ where $c_i\in \mathbb{F}_2$}
+\]</div>
+<p>同时 <span class="math notranslate nohighlight">\(V_m\)</span> 还是一个加法群，单位元为 <span class="math notranslate nohighlight">\(V_0=\{0\}\)</span> ，如果 <span class="math notranslate nohighlight">\(V_k\)</span> 是 <span class="math notranslate nohighlight">\(V_m\)</span> 的一个线性子空间，那么  <span class="math notranslate nohighlight">\(V_k\)</span> 也是 <span class="math notranslate nohighlight">\(V_m\)</span> 的一个加法子群。对于 <span class="math notranslate nohighlight">\(V_k\)</span> ，我们可以用一个多项式来编码其中的所有元素，即该多项式的根集合正好对应 <span class="math notranslate nohighlight">\(V_k\)</span> 的所有元素的集合，我们把多项式记为 <span class="math notranslate nohighlight">\(s_k(X)\)</span> 。这个多项式也被称为「Subspace Polynomial」子空间多项式：</p>
+<div class="math notranslate nohighlight">
+\[
+s_k(X) = \prod_{i=0}^{2^k-1}(X-\theta_i), \text{ where $\theta_i\in V_k$ }
+\]</div>
+<p>多项式 <span class="math notranslate nohighlight">\(s_k(X)\)</span> 也可以看成是 <span class="math notranslate nohighlight">\(V_k\)</span> 这个 Domain 上的 Vanishing Polynomial，因为对于任意的 <span class="math notranslate nohighlight">\(\theta\in V_k\)</span> ，都满足：</p>
+<div class="math notranslate nohighlight">
+\[
+s_k(\theta) = 0
+\]</div>
+<section id="linearized-polynomial">
+<h3>Linearized Polynomial<a class="headerlink" href="#linearized-polynomial" title="Link to this heading">#</a></h3>
+<p>上面介绍的 Subspace 多项式是一种所谓的 Linearized Polynomial，因为它的定义满足下面的形式：</p>
+<div class="math notranslate nohighlight">
+\[
+L(X) = \sum_{i=0}^{n-1} c_i\cdot X^{q^i}, \quad c_i\in \mathbb{F}_{q}
+\]</div>
+<p>多项式 <span class="math notranslate nohighlight">\(L(X)\)</span> 之所以被称为 Linearized Polynomial，因为每一个 <span class="math notranslate nohighlight">\(L(X)\)</span> 都对应到 <span class="math notranslate nohighlight">\(\mathbb{F}_{q}\)</span> 的扩张域 <span class="math notranslate nohighlight">\(K\)</span> 上的一个线性算子（Linear Operator）。假如 <span class="math notranslate nohighlight">\(L(X)\)</span> 的所有根都在扩张域 <span class="math notranslate nohighlight">\(K=\mathbb{F}_{q^s}\)</span> 中，那么对于所有的 <span class="math notranslate nohighlight">\(\theta\in K\)</span>，都有 <span class="math notranslate nohighlight">\(L(\theta)\in K\)</span>。而且，如果 <span class="math notranslate nohighlight">\(\theta\neq\theta'\)</span>，那么 <span class="math notranslate nohighlight">\(L(\theta)\neq L(\theta')\)</span>。每一个 <span class="math notranslate nohighlight">\(L(X)\)</span> 都可以被视为一个矩阵 <span class="math notranslate nohighlight">\(B\in \mathbb{F}_q^{s\times s}\)</span> ，完成 向量空间 <span class="math notranslate nohighlight">\(\mathbb{F}^s_q\)</span> 上的线性变换，使得：</p>
+<div class="math notranslate nohighlight">
+\[
+(c_0, c_1, \ldots, c_{s-1}) B = (d_0, d_1, \ldots, d_{s-1})
+\]</div>
+<p>对于 Subspace Polynomial 而言，每一个 <span class="math notranslate nohighlight">\(s_k(X)\)</span> 都是一个 Linearized Polynomial，反过来，任何一个 Linearized polynomial <span class="math notranslate nohighlight">\(L(X)\in \mathbb{F}_{q^m}[X]\)</span>，它的所有根都构成某个线性子空间 <span class="math notranslate nohighlight">\(V_n\subset V_m\)</span>。详细的证明过程请参考 [LN97]。</p>
+</section>
+<section id="id1">
+<h3>线性性质<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>由于 <span class="math notranslate nohighlight">\(s_k(X)\)</span> 的每一项都是 <span class="math notranslate nohighlight">\(a_i\cdot X^{2^i}\)</span> 的形式，因此它具有加法的同态性：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+s_k(x + y) &amp;= s_k(x) + s_k(y), &amp;\quad \forall x, y \in \mathbb{F}_{2^m}\\
+s_k(c\cdot x) &amp;= c\cdot s_k(x), &amp;\quad \forall x\in \mathbb{F}_{2^m}, \forall c\in \mathbb{F}_2
+\end{align*}
+\end{split}\]</div>
+<p>我们来尝试简单证明第一个等式，根据有限域理论的一个常见定理（Freshman’s dream）：</p>
+<div class="math notranslate nohighlight">
+\[
+(x + y)^{2} = x^2 + 2xy + y^2 = x^{2} + y^{2}, \quad\text{where $x, y\in \mathbb{F}_{2^m}$}
+\]</div>
+<p>显然，<span class="math notranslate nohighlight">\(2xy=0\)</span>，因为在二进制域中，<span class="math notranslate nohighlight">\(2=0\)</span>。所以下面的等式也同理成立：</p>
+<div class="math notranslate nohighlight">
+\[
+(x + y)^{2^i} = x^{2^i} + y^{2^i}
+\]</div>
+<p>接下来验证下 <span class="math notranslate nohighlight">\(s_k(X)\)</span> 的加法同态性：</p>
+<div class="math notranslate nohighlight">
+\[
+s_k(x + y) = \sum_{i=0}^{k} a_i\cdot (x+y)^{2^i}  = \sum_{i=0}^{k} a_i\cdot \big(x^{2^i} + y^{2^i}\big) = s_k(x) + s_k(y)
+\]</div>
+</section>
+<section id="id2">
+<h3>子空间多项式的递推式<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>对于子空间 <span class="math notranslate nohighlight">\(V_k\)</span>，它可以被拆分为两个不相交的集合：</p>
+<div class="math notranslate nohighlight">
+\[
+V_k = V_{k-1} \cup (\beta_{k-1}+V_{k-1})
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(V_k=\langle \beta_0, \beta_1, \ldots, \beta_{k-1} \rangle\)</span> , <span class="math notranslate nohighlight">\(V_{k-1}=\langle \beta_0, \beta_1, \ldots, \beta_{k-2} \rangle \)</span> ，
+那么 <span class="math notranslate nohighlight">\(V_k\)</span>, <span class="math notranslate nohighlight">\(V_{k-1}\)</span>, <span class="math notranslate nohighlight">\(\beta_{k-1}+V_{k-1}\)</span> 所对应的子空间多项式满足下面的关系：</p>
+<div class="math notranslate nohighlight">
+\[
+s_k(X) = s_{k-1}(X) \cdot s_{k-1}(X+\beta_{k-1})
+\]</div>
+<p>举个简单例子，假设 <span class="math notranslate nohighlight">\(k=3\)</span>，<span class="math notranslate nohighlight">\(V_3=\langle \beta_0,\beta_1,\beta_2\rangle \)</span> 由两部分构成，一部分是 <span class="math notranslate nohighlight">\(V_2=\langle \beta_0,\beta_1\rangle \)</span>，另一部分是 <span class="math notranslate nohighlight">\(V_2\)</span> 中的每一个元素加上 <span class="math notranslate nohighlight">\({\color{blue}\beta_2}\)</span>。因此，<span class="math notranslate nohighlight">\(V_3\)</span> 的元素个数为 <span class="math notranslate nohighlight">\(2^2 + 2^2 = 8\)</span>，下面列出 <span class="math notranslate nohighlight">\(V_3\)</span> 的全部元素：</p>
+<div class="math notranslate nohighlight">
+\[
+V_3 = \{0, \beta_0, \beta_1, \beta_0+\beta_1\} \cup \{{\color{blue}\beta_2}, \beta_0+{\color{blue}\beta_2}, \beta_1+{\color{blue}\beta_2}, (\beta_0+\beta_1)+{\color{blue}\beta_2}\}
+\]</div>
+<p>我们容易验证： <span class="math notranslate nohighlight">\(s_3(X) = s_{2}(X) \cdot s_{2}(X+\beta_{k-1})\)</span> 。当然 <span class="math notranslate nohighlight">\(s_{2}(X)\)</span> 也可以拆成关于 <span class="math notranslate nohighlight">\(s_1(X)\)</span> 和 <span class="math notranslate nohighlight">\(s_1(X+\beta_1)\)</span> 的乘积，我们不妨试着拆解到底：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+s_3(X) &amp; = s_2(X)\cdot s_2(X + \beta_2) \\
+&amp; = s_2(X)^2 + \beta_2\cdot s_2(X) \\
+&amp; = s_1(X)\cdot s_1(X + \beta_1)\cdot s_1(X)\cdot s_1(X + \beta_1) + \beta_2\cdot s_1(X)\cdot s_1(X + \beta_1) \\
+&amp; = (s_1(X)^2 + \beta_1\cdot s_1(X))^2 + \beta_2\cdot s_1(X)^2 + \beta_1\beta_2\cdot s_1(X) \\
+&amp; = s_1(X)^4 + \beta_1^2\cdot s_1(X)^2 + \beta_2\cdot s_1(X)^2 + \beta_1\beta_2\cdot s_1(X) \\
+&amp; = s_1(X)^4 + (\beta_1^2+\beta_2)\cdot s_1(X)^2 + \beta_1\beta_2\cdot s_1(X) \\
+&amp; = (X\cdot(X+\beta_0))^4 + (\beta_1^2+\beta_2)\cdot (X\cdot(X + \beta_0))^2 + \beta_1\beta_2\cdot (X\cdot(X + \beta_0)) \\
+&amp; = (X^2 + \beta_0\cdot X)^4 + (\beta_1^2+\beta_2)\cdot (X^2 + \beta_0\cdot X)^2 + \beta_1\beta_2\cdot (X^2 + \beta_0\cdot X) \\
+&amp; = X^8  + \beta_0^4X^4 + (\beta_1^2+\beta_2)X^4 + \beta_0^2(\beta_1^2+\beta_2)X^2 + \beta_1\beta_2X^2 + \beta_0\beta_1\beta_2X \\
+\end{split}
+\end{split}\]</div>
+<p>最后 <span class="math notranslate nohighlight">\(s_3(X)\)</span> 的展开式满足 <span class="math notranslate nohighlight">\(\sum_{i=0}^{k} a_i\cdot X^{2^i}\)</span> 这样的模式，也符合了我们上面的结论。</p>
+</section>
+</section>
+<section id="id3">
+<h2>子空间上的同态映射<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>因为 Subspace Polynomial 实际上是一种 Vanishing Polynomial，并且它还具有加法同态，所以我们可以利用 Subspace Polynomial 来定义子空间之间的同态映射。</p>
+<p>例如对于 <span class="math notranslate nohighlight">\(V_3=\langle \beta_0, \beta_1, \beta_2\rangle\)</span> ，我们定义 <span class="math notranslate nohighlight">\(V_3\)</span> 的子空间 <span class="math notranslate nohighlight">\(V_1=\{0, \beta_0\}\)</span> 及其 Subspace Polynomial <span class="math notranslate nohighlight">\(s_1(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+s_1(X) = X\cdot (X+\beta_0)
+\]</div>
+<p>很显然，<span class="math notranslate nohighlight">\(s_1(V_1)=\{0, 0\}\)</span>，如果将 <span class="math notranslate nohighlight">\(s_1(X)\)</span> 作用到 <span class="math notranslate nohighlight">\(V_3\)</span> ，我们会得到下面的结果：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+s_1(0) &amp;= 0\\
+s_1(\beta_0) &amp; = 0 \\
+s_1(\beta_1) &amp; = \beta_0\beta_1 + \beta_1^2\\
+s_1(\beta_0+\beta_1) &amp; = \beta_0\beta_1 + \beta_1^2\\
+s_1(\beta_2) &amp;= \beta_0\beta_2 + \beta_2^2\\
+s_1(\beta_0+\beta_2) &amp;= \beta_0\beta_2 + \beta_2^2\\
+s_1(\beta_1+\beta_2) &amp;= \beta_0\beta_1 + \beta_1^2 + \beta_0\beta_2 + \beta_2^2\\
+s_1(\beta_0+\beta_1+\beta_2) &amp;= \beta_0\beta_1 + \beta_1^2 + \beta_0\beta_2 + \beta_2^2\\
+\end{split}
+\end{split}\]</div>
+<p>上面的等式显示 <span class="math notranslate nohighlight">\(s_1(V_3)\)</span> 被映射到了一个大小只有 <span class="math notranslate nohighlight">\(V_3\)</span> 一半的集合，记为 <span class="math notranslate nohighlight">\(V_2\)</span>。该集合也是一个子空间，<span class="math notranslate nohighlight">\(V_2= \langle \beta'_0, \beta'_1\rangle = \langle \beta_0\beta_1 + \beta_1^2, \beta_0\beta_2 + \beta_2^2 \rangle\)</span>，维度为 <span class="math notranslate nohighlight">\(2\)</span> 。</p>
+<p>这不是巧合，根据群同构定理，同态映射 <span class="math notranslate nohighlight">\(\phi: H \to G\)</span> 的 Image <span class="math notranslate nohighlight">\(G\)</span> 满足 <span class="math notranslate nohighlight">\(G\cong H/Ker(\phi)\)</span> ，其中 <span class="math notranslate nohighlight">\(G\)</span> 是一个商群，并且 <span class="math notranslate nohighlight">\(|G| = |H|/|Ker(\phi)|\)</span> 。在上面这个例子里，<span class="math notranslate nohighlight">\(s_1: V_3\to V_2\)</span> 是同态映射，<span class="math notranslate nohighlight">\(V_1=Ker(s_1)\)</span> 。</p>
+<section id="id4">
+<h3>映射构成的链<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>对于 <span class="math notranslate nohighlight">\(V_2 = s_1(V_3)\)</span>，我们仍然可以继续构造一个 Degree 为 <span class="math notranslate nohighlight">\(2\)</span> 的 Subspace Polynomial，</p>
+<div class="math notranslate nohighlight">
+\[
+s_1'(X) = X\cdot (X+\beta_0\beta_1 + \beta_1^2)
+\]</div>
+<p>可以继续将 <span class="math notranslate nohighlight">\(V_2\)</span> 映射到一个一维的子空间 <span class="math notranslate nohighlight">\(V_1=\langle \beta''\rangle\)</span>。我们只需要计算 <span class="math notranslate nohighlight">\(s_1(\beta'_0)\)</span> 与 <span class="math notranslate nohighlight">\(s_1(\beta'_1)\)</span> 即可，这些 Basis 分量构成了 <span class="math notranslate nohighlight">\(V_2\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+s_1'(\beta_0\beta_1 + \beta_1^2) &amp;= 0 \\
+s_1'(\beta_0\beta_1 + \beta_1^2 + \beta_0\beta_2 + \beta_2^2)&amp; = \beta_0^2\beta_1\beta_2 + \beta_0\beta_1^2\beta_2 + \beta_0^2\beta_2^2 + \beta_0\beta_1\beta_2^2 + \beta_1^2\beta_2^2 + \beta_2^4 \\
+ &amp; = \beta''
+\end{split}
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(V_2\)</span> 的 Basis <span class="math notranslate nohighlight">\((\beta'_0, \beta'_1)\)</span> 中第一个分量会被映射到 <span class="math notranslate nohighlight">\(0\)</span>，第二个分量映射到 <span class="math notranslate nohighlight">\(\beta''\)</span> 。</p>
+<p>至此，我们得到一个映射的链：</p>
+<div class="math notranslate nohighlight">
+\[
+V_3 \overset{s_1}{\longrightarrow} V_2 \overset{s'_1}{\longrightarrow} V_1
+\]</div>
+<p>或者也可以写为：</p>
+<div class="math notranslate nohighlight">
+\[
+\langle \beta_0, \beta_1, \beta_2 \rangle \overset{s_1}{\longrightarrow} \langle s_1(\beta_1), s_1(\beta_2) \rangle
+\overset{s'_1}{\longrightarrow} \langle s'_1(s_1(\beta_2)) \rangle
+\]</div>
+<p>并且每次映射到的线性子空间的维度都减一，即集合大小减半。这个代数结构是我们后续构造 FFT 与 FRI 协议的关键。</p>
+<p>不难证明，对于任意的线性子空间，只要我们选定一个 Basis 之后，就可以依次构造 Degree 为 2 的 Subspace Polynomial 作为映射函数，然后通过映射得到一个维度减 1 的子空间，然后不断重复，直到子空间降至 1 维。当然 Basis 选择不同，以及 Subspace Polynomial 的选择不同都会导致不同的映射链。选择恰当的映射链可以显著提高计算的效率。</p>
+</section>
+</section>
+<section id="s-1">
+<h2><span class="math notranslate nohighlight">\({s}_1\)</span> 映射的复合<a class="headerlink" href="#s-1" title="Link to this heading">#</a></h2>
+<p>我们定义映射链的初始子空间为 <span class="math notranslate nohighlight">\(S^{(0)}\)</span>，映射后的子空间为 <span class="math notranslate nohighlight">\(S^{(1)}\)</span>，<span class="math notranslate nohighlight">\(i\)</span> 次映射之后的子空间为 <span class="math notranslate nohighlight">\(S^{(i)}\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+S^{(0)} \overset{s_1}{\longrightarrow} S^{(1)} \overset{s^{(1)}_1}{\longrightarrow} \cdots \overset{s^{(n-1)}_1}{\longrightarrow} S^{(n)}
+\]</div>
+<p>给定 <span class="math notranslate nohighlight">\(S^{(i)}\)</span> 的一组 Basis 后，假设为 <span class="math notranslate nohighlight">\(B^{(i)}=(\beta^{(i)}_0, \beta^{(i)}_1,\ldots, \beta^{(i)}_s)\)</span>，在 Basis 上定义 Subspace Polynomial <span class="math notranslate nohighlight">\({s}^{(i)}_1\)</span>，并用其作为群同态映射函数，把 <span class="math notranslate nohighlight">\(S^{(i)}\)</span> 降维到 <span class="math notranslate nohighlight">\(S^{(i+1)}\)</span>。降维后的线性子空间 <span class="math notranslate nohighlight">\(S^{(i+1)}\)</span> 的 Basis 需要把 <span class="math notranslate nohighlight">\(S^{(i)}\)</span> 的 Basis 同步跟着 <span class="math notranslate nohighlight">\({s}^{(i)}_1\)</span> 转换到一个新的 Basis。切换到新 Basis 之后，我们又可以定义一组新的 Subspace Polynomial <span class="math notranslate nohighlight">\({s}^{(i+1)}_i(X)\)</span>。</p>
+<p>我们假设 <span class="math notranslate nohighlight">\(S^{(0)}=\langle \beta_0, \beta_1, \ldots, \beta_{k-1}\rangle\)</span> 开始，给定一组 Basis <span class="math notranslate nohighlight">\(B_k\)</span>，经过 <span class="math notranslate nohighlight">\({s}_1\)</span> 的映射之后，我们得到了 <span class="math notranslate nohighlight">\(S^{(1)}\)</span>，以及其 Basis <span class="math notranslate nohighlight">\(B^{(1)}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+B^{(1)} = \langle {\color{blue}{s}_1(\beta_1)}, {\color{blue}{s}_1(\beta_2)}, \ldots, {s}_1(\beta_{k-1}) \rangle
+\]</div>
+<p>在 <span class="math notranslate nohighlight">\(S^{(1)}\)</span> 再定义 <span class="math notranslate nohighlight">\({s}^{(1)}_1(X)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+{s}^{(1)}_1(X) = {X(X+{s}_1(\beta_1))} 
+\]</div>
+<p>那么，<span class="math notranslate nohighlight">\(S^{(1)}\)</span> 映射后产生的 <span class="math notranslate nohighlight">\(S^{(2)}\)</span> 和 <span class="math notranslate nohighlight">\(S^{(0)}\)</span> 之间的关系是什么？对于任何一个元素 <span class="math notranslate nohighlight">\(a \in S^{(0)}\)</span>，它先经过 <span class="math notranslate nohighlight">\({s}_1\)</span> 映射到 <span class="math notranslate nohighlight">\(S^{(1)}\)</span>，然后再经过 <span class="math notranslate nohighlight">\({s}^{(1)}_1\)</span> 映射到 <span class="math notranslate nohighlight">\(S^{(2)}\)</span> 中的某个元素，因此经过两次映射后的值可以被写为两次映射函数的复合， <span class="math notranslate nohighlight">\({s}^{(1)}_1({s}_1(X))\)</span>，我们化简下这个复合函数：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+{s}^{(1)}_1({s}_1(X)) &amp;= {s}_1(X)({s}_1(X)+{s}_1(\beta_1))
+&amp;  \\[3ex]
+&amp;= {s}_1(X)({s}_1(X+\beta_1)) &amp; (\text{additive homomorphism })\\[3ex]
+&amp;= {s}_2(X) &amp; (\text{recurrency } )
+\end{align*}
+\end{split}\]</div>
+<p>于是我们推导出了 <span class="math notranslate nohighlight">\({s}^{(1)}_1({s}_1(X))={s}_2(X)\)</span>。这意味着经过两次 2-to-1 的映射，等价于做一次 4-to-1 的映射，并且对应的同态映射函数为 <span class="math notranslate nohighlight">\({s}_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+{s}_2: &amp;S^{(0)} \to S^{(2)} \\[3ex]
+&amp; X \mapsto {X(X+\beta_0)(X+\beta_1)(X+\beta_1+\beta_0)} \\
+\end{split}
+\end{split}\]</div>
+<p>如下图所示，左右两种映射方式都会得到 <span class="math notranslate nohighlight">\(S^{(2)}\)</span>：</p>
+<img src="img/subspace-1.png" width="100%">
+<p>同理，我们可以得到下面的结论，对于折叠 <span class="math notranslate nohighlight">\(j\)</span> 次之后的线性子空间 <span class="math notranslate nohighlight">\(S^{(j)}\)</span> 为</p>
+<div class="math notranslate nohighlight">
+\[
+S^{(j)}  = \langle {s}_{j}(\beta_j), {s}_{j}(\beta_{j+1}), \ldots, {s}_{j}(\beta_{k-1}) \rangle
+\]</div>
+<p>并且 <span class="math notranslate nohighlight">\({s}_{j}\)</span> 满足下面的复合等式：</p>
+<div class="math notranslate nohighlight">
+\[
+s_{j}(X) = s^{(1)}_{j-1}(s_1(X)) =  s^{(1)}_{j-1}\circ s_1
+\]</div>
+<p>这个复合映射的等式可以解读为：先做一次 <span class="math notranslate nohighlight">\(s_1\)</span> 映射得到 <span class="math notranslate nohighlight">\(S^{(1)}\)</span>，然后再做一次 <span class="math notranslate nohighlight">\(j-1\)</span> 维的映射 <span class="math notranslate nohighlight">\(s^{(1)}_{j-1}\)</span>，等价于直接一次 <span class="math notranslate nohighlight">\(j\)</span> 维映射 <span class="math notranslate nohighlight">\(s_{j}\)</span>，两者都映射到同一个子空间 <span class="math notranslate nohighlight">\(S^{(j)}\)</span>。</p>
+<p>同样，我们还能证明：如果先做一次 <span class="math notranslate nohighlight">\(j-1\)</span> 维的映射 <span class="math notranslate nohighlight">\(s_{j-1}\)</span>，再在映射后的子空间 <span class="math notranslate nohighlight">\(S^{(j-1)}\)</span> 上做一次一维映射，同样可以得到子空间 <span class="math notranslate nohighlight">\(S^{(j)}\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+s_{j}(X) = s^{(1)}_{1}(s_{j-1}(X)) =  s^{(1)}_{1}\circ s_{j-1}
+\]</div>
+<p>更一般地，我们可以证明得到下面的重要性质，即在任意子空间 <span class="math notranslate nohighlight">\(S^{(i)}\)</span> 上做一次 <span class="math notranslate nohighlight">\(j\)</span> 维映射，等价于在其上连续做 <span class="math notranslate nohighlight">\(j\)</span> 次 1 维映射：</p>
+<div class="math notranslate nohighlight">
+\[
+s^{(i)}_{j}(X) = s^{(i+j-1)}_1\circ s^{(i+j-2)}_1\circ \cdots \circ s^{(i)}_1
+\]</div>
+</section>
+<section id="polynomial-basis">
+<h2>多项式的 Polynomial Basis<a class="headerlink" href="#polynomial-basis" title="Link to this heading">#</a></h2>
+<p>对于一个次数小于 <span class="math notranslate nohighlight">\(N=2^n\)</span> 的一元多项式 <span class="math notranslate nohighlight">\(f(X) \in \mathbb{F}[X]^{&lt;N}\)</span>，它有两种常见的表达形式，「系数式」与「点值式」。其中系数式是我们最常见的形式：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = c_0 + c_1X + c_2X^2 + \ldots + c_{N-1}X^{N-1}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\vec{c}=(c_0, c_1, \ldots, c_{N-1})\)</span> 为多项式的系数向量。另外未知数的向量 <span class="math notranslate nohighlight">\((1, X, X^2, \ldots, X^{N-1})\)</span> 则构成了一组多项式的基（Basis），按惯例称之为 Monomial Basis，记为 <span class="math notranslate nohighlight">\(\mathcal{B}^{mono}\)</span> :</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B}^{mono}=(1, X, X^2, \ldots, X^{N-1})
+\]</div>
+<p>这个基向量也可以表达为下面的 Tensor Product 形式：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B}^{mono}=(1, X) \otimes (1, X^2) \otimes \ldots \otimes (1, X^{2^{n-1}})
+\]</div>
+<p>一元多项式的 「点值式」称为 Lagrange Basis 表示。即我们可以用 <span class="math notranslate nohighlight">\(N\)</span> 个「系数」来唯一确定一个  Degree 小于 N 的多项式（请注意，这里的系数是更广泛意义上的概念，而不是局限于「系数式」表示中的系数）。</p>
+<p>通过多项式除法，我们可以得到多项式在 <span class="math notranslate nohighlight">\(\mathcal{B}^{mono}\)</span>  上的系数。例如有一个 degree 为 <span class="math notranslate nohighlight">\(7\)</span> 的多项式 <span class="math notranslate nohighlight">\(t(X)\)</span>，那么我们可以先计算 <span class="math notranslate nohighlight">\(X^4\cdot X^2\cdot X\)</span> 的系数，即计算多项式除法： <span class="math notranslate nohighlight">\(t(X)/(X^4\cdot X^2\cdot X)\)</span> ，得到一个系数 <span class="math notranslate nohighlight">\(c_7\)</span> 与一个余数多项式 <span class="math notranslate nohighlight">\(t'(X)\)</span>；然后再计算 <span class="math notranslate nohighlight">\(t'(X)/(X^4\cdot X^2)\)</span>，得到 <span class="math notranslate nohighlight">\(\mathcal{B}^{mono}_6 = X^6\)</span> 的系数 <span class="math notranslate nohighlight">\(c_6\)</span>，以此类推，最终我们可以得到 <span class="math notranslate nohighlight">\(t(X)\)</span> 关于 <span class="math notranslate nohighlight">\(\mathcal{B}^{mono}\)</span> 的系数向量 <span class="math notranslate nohighlight">\(\vec{c}=(c_0, c_1, \ldots, c_7)\)</span> ，使得：</p>
+<div class="math notranslate nohighlight">
+\[
+t(X) = c_0 + c_1X + c_2X^2 + \ldots + c_7X^7
+\]</div>
+<p>利用前文已讨论过的 Subspace Polynomial <span class="math notranslate nohighlight">\(s_k(X)\)</span> ，我们可以定义一组新的 Basis。根据其定义， <span class="math notranslate nohighlight">\(s_k(X)\)</span> 的 degree 恰好也是 <span class="math notranslate nohighlight">\(2^k\)</span> ，类似 <span class="math notranslate nohighlight">\((1, X, X^2, X^4)\)</span> ，因此 <span class="math notranslate nohighlight">\((s_0(X), s_1(X), s_2(X))\)</span> 也可作为构造多项式 Basis 的基本原料。仿照 <span class="math notranslate nohighlight">\(\mathcal{B}^{mono}\)</span> 的定义，我们定义 (Novel) Polynomial Basis <span class="math notranslate nohighlight">\(\mathcal{B}^{novel}\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B}^{novel} = (1, s_0(X)) \otimes (1, s_1(X)) \otimes \ldots \otimes (1, s_{n-1}(X))
+\]</div>
+<p>请注意与论文 [LCH14] 和 [DP24] 不同的是，这里我们暂时没有引入 Normalized Subspace Polynomial，以方便大家理解。回到上面的定义，其中每一个分量 <span class="math notranslate nohighlight">\(\mathcal{B}^{novel}_i\)</span> 我们简记为 <span class="math notranslate nohighlight">\(\mathcal{X}_i(X)\)</span> ，定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{X}_i(X) = \prod_{j=0}^{n-1}(s_j(X))^{i_j}, \text{ where $\mathsf{bits}(i)=(i_0, i_1, \ldots, i_{n-1})$}
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\mathsf{bits}(i)\)</span> 表示把整数 <span class="math notranslate nohighlight">\(i\)</span> 按照二进制展开，比如 <span class="math notranslate nohighlight">\(i=5\)</span>，那么 <span class="math notranslate nohighlight">\(\mathsf{bits}(5)=(1, 0, 1)\)</span>， <span class="math notranslate nohighlight">\(\mathsf{bits}(6) = (0, 1, 1)\)</span>。举例 <span class="math notranslate nohighlight">\(n=3, N=8\)</span> ，按照上面的定义，我们可以计算出一组多项式基 <span class="math notranslate nohighlight">\(\big(\mathcal{X}_0(X), \mathcal{X}_1(X),\ldots, \mathcal{X}_7(X)\big)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathcal{X}_0(X) &amp;= 1 \\
+\mathcal{X}_1(X) &amp;= s_0(X) = X\\
+\mathcal{X}_2(X) &amp;= s_1(X) \\
+\mathcal{X}_3(X) &amp;= s_0(X)\cdot s_1(X)\\
+\mathcal{X}_4(X) &amp;= s_2(X)\\
+\mathcal{X}_5(X) &amp;= s_0(X)\cdot s_2(X)\\
+\mathcal{X}_6(X) &amp;= s_1(X)\cdot s_2(X) \\
+\mathcal{X}_7(X) &amp;= s_0(X)\cdot s_1(X)\cdot s_2(X) \\
+\end{split}
+\end{split}\]</div>
+<p>容易检验，每一个 Basis 分量 <span class="math notranslate nohighlight">\(\mathcal{X}_i(X)\)</span> 的 Degree 恰好为 <span class="math notranslate nohighlight">\(i\)</span>，因此 <span class="math notranslate nohighlight">\(\mathcal{B}^{novel}\)</span> 就构成了一组线性无关的多项式 Basis。对于任意的 Degree 小于 8 的多项式 <span class="math notranslate nohighlight">\(f(X)\in \mathbb{F}_{2^m}[X]\)</span> :</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f(X) &amp;= a_0\mathcal{X}_0(X) + a_1\mathcal{X}_1(X) + \ldots + a_7\mathcal{X}_7(X)\\
+&amp;= a_0 + a_1s_0(X) + a_2s_1(X) + a_3s_0(X)\cdot {s}_1(X) \\
+&amp; + a_4s_2(X) + a_5{s}_0(X)\cdot {s}_2(X) + a_6{s}_1(X)\cdot {s}_2(X) + a_7{s}_0(X)\cdot {s}_1(X)\cdot s_2(X) \\
+\end{split}
+\end{split}\]</div>
+<p>同样，我们可以利用多项式除法来将一个多项式在 <span class="math notranslate nohighlight">\(\mathcal{B}^{novel}\)</span> 和 <span class="math notranslate nohighlight">\(\mathcal{B}^{mono}\)</span> 之间转换。</p>
+</section>
+<section id="additive-fft">
+<h2>Additive FFT<a class="headerlink" href="#additive-fft" title="Link to this heading">#</a></h2>
+<p>类似 Multiplicative FFT，要构造 Additive FFT，我们需要在 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^m}\)</span> 中定义一个加法子群的映射链。如前所述，Subspace Polynomials 恰好可以用来构造这个映射链。同时 Subspace Polynomials 又可以构造一组多项式 Basis。</p>
+<div class="math notranslate nohighlight">
+\[
+S^{(0)} \overset{s_1}{\longrightarrow} S^{(1)} \overset{s^{(1)}_1}{\longrightarrow} \cdots \overset{s^{(n-1)}_1}{\longrightarrow} S^{(n)}
+\]</div>
+<p>为了演示方便，指定 <span class="math notranslate nohighlight">\(n=3\)</span>，<span class="math notranslate nohighlight">\(S^{(0)}=\langle \beta_0, \beta_1, \beta_2\rangle\)</span> 。仿照 Multiplicative FFT 的思路，我们将用 <span class="math notranslate nohighlight">\(\mathcal{B}^{novel}\)</span> 表示的多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> （Degree 为 7）进行奇偶项拆分，拆分成两个次数减半的多项式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f(X) &amp;= a_0\mathcal{X}_0(X) + a_1\mathcal{X}_1(X) + \ldots + a_7\mathcal{X}_7(X)\\
+&amp;= a_0 + a_1{s}_0(X) + a_2{s}_1(X) + a_3{s}_0(X)\cdot {s}_1(X) \\
+&amp; \qquad + a_4{s}_2(X) + a_5{s}_0(X)\cdot {s}_2(X) + a_6{s}_1(X)\cdot {s}_2(X) + a_7{s}_0(X)\cdot {s}_1(X)\cdot {s}_2(X) \\
+&amp; = \big(a_0 + a_2 {s}_1(X) + a_4{s}_2(X) + a_6{s}_1(X)\cdot {s}_2(X)\big) \\
+&amp; \qquad + \big(a_1 + a_3{s}_0(X)\cdot {s}_1(X) + a_5{s}_0(X)\cdot{s}_2(X) + a_7{s}_0(X)\cdot{s}_1(X)\cdot {s}_2(X)\big) \\
+&amp; = \big(a_0 + a_2 {s}_1(X) + a_4{s}_2(X) + a_6{s}_1(X)\cdot {s}_2(X)\big) \\
+&amp; \qquad + {\color{red}{s}_0(X)}\cdot \big(a_1 + a_3\cdot{s}_1(X) + a_5\cdot{s}_2(X) + a_7\cdot{s}_1(X)\cdot {s}_2(X)\big) \\
+\end{split}
+\end{split}\]</div>
+<p>然后我们引入两个辅助多项式 <span class="math notranslate nohighlight">\(f_{even}(X), f_{odd}(X)\)</span> ，它们</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f_{even}(X) &amp;= a_0 + a_2\cdot {s}_1(X) + a_4\cdot {s}_2(X) + a_6\cdot {s}_1(X)\cdot {s}_2(X) \\
+f_{odd}(X) &amp;= a_1 + a_3\cdot{s}_1(X) + a_5\cdot{s}_2(X) + a_7\cdot{s}_1(X)\cdot {s}_2(X) \\
+\end{split}
+\end{split}\]</div>
+<p>根据我们之前推导的映射的复合性质，<span class="math notranslate nohighlight">\(s_1(X)=s^{(1)}_0\circ s_0(X)\)</span>，<span class="math notranslate nohighlight">\(s_2(X)=s^{(1)}_1\circ s_1(X)\)</span>，于是我们可以得到：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f_{even}(X) &amp;= a_0 + a_2 \cdot s^{(1)}_0(s_1(X)) + a_4 \cdot s^{(1)}_1(s_1(X)) + a_6 \cdot s^{(1)}_0(s_1(X))\cdot s^{(1)}_1(s_1(X)) \\
+ &amp; = a_0 + a_2 \cdot s^{(1)}_0({\color{blue}s_1(X)}) + a_4 \cdot s^{(1)}_1({\color{blue}s_1(X)}) + a_6 \cdot s^{(1)}_0({\color{blue}s_1(X)})\cdot s^{(1)}_1({\color{blue}s_1(X)}) \\
+f_{odd}(X) &amp;= a_1 + a_3 \cdot s^{(1)}_0(s_1(X)) + a_5 \cdot s^{(1)}_1(s_1(X)) + a_7 \cdot s^{(1)}_0(s_1(X))\cdot s^{(1)}_1(s_1(X)) \\
+ &amp; = a_1 + a_3 \cdot s^{(1)}_0({\color{blue}s_1(X)}) + a_5 \cdot s^{(1)}_1({\color{blue}s_1(X)}) + a_7 \cdot s^{(1)}_0({\color{blue}s_1(X)})\cdot s^{(1)}_1({\color{blue}s_1(X)}) \\
+\end{split}
+\end{split}\]</div>
+<p>代入 <span class="math notranslate nohighlight">\({\color{blue}Y=s_1(X)}\)</span> 后，我们可以把 <span class="math notranslate nohighlight">\(f(X)\)</span> 拆分成关于 <span class="math notranslate nohighlight">\(f_{even}({\color{blue}Y})\)</span> 和 <span class="math notranslate nohighlight">\(f_{odd}({\color{blue}Y})\)</span> 的等式：</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{split}
+f(X) &amp; = f_{even}({\color{blue}Y}) +  {s}_0(X)\cdot f_{odd}({\color{blue}Y})
+\end{split}
+\]</div>
+<p>而多项式 <span class="math notranslate nohighlight">\(f_{even}({\color{blue}Y})\)</span> 和 <span class="math notranslate nohighlight">\(f_{odd}({\color{blue}Y})\)</span> 正好是定义在 <span class="math notranslate nohighlight">\(\mathcal{X}^{(1)}\)</span> 上的多项式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{llll}
+\mathcal{X}^{(1)}_0(X) &amp;= 1 \\
+\mathcal{X}^{(1)}_1(X) &amp;= {s}^{(1)}_0(X) &amp; = {s}_0({s}_1(X)) &amp; = {s}_1(X) \\
+\mathcal{X}^{(1)}_2(X) &amp;= {s}^{(1)}_1(X) &amp; =  {s}_1({s}_1(X)) &amp; = {s}_2(X) \\
+\mathcal{X}^{(1)}_3(X) &amp;= {s}^{(1)}_0(X)\cdot {s}^{(1)}_1(X) &amp; = {s}_0({s}_1(X)) \cdot {s}_1({s}_1(X)) &amp; = {s}_1(X) \cdot {s}_2(X)\\
+\end{array}
+\end{split}\]</div>
+<p>重写下奇偶多项式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f_{even}(X) &amp;= a_0\cdot\mathcal{X}^{(1)}_0(X) + a_2\cdot \mathcal{X}^{(1)}_1(X) + a_4\cdot \mathcal{X}^{(1)}_2(X) + a_6\cdot \mathcal{X}^{(1)}_3(X) \\
+f_{odd}(X) &amp;= a_1\cdot\mathcal{X}^{(1)}_0(X) + a_3\cdot \mathcal{X}^{(1)}_1(X) + a_5\cdot \mathcal{X}^{(1)}_2(X) + a_7\cdot \mathcal{X}^{(1)}_3(X)
+\end{split}
+\end{split}\]</div>
+<p>从结构上看，这个等式与 Multiplicative FFT 中的 <span class="math notranslate nohighlight">\(f(X)=f_{even}(X^2) + X\cdot f_{odd}(X^2)\)</span> 拆分非常相似；而 <span class="math notranslate nohighlight">\(X\mapsto X^2\)</span> 映射也对应于 <span class="math notranslate nohighlight">\(s_1: X \mapsto X(X+\beta_0)\)</span> 映射。 而 <span class="math notranslate nohighlight">\(S^{(0)}\)</span> 在 <span class="math notranslate nohighlight">\(s_1\)</span> 的映射下，产生出一个尺寸只有原来一半的子空间 <span class="math notranslate nohighlight">\(S^{(1)}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+S^{(1)} = \langle s_1(\beta_1), s_1(\beta_2) \rangle
+\]</div>
+<p>于是我们可以依赖递归调用，求得 <span class="math notranslate nohighlight">\(\{f_{even}(X) \mid X\in S^{(1)}\}\)</span> 与 <span class="math notranslate nohighlight">\(\{ f_{odd}(X) \mid X\in S^{(1)}\}\)</span> ，然后再利用 <span class="math notranslate nohighlight">\(f(X)=f_{even}(X) + s_0(X)\cdot f_{odd}(X)\)</span> 这个等式得到 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(S^{(0)}\)</span> 上的值。</p>
+<p>下面我们假设递归调用成功返回，那么我们就得到了 <span class="math notranslate nohighlight">\(f_{even}(X)\)</span> 和 <span class="math notranslate nohighlight">\(f_{odd}(X)\)</span> 在 <span class="math notranslate nohighlight">\(S^{(1)}\)</span> 上的全部求值，记为 <span class="math notranslate nohighlight">\(\vec{u}\)</span> 与 <span class="math notranslate nohighlight">\(\vec{v}\)</span>，定义如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(u_0, u_1, u_2, u_3) &amp;= \big(f_{even}(0), f_{even}(1), f_{even}(s_1(\beta_1)), f_{even}(s_1(\beta_1) + 1)\big)\\[2ex]
+(v_0, v_1, v_2, v_3) &amp;= \big(f_{odd}(0), f_{odd}(1), f_{odd}(s_1(\beta_1)), f_{odd}(s_1(\beta_1) + 1)\big)\\
+\end{split}
+\end{split}\]</div>
+<p>然后我们就可以计算 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(S^{(0)}\)</span> 上的全部求值，即 <span class="math notranslate nohighlight">\(f(X)\mid_{S^{(0)}}\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{rlll}
+f(0) &amp;= f_{even}({s}_1(0)) + 0\cdot f_{odd}({s}_1(0)) \\
+    &amp; = u_0\\[1ex]
+f(1) &amp;= f_{even}({s}_1(1)) + 1\cdot v_1 \\
+    &amp; = u_0 + v_1 \\[1ex]
+f(\beta_1) &amp;= f_{even}({s}_1(\beta_1)) + \beta_1\cdot f_{odd}({s}_1(\beta_1)) \\ 
+    &amp; = u_1 + \beta_1 \cdot v_1\\[1ex]
+f(\beta_1+1) &amp;= f_{even}({s}_1(\beta_1)+{s}_1(1)) + (\beta_1 +1)\cdot f_{odd}({s}_1(\beta_1)+{s}_1(1)) \\
+    &amp; = u_1 + \beta_1\cdot v_1 + v_1\\[1ex]
+f(\beta_2) &amp;= f_{even}({s}_1(\beta_2)) + \beta_2 \cdot f_{odd}({s}_1(\beta_2)) \\ 
+    &amp; = u_2 + \beta_2\cdot v_2 \\[1ex]
+f(\beta_2+1) &amp;= f_{even}({s}_1(\beta_2)+{s}_1(1)) + (\beta_2 +1) \cdot f_{odd}({s}_1(\beta_2)+{s}_1(1)) \\
+    &amp; = u_2 + \beta_2\cdot v_2 + v_2\\[1ex]
+f(\beta_2+\beta_1) &amp;= f_{even}({s}_1(\beta_2)+{s}_1(\beta_1)) + (\beta_2 + \beta_1) \cdot f_{odd}({s}_1(\beta_2)+{s}_1(\beta_1)) \\
+    &amp; = u_3 + \beta_2\cdot v_3 + \beta_1\cdot v_3 \\[1ex]
+f(\beta_2+\beta_1+1) &amp;= f_{even}({s}_1(\beta_2)+{s}_1(\beta_1)+{s}_1(1)) + (\beta_2 + \beta_1 + 1) \cdot f_{odd}({s}_1(\beta_2)+{s}_1(\beta_1)+{s}_1(1)) \\
+    &amp; = u_3 + \beta_2\cdot v_3  + \beta_1\cdot v_3 + v_3\\[1ex]
+\end{array}
+\end{split}\]</div>
+<p>我们把上面这个 Additive FFT 递归算法用 Python 代码实现如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">afft</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform the Additive Fast Fourier Transform (AFFT) on a given polynomial.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f (list): Coefficients of the polynomial to be transformed.</span>
+<span class="sd">        k (int): The depth of recursion, where 2^k is the size of the domain.</span>
+<span class="sd">        B (list): The basis of the domain over which the polynomial is evaluated.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: The evaluations of the polynomial over the domain.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">f_even</span> <span class="o">=</span> <span class="n">f</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">f_odd</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">V</span> <span class="o">=</span> <span class="n">span</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>                                <span class="c1"># the subspace spanned by B</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># s^(i)_1 map</span>
+    <span class="n">B_half</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>             <span class="c1"># the basis of the mapped subspace</span>
+    
+    <span class="n">e_even</span> <span class="o">=</span> <span class="n">afft</span><span class="p">(</span><span class="n">f_even</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">B_half</span><span class="p">)</span>  <span class="c1"># compute the evaluations of f_even</span>
+    <span class="n">e_odd</span>  <span class="o">=</span> <span class="n">afft</span><span class="p">(</span><span class="n">f_odd</span><span class="p">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">B_half</span><span class="p">)</span>   <span class="c1"># compute the evaluations of f_odd</span>
+
+    <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">half</span><span class="p">)</span>                <span class="c1"># initialize the list of evaluations</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">half</span><span class="p">):</span>
+        <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span>   <span class="o">=</span> <span class="n">e_even</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">V</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">e_odd</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_even</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">V</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">e_odd</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">e</span>
+</pre></div>
+</div>
+<p>函数 <code class="docutils literal notranslate"><span class="pre">afft(f,</span> <span class="pre">k,</span> <span class="pre">B)</span></code> 总共有三个参数，分别是多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{B}^{novel}\)</span> 上的系数向量，递归深度 <span class="math notranslate nohighlight">\(k\)</span>，以及当前的子空间 <span class="math notranslate nohighlight">\(S^{(0)}\)</span> 的 Basis。</p>
+</section>
+<section id="id5">
+<h2>总结<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>Additive FFT 算法需要一个通过 Subspace Polynomial 构造的子空间的映射链。本文介绍的原理并不局限在递归构造的二进制域，而是一种更广泛的代数结构。
+在 [LCH14] 论文中采用的是另外一种递归 Additive FFT 算法，我们将在下一篇文中介绍两者的差异，以及 [DP24] 论文中的 Additive FFT 迭代算法（Algorithm 2）。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[DP24] Benjamin E. Diamond and Jim Posen. “Polylogarithmic Proofs for Multilinears over Binary Towers”. 2024. <a class="reference external" href="https://eprint.iacr.org/2024/504">https://eprint.iacr.org/2024/504</a></p></li>
+<li><p>[LCH14] Lin, Sian-Jheng, Wei-Ho Chung, and Yunghsiang S. Han. “Novel polynomial basis and its application to Reed-Solomon erasure codes.” 2014 ieee 55th annual symposium on foundations of computer science. IEEE, 2014. <a class="reference external" href="https://arxiv.org/abs/1404.3458">https://arxiv.org/abs/1404.3458</a></p></li>
+<li><p>[LN97] Lidl, Rudolf, and Harald Niederreiter. Finite fields. No. 20. Cambridge university press, 1997.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri-binius"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="binius-01.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Notes on FRI-Binius (Part I): Binary Towers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../zeromorph/zeromorph.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ZeroMorph 笔记</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subspace-polynomial">线性子空间多项式 Subspace Polynomial</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linearized-polynomial">Linearized Polynomial</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">线性性质</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">子空间多项式的递推式</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">子空间上的同态映射</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">映射构成的链</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s-1"><span class="math notranslate nohighlight">\({s}_1\)</span> 映射的复合</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomial-basis">多项式的 Polynomial Basis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-fft">Additive FFT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

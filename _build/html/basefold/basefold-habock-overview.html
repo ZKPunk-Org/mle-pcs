@@ -1,0 +1,1113 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Note on Basefold’s Soundness Proof under List Decoding &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-habock-overview';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-habock-overview.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-habock-overview.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Note on Basefold’s Soundness Proof under List Decoding</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-protocol">Basefold Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-with-sumcheck-protocol">Combining with Sumcheck Protocol</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-with-fri-protocol">Combining with FRI Protocol</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness-overview">Soundness Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-phase">Commit Phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-phase">Query Phase</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement-theorems">Correlated Agreement Theorems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="note-on-basefold-s-soundness-proof-under-list-decoding">
+<h1>Note on Basefold’s Soundness Proof under List Decoding<a class="headerlink" href="#note-on-basefold-s-soundness-proof-under-list-decoding" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>This article mainly outlines the security proof for the Basefold [ZCF23] multilinear PCS under list decoding, as presented in Ulrich Haböck’s paper [H24]. In [ZCF23], the soundness proof was given under unique decoding for foldable linear codes, while in [H24], the proof is for Reed-Solomon codes under list decoding, raising the bound to the Johnson bound, i.e., <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span>. To prove security, the paper presents two correlated agreement theorems stronger than the one given in [BCIKS20]:</p>
+<ol class="arabic simple">
+<li><p>[H24, Theorem 3] Correlated agreement for subcodes.</p></li>
+<li><p>[H24, Theorem 4] Weighted correlated agreement for subcodes.</p></li>
+</ol>
+<p>When considering the Basefold protocol applied to Reed-Solomon codes, the protocol combines FRI and sumcheck. To prove its security, [H24] proposes subcodes that incorporate sumcheck-like constraints on top of Reed-Solomon codes. By combining this with the corresponding correlated agreement theorems, the security of the protocol can be proven.</p>
+<section id="basefold-protocol">
+<h2>Basefold Protocol<a class="headerlink" href="#basefold-protocol" title="Link to this heading">#</a></h2>
+<p>For a multilinear polynomial <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n) \in F[X_1, \ldots, X_n]\)</span>, we want to prove that for any query <span class="math notranslate nohighlight">\(\vec{\omega} = (\omega_1, \ldots, \omega_n)\)</span> from <span class="math notranslate nohighlight">\(F^n\)</span>, we have <span class="math notranslate nohighlight">\(v = P(\omega_1, \ldots, \omega_n)\)</span>. To implement PCS for the multilinear polynomial <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n)\)</span>, the Basefold protocol combines the Sumcheck and FRI protocols. The following introduction is based on the description in [H24].</p>
+<section id="combining-with-sumcheck-protocol">
+<h3>Combining with Sumcheck Protocol<a class="headerlink" href="#combining-with-sumcheck-protocol" title="Link to this heading">#</a></h3>
+<p>To prove <span class="math notranslate nohighlight">\(v = P(\omega_1, \ldots, \omega_n)\)</span>, we first convert the query value <span class="math notranslate nohighlight">\(P(\omega_1, \ldots, \omega_n)\)</span> into a Sumcheck sum form:</p>
+<div class="math notranslate nohighlight">
+\[
+P(\omega_1, \ldots, \omega_n) = \sum_{\vec{x} = (x_1, \ldots, x_n) \in H_n} L(\vec{x}, \vec{\omega}) \cdot P(\vec{x}) 
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(H_n = \{0,1\}^n\)</span>, and <span class="math notranslate nohighlight">\(L(\vec{x}, \vec{\omega})\)</span> is actually the <span class="math notranslate nohighlight">\(eq(\cdot, \cdot)\)</span> function:</p>
+<div class="math notranslate nohighlight">
+\[
+L(\vec{x}, \vec{\omega}) = \prod_{i = 1}^n \left ((1 - x_i)(1 - \omega_i) + x_i\omega_i \right)
+\]</div>
+<p>Therefore, the proof of <span class="math notranslate nohighlight">\(v = P(\omega_1, \ldots, \omega_n)\)</span> is transformed into proving the sum over <span class="math notranslate nohighlight">\(H_n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\vec{x} = (x_1, \ldots, x_n) \in H_n} L(\vec{x}, \vec{\omega}) \cdot P(\vec{x}) = v
+\]</div>
+<p>The Sumcheck protocol can then be used to prove this sum is correct.</p>
+<p>For <span class="math notranslate nohighlight">\(i = 1, \ldots, n - 1\)</span>, the Prover needs to construct a univariate polynomial based on the challenge random numbers <span class="math notranslate nohighlight">\(\lambda_1, \ldots,\lambda_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+q_i(X) = \sum_{\vec{x} = (x_{i + 2}, \ldots, x_n) \in H_{n - (i + 1)}} L(\lambda_1,\ldots, \lambda_i,X,\vec{x}, \vec{\omega}) \cdot P(\lambda_1, \ldots, \lambda_i,X,\vec{x})
+\]</div>
+<p>This corresponds to the polynomial <span class="math notranslate nohighlight">\(P(\lambda_1, \ldots, \lambda_i, X, \omega_{i+2}, \ldots, \omega_{n})\)</span>.</p>
+<p>We can see that in <span class="math notranslate nohighlight">\(q_i(X)\)</span>, <span class="math notranslate nohighlight">\(L(\lambda_1,\ldots, \lambda_i,X,\vec{x}, \vec{\omega})\)</span> is linear in <span class="math notranslate nohighlight">\(X\)</span>, and <span class="math notranslate nohighlight">\(P(\lambda_1, \ldots, \lambda_i,X,\vec{x})\)</span> is also linear in <span class="math notranslate nohighlight">\(X\)</span>. Their product becomes quadratic in <span class="math notranslate nohighlight">\(X\)</span>. To correspond with the correlated agreement theorem for linear subcodes later, we extract the linear term in <span class="math notranslate nohighlight">\(X\)</span>. The Prover needs to send the linear polynomial:</p>
+<div class="math notranslate nohighlight">
+\[
+\Lambda_i(X) = \sum_{\vec{x} = (x_{i + 2}, \ldots, x_n) \in H_{n - (i + 1)}} L(\vec{x}, (\omega_{i+2}, \ldots, \omega_n)) \cdot P(\lambda_1, \ldots, \lambda_i,X,\vec{x})
+\]</div>
+<p>Since</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	L((\lambda_1, \ldots, \lambda_i, X, \vec{x}), \vec{\omega}) &amp; = L((\lambda_1, \ldots, \lambda_i, X, \vec{x}), (\omega_1, \ldots, \omega_{i}, \omega_{i+1}, \omega_{i+2}, \ldots, \omega_n)) \\
+	&amp; = \left( \prod_{j = 1}^{i}[(1 - \lambda_j)(1 - \omega_j) + \lambda_j \omega_j] \right) \\
+	&amp; \quad \cdot \left( (1 - \lambda_{i+1})(1 - \omega_{i+1}) + X \cdot \omega_{i+1} \right) \\
+	&amp; \quad \cdot \left( \prod_{j = i+2}^{n}[(1 - \lambda_j)(1 - \omega_j) + \lambda_j \omega_j] \right) \\
+	&amp; = L(\lambda_1, \ldots, \lambda_i, \omega_1, \ldots, \omega_i) \cdot L(X, \omega_{i+1}) \cdot L(\vec{x}, (\omega_{i+2}, \ldots, \omega_n))
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[
+q_i(X) = L(\lambda_1, \ldots, \lambda_i, \omega_1, \ldots, \omega_i) \cdot L(X, \omega_{i+1}) \cdot \Lambda_i(X).
+\]</div>
+<p>The Prover only needs to provide <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span>, and the Verifier can calculate <span class="math notranslate nohighlight">\(q_i(X)\)</span> using the above equation.</p>
+<p>In the Sumcheck protocol, the Prover first sends a univariate polynomial <span class="math notranslate nohighlight">\(\Lambda_0(X) = \sum_{\vec{x} = (x_2, \ldots, x_n) \in H_{n - 1}}L(\vec{x}, (\omega_2, \ldots, \omega_n)) \cdot P(X, \vec{x})\)</span> and <span class="math notranslate nohighlight">\(s_0 = v\)</span>. Then in round <span class="math notranslate nohighlight">\(1 \le i \le n - 1\)</span>:</p>
+<ol class="arabic simple">
+<li><p>The Verifier can calculate <span class="math notranslate nohighlight">\(q_{i-1}(X)\)</span> based on <span class="math notranslate nohighlight">\(\Lambda_{i-1}(X)\)</span> and check if <span class="math notranslate nohighlight">\(s_{i-1} = q_{i-1}(0) + q_{i-1}(1)\)</span>. Then choose a random number <span class="math notranslate nohighlight">\(\lambda_i \leftarrow \$ F\)</span> and send it to the Prover.</p></li>
+<li><p>The Prover calculates <span class="math notranslate nohighlight">\(P(\lambda_1, \ldots, \lambda_i, X_{i+1}, \ldots, X_n)\)</span> based on <span class="math notranslate nohighlight">\(\lambda_i\)</span>, computes <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> and sends it to the Verifier. Both the Prover and Verifier set <span class="math notranslate nohighlight">\(s_i = q_{i-1}(\lambda_i)\)</span>.</p></li>
+</ol>
+<p>In the last step of Sumcheck, we need to obtain the value of <span class="math notranslate nohighlight">\(P(X_1, \ldots, X_n)\)</span> at a random point <span class="math notranslate nohighlight">\((\lambda_1, \lambda_2, \ldots, \lambda_n)\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+P(\lambda_1,  \ldots, \lambda_n),
+\]</div>
+<p>This value can be obtained by folding a univariate polynomial <span class="math notranslate nohighlight">\(f_{0}(X)\)</span> of degree not exceeding <span class="math notranslate nohighlight">\(2^n - 1\)</span> corresponding to the multilinear polynomial <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n)\)</span> using the same random numbers <span class="math notranslate nohighlight">\(\lambda_1,  \ldots, \lambda_n\)</span> in the FRI protocol. After folding <span class="math notranslate nohighlight">\(f_{0}(X)\)</span> <span class="math notranslate nohighlight">\(n\)</span> times, we will get a constant <span class="math notranslate nohighlight">\(c\)</span>, and we want its value to be <span class="math notranslate nohighlight">\(P(\lambda_1,  \ldots, \lambda_n) = c\)</span>.</p>
+</section>
+<section id="combining-with-fri-protocol">
+<h3>Combining with FRI Protocol<a class="headerlink" href="#combining-with-fri-protocol" title="Link to this heading">#</a></h3>
+<p>For the multilinear polynomial <span class="math notranslate nohighlight">\(P(X_1, X_2, \ldots, X_n)\)</span>, there is a univariate polynomial <span class="math notranslate nohighlight">\(f_{0}(X)\)</span> (called <em>univariate representation</em> in [H24]) corresponding to it:</p>
+<div class="math notranslate nohighlight">
+\[
+f_0(X) = \sum_{i = 0}^{2^n - 1} P(i_1, \ldots, i_n) \cdot X^i
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(i_1, \ldots, i_n\)</span> is the binary representation of <span class="math notranslate nohighlight">\(i\)</span>, with <span class="math notranslate nohighlight">\(i_1\)</span> being the least significant bit and <span class="math notranslate nohighlight">\(i_n\)</span> being the most significant bit.</p>
+<p>For example, when <span class="math notranslate nohighlight">\(n = 3\)</span>, suppose the multilinear polynomial is:</p>
+<div class="math notranslate nohighlight">
+\[
+P(X_1, X_2, X_3) = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1X_2 + a_4 X_3 + a_5 X_1 X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3
+\]</div>
+<p>Then the univariate polynomial <span class="math notranslate nohighlight">\(f_0(X)\)</span> corresponding to <span class="math notranslate nohighlight">\(P(X_1, X_2, X_3)\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	f_0(X) &amp; = \sum_{i = 0}^{7}P(i_1,i_{2},i_3) \cdot X^i \\
+	&amp; = P(0, 0, 0) + P(1, 0, 0) X + P(0, 1, 0) X^2  + P(1,1,0) X^3  \\
+    &amp; \quad + P(0,0,1) X^4 + P(1,0,1) X^5 + P(0,1,1) X^6 +  P(1, 1, 1) X^{7} \\
+    &amp; = (P(0,0,0) + P(0, 1, 0) X^2 + P(0,0,1) X^4) \\
+    &amp; \quad + X \cdot (P(1, 0, 0) + P(1,1,0) X^2 + P(1,0,1) X^4 + P(1, 1, 1) X^{6}) \\
+    &amp; = f_{0,0}(X^2) + X \cdot f_{0,1}(X^2)
+\end{aligned}
+\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(f_{0,0}(X^2)\)</span> corresponds to the even terms of <span class="math notranslate nohighlight">\(f_0(X)\)</span>, while <span class="math notranslate nohighlight">\(f_{0,1}(X^2)\)</span> corresponds to the odd terms. We can see that the coefficients in the even terms <span class="math notranslate nohighlight">\(P(0,0,0) + P(0, 1, 0) X^2 + P(0,0,1) X^4\)</span> correspond to <span class="math notranslate nohighlight">\(P(0, \cdot, \cdot)\)</span> in the multilinear polynomial, while the coefficients in the odd terms correspond to <span class="math notranslate nohighlight">\(P(1, \cdot, \cdot)\)</span>. In other words, <span class="math notranslate nohighlight">\(f_{0,0}(X)\)</span> is the <em>univariate representation</em> of <span class="math notranslate nohighlight">\(P(0, X_2, X_3)\)</span>, and <span class="math notranslate nohighlight">\(f_{0,1}(X)\)</span> is the univariate representation of <span class="math notranslate nohighlight">\(P(1, X_2, X_3)\)</span>, because:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f_{0,0}(X) = \sum_{i = 0}^{3}P(0,i_1,i_2) \cdot X^i \\
+     f_{0,1}(X) = \sum_{i = 0}^{3}P(1,i_1,i_2) \cdot X^i 
+\end{aligned}
+\end{split}\]</div>
+<p>Using <span class="math notranslate nohighlight">\(\lambda_1\)</span> to fold <span class="math notranslate nohighlight">\(f_{0,0}(X)\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}(X)\)</span>, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+f_1(X) = (1 - \lambda_1) \cdot f_{0,0}(X) + \lambda_1 \cdot f_{0,1}(X)
+\]</div>
+<p>And <span class="math notranslate nohighlight">\(f_1(X)\)</span> is precisely the <em>univariate representation</em> of <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, X_3)\)</span>. Note that the folding method here is not the common one in the FRI protocol:</p>
+<div class="math notranslate nohighlight">
+\[
+f_1(X) = f_{0,0}(X) + \lambda_1 \cdot f_{0,1}(X)
+\]</div>
+<p>This is because in this case, the resulting <span class="math notranslate nohighlight">\(f_1(X)\)</span> does not correspond to <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, \ldots, X_n)\)</span>. This is tied to the correspondence relationship between univariate polynomials and multilinear polynomials. Under this folding method, their correspondence relationship should change to (the WHIR paper [ACFY24] adopts this correspondence method):</p>
+<div class="math notranslate nohighlight">
+\[
+f_0(X) = P(X^{2^0}, X^{2^1}, \ldots, X^{2^{n-1}})
+\]</div>
+<p>We won’t elaborate here on how <span class="math notranslate nohighlight">\(f_1(X)\)</span> can correspond to <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, \ldots, X_n)\)</span> under this correspondence relationship.</p>
+<p>Returning to the correspondence relationship between univariate polynomials and multilinear polynomials given in [H24], let’s now derive that <span class="math notranslate nohighlight">\(f_1(X)\)</span> obtained by folding <span class="math notranslate nohighlight">\(f_0(X)\)</span> with <span class="math notranslate nohighlight">\(1 - \lambda_1\)</span> and <span class="math notranslate nohighlight">\(\lambda_1\)</span> indeed corresponds to <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, X_3)\)</span>. For general <span class="math notranslate nohighlight">\(P(X_1, \ldots, X_n)\)</span>, we have:</p>
+<div class="math notranslate nohighlight">
+\[
+P(\vec{X}) = \sum_{\vec{x} \in H_n} P(\vec{x}) \cdot L(\vec{x}, \vec{X})
+\]</div>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	P(\lambda_1, X_2, \ldots, X_n) &amp; = \sum_{\vec{b} \in H_n} P(\vec{b}) \cdot L(\vec{b}, (\lambda_1, X_2, \ldots, X_n)) \\
+	&amp; = \sum_{\vec{b} \in H_n} \left(P(\vec{b}) \cdot \left((1- b_1)(1 - \lambda_1) + b_1 \lambda_1\right)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; = \sum_{\vec{b} \in H_{n-1}} \left(P(0, \vec{b}) \cdot \left((1- 0)(1 - \lambda_1) + 0 \cdot  \lambda_1\right)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; \quad + \sum_{\vec{b} \in H_{n-1}} \left(P(1, \vec{b}) \cdot \left((1- 1)(1 - \lambda_1) + 1 \cdot \lambda_1\right)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; = \sum_{\vec{b} \in H_{n-1}} \left(P(0, \vec{b}) \cdot (1 - \lambda_1)\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; \quad + \sum_{\vec{b} \in H_{n-1}} \left(P(1, \vec{b}) \cdot \lambda_1 \prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; =  (1 - \lambda_1) \sum_{\vec{b} \in H_{n-1}} \left(P(0, \vec{b}) \cdot\prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; \quad + \lambda_1 \sum_{\vec{b} \in H_{n-1}} \left(P(1, \vec{b}) \cdot  \prod_{i = 2}^n \left[(1- b_i)(1 - X_i) + b_i X_i\right] \right) \\
+	&amp; = (1 - \lambda_1) P(0, X_2, \ldots, X_n) + \lambda_1 P(1, X_2, \ldots, X_n)
+\end{aligned}
+\end{split}\]</div>
+<p>Thus, we have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f_1(X) &amp; = (1 - \lambda_1) \cdot f_{0,0}(X) + \lambda_1 \cdot f_{0,1}(X) \\
+    &amp; = (1 - \lambda_1) \cdot \sum_{i = 0}^{3}P(0,i_1,i_2) \cdot X^i + \lambda_1 \cdot \sum_{i = 0}^{3}P(1,i_1,i_2) \cdot X^i \\
+    &amp; = \sum_{i = 0}^{3}((1 - \lambda_1)P(0,i_1,i_2) + \lambda_1 P(1,i_1,i_2)) \cdot X^i \\
+    &amp; = \sum_{i = 0}^{3}P(\lambda_1, i_1, i_2) \cdot X^i
+\end{aligned}
+\end{split}\]</div>
+<p>This also shows that <span class="math notranslate nohighlight">\(f_1(X)\)</span> is the univariate representation of <span class="math notranslate nohighlight">\(P(\lambda_1, X_2, X_3)\)</span>. Then, by folding <span class="math notranslate nohighlight">\(f_1(X)\)</span> in this way using random numbers <span class="math notranslate nohighlight">\(\lambda_2, \lambda_3\)</span>, we finally get a constant polynomial whose value corresponds exactly to <span class="math notranslate nohighlight">\(P(\lambda_1, \lambda_2, \lambda_3)\)</span>. To summarize, the Basefold protocol performs the Sumcheck protocol on the multilinear polynomial using random numbers on one hand, and the FRI protocol on the corresponding univariate polynomial using the same random numbers on the other hand, thus achieving PCS for multilinear polynomials. This corresponds to [H24, Protocol 1], which is the Basefold protocol for Reed-Solomon codes. The overall protocol idea is as such, so we won’t repeat the specific protocol process here. See [H24, Protocol 1] for details.</p>
+<blockquote>
+<div><p>🐞 <strong>typo</strong>
+In [H24, Protocol 1], during the Query phase, the paper states that the folding relationship to be checked is:</p>
+<div class="math notranslate nohighlight">
+\[
+&gt;  f_{i+1}(x_{i+1}) = \frac{f_0(x_i) + f_0(-x_i)}{2} + \lambda_i \cdot \frac{f_0(x_i) + f_0(-x_i)}{2 \cdot x_i}
+&gt; \]</div>
+<p>However, based on the folding relationship given earlier, I believe it should be changed to:</p>
+<div class="math notranslate nohighlight">
+\[
+&gt;  f_{i+1}(x_{i+1}) = (1 - \lambda_i) \cdot \frac{f_0(x_i) + f_0(-x_i)}{2} + \lambda_i \cdot \frac{f_0(x_i) - f_0(-x_i)}{2 \cdot x_i}
+&gt; \]</div>
+</div></blockquote>
+<p>The soundness proof in [H24] is for a more general protocol, namely the batch version of the Basefold protocol.</p>
+<blockquote>
+<div><p><strong>Protocol 2</strong> [H24, Protocol 2] (Batch Reed-Solomon code Basefold). The prover shares the Reed-Solomon codewords <span class="math notranslate nohighlight">\(g_0, \ldots, g_M \in \mathcal{C}_0 = \mathrm{RS}_{2^n}[F,D_0] = \{q(x)|_{x \in D_0}: q(x) \in F[X]^{&lt;2^n} \}\)</span> of the multilinears <span class="math notranslate nohighlight">\(G_0, \ldots, G_M\)</span> , together with their evaluation claims <span class="math notranslate nohighlight">\(v_0, \ldots, v_M\)</span> at <span class="math notranslate nohighlight">\(\vec{\omega} \in F^n\)</span> with the verifier. Then they engage in the following extension of Protocol 1:</p>
+<ol class="arabic simple">
+<li><p>In a preceding round <span class="math notranslate nohighlight">\(i = 0\)</span> , the verifier sends a random <span class="math notranslate nohighlight">\(\lambda_0 \leftarrow \$ F\)</span> , and the prover answers with the oracle for</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+&gt; f_0 = \sum_{k = 0}^{M} \lambda_0^k \cdot g_k \tag{1} 
+&gt; \]</div>
+<p>Then both prover and verifier engage in Protocol 1 on <span class="math notranslate nohighlight">\(f_0\)</span> and the claim <span class="math notranslate nohighlight">\(v_0 = \sum_{k = 0}^M \lambda_0^k \cdot v_k\)</span> . In addition to the checks in Protocol 1, the verifier also checks that equation <span class="math notranslate nohighlight">\((1)\)</span> holds at every sample <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(D_0\)</span> .</p>
+</div></blockquote>
+<p>The batch version of the Basefold protocol essentially uses a random number <span class="math notranslate nohighlight">\(\lambda_{0}\)</span> to linearly combine <span class="math notranslate nohighlight">\(g_{0}, \ldots, g_{M}\)</span> through its powers, transforming them into a function <span class="math notranslate nohighlight">\(f_{0}\)</span>, and then applies Protocol 1 to it.</p>
+</section>
+</section>
+<section id="soundness-overview">
+<h2>Soundness Overview<a class="headerlink" href="#soundness-overview" title="Link to this heading">#</a></h2>
+<p>This section mainly analyzes the proof approach for the soundness error of Protocol 2. First, let’s explain the meaning of soundness error. For any potentially malicious Prover <span class="math notranslate nohighlight">\(P^*\)</span>, if there exists a <span class="math notranslate nohighlight">\(g_{k}\)</span> among the provided <span class="math notranslate nohighlight">\(g_{0}, \ldots, g_{M}\)</span> that is more than <span class="math notranslate nohighlight">\(\theta\)</span> distant from the Reed-Solomon encoding space <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> ([H24] studies the proof under list decoding, so it considers the parameter <span class="math notranslate nohighlight">\(\theta \in \left( \frac{1 - \rho}{2}, 1 - \sqrt{\rho} \right)\)</span>), or if the multilinear representation <span class="math notranslate nohighlight">\(P_k\)</span> corresponding to <span class="math notranslate nohighlight">\(g_k\)</span> does not satisfy the evaluation claim <span class="math notranslate nohighlight">\(P_{k}(\vec{\omega}) = v_{k}\)</span>, under this condition, the probability that <span class="math notranslate nohighlight">\(P^*\)</span> passes the Verifier’s checks does not exceed <span class="math notranslate nohighlight">\(\varepsilon\)</span>. This probability <span class="math notranslate nohighlight">\(\varepsilon\)</span> is called the soundness error. In other words, the soundness error analyzes the probability that a malicious Prover <span class="math notranslate nohighlight">\(P^*\)</span> can luckily pass the Verifier’s checks. <span class="math notranslate nohighlight">\(P^*\)</span> might luckily pass the checks at places where randomness is introduced. Analyzing the protocol, we find three such places:</p>
+<ol class="arabic simple">
+<li><p>Commit phase</p>
+<ol class="arabic simple">
+<li><p>Using the random number <span class="math notranslate nohighlight">\(\lambda_{0}\)</span> to batch <span class="math notranslate nohighlight">\(g_{0},\ldots, g_{M}\)</span>, let this probability be <span class="math notranslate nohighlight">\(\varepsilon_{C_1}\)</span>.</p></li>
+<li><p>Using random numbers <span class="math notranslate nohighlight">\(\lambda_1, \ldots, \lambda_n\)</span> for the sumcheck protocol and FRI-like folding process, let this probability be <span class="math notranslate nohighlight">\(\varepsilon_{C_2}\)</span>.</p></li>
+</ol>
+</li>
+<li><p>Query phase</p>
+<ol class="arabic simple">
+<li><p>The Verifier randomly selects <span class="math notranslate nohighlight">\(x_0 \leftarrow D_0\)</span> to check if the folding is correct, let this probability be <span class="math notranslate nohighlight">\(\varepsilon_{\mathrm{query}}\)</span></p></li>
+</ol>
+</li>
+</ol>
+<p>Therefore, the soundness error of the entire protocol is:</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon &lt; \varepsilon_{C_1} + \varepsilon_{C_2} + \varepsilon_{\mathrm{query}}.
+\]</div>
+<section id="commit-phase">
+<h3>Commit Phase<a class="headerlink" href="#commit-phase" title="Link to this heading">#</a></h3>
+<p>Now let’s consider the case of folding <span class="math notranslate nohighlight">\(f_0\)</span> into <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> using <span class="math notranslate nohighlight">\(\lambda_1 \leftarrow \$ F\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1} = (1 - \lambda_1) \cdot f_{0,0} + \lambda_1 \cdot f_{0,1}
+\]</div>
+<p>Assume the given parameter <span class="math notranslate nohighlight">\(\theta = \frac{1}{2}\)</span>. Since <span class="math notranslate nohighlight">\(\lambda_1\)</span> is a random number selected from <span class="math notranslate nohighlight">\(F\)</span>, the following situation might occur:</p>
+<p><img alt="" src="../_images/basefold-habock-commit-phase-1.svg" /></p>
+<p>In the figure, <span class="math notranslate nohighlight">\(p_0, p_{0,0}, p_{0,1}, p_{\lambda_1}\)</span> are the closest codewords in the corresponding Reed-Solomon encoding space to <span class="math notranslate nohighlight">\(f_0, f_{0,0}, f_{0,1}, f_{\lambda_1}\)</span> respectively. The same green color indicates that they have the same value at that point, while different colors indicate different values at that point. We can see that for the <span class="math notranslate nohighlight">\(f_0\)</span> provided by the malicious Prover, its distance from the Reed-Solomon space <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span> is greater than <span class="math notranslate nohighlight">\(\theta = \frac{1}{2}\)</span>, but after folding with <span class="math notranslate nohighlight">\(\lambda_1\)</span>, the resulting <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> might end up less than <span class="math notranslate nohighlight">\(\theta\)</span> distant from the Reed-Solomon space <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span>. This way, <span class="math notranslate nohighlight">\(f_1\)</span> would pass the Verifier’s folding verification in the subsequent protocol, and <span class="math notranslate nohighlight">\(P^*\)</span> would successfully deceive the Verifier.</p>
+<p>So what’s the probability of this situation occurring? It’s given by the Correlated Agreement theorem from [BCIKS20]. This theorem states that if</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\lambda_1 \in F}[\Delta((1 - \lambda_1) f_{0,0} + \lambda_1 f_{0,1}, \mathcal{C}_1) \le \theta] &gt; \epsilon
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is an expression related to <span class="math notranslate nohighlight">\(\theta, \rho, |F|, |D_1|\)</span>, which can also be written as <span class="math notranslate nohighlight">\(\epsilon(\theta, \rho, |F|, |D_1|)\)</span>, and its form differs under unique decoding and list decoding (this part will be explained in detail in the next section). In other words, if we take all possible <span class="math notranslate nohighlight">\(\lambda_1\)</span> in <span class="math notranslate nohighlight">\(F\)</span> to get <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span>, and the proportion of those not exceeding <span class="math notranslate nohighlight">\(\theta\)</span> in distance from <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> is greater than <span class="math notranslate nohighlight">\(\epsilon\)</span>, then there must exist a subset <span class="math notranslate nohighlight">\(D' \subset D_1\)</span> and codewords <span class="math notranslate nohighlight">\(p_{0,0}, p_{0,1}\)</span> in <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span> such that:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D_1| \ge 1 - \theta\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{0,0}|_{D'} = p_{0,0}|_{D'}\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}|_{D'} = p_{0,1}|_{D'}\)</span>.</p></li>
+</ol>
+<p><img alt="" src="../_images/basefold-habock-commit-phase-2.svg" /></p>
+<p>Now we can see that not only are <span class="math notranslate nohighlight">\(f_{0,0}\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}\)</span> close to the encoding space <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span>, but they also share the same set <span class="math notranslate nohighlight">\(D'\)</span> where they match the corresponding codewords. This is a good conclusion that can help us derive the distance of the original <span class="math notranslate nohighlight">\(f_0\)</span> to <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span>.</p>
+<p>Through the mapping <span class="math notranslate nohighlight">\(\pi: x \mapsto x^2\)</span>, points in <span class="math notranslate nohighlight">\(D_0\)</span> can be mapped to <span class="math notranslate nohighlight">\(D_1\)</span>. Now we can use <span class="math notranslate nohighlight">\(\pi^{-1}\)</span> to map the points in <span class="math notranslate nohighlight">\(D' \subseteq D_1\)</span> back to <span class="math notranslate nohighlight">\(D_0\)</span>. For example, let <span class="math notranslate nohighlight">\(\omega^8 = 1\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+D_0 = \{\omega^0, \omega^1, \omega^2, \omega^3, \omega^4, \omega^5, \omega^6, \omega^7\}
+\]</div>
+<p>Then through the mapping <span class="math notranslate nohighlight">\(\pi: x \mapsto x^2\)</span>, we can get</p>
+<div class="math notranslate nohighlight">
+\[
+D_1 = \{\omega^0, \omega^2, \omega^4, \omega^6\}
+\]</div>
+<p>Suppose <span class="math notranslate nohighlight">\(D' = \{\omega^0, \omega^2, \omega^4 \}\)</span>, then we can get</p>
+<div class="math notranslate nohighlight">
+\[
+\pi^{-1}(D') = \{\omega^0, \omega^1, \omega^2, \omega^4, \omega^5, \omega^6 \}
+\]</div>
+<p>As shown in the following figure:</p>
+<p><img alt="" src="../_images/basefold-habock-commit-map.svg" /></p>
+<p>Now, according to the correlated agreement theorem, we have <span class="math notranslate nohighlight">\(f_{0,0}|_{D'} = p_{0,0}|_{D'}\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}|_{D'} = p_{0,1}|_{D'}\)</span>. Therefore, we can obtain the polynomial before folding based on <span class="math notranslate nohighlight">\(p_{0,0}\)</span> and <span class="math notranslate nohighlight">\(p_{0,1}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+p_0(X) = p_{0,0}(X^2) + X \cdot p_{0,1}(X^2)
+\]</div>
+<p>We can conclude that <span class="math notranslate nohighlight">\(f_0(X)\)</span> and <span class="math notranslate nohighlight">\(p_0(X)\)</span> have consistent values on <span class="math notranslate nohighlight">\(\pi^{-1}(D')\)</span>, thus obtaining the distance of <span class="math notranslate nohighlight">\(f_0(X)\)</span> to the encoding space <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta(f_0, \mathcal{C}_0) \le \frac{|\pi^{-1}(D')|}{|D_0|} \le \theta
+\]</div>
+<p><img alt="" src="../_images/basefold-habock-commit-phase-3.svg" /></p>
+<p>This also indicates that the Prover did not cheat, and the function <span class="math notranslate nohighlight">\(f_0\)</span> is not more than <span class="math notranslate nohighlight">\(\theta\)</span> distant from the corresponding encoding space. Returning to the initial question, we wanted to analyze the probability of a cheating Prover successfully deceiving the Verifier. Now the correlated agreement theorem tells us that except for a probability <span class="math notranslate nohighlight">\(\epsilon\)</span>, we can ensure the Prover did not cheat, which also means that if the Prover cheats, the probability of successfully deceiving the Verifier will not exceed this probability <span class="math notranslate nohighlight">\(\epsilon\)</span>.</p>
+<p>Have we finished analyzing the soundness error of the Commit phase? Reviewing the above analysis, we used the correlated agreement theorem to obtain the probability that the folded polynomial could deceive the Verifier due to the introduction of the folding random number <span class="math notranslate nohighlight">\(\lambda_1\)</span>. However, one thing to remember is that the Basefold protocol not only checks if the FRI-like folding is correct but also simultaneously checks the sumcheck constraint. Therefore, the above analysis is not sufficient. Following the idea of the correlated agreement theorem, we add the sumcheck constraint on top of it. If there exists a polynomial <span class="math notranslate nohighlight">\(p_{\lambda_1}\)</span> corresponding to <span class="math notranslate nohighlight">\(P_{\lambda_1} = P(\lambda_1, X_2, \ldots, X_n)\)</span> that satisfies the sumcheck constraint, we want to obtain <span class="math notranslate nohighlight">\(P_0 = P(0, X_2, \ldots, X_n)\)</span> and <span class="math notranslate nohighlight">\(P_1 = P(1, X_2, \ldots, X_n)\)</span> corresponding to <span class="math notranslate nohighlight">\(p_{0,0}(X)\)</span> and <span class="math notranslate nohighlight">\(p_{0,1}(X)\)</span> that also satisfy the sumcheck constraint. This way, we can infer whether the sumcheck constraint is satisfied before folding.</p>
+<p><img alt="" src="../_images/basefold-habock-commit-sumcheck.svg" /></p>
+<p>Now consider the sumcheck constraint. We know:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L((\lambda_1, \cdot), \vec{\omega}), P_{\lambda_1} \rangle_{H_{n-1}} = q_0(\lambda_1)
+\]</div>
+<p>We want to obtain:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L((0, \cdot), \vec{\omega}), P_{0} \rangle_{H_{n-1}} = q_0(0) \tag{2}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\langle L((1, \cdot), \vec{\omega}), P_{1} \rangle_{H_{n-1}} = q_0(1) \tag{3}
+\]</div>
+<p>If equations <span class="math notranslate nohighlight">\((2)\)</span> and <span class="math notranslate nohighlight">\((3)\)</span> hold, since <span class="math notranslate nohighlight">\(s_0 = q_0(0) + q_0(1)\)</span>, we can conclude that the multilinear polynomial <span class="math notranslate nohighlight">\(P(X)\)</span> corresponding to <span class="math notranslate nohighlight">\(p_0(X)\)</span> obtained from <span class="math notranslate nohighlight">\(p_{0,0}(X)\)</span> and <span class="math notranslate nohighlight">\(q_{0,1}(X)\)</span> satisfies the sumcheck constraint.</p>
+<p>Following the approach in Section 3.2 of [H24], we derive that equations <span class="math notranslate nohighlight">\((2)\)</span> and <span class="math notranslate nohighlight">\((3)\)</span> hold. Based on the relationship between <span class="math notranslate nohighlight">\(q_i(X)\)</span> and <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span>, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+q_0(\lambda_1) = L(\lambda_1, \omega_1)  \cdot \Lambda_0(\lambda_1)
+\]</div>
+<p>And:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L((\lambda_1, \cdot), \vec{\omega}), P_{\lambda_1} \rangle_{H_{n-1}}  = L(\lambda_1, \omega_1) \cdot \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} \rangle_{H_{n-1}} 
+\]</div>
+<p>Therefore:</p>
+<div class="math notranslate nohighlight">
+\[
+L(\lambda_1, \omega_1) \cdot \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} \rangle_{H_{n-1}}  = L(\lambda_1, \omega_1)  \cdot \Lambda_0(\lambda_1)
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(L(X, \omega_1) = (1 - X)(1 - \omega_1) + X \cdot \omega_1\)</span> is a linear polynomial, <span class="math notranslate nohighlight">\(L(X)\)</span> has only one zero point in <span class="math notranslate nohighlight">\(F\)</span>. When <span class="math notranslate nohighlight">\(\lambda_1\)</span> takes this point, we have <span class="math notranslate nohighlight">\(L(\lambda_1, \omega_1) = 0\)</span>, and the above equation naturally holds. The probability of this happening is <span class="math notranslate nohighlight">\(1 / |F|\)</span>. If <span class="math notranslate nohighlight">\(L(\lambda_1, \omega_1) \neq 0\)</span>, then:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} \rangle_{H_{n-1}} = \Lambda_0(\lambda_1)
+\]</div>
+<p>[H24] gives:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} = 0 \tag{4}
+\]</div>
+<p>Here’s a detailed derivation: Since <span class="math notranslate nohighlight">\(P_{\lambda_1} = P(\lambda_1, X_2, \ldots, X_n)\)</span>, we have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1}  \rangle_{H_{n-1}} &amp; = \sum_{\vec{x} \in H_{n-1}} L(\vec{x}, (\omega_2, \ldots, \omega_n)) \cdot P(\lambda_1, \vec{x}) \\
+	&amp; = P(\lambda_1, \omega_2, \ldots, \omega_n)
+\end{aligned}
+\end{split}\]</div>
+<p>So the above equation becomes:</p>
+<div class="math notranslate nohighlight">
+\[
+P(\lambda_1, \omega_2, \ldots, \omega_n) = \Lambda_0(\lambda_1)
+\]</div>
+<p>Let a function be <span class="math notranslate nohighlight">\(P'(X_2,\ldots, X_n) = P(\lambda_1, X_2, \ldots, X_n) - \Lambda_0(\lambda_1)\)</span>, its evaluation at point <span class="math notranslate nohighlight">\((\omega_2, \ldots, \omega_n)\)</span> is <span class="math notranslate nohighlight">\(P'(\omega_2, \ldots, \omega_n) = 0\)</span>, and <span class="math notranslate nohighlight">\(P'(\omega_2, \ldots, \omega_n)\)</span> can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	P'(\omega_2, \ldots, \omega_n) &amp; = \langle L(\cdot, \omega_2, \ldots, \omega_n), P'(\cdot)  \rangle_{H_{n-1}} \\
+	&amp; = \langle L(\cdot, \omega_2, \ldots, \omega_n), P(\lambda_1, \cdot) - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} \\
+	&amp; = \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} \\
+	&amp; = 0
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} = 0
+\]</div>
+<p>By linearity, we know:</p>
+<div class="math notranslate nohighlight">
+\[
+\Lambda_{0}(\lambda_1) = (1 - \lambda_1) \cdot \Lambda_{0}(0) + \lambda_1 \cdot \Lambda_{0}(1) \tag{5}
+\]</div>
+<p>At the same time:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1} = (1 - \lambda_1) \cdot f_{0,0} + \lambda_1 \cdot f_{0,1} \tag{6}
+\]</div>
+<p>Subtracting <span class="math notranslate nohighlight">\((5)\)</span> from <span class="math notranslate nohighlight">\((6)\)</span>, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1} - \Lambda_{0}(\lambda_1) = (1 - \lambda_1) \cdot (f_{0,0} - \Lambda_{0}(0)) + \lambda_1 \cdot (f_{0,1} - \Lambda_{0}(1))
+\]</div>
+<p>Let the new polynomial be:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1}' =  (1 - \lambda_1) \cdot (f_{0,0} - \Lambda_{0}(0)) + \lambda_1 \cdot (f_{0,1} - \Lambda_{0}(1))
+\]</div>
+<p>Following the idea of the correlated agreement theorem, according to the condition, if:</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\lambda_1 \in F}[\Delta((1 - \lambda_1) f_{0,0} + \lambda_1 f_{0,1}, \mathcal{C}_1) \le \theta] &gt; \epsilon
+\]</div>
+<p>That is, if <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> is not more than <span class="math notranslate nohighlight">\(\theta\)</span> distant from <span class="math notranslate nohighlight">\(p_{\lambda_1}\)</span> with a probability greater than a bound <span class="math notranslate nohighlight">\(\epsilon\)</span>, then subtracting a number <span class="math notranslate nohighlight">\(\Lambda_0(\lambda_1)\)</span> from both of them does not affect the distance between them. Therefore, <span class="math notranslate nohighlight">\(f_{\lambda_1}'\)</span> is not more than <span class="math notranslate nohighlight">\(\theta\)</span> distant from <span class="math notranslate nohighlight">\(p_{\lambda_1}' = p_{\lambda_1} - \Lambda_0(\lambda_1)\)</span>.</p>
+<p>Which encoding space does <span class="math notranslate nohighlight">\(p_{\lambda_1}' = p_{\lambda_1} - \Lambda_0(\lambda_1)\)</span> belong to? We know that <span class="math notranslate nohighlight">\(p_{\lambda_1} \in \mathcal{P}_{n - 1} = F[X]^{&lt;2^{n-1}}\)</span>, and <span class="math notranslate nohighlight">\(\Lambda_0(\lambda_1)\)</span> is essentially a number, so <span class="math notranslate nohighlight">\(p_{\lambda_1}'\)</span> is still in the <span class="math notranslate nohighlight">\(\mathcal{P}_{n - 1}\)</span> space. At the same time, we have already derived:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{\lambda_1} - \Lambda_0(\lambda_1)  \rangle_{H_{n-1}} = 0 
+\]</div>
+<p>This indicates that the multilinear polynomial corresponding to <span class="math notranslate nohighlight">\(p_{\lambda_1}'\)</span> also satisfies such an inner product constraint. Therefore, we can say that <span class="math notranslate nohighlight">\(p_{\lambda_1}'\)</span> is in a subspace of <span class="math notranslate nohighlight">\(\mathcal{P}_{n - 1}\)</span>, namely:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{P}_{n - 1}' = \{u(X) \in \mathcal{P}_{n - 1}: \langle L(\cdot, \omega_2, \ldots, \omega_n), U \rangle_{H_{n-1}} = 0 \}
+\]</div>
+<p>In the above equation, <span class="math notranslate nohighlight">\(U\)</span> is the multilinear polynomial corresponding to <span class="math notranslate nohighlight">\(u(X)\)</span>. Such a polynomial subspace can form a linear subcode <span class="math notranslate nohighlight">\(\mathcal{C}_1'\)</span> of the encoding space <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span>. We can see that by extracting the linear term <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> from <span class="math notranslate nohighlight">\(q_i(X)\)</span> and adding a sumcheck-like constraint, we find that the encoding space to be considered is a linear subspace of the original encoding space.</p>
+<p>Now let’s summarize the conclusions we’ve reached so far. Let <span class="math notranslate nohighlight">\(f_{0,0}' := f_{0,0} - \Lambda_0(0)\)</span>, <span class="math notranslate nohighlight">\(f_{0,1}' := f_{0,1} - \Lambda_0(1)\)</span>, we have:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\lambda_1}' = (1 - \lambda_1) \cdot f_{0,0}' + \lambda_1 \cdot f_{0,1}'
+\]</div>
+<p>At the same time, <span class="math notranslate nohighlight">\(f_{\lambda_1}'\)</span> is not more than <span class="math notranslate nohighlight">\(\theta\)</span> distant from <span class="math notranslate nohighlight">\(p_{\lambda_1}' = p_{\lambda_1} - \Lambda_0(\lambda_1)\)</span> with a probability greater than <span class="math notranslate nohighlight">\(\epsilon\)</span>, and <span class="math notranslate nohighlight">\(p_{\lambda_1}' \in \mathcal{P}_{n-1}'\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\lambda_1 \in F}[\Delta((1 - \lambda_1) f_{0,0}' + \lambda_1 f_{0,1}', \mathcal{C}_1') \le \theta] &gt; \epsilon
+\]</div>
+<p>[H24, Theorem 3] gives the correlated agreement theorem for linear subcodes, whose strict description will be introduced in the next section. The conclusion of this theorem states that there exist polynomials <span class="math notranslate nohighlight">\(p_{0,0}'\)</span> and <span class="math notranslate nohighlight">\(p_{0,1}'\)</span> from <span class="math notranslate nohighlight">\(\mathcal{P}_{n-1}'\)</span>, and <span class="math notranslate nohighlight">\(D' \subseteq D_1\)</span>, satisfying:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D_1| \ge 1 - \theta\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{0,0}'|_{D'} = p_{0,0}'|_{D'}\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}'|_{D'} = p_{0,1}'|_{D'}\)</span>.</p></li>
+</ol>
+<p>Here, <span class="math notranslate nohighlight">\(\mathcal{P}_{n-1}'\)</span> includes the sumcheck constraint. According to the definitions of <span class="math notranslate nohighlight">\(f_{0,0}'\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}'\)</span>, we can get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	f_{0,0} = f_{0,0}' + \Lambda_0(0) \\
+	f_{0,1} = f_{0,1}' + \Lambda_0(1)
+\end{aligned}
+\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\Lambda_0(0)\)</span> and <span class="math notranslate nohighlight">\(\Lambda_0(1)\)</span> essentially represent numbers, according to conclusion 2, we have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	f_{0,0}(X)|_{D'} = p_{0,0}'(X)|_{D'} + \Lambda_0(0) = (p_{0,0}'(X) + \Lambda_0(0))|_{D'} \\
+	f_{0,1}(X)|_{D'} = p_{0,1}'(X)|_{D'} + \Lambda_0(1) = (p_{0,1}'(X) + \Lambda_0(1))|_{D'} \\
+\end{aligned}
+\end{split}\]</div>
+<p>Let:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	p_{0,0}(X) = p_{0,0}'(X) + \Lambda_0(0) \\
+	p_{0,1}(X) = p_{0,1}'(X) + \Lambda_0(1)
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore, <span class="math notranslate nohighlight">\(f_{0,0}(X)\)</span> and <span class="math notranslate nohighlight">\(f_{0,1}(X)\)</span> are consistent with <span class="math notranslate nohighlight">\(p_{0,0}(X)\)</span> and <span class="math notranslate nohighlight">\(p_{0,1}(X)\)</span> on <span class="math notranslate nohighlight">\(D'\)</span> respectively. From <span class="math notranslate nohighlight">\(p_{0,0}(X)\)</span> and <span class="math notranslate nohighlight">\(p_{0,1}(X)\)</span>, we can obtain their corresponding multivariate polynomials <span class="math notranslate nohighlight">\(P_0, P_1 \in F[X_2, \ldots, X_n]\)</span>. Since <span class="math notranslate nohighlight">\(p_{0,0}'(X), p_{0,1}'(X) \in \mathcal{P}_{n-1}'\)</span>, their corresponding multilinear polynomials <span class="math notranslate nohighlight">\(P_{0,0}', P_{0,1}'\)</span> satisfy:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,0}' \rangle_{H_{n-1}} = 0 \\
+	\langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,1}' \rangle_{H_{n-1}} = 0 \\
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,0}' + \Lambda_0(0) - \Lambda_0(0) \rangle_{H_{n-1}} = 0 \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_{0,1}' + \Lambda_0(1) - \Lambda_0(1) \rangle_{H_{n-1}} = 0 \\
+	\Rightarrow \qquad \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_0 - \Lambda_0(0) \rangle_{H_{n-1}} = 0 \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_1 - \Lambda_0(1) \rangle_{H_{n-1}} = 0 \\
+	\Rightarrow \qquad \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_0 \rangle_{H_{n-1}} =  \Lambda_0(0) \\
+	&amp; \langle L(\cdot, \omega_2, \ldots, \omega_n), P_1 \rangle_{H_{n-1}} = \Lambda_0(1) 
+\end{aligned}
+\end{split}\]</div>
+<p>Multiplying both sides by <span class="math notranslate nohighlight">\(L(0, \omega_1), L(1, \omega_1)\)</span> respectively, and using <span class="math notranslate nohighlight">\(q_0(X) = L(X, \omega_1) \cdot \Lambda_0(X)\)</span>, we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\langle L((0, \cdot), \vec{\omega}), P_{0} \rangle_{H_{n-1}} = q_0(0)\\
+	\langle L((1, \cdot), \vec{\omega}), P_{1} \rangle_{H_{n-1}} = q_0(1)
+\end{aligned}
+\end{split}\]</div>
+<p>This also shows that equations <span class="math notranslate nohighlight">\((2)\)</span> and <span class="math notranslate nohighlight">\((3)\)</span> hold, which implies that <span class="math notranslate nohighlight">\(P(X)\)</span> corresponding to <span class="math notranslate nohighlight">\(p_0(X)\)</span> satisfies the sumcheck constraint.</p>
+<p>In summary, the soundness error in the commit phase can be analyzed following the above approach. The specific probability is given by the correlated agreement theorem. [H24, Theorem 1] gives the soundness error in the commit phase as:</p>
+<ol class="arabic simple">
+<li><p>Batching phase: <span class="math notranslate nohighlight">\(\varepsilon_{C_1} = \varepsilon(\mathcal{C}_0, M, 1, \theta)\)</span>.</p></li>
+<li><p>Sumcheck and FRI-like folding phase: <span class="math notranslate nohighlight">\(\varepsilon_{C_2} = \sum_{i = 1}^n \left(\frac{1}{|F|} + \varepsilon(\mathcal{C}_i, 1, B_i, \theta) \right)\)</span>, where <span class="math notranslate nohighlight">\(\frac{1}{|F|}\)</span> is the additional probability introduced when simplifying the sumcheck constraint to make <span class="math notranslate nohighlight">\(L(X, \omega_i) = 0\)</span>.</p></li>
+</ol>
+<p>The above <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_i, M_i, B_i, \theta)\)</span> is given by the weighted correlated agreement theorem [H24, Theorem 4].</p>
+</section>
+<section id="query-phase">
+<h3>Query Phase<a class="headerlink" href="#query-phase" title="Link to this heading">#</a></h3>
+<p>For a malicious Prover <span class="math notranslate nohighlight">\(P^*\)</span>, now excluding the case where it can luckily pass the Verifier’s check in the Commit phase, after one folding, <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> will be <span class="math notranslate nohighlight">\(\theta\)</span> far from <span class="math notranslate nohighlight">\(\mathcal{C}_1\)</span>, or the sumcheck constraint will be incorrect.</p>
+<p><img alt="" src="../_images/basefold-habock-query.svg" /></p>
+<p>For <span class="math notranslate nohighlight">\(\Delta(f_0, \mathcal{C}_0) &gt; \theta\)</span>, since the Verifier will randomly select an <span class="math notranslate nohighlight">\(x_0\)</span> from <span class="math notranslate nohighlight">\(D_0\)</span> to check if the folding is correct, if it queries those points where <span class="math notranslate nohighlight">\(f_{\lambda_1}\)</span> and <span class="math notranslate nohighlight">\(p_{\lambda_1}\)</span> are consistent on <span class="math notranslate nohighlight">\(D_1\)</span>, it will pass the check. This proportion does not exceed <span class="math notranslate nohighlight">\(1 - \theta\)</span>. If the query is repeated <span class="math notranslate nohighlight">\(s\)</span> times, then the probability of <span class="math notranslate nohighlight">\(P^*\)</span> luckily passing the check does not exceed <span class="math notranslate nohighlight">\((1 - \theta)^s\)</span>.</p>
+<p>For the case where the sumcheck constraint is incorrect, the verifier will use the sumcheck protocol to check if the constraint is correct. Here, <span class="math notranslate nohighlight">\(P^*\)</span> cannot successfully cheat and will definitely be caught.</p>
+<p>In summary, the soundness error in the query phase is <span class="math notranslate nohighlight">\(\varepsilon_{\mathrm{query}} = (1 - \theta)^s\)</span>.</p>
+<p>Therefore, we obtain the soundness error of the entire protocol given by [H24, Theorem 1]:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\varepsilon &amp; &lt; \varepsilon_{C_1} + \varepsilon_{C_2} + \varepsilon_{\mathrm{query}} \\
+	&amp; =  \varepsilon(\mathcal{C}_0, M, 1, \theta) + \sum_{i = 1}^n \left(\frac{1}{|F|} + \varepsilon(\mathcal{C}_i, 1, B_i, \theta) \right) + (1 - \theta)^s
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>🐞 <strong>typo</strong>
+I believe the condition <span class="math notranslate nohighlight">\(\theta = (1 + \frac{1}{2m}) \cdot \sqrt{\rho}\)</span> given in [H24, Theorem 1] is incorrect. Based on the condition given in [H24, Theorem 4] later, it should be changed to <span class="math notranslate nohighlight">\(\theta = 1 - (1 + \frac{1}{2m}) \cdot \sqrt{\rho}\)</span>.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="correlated-agreement-theorems">
+<h2>Correlated Agreement Theorems<a class="headerlink" href="#correlated-agreement-theorems" title="Link to this heading">#</a></h2>
+<p>This section introduces the correlated agreement theorem given by [BCIKS20], as well as the correlated agreement theorem for subcodes given by [H24] based on this.</p>
+<p>First is the correlated agreement theorem given by [BCIKS20], which includes two theorems: one for the unique decoding bound and one for reaching the Johnson bound under list decoding. Some symbols have been changed. Let <span class="math notranslate nohighlight">\(F\)</span> denote a finite field, <span class="math notranslate nohighlight">\(\mathcal{C} = RS_k[F, D]\)</span> denote a Reed-Solomon code over <span class="math notranslate nohighlight">\(F\)</span>, with evaluation domain <span class="math notranslate nohighlight">\(D\)</span> and rate <span class="math notranslate nohighlight">\(\rho = k /|D|\)</span>.</p>
+<p><strong>Theorem 3</strong> [BCIKS20, Theorem 6.1] Suppose <span class="math notranslate nohighlight">\(\theta \leq \frac{1 - \rho}{2}\)</span>. Let <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> be functions from <span class="math notranslate nohighlight">\(D\)</span> to <span class="math notranslate nohighlight">\(F\)</span>. If</p>
+<div class="math notranslate nohighlight">
+\[ 
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}) \le \theta \}|}{|F|} &gt; \varepsilon 
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{|D|}{|F|}
+\]</div>
+<p>then for any <span class="math notranslate nohighlight">\(z \in F\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[ 
+\Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}) \leq \theta, 
+\]</div>
+<p>Moreover, there exist <span class="math notranslate nohighlight">\(p_0, \ldots, p_M \in \mathcal{C}\)</span> such that for all <span class="math notranslate nohighlight">\(z \in F\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[ 
+\Delta(u_0 + zu_1 + \cdots + z_l u_l, v_0 + zv_1 + \cdots + z_l v_l) \leq \theta 
+\]</div>
+<p>In fact,</p>
+<div class="math notranslate nohighlight">
+\[ 
+| \{ x \in D : (u_0(x), \ldots, u_l(x)) \neq (v_0(x), \ldots, v_l(x)) \} | \leq \theta |D|. 
+\]</div>
+<p><strong>Theorem 4</strong> [BCIKS20, Theorem 6.2] Let <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> be functions from <span class="math notranslate nohighlight">\(D\)</span> to <span class="math notranslate nohighlight">\(F\)</span>. Let <span class="math notranslate nohighlight">\(m \ge 3\)</span>, define <span class="math notranslate nohighlight">\(\theta_0(\rho, m) := 1 - \sqrt{\rho} \cdot (1 + \frac{1}{2m})\)</span>, and let <span class="math notranslate nohighlight">\(\theta \le \theta_0(\rho, m)\)</span>. If</p>
+<div class="math notranslate nohighlight">
+\[ 
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}) \le \theta \}|}{|F|} &gt; \varepsilon 
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{(m+\frac{1}{2})^7}{3 \cdot \rho^{3/2}} \cdot \frac{|D|^2}{|F|}
+\]</div>
+<p>then <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M\)</span> are simultaneously <span class="math notranslate nohighlight">\(\theta\)</span>-close to <span class="math notranslate nohighlight">\(\mathcal{C}_0\)</span>, i.e., there exist <span class="math notranslate nohighlight">\(p_0, \ldots, p_M \in \mathcal{C}\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[ 
+| \{ x \in D : \forall 0 \leq i \leq M, f_i(x) = p_i(x) \} | \geq (1 - \theta) |D|. 
+\]</div>
+<p>Theorem 3 and Theorem 4 give the correlated agreement theorems under unique decoding and list decoding, respectively. Although their formulations are somewhat different from those given in the previous section, they express the same meaning. Here, the specific expressions for <span class="math notranslate nohighlight">\(\varepsilon\)</span> are given.</p>
+<p>In [H24], by analyzing the Guruswami-Sudan list decoder in the proof of the correlated agreement theorem in [BCIKS20], a correlated agreement theorem for subcodes under list decoding is obtained.</p>
+<p><strong>Theorem 5</strong> [H24, Theorem 3] (Correlated Agreement for Subcodes) Let <span class="math notranslate nohighlight">\(F\)</span> be a finite field of arbitrary characteristic, <span class="math notranslate nohighlight">\(\mathcal{C} = RS_k[F, D]\)</span> be a Reed-Solomon code over <span class="math notranslate nohighlight">\(F\)</span> with evaluation domain <span class="math notranslate nohighlight">\(D\)</span> and rate <span class="math notranslate nohighlight">\(\rho = k /|D|\)</span>. Let <span class="math notranslate nohighlight">\(\mathcal{C}'\)</span> be a linear subcode of <span class="math notranslate nohighlight">\(\mathcal{C}\)</span>, generated by a subspace <span class="math notranslate nohighlight">\(\mathcal{P}'\)</span> of polynomials from <span class="math notranslate nohighlight">\(F[X]^{&lt;k}\)</span>. Given a proximity parameter <span class="math notranslate nohighlight">\(\theta = 1 - \sqrt{\rho} \cdot \left(1 + \frac{1}{2m}\right)\)</span>, where <span class="math notranslate nohighlight">\(m \geq 3\)</span>, and <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}') &lt; \theta \}|}{|F|} &gt; \varepsilon,
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{(m+\frac{1}{2})^7}{3 \cdot \rho^{3/2}} \cdot \frac{|D|^2}{|F|} ,
+\]</div>
+<p>then there exist polynomials <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M \in \mathcal{P}'\)</span>, and a set <span class="math notranslate nohighlight">\(D' \subseteq D\)</span>, satisfying</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D| \ge 1 - \theta\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M\)</span> are consistent with <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M\)</span> respectively on <span class="math notranslate nohighlight">\(D'\)</span>.</p></li>
+</ol>
+<p>Comparing Theorem 5 and Theorem 4, in terms of the expression of <span class="math notranslate nohighlight">\(\varepsilon\)</span>, their forms can be said to be consistent. The difference is that Theorem 5 is considered in a linear subcode of the Reed-Solomon encoding space. It’s natural to conjecture that for unique decoding, there is also a similar result to Theorem 4 for subcodes.</p>
+<p><strong>Conjecture 6</strong> Let <span class="math notranslate nohighlight">\(F\)</span> be a finite field of arbitrary characteristic, <span class="math notranslate nohighlight">\(\mathcal{C} = RS_k[F, D]\)</span> be a Reed-Solomon code over <span class="math notranslate nohighlight">\(F\)</span> with evaluation domain <span class="math notranslate nohighlight">\(D\)</span> and rate <span class="math notranslate nohighlight">\(\rho = k /|D|\)</span>. Let <span class="math notranslate nohighlight">\(\mathcal{C}'\)</span> be a linear subcode of <span class="math notranslate nohighlight">\(\mathcal{C}\)</span>, generated by a subspace <span class="math notranslate nohighlight">\(\mathcal{P}'\)</span> of polynomials from <span class="math notranslate nohighlight">\(F[X]^{&lt;k}\)</span>. Let <span class="math notranslate nohighlight">\(\theta \le \frac{1 - \rho}{2}\)</span>, and <span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M \in F^D\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|\{ z \in F : \Delta(f_0 + z \cdot f_1 + \ldots + z^M \cdot f_M, \mathcal{C}') &lt; \theta \}|}{|F|} &gt; \varepsilon,
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon = M \cdot \frac{|D|}{|F|}
+\]</div>
+<p>then there exist polynomials <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M \in \mathcal{P}'\)</span>, and a set <span class="math notranslate nohighlight">\(D' \subseteq D\)</span>, satisfying</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D'|/|D| \ge 1 - \theta\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f_0, f_1, \ldots, f_M\)</span> are consistent with <span class="math notranslate nohighlight">\(p_0, p_1, \ldots, p_M\)</span> respectively on <span class="math notranslate nohighlight">\(D'\)</span>.</p></li>
+</ol>
+<p>Similar to the soundness proof of the batch FRI protocol in [BCIKS20], which used a weighted version of the correlated agreement theorem, [H24] also gives a weighted correlated agreement theorem for the batch Basefold protocol. According to the description in [H24], let’s first explain the meaning of “weighted”. Given a sub-probability measure <span class="math notranslate nohighlight">\(\mu\)</span> on <span class="math notranslate nohighlight">\(D\)</span> and <span class="math notranslate nohighlight">\(f \in F^D\)</span>, we write</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(f, \mathcal{C}') \ge 1 - \theta
+\]</div>
+<p>to mean that there exists a polynomial <span class="math notranslate nohighlight">\(p(X)\)</span> in <span class="math notranslate nohighlight">\(\mathcal{P}'\)</span> such that <span class="math notranslate nohighlight">\(\mu(\{x \in D: f(x) = p(x)\}) \ge 1 - \theta\)</span>. This means using the measure <span class="math notranslate nohighlight">\(\mu\)</span> to calculate the set of <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(D\)</span> that satisfy <span class="math notranslate nohighlight">\(f(x) = p(x)\)</span>. For completeness, here’s the weighted correlated agreement theorem for list decoding given in [H24].</p>
+<p><strong>Theorem 7</strong> [H24, Theorem 4] (Weighted Correlated Agreement for Subcodes) Let <span class="math notranslate nohighlight">\(C'\)</span> be a linear subcode of <span class="math notranslate nohighlight">\(RS_k[F,D]\)</span>, and choose <span class="math notranslate nohighlight">\(\theta=1-\sqrt{\rho}\cdot\left(1+\frac{1}{2m}\right)\)</span>, for some integer <span class="math notranslate nohighlight">\(m\geq3\)</span>, where <span class="math notranslate nohighlight">\(\rho=k/|D|\)</span>. Assume a density function <span class="math notranslate nohighlight">\(\delta:D\to[0,1]\cap\mathbb{Q}\)</span> with common denominator <span class="math notranslate nohighlight">\(B\geq1\)</span>, i.e. for all <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(D\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\delta(x)=\frac{m_x}{B},
+\]</div>
+<p>for an integer value <span class="math notranslate nohighlight">\(m_x\in[0,B]\)</span>, and let <span class="math notranslate nohighlight">\(\mu\)</span> be the sub-probability measure with density <span class="math notranslate nohighlight">\(\delta\)</span>, defined by <span class="math notranslate nohighlight">\(\mu(\{x\})=\delta(x)/ |D|\)</span>. If for <span class="math notranslate nohighlight">\(f_0,f_1,\ldots,f_M\in F^D\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\{z\in F:\text{agree}_\mu(f_0+z\cdot f_1+\ldots+z^M\cdot f_M,\mathcal{C}')\ge 1-\theta\}}{|F|} &gt; \varepsilon(\mathcal{C},M,B,\theta)
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon(\mathcal{C},M,B,\theta)=\frac{M}{|F|} \cdot\frac{(m + \frac{1}{2})}{\sqrt{\rho}}\cdot\max\left(\frac{(m + \frac{1}{2})^6}{3\cdot\rho}\cdot|D|^2, 2\cdot(B\cdot|D|+1)\right),
+\]</div>
+<p>then there exist polynomials <span class="math notranslate nohighlight">\(p_0(X),p_1(X),\ldots,p_M(X)\)</span> belonging to the subcode <span class="math notranslate nohighlight">\(\mathcal{C}'\)</span>, and a set <span class="math notranslate nohighlight">\(A\)</span> with <span class="math notranslate nohighlight">\(\mu(A)\ge 1-\theta\)</span> on which <span class="math notranslate nohighlight">\(f_0,f_1,\ldots,f_M\)</span> coincide with <span class="math notranslate nohighlight">\(p_0(X),p_1(X),\ldots,p_M(X)\)</span>, respectively.</p>
+<p>The advantage of the weighted correlated agreement theorem is that in the process of proving the protocol’s soundness, <span class="math notranslate nohighlight">\(\mu\)</span> can be defined by oneself, increasing flexibility. The details of the soundness proof for the Basefold protocol will be introduced in the next article.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[ACFY24] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.”<em>Cryptology ePrint Archive</em>(2024).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-protocol">Basefold Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-with-sumcheck-protocol">Combining with Sumcheck Protocol</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-with-fri-protocol">Combining with FRI Protocol</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness-overview">Soundness Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-phase">Commit Phase</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-phase">Query Phase</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement-theorems">Correlated Agreement Theorems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

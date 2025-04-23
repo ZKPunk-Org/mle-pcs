@@ -1,0 +1,813 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MLE-PCS: Comparison of Multilinear Polynomial Commitment Schemes &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'README';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FREADME.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/README.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MLE-PCS: Comparison of Multilinear Polynomial Commitment Schemes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-purpose">Project Purpose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-structure">Project Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-details">Implementation Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-implementations">Reference Implementations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-notebooks">Jupyter Notebooks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-notes">Research Notes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-notices">Important Notices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pcs-list">PCS List</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#on-going">On-going</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-pcs-future-work">More PCS (Future work)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">Contributors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mle-pcs-comparison-of-multilinear-polynomial-commitment-schemes">
+<h1>MLE-PCS: Comparison of Multilinear Polynomial Commitment Schemes<a class="headerlink" href="#mle-pcs-comparison-of-multilinear-polynomial-commitment-schemes" title="Link to this heading">#</a></h1>
+<p><em>This README is a living document and will be updated as the project progresses through its milestones.</em></p>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#mle-pcs-comparison-of-multilinear-polynomial-commitment-schemes"><span class="xref myst">MLE-PCS: Comparison of Multilinear Polynomial Commitment Schemes</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#background"><span class="xref myst">Background</span></a></p></li>
+<li><p><a class="reference internal" href="#project-purpose"><span class="xref myst">Project Purpose</span></a></p></li>
+<li><p><a class="reference internal" href="#features"><span class="xref myst">Features</span></a></p></li>
+<li><p><a class="reference internal" href="#project-structure"><span class="xref myst">Project Structure</span></a></p></li>
+<li><p><a class="reference internal" href="#implementation-details"><span class="xref myst">Implementation Details</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#reference-implementations"><span class="xref myst">Reference Implementations</span></a></p></li>
+<li><p><a class="reference internal" href="#jupyter-notebooks"><span class="xref myst">Jupyter Notebooks</span></a></p></li>
+<li><p><a class="reference internal" href="#research-notes"><span class="xref myst">Research Notes</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#important-notices"><span class="xref myst">Important Notices</span></a></p></li>
+<li><p><a class="reference internal" href="#pcs-list"><span class="xref myst">PCS List</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#on-going"><span class="xref myst">On-going</span></a></p></li>
+<li><p><a class="reference internal" href="#more-pcs-future-work"><span class="xref myst">More PCS (Future work)</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#contributors"><span class="xref myst">Contributors</span></a></p></li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+<li><p><a class="reference internal" href="#acknowledgments"><span class="xref myst">Acknowledgments</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
+<p>Multilinear Polynomial Commitment Schemes (MLE PCS) are fundamental building blocks in the field of cryptography, particularly within zero-knowledge proofs. These schemes enable the commitment to a multilinear polynomial in such a way that the prover can later reveal evaluations of the polynomial at specific points without revealing the entire polynomial. Efficient and secure MLE PCS schemes are crucial for the development of scalable and practical zero-knowledge proof systems.</p>
+<p>This repository, <strong>mle-pcs</strong>, is a research-driven project focused on the Comparison of Multilinear Polynomial Commitment Schemes. The research is supported by the Ethereum Foundation and aims to provide a comprehensive analysis of different schemes, their design philosophies, security properties, and performance metrics.</p>
+</section>
+<section id="project-purpose">
+<h2>Project Purpose<a class="headerlink" href="#project-purpose" title="Link to this heading">#</a></h2>
+<p>The primary objective of this project is to conduct a comprehensive comparison of various MLE PCS schemes. By implementing reference codes and analyzing their protocol designs, security parameters, and performance metrics, we aim to identify the strengths and weaknesses of each scheme.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Reference Implementations</strong>: Python-based implementations of various MLE PCS schemes to deepen understanding.</p></li>
+<li><p><strong>Interactive Tutorials</strong>: Jupyter notebooks serve as interactive playgrounds for experimenting with different schemes.</p></li>
+<li><p><strong>Comprehensive Notes</strong>: Detailed research notes available in each folder, provided in both English and Chinese.</p></li>
+<li><p><strong>Future Blog Posts</strong>: Planned blog posts will elaborate on the research findings and comparisons.</p></li>
+</ul>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">#</a></h2>
+<p>The repository is organized to facilitate both research and experimental exploration:</p>
+<details>
+  <summary>layout:</summary>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mle-pcs/
+├── basefold/
+│   ├── basefold-01.md
+│   ├── basefold-01.zh.md
+│   ├── basefold-02.md
+│   ├── basefold-02.zh.md
+│   └── ...
+├── fri/
+│   ├── BBHR18-FRI.md
+│   ├── BBHR18-FRI.zh.md
+│   ├── BCIKS20-proximity-gaps.md
+│   ├── BCIKS20-proximity-gaps.zh.md
+│   └── ...
+├── fri-binius/
+│   ├── binius-01.md
+│   ├── binius-01.zh.md
+│   ├── binius-02.md
+│   ├── binius-02.zh.md
+│   └── ...
+├── zeromorph/
+│   ├── zeromorph.md
+│   ├── zeromorph.zh.md
+│   ├── zeromorph_mapping_tutorial.ipynb
+│   └── ...
+├── src/
+│   ├── Basefold.py
+│   ├── Basefold.ipynb
+│   ├── bcho_pcs.ipynb
+│   ├── kzg10.ipynb
+│   ├── zeromorph.ipynb
+│   └── ... (other source files)
+</pre></div>
+</div>
+</details>
+<ul class="simple">
+<li><p><strong>basefold/</strong>: Contains research notes related to the BaseFold PCS scheme</p></li>
+<li><p><strong>fri/</strong>: Focuses on the Fast Reed-Solomon Interactive Oracle Proofs of Proximity (FRI) scheme.</p></li>
+<li><p><strong>fri-binius/</strong>: Explores the Binius-PCS scheme based on FRI.</p></li>
+<li><p><strong>zeromorph/</strong>: Includes tutorials and notes on the Zeromorph PCS scheme.</p></li>
+<li><p><strong>src/</strong>: Houses reference Python implementations and Jupyter notebooks for interactive experimentation.</p></li>
+<li><p><strong>test/</strong>: Test cases for the implementations.</p></li>
+<li><p>*<strong>.ipynb</strong>: Jupyter notebooks for interactive playgrounds and tutorials.</p></li>
+</ul>
+</section>
+<section id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading">#</a></h2>
+<section id="reference-implementations">
+<h3>Reference Implementations<a class="headerlink" href="#reference-implementations" title="Link to this heading">#</a></h3>
+<p>We have implemented reference code for several MLE PCS schemes using Python. Python was chosen for its flexibility and readability, facilitating a better understanding of the underlying concepts. These implementations serve as a foundation for further research and experimentation.</p>
+</section>
+<section id="jupyter-notebooks">
+<h3>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Link to this heading">#</a></h3>
+<p>Interactive Jupyter Notebooks are provided to serve as playgrounds and tutorials for experimenting with different PCS schemes. These notebooks allow users to run code snippets, visualize results, and gain hands-on experience with the algorithms.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="src/Basefold.html"><span class="std std-doc"><strong>Basefold.ipynb</strong></span></a>: Tutorial and experiments related to the BaseFold PCS scheme.</p></li>
+<li><p><a class="reference internal" href="src/bcho_pcs.html"><span class="std std-doc"><strong>bcho_pcs.ipynb</strong></span></a>: Tutorial and experiments related to the BCHO PCS scheme.</p></li>
+<li><p><a class="reference internal" href="src/kzg10.html"><span class="std std-doc"><strong>kzg10.ipynb</strong></span></a>: Implementation and analysis of the KZG10 PCS scheme.</p></li>
+<li><p><a class="reference internal" href="src/zeromorph.html"><span class="std std-doc"><strong>zeromorph.ipynb</strong></span></a>: Tutorial and experiments related to the Zeromorph PCS scheme.</p></li>
+<li><p><a class="reference internal" href="zeromorph/zeromorph_mapping_tutorial.html"><span class="std std-doc"><strong>zeromorph_mapping_tutorial.ipynb</strong></span></a>: Step-by-step guide to the Zeromorph PCS mapping process.</p></li>
+</ul>
+</section>
+<section id="research-notes">
+<h3>Research Notes<a class="headerlink" href="#research-notes" title="Link to this heading">#</a></h3>
+<p>Comprehensive research notes are available within each relevant folder, provided in both English and Chinese. These notes document our understanding, analysis, and insights into each PCS scheme.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#basefold/"><span class="xref myst"><strong>basefold/</strong></span></a>: Detailed notes on the BaseFold scheme.</p></li>
+<li><p><a class="reference internal" href="#fri/"><span class="xref myst"><strong>fri/</strong></span></a>: Insights and analysis on the FRI scheme.</p></li>
+<li><p><a class="reference internal" href="#fri-binius/"><span class="xref myst"><strong>fri-binius/</strong></span></a>: Comprehensive exploration of the Binius-PCS scheme.</p></li>
+<li><p><a class="reference internal" href="#zeromorph/"><span class="xref myst"><strong>zeromorph/</strong></span></a>: Tutorials and notes on Zeromorph PCS.</p></li>
+</ul>
+<p><em>You can also find the PDF version of the research notes at <a class="reference external" href="https://sec-bit.github.io/mle-pcs/">https://sec-bit.github.io/mle-pcs/</a>. Note PDF files may not be fully updated to the latest version.</em></p>
+<p>📌 <strong>Request for Feedback</strong>: These notes are open for proofreading and reviewing. We welcome any advice, corrections, or suggestions to improve the content. Your contributions are highly appreciated!</p>
+<p>📅 <strong>Upcoming Blog Posts</strong>: In the future, we plan to polish and publish these notes as blog posts to reach a wider audience and share our findings more broadly.</p>
+</section>
+</section>
+<section id="important-notices">
+<h2>Important Notices<a class="headerlink" href="#important-notices" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Research and Experimental Purpose Only</strong>: This project is intended solely for research and experimental purposes.</p></li>
+<li><p><strong>Not for Production Use</strong>: <strong>Do not use this code in any production environment.</strong> The implementations are reference codes aimed at understanding concepts better.</p></li>
+<li><p><strong>Educational Value</strong>: The Python implementations provided are designed to be flexible and easy to understand, facilitating learning and further experimentation.</p></li>
+</ul>
+</section>
+<section id="pcs-list">
+<h2>PCS List<a class="headerlink" href="#pcs-list" title="Link to this heading">#</a></h2>
+<section id="on-going">
+<h3>On-going<a class="headerlink" href="#on-going" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Basefold</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2023/1705">BaseFold: Efficient Field-Agnostic Polynomial Commitment Schemes from Foldable Codes</a></p></li>
+</ul>
+</li>
+<li><p>Binius-PCS (for binary fields)</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2023/630">Proximity Testing with Logarithmic Randomness</a></p></li>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2023/1784">Succinct Arguments over Towers of Binary Fields</a></p></li>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2024/504">Polylogarithmic Proofs for Multilinears over Binary Towers</a></p></li>
+</ul>
+</li>
+<li><p>FRI (for univariate polynomial only)</p>
+<ul>
+<li><p><a class="reference external" href="https://eccc.weizmann.ac.il/report/2017/134/download/">Fast Reed-Solomon Interactive Oracle Proofs of Proximity</a></p></li>
+<li><p><a class="reference external" href="https://www.math.toronto.edu/swastik/fri.pdf">Worst-case to average case reductions for the distance to a code</a></p></li>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2019/336">DEEP-FRI: Sampling Outside the Box Improves Soundness</a></p></li>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2020/654">Proximity Gaps for Reed-Solomon Codes</a></p></li>
+</ul>
+</li>
+<li><p>Zeromorph (MLE-2-Uni adaptor)</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2023/917">Zeromorph: Zero-Knowledge Multilinear-Evaluation Proofs from Homomorphic Univariate Commitments</a></p></li>
+</ul>
+</li>
+<li><p>Virgo-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2019/1482">Transparent Polynomial Delegation and Its Applications to Zero Knowledge Proof</a></p></li>
+</ul>
+</li>
+<li><p>PH23(Logup)-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2023/1284">Improving logarithmic derivative lookups using GKR</a></p></li>
+</ul>
+</li>
+<li><p>BCHO22(Gemini)-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2022/420">Gemini: Elastic SNARKs for Diverse Environments</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="more-pcs-future-work">
+<h3>More PCS (Future work)<a class="headerlink" href="#more-pcs-future-work" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Brakedown-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2021/1043">Brakedown: Linear-time and field-agnostic SNARKs for R1CS</a></p></li>
+</ul>
+</li>
+<li><p>Orion-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2022/1010">Orion: Zero Knowledge Proof with Linear Prover Time</a></p></li>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2024/1164">A Crack in the Firmament: Restoring Soundness of the Orion Proof System and More</a></p></li>
+</ul>
+</li>
+<li><p>Hyrax-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2017/1132">Doubly-efficient zkSNARKs without trusted setup</a></p></li>
+</ul>
+</li>
+<li><p>Libra-PCS</p>
+<ul>
+<li><p><a class="reference external" href="https://eprint.iacr.org/2019/317">Libra: Succinct Zero-Knowledge Proofs with Optimal Prover Computation</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
+<p>We encourage contributions from the community to enhance this project. If you would like to contribute, please fork the repository and submit a pull request or open an issue for discussion.</p>
+<p>TODO: list current contributors</p>
+<p>You can find guidelines for contributing to this project <a class="reference internal" href="CONTRIBUTING.html"><span class="std std-doc">here</span></a>.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ACFY24a] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[ACFY24b] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[BCH+22] Jonathan Bootle, Alessandro Chiesa, Yuncong Hu, and Michele Orru. “Gemini: Elastic SNARKs for diverse environments.” In <em>Annual International Conference on the Theory and Applications of Cryptographic Techniques</em>, pp. 427-457. Cham: Springer International Publishing, 2022.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. “DEEP-FRI: sampling outside the box improves soundness.” <em>arXiv preprint arXiv:1903.12243</em> (2019).</p></li>
+<li><p>[BBHR18] Eli Ben-Sasson, Iddo Bentov, Ynon Horesh, and Michael Riabzev. Fast Reed-Solomon Interactive Oracle Proofs of Proximity. In Proceedings of the 45th International Colloquium on Automata, Languages, and Programming (ICALP), 2018. Available online as Report 134-17 on Electronic Colloquium on Computational Complexity.</p></li>
+<li><p>[CFS17] Chiesa, Alessandro, Michael A. Forbes, and Nicholas Spooner. “A zero knowledge sumcheck and its applications.” <a class="reference external" href="https://eprint.iacr.org/2017/305"><em>arXiv preprint arXiv:1704.02086</em> (2017)</a>.</p></li>
+<li><p>[CHMMVW19] Alessandro Chiesa, Yuncong Hu, Mary Maller, Pratyush Mishra, Psi Vesely, and Nicholas Ward. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p></li>
+<li><p>[D24] Yuval Domb. “Really Complex Codes with Application to STARKs.” <em>Cryptology ePrint Archive</em> (2024). <a class="reference external" href="https://eprint.iacr.org/2024/1620">https://eprint.iacr.org/2024/1620</a></p></li>
+<li><p>[DP23] Diamond, Benjamin E., and Jim Posen. “Succinct arguments over towers of binary fields.” Cryptology ePrint Archive (2023).</p></li>
+<li><p>[DP24] Diamond, Benjamin E., and Jim Posen. “Polylogarithmic Proofs for Multilinears over Binary Towers.” Cryptology ePrint Archive (2024).</p></li>
+<li><p>[GLHQTZ24] Yanpei Guo, Xuanming Liu, Kexi Huang, Wenjie Qu, Tianyang Tao, and Jiaheng Zhang. “DeepFold: Efficient Multilinear Polynomial Commitment from Reed-Solomon Code and Its Application to Zero-knowledge Proofs.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+<li><p>[HLP24] Ulrich Haböck, David Levit, and Shahar Papini. “Circle STARKs.” <em>Cryptology ePrint Archive</em> (2024). <a class="reference external" href="https://eprint.iacr.org/2024/278">https://eprint.iacr.org/2024/278</a></p></li>
+<li><p>[KT23] Kohrita, Tohru, and Patrick Towa. “Zeromorph: Zero-knowledge multilinear-evaluation proofs from homomorphic univariate commitments.” Cryptology ePrint Archive (2023).</p></li>
+<li><p>[KZG10] Kate, Aniket, Gregory M. Zaverucha, and Ian Goldberg. “Constant-size commitments to polynomials and their applications.” Advances in Cryptology-ASIACRYPT 2010: 16th International Conference on the Theory and Application of Cryptology and Information Security, Singapore, December 5-9, 2010. Proceedings 16. Springer Berlin Heidelberg, 2010.</p></li>
+<li><p>[PH23] Papini, Shahar, and Ulrich Haböck. “Improving logarithmic derivative lookups using GKR.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/1284">https://eprint.iacr.org/2023/1284</a></p></li>
+<li><p>[PST13] Papamanthou, Charalampos, Elaine Shi, and Roberto Tamassia. “Signatures of correct computation.” Theory of Cryptography Conference. Berlin, Heidelberg: Springer Berlin Heidelberg, 2013. <a class="reference external" href="https://eprint.iacr.org/2011/587">https://eprint.iacr.org/2011/587</a></p></li>
+<li><p>[XZZPS19] Tiancheng Xie, Jiaheng Zhang, Yupeng Zhang, Charalampos Papamanthou, and Dawn Song. “Libra: Succinct Zero-Knowledge Proofs with Optimal Prover Computation.” Cryptology ePrint Archive (2019). <a class="reference external" href="https://eprint.iacr.org/2019/317">https://eprint.iacr.org/2019/317</a></p></li>
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” In <em>Annual International Cryptology Conference</em>, pp. 138-169. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[ZGKPP17] Yupeng Zhang, Daniel Genkin, Jonathan Katz, Dimitrios Papadopoulos, and Charalampos Papamanthou. “A zero-knowledge version of vSQL.” <em>Cryptology ePrint Archive</em> (2017). <a class="reference external" href="https://eprint.iacr.org/2017/1146">https://eprint.iacr.org/2017/1146</a></p></li>
+<li><p>[ZXZS19] Jiaheng Zhang, Tiancheng Xie, Yupeng Zhang, and Dawn Song. “Transparent Polynomial Delegation and Its Applications to Zero Knowledge Proof”. In 2020 IEEE Symposium on Security and Privacy (SP), pp. 859-876. IEEE, 2020. <a class="reference external" href="https://eprint.iacr.org/2019/1482">https://eprint.iacr.org/2019/1482</a>.</p></li>
+</ul>
+<p>More are listed in the research notes.</p>
+</section>
+<section id="acknowledgments">
+<h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading">#</a></h2>
+<p>We extend our gratitude to the <strong>Ethereum Foundation</strong> for funding this research. Special thanks to all the contributors and the cryptographic community for their continuous support and valuable insights.</p>
+<hr class="docutils" />
+<p><strong>Disclaimer</strong>: This project is for research and experimental purposes only. Please do not use this code in any production environment.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-purpose">Project Purpose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-structure">Project Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-details">Implementation Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-implementations">Reference Implementations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-notebooks">Jupyter Notebooks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-notes">Research Notes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-notices">Important Notices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pcs-list">PCS List</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#on-going">On-going</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-pcs-future-work">More PCS (Future work)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">Contributors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

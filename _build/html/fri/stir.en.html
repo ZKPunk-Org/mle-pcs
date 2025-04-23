@@ -1,0 +1,831 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>STIR: Improving Rate to Reduce Query Complexity &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/stir.en';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/stir.en.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/stir.en.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>STIR: Improving Rate to Reduce Query Complexity</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri-v-s-stir">FRI v.s. STIR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#powerful-tools-for-rs-encoding">Powerful Tools for RS Encoding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#folding">Folding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quotienting">Quotienting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-domain-sampling">Out of Domain Sampling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-dive-into-one-iteration-of-the-stir-protocol">Deep Dive into One Iteration of the STIR Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness-analysis">Soundness Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-correction">Degree correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="stir-improving-rate-to-reduce-query-complexity">
+<h1>STIR: Improving Rate to Reduce Query Complexity<a class="headerlink" href="#stir-improving-rate-to-reduce-query-complexity" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>This article is mainly inspired by the blog post <a class="reference external" href="https://gfenzi.io/papers/stir/">STIR: Reed–Solomon Proximity Testing with Fewer Queries</a> by the authors of the <a class="reference external" href="https://eprint.iacr.org/2024/390">STIR paper</a> and the presentation <a class="reference external" href="https://www.youtube.com/watch?v=OLklJjp8KB4&amp;amp;ab_channel=ZeroKnowledge">ZK11: STIR: Reed–Solomon Proximity Testing with Fewer Queries - Gal Arnon &amp; Giacomo Fenzi</a>, introducing the STIR protocol.</p>
+<p>Like FRI, STIR also solves the Reed-Solomon Proximity Testing problem, but compared to FRI, it has lower query complexity, which reduces the size of the argument and the hash complexity of the Verifier. So how does STIR achieve this? The answer is in the name itself, STIR stands for <strong>S</strong>hift <strong>T</strong>o <strong>I</strong>mprove <strong>R</strong>ate, and the core idea of STIR is to improve the rate by shifting the evaluation domain in each round. Intuitively, the rate actually characterizes the proportion of true information contained in the codeword. As the rate decreases, the true information decreases, corresponding to an increase in redundancy in the codeword, making it easier for the Verifier to test the proximity of a received message to the encoding space. In other words, the Verifier’s testing ability becomes stronger. This means that the Verifier only needs fewer queries to achieve the target security. Let’s look at how STIR reduces the rate by comparing FRI and STIR.</p>
+<section id="fri-v-s-stir">
+<h2>FRI v.s. STIR<a class="headerlink" href="#fri-v-s-stir" title="Link to this heading">#</a></h2>
+<p>For a finite field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, let <span class="math notranslate nohighlight">\(\mathcal{L} \subseteq \mathbb{F}\)</span> be the evaluation domain, with size <span class="math notranslate nohighlight">\(|\mathcal{L}| = n\)</span>, and let <span class="math notranslate nohighlight">\(d\)</span> denote the degree bound (assume both <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(d\)</span> are powers of 2). Then the Reed-Solomon encoding space <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> contains all functions <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> such that <span class="math notranslate nohighlight">\(f\)</span> is consistent with the evaluation of a polynomial of degree strictly less than <span class="math notranslate nohighlight">\(d\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>. The rate is <span class="math notranslate nohighlight">\(\rho := d/|\mathcal{L}|\)</span>.</p>
+<p>The goal of the protocol is to solve the Reed-Solomon Proximity Testing problem, where the Verifier can obtain a function <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> through queries. The Verifier’s goal is to query the values of <span class="math notranslate nohighlight">\(f\)</span> at as few locations as possible to distinguish which of the following cases <span class="math notranslate nohighlight">\(f\)</span> belongs to:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f\)</span> is a Reed-Solomon codeword, i.e., <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>;</p></li>
+<li><p><span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from all codewords in the Reed-Solomon encoding space <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> in relative Hamming distance, i.e., <span class="math notranslate nohighlight">\(\Delta(f, \mathrm{RS}[\mathbb{F},\mathcal{L},d]) &gt; \delta\)</span>.</p></li>
+</ol>
+<p>We consider the above Reed-Solomon Proximity Testing problem under the IOPP (Interactive Oracle Proofs of Proximity) model, where the Verifier can interact with the Prover and obtain the Prover’s messages through an oracle, as shown in the following figure.</p>
+<p><img alt="" src="../_images/stir-iopp-for-RS.excalidraw.svg" /></p>
+<p>After a series of interactions with the Prover, the Verifier has two situations:</p>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>, the Verifier accepts :)</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(\Delta(f, \mathrm{RS}[\mathbb{F},\mathcal{L},d]) &gt; \delta\)</span>, the Verifier rejects with high probability :(</p></li>
+</ul>
+<p>We compare the FRI protocol and the STIR protocol in the case of <span class="math notranslate nohighlight">\(k\)</span>-fold, as shown in the following figure.</p>
+<p><img alt="" src="../_images/stir-FRI-STIR.svg" /></p>
+<p>In the FRI protocol, assume that <span class="math notranslate nohighlight">\(g_1\)</span> is obtained by <span class="math notranslate nohighlight">\(k\)</span>-fold using the random number <span class="math notranslate nohighlight">\(\alpha_1\)</span>, where <span class="math notranslate nohighlight">\(\mathcal{L}^{k} = \{x^k,x\in \mathcal{L}\}\)</span>. Therefore, testing <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> is converted to testing <span class="math notranslate nohighlight">\(g_1 \in \mathrm{RS}[\mathbb{F},\mathcal{L}^k,d/k]\)</span>, and recursively testing <span class="math notranslate nohighlight">\(g_i \in \mathrm{RS}[\mathbb{F},\mathcal{L}^{k^i},d/k^i]\)</span>. Thus, in the <span class="math notranslate nohighlight">\(i\)</span>-th round, its rate is</p>
+<div class="math notranslate nohighlight">
+\[
+\rho_i = \frac{\frac{d}{k^i}}{|\mathcal{L}_i|} = \frac{d}{k^i} \cdot \frac{k^i}{n} = \frac{d}{n} = \rho
+\]</div>
+<p>We can see that in each round, the rate <span class="math notranslate nohighlight">\(\rho_i\)</span> remains constant at <span class="math notranslate nohighlight">\(\rho\)</span>.</p>
+<p>In the STIR protocol, note that <span class="math notranslate nohighlight">\(g_1'\)</span> is still <span class="math notranslate nohighlight">\(k\)</span>-folded, but the size of its evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> is not reduced by <span class="math notranslate nohighlight">\(k\)</span> times, but by 2 times. At this time, testing <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> is converted to testing <span class="math notranslate nohighlight">\(g_1' \in \mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span>. Then in the <span class="math notranslate nohighlight">\(i\)</span>-th round, we need to test <span class="math notranslate nohighlight">\(g_i' \in \mathrm{RS}[\mathbb{F},\mathcal{L}_{i}',d/k^i]\)</span>. Now</p>
+<div class="math notranslate nohighlight">
+\[
+\rho_i = \frac{\frac{d}{k^i}}{|\mathcal{L}'_i|} = \frac{d}{k^i} \cdot \frac{2^i}{n} = \left( \frac{2}{k}\right)^i \cdot \frac{d}{n} = \left( \frac{2}{k}\right)^i \cdot \rho
+\]</div>
+<p>If <span class="math notranslate nohighlight">\(\frac{2}{k} &lt; 1\)</span>, i.e., <span class="math notranslate nohighlight">\(k &gt; 2\)</span>, we can see that the rate <span class="math notranslate nohighlight">\(\rho_{i}\)</span> decreases in each round, which is the key to STIR’s reduction in query complexity. In other words, because the Verifier’s testing ability becomes stronger, it only needs fewer queries to achieve the target security.</p>
+<p>When we compile the above IOPP into a SNARK, we need to use the BCS transformation ([BCS16], BCS transformation), which consists of two steps:</p>
+<ol class="arabic simple">
+<li><p>Merkle commit the Prover’s messages, and when the Verifier wants to query, open these commitments. This step transforms the IOPP into a succinct interactive argument.</p></li>
+<li><p>Use the Fiat-Shamir transform to convert the succinct interactive argument obtained in the first step into a non-interactive one.</p></li>
+</ol>
+<p>In the BCS transformation, the IOPP needs to have a strong soundness property called round-by-round soundness, which requires the IOPP to have a relatively small soundness error in each round, which is a stronger requirement than requiring the entire IOPP to have a relatively small soundness error. Let’s assume that the bound for the round-by-round soundness error is <span class="math notranslate nohighlight">\(2^{-\lambda}\)</span>. Each round can be queried <span class="math notranslate nohighlight">\(t_{i}\)</span> times repeatedly, and the entire IOPP protocol goes through <span class="math notranslate nohighlight">\(M\)</span> rounds, so the total query complexity of the entire proof is <span class="math notranslate nohighlight">\(\sum_{i = 0}^M t_i\)</span>. For <span class="math notranslate nohighlight">\(\delta\)</span> reaching the Johnson bound, i.e., <span class="math notranslate nohighlight">\(\delta = 1 - \sqrt{\rho}\)</span>, we can calculate that</p>
+<ol class="arabic">
+<li><p>The query complexity of FRI is:</p>
+<div class="math notranslate nohighlight">
+\[
+        O \left( \lambda \cdot \frac{\log d}{- \log \sqrt{\rho}} \right)
+    \]</div>
+</li>
+<li><p>The query complexity of STIR is:</p>
+<div class="math notranslate nohighlight">
+\[
+        O \left( \lambda \cdot \log \left( \frac{\log d}{- \log \sqrt{\rho}} \right) + \log d \right)
+    \]</div>
+</li>
+</ol>
+<p>In the query complexity of STIR, <span class="math notranslate nohighlight">\(d\)</span> is usually not large, so the first term <span class="math notranslate nohighlight">\(\lambda \cdot \log \left( \frac{\log d}{- \log \sqrt{\rho}} \right)\)</span> accounts for a larger proportion. We can see that it is at the <span class="math notranslate nohighlight">\(\log \log\)</span> level, while the original FRI is only at the <span class="math notranslate nohighlight">\(\log\)</span> level.</p>
+<p>Figure 2 in Section 6.4 of the paper [ACFY24] gives the experimental results comparing FRI and STIR. We can see that the reduction in query complexity of STIR results in better performance in terms of argument size and the number of hashes computed by the Verifier compared to FRI. This is understandable, as fewer query complexity means:</p>
+<ol class="arabic simple">
+<li><p>A reduction in the overall argument size is obvious.</p></li>
+<li><p>With fewer queries, the Verifier needs to open fewer Merkle commitments, resulting in fewer hash computations.</p></li>
+</ol>
+<p><img alt="" src="../_images/stir-comparison.png" /></p>
+</section>
+<section id="powerful-tools-for-rs-encoding">
+<h2>Powerful Tools for RS Encoding<a class="headerlink" href="#powerful-tools-for-rs-encoding" title="Link to this heading">#</a></h2>
+<p>Here we first introduce several powerful tools for RS encoding, which can help us understand the specific STIR protocol construction.</p>
+<section id="folding">
+<h3>Folding<a class="headerlink" href="#folding" title="Link to this heading">#</a></h3>
+<p>For a function <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span>, given a random number <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span>, its <span class="math notranslate nohighlight">\(k\)</span>-fold function is denoted as <span class="math notranslate nohighlight">\(f_r := \mathrm{Fold}(f,r) : \mathcal{L}^{k} \rightarrow \mathbb{F}\)</span>. It is defined as, for each <span class="math notranslate nohighlight">\(x \in \mathcal{L}^{k}\)</span>, we can find <span class="math notranslate nohighlight">\(k\)</span> <span class="math notranslate nohighlight">\(y\)</span> in <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> satisfying <span class="math notranslate nohighlight">\(y^k = x\)</span>. From <span class="math notranslate nohighlight">\(k\)</span> pairs of <span class="math notranslate nohighlight">\((y, f(y))\)</span>, we can obtain a unique polynomial <span class="math notranslate nohighlight">\(\hat{p}\)</span> of degree less than <span class="math notranslate nohighlight">\(k\)</span> satisfying <span class="math notranslate nohighlight">\(\hat{p}(y) = f(y)\)</span>, then <span class="math notranslate nohighlight">\(\hat{p}(r)\)</span> is the value of the function <span class="math notranslate nohighlight">\(f_r(x)\)</span>. This definition of the Fold function is completely consistent with the definition of the Fold function in the FRI protocol, and it has two good properties.</p>
+<p>The first property is distance preservation.</p>
+<ol class="arabic simple">
+<li><p>If the function <span class="math notranslate nohighlight">\(f\)</span> before folding is in <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span>, then for any randomly chosen <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span>, the folded function is still an RS code, i.e., <span class="math notranslate nohighlight">\(f_r \in \mathrm{RS}[\mathbb{F}, \mathcal{L}^k, d/k]\)</span>.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span>, if <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span>, then with probability at least <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/\mathbb{F}\)</span> over the choice of random <span class="math notranslate nohighlight">\(r\)</span>, <span class="math notranslate nohighlight">\(f_r\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}^k, d/k]\)</span>.</p></li>
+</ol>
+<p>This property ensures that we can boldly perform folding. If the Prover cheats and provides a function that is <span class="math notranslate nohighlight">\(\delta\)</span>-far from the encoding space, the folded function will still be <span class="math notranslate nohighlight">\(\delta\)</span>-far from the corresponding encoding space with high probability.</p>
+<p>The second property is called Local, which means that to obtain the value of the folded function at any point, we only need to query the values of <span class="math notranslate nohighlight">\(f\)</span> at <span class="math notranslate nohighlight">\(k\)</span> points to calculate it, because at this time we can obtain a unique polynomial <span class="math notranslate nohighlight">\(\hat{p}\)</span> of degree less than <span class="math notranslate nohighlight">\(k\)</span>, and then substitute <span class="math notranslate nohighlight">\(r\)</span> to calculate <span class="math notranslate nohighlight">\(\hat{p}(r)\)</span>, which is the value at that point. At this time, the Prover does not need to provide an oracle for <span class="math notranslate nohighlight">\(\mathrm{Fold}(f,r)\)</span> separately, the Verifier can obtain it by accessing the oracle of <span class="math notranslate nohighlight">\(f\)</span>, which reduces the argument size.</p>
+</section>
+<section id="quotienting">
+<h3>Quotienting<a class="headerlink" href="#quotienting" title="Link to this heading">#</a></h3>
+<p>For functions <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> and <span class="math notranslate nohighlight">\(p: S \rightarrow \mathbb{F}\)</span>, where <span class="math notranslate nohighlight">\(S \subseteq \mathbb{F}\)</span>, the quotient with respect to function <span class="math notranslate nohighlight">\(f\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{Quotient}(f, S, p)(x) := \frac{f(x) - \hat{p}(x)}{\prod_{a \in S}(X - a)},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{p}\)</span> is the unique polynomial of degree less than <span class="math notranslate nohighlight">\(|S|\)</span> satisfying <span class="math notranslate nohighlight">\(\hat{p}(a) = p(a)\)</span> for all <span class="math notranslate nohighlight">\(a \in S\)</span>.</p>
+<p>An important property of this function is Consistency. Assuming <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> are disjoint (actually they can intersect, the conclusion will be more complex, see [ACFY24] Lemma 4.4), then</p>
+<ol class="arabic simple">
+<li><p>If <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span>, it is an evaluation of a polynomial of degree less than <span class="math notranslate nohighlight">\(d\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>, and this polynomial is consistent with <span class="math notranslate nohighlight">\(p\)</span> on <span class="math notranslate nohighlight">\(S\)</span>, then <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, S, p) \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d - |S|]\)</span>.</p></li>
+<li><p>If for any polynomial <span class="math notranslate nohighlight">\(\hat{u}\)</span> of degree less than <span class="math notranslate nohighlight">\(d\)</span> that is <span class="math notranslate nohighlight">\(\delta\)</span>-close to <span class="math notranslate nohighlight">\(f\)</span>, <span class="math notranslate nohighlight">\(\hat{u}\)</span> is not completely consistent with <span class="math notranslate nohighlight">\(p\)</span> on <span class="math notranslate nohighlight">\(S\)</span>, i.e., for some <span class="math notranslate nohighlight">\(a \in S\)</span>, <span class="math notranslate nohighlight">\(\hat{u}(a) \neq p(a)\)</span>, then <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, S, p)\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d - |S|]\)</span>.</p></li>
+</ol>
+<p><img alt="" src="../_images/stir-quotient.svg" /></p>
+<p>Regarding point 2 above, for codewords <span class="math notranslate nohighlight">\(\hat{u}\)</span> within <span class="math notranslate nohighlight">\(\delta\)</span> range of <span class="math notranslate nohighlight">\(f\)</span>, the set of these codewords is denoted as <span class="math notranslate nohighlight">\(\mathrm{List}(f,d,\delta)\)</span>. For any <span class="math notranslate nohighlight">\(\hat{u} \in \mathrm{List}(f,d,\delta)\)</span>, as long as there is a point on <span class="math notranslate nohighlight">\(S\)</span> where <span class="math notranslate nohighlight">\(\hat{u}(a) \neq p(a)\)</span>, the distance of the quotient polynomial <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, S, p)\)</span> is amplified and becomes <span class="math notranslate nohighlight">\(\delta\)</span>-far. In other words, if an incorrect value <span class="math notranslate nohighlight">\(f(a) - p(a)\)</span> is divided here, the quotient polynomial becomes very far from the RS encoding space of low-degree polynomials.</p>
+<p>Note that here we require that for any <span class="math notranslate nohighlight">\(\hat{u} \in \mathrm{List}(f,d,\delta)\)</span>, <span class="math notranslate nohighlight">\(\hat{u}\)</span> is inconsistent with <span class="math notranslate nohighlight">\(p\)</span> on <span class="math notranslate nohighlight">\(S\)</span>. Using the Out of Domain Sampling method, we can limit the codewords within <span class="math notranslate nohighlight">\(\delta\)</span> range of <span class="math notranslate nohighlight">\(f\)</span> to at most one with high probability, which makes it easier for the Verifier to detect. We will discuss this method in detail in the next section.</p>
+<p>The <span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> function can help us add constraints on the function <span class="math notranslate nohighlight">\(f\)</span>. For example, if we want to restrict the value of <span class="math notranslate nohighlight">\(f\)</span> at point <span class="math notranslate nohighlight">\(a\)</span> to be <span class="math notranslate nohighlight">\(b\)</span>, we can achieve this through <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, \{a\}, p)\)</span>, where <span class="math notranslate nohighlight">\(p(a) = b\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{Quotient}(f, \{a\}, p) = \frac{f(x) - p(x)}{x - a} 
+\]</div>
+<p>Then we just need to prove <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, \{a\}, p) \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d - 1]\)</span>. If the <span class="math notranslate nohighlight">\(f\)</span> provided by the Prover does not have a value of <span class="math notranslate nohighlight">\(b\)</span> at point <span class="math notranslate nohighlight">\(a\)</span>, i.e., <span class="math notranslate nohighlight">\(f(a) \neq b\)</span>, then <span class="math notranslate nohighlight">\(f(a) \neq p(a)\)</span>, which will cause <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, \{a\}, p)\)</span> to be <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d - 1]\)</span>, making it easy for the Verifier to detect. Here we only added one constraint, of course we can add multiple constraints, so we can add constraints to <span class="math notranslate nohighlight">\(f\)</span> while converting the test of <span class="math notranslate nohighlight">\(f\)</span> to testing whether the <span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> function is <span class="math notranslate nohighlight">\(\delta\)</span>-close to the corresponding RS encoding space.</p>
+<p>The <span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> function, like the folding function, has the Local property. To calculate the value of the <span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> function at a point <span class="math notranslate nohighlight">\(x \in \mathcal{L}\backslash\mathcal{S}\)</span>, it can be calculated by querying the value of function <span class="math notranslate nohighlight">\(f\)</span> at point <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</section>
+<section id="out-of-domain-sampling">
+<h3>Out of Domain Sampling<a class="headerlink" href="#out-of-domain-sampling" title="Link to this heading">#</a></h3>
+<p>Out of Domain Sampling is a powerful tool that can help us limit the number of codewords within <span class="math notranslate nohighlight">\(\delta\)</span> range of the function <span class="math notranslate nohighlight">\(f\)</span> provided by the Prover, thus converting List Decoding to Unique Decoding.</p>
+<p>Generally, for a function <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span>, the Verifier randomly selects a number <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F} \backslash \mathcal{L}\)</span> from outside the domain <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>, and the Prover returns a value <span class="math notranslate nohighlight">\(\beta\)</span>. Then in the list of codewords <span class="math notranslate nohighlight">\(\mathrm{List}(f,d,\delta)\)</span> within <span class="math notranslate nohighlight">\(\delta\)</span> range of <span class="math notranslate nohighlight">\(f\)</span>, with high probability, there is at most one codeword <span class="math notranslate nohighlight">\(\hat{u}\)</span> satisfying <span class="math notranslate nohighlight">\(\hat{u}(\alpha) = \beta\)</span>.</p>
+<p><img alt="" src="../_images/stir-out-of-domain-sampling.svg" /></p>
+<p>This can be explained using the fundamental theorem of algebra. We only need to prove that the probability of two different codewords <span class="math notranslate nohighlight">\(\hat{u}'\)</span> and <span class="math notranslate nohighlight">\(\hat{u}\)</span> in <span class="math notranslate nohighlight">\(\mathrm{List}(f,d,\delta)\)</span> having the same value at point <span class="math notranslate nohighlight">\(\alpha\)</span> is relatively small, which implies that with high probability, there is at most one codeword satisfying <span class="math notranslate nohighlight">\(\hat{u}(\alpha) = \beta\)</span>.</p>
+<p>First, fix two different codewords <span class="math notranslate nohighlight">\(\hat{u}'\)</span> and <span class="math notranslate nohighlight">\(\hat{u}\)</span>. Since they are different codewords and both have degree less than <span class="math notranslate nohighlight">\(d\)</span>, by the fundamental theorem of algebra, we have</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\alpha \leftarrow \mathbb{F} \backslash \mathcal{L}} [\hat{u}'(\alpha) = \hat{u}(\alpha)] \le \frac{d - 1}{|\mathbb{F}| - |\mathcal{L}|}
+\]</div>
+<p>Suppose <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L},d]\)</span> is <span class="math notranslate nohighlight">\((\delta, l)\)</span> list-decodable, meaning that there are at most <span class="math notranslate nohighlight">\(l\)</span> codewords within <span class="math notranslate nohighlight">\(\delta\)</span> range. Then there are <span class="math notranslate nohighlight">\(\binom{l}{2}\)</span> ways to choose two different codewords <span class="math notranslate nohighlight">\(\hat{u}'\)</span> and <span class="math notranslate nohighlight">\(\hat{u}\)</span>. Therefore, the probability of any two different codewords <span class="math notranslate nohighlight">\(\hat{u}'\)</span> and <span class="math notranslate nohighlight">\(\hat{u}\)</span> having the same value at point <span class="math notranslate nohighlight">\(\alpha\)</span> does not exceed <span class="math notranslate nohighlight">\(\binom{l}{2} \cdot \frac{d - 1}{|\mathbb{F}| - |\mathcal{L}|}\)</span>. This probability is very small, thus proving the point.</p>
+<p>How to restrict that the <span class="math notranslate nohighlight">\(\beta\)</span> sent by the Prover is really the value of <span class="math notranslate nohighlight">\(f\)</span> at point <span class="math notranslate nohighlight">\(a\)</span>? This can be achieved using the Quotient tool introduced in the previous section.</p>
+</section>
+</section>
+<section id="deep-dive-into-one-iteration-of-the-stir-protocol">
+<h2>Deep Dive into One Iteration of the STIR Protocol<a class="headerlink" href="#deep-dive-into-one-iteration-of-the-stir-protocol" title="Link to this heading">#</a></h2>
+<p>In this section, we will apply the three tools mentioned earlier to delve into one iteration of the STIR protocol.</p>
+<p>Objective:</p>
+<ul class="simple">
+<li><p>Initially given a function <span class="math notranslate nohighlight">\(f\)</span>, we want to prove that it is in <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>, where <span class="math notranslate nohighlight">\(\mathcal{L} =\langle \omega \rangle\)</span>.</p></li>
+<li><p>After one iteration, prove that function <span class="math notranslate nohighlight">\(f' \in \mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span>, where <span class="math notranslate nohighlight">\(\mathcal{L}' = \omega \cdot \langle \omega^2 \rangle\)</span>.</p></li>
+</ul>
+<p>That is, function <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(k\)</span>-folded, its degree is reduced to <span class="math notranslate nohighlight">\(d/k\)</span>, but the size of the evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> of function <span class="math notranslate nohighlight">\(f'\)</span> after one iteration is not reduced by <span class="math notranslate nohighlight">\(k\)</span> times, but by 2 times. This is the core idea of the STIR protocol mentioned earlier, reducing query complexity by improving the rate.</p>
+<p>Regarding the evaluation domains <span class="math notranslate nohighlight">\(\mathcal{L} =\langle \omega \rangle\)</span> and <span class="math notranslate nohighlight">\(\mathcal{L}' = \omega \cdot \langle \omega^2 \rangle\)</span>, here’s an example to illustrate. Suppose <span class="math notranslate nohighlight">\(\omega^8 = 1\)</span>.</p>
+<p><img alt="" src="../_images/stir-evaluation-domain.svg" /></p>
+<p>The <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> constructed in this way is half the size of <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>, but actually <span class="math notranslate nohighlight">\(\langle \omega^2 \rangle\)</span> can also satisfy the requirement of halving. Why not choose <span class="math notranslate nohighlight">\(\mathcal{L}' = \langle \omega^2 \rangle\)</span>? Suppose we perform <span class="math notranslate nohighlight">\(k = 4\)</span> folds, we can ensure that <span class="math notranslate nohighlight">\(\mathcal{L}^4 = \{\omega^4, \omega^8\}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{L}' = \{\omega^1, \omega^3,\omega^5, \omega^7\}\)</span> are disjoint. The advantage of doing this is to avoid constructing the function <span class="math notranslate nohighlight">\(\mathrm{Fill}\)</span> defined by the intersection points in <span class="math notranslate nohighlight">\(\mathcal{L}^4 \cap \mathcal{L}'\)</span>, so the Verifier doesn’t need to additionally check if the function values of <span class="math notranslate nohighlight">\(\mathrm{Fill}\)</span> are correct (as explained in [ACFY24] Remark 5.3).</p>
+<p>The protocol flow for one iteration is shown in the following figure:</p>
+<p><img alt="" src="../_images/stir-iteration.svg" /></p>
+<ol class="arabic simple">
+<li><p>Sample folding randomness: The Verifier first randomly selects a number <span class="math notranslate nohighlight">\(r^{\mathrm{fold}}\)</span> from <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, which will be used to fold function <span class="math notranslate nohighlight">\(f\)</span>.</p></li>
+<li><p>Send folded function: The Prover sends the folded function <span class="math notranslate nohighlight">\(g: \mathcal{L}' \rightarrow \mathbb{F}\)</span>. If the Prover is honest, then function <span class="math notranslate nohighlight">\(g\)</span> is the evaluation of polynomial <span class="math notranslate nohighlight">\(\hat{g}\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>. Here, evaluation means that <span class="math notranslate nohighlight">\(g\)</span> is completely consistent with <span class="math notranslate nohighlight">\(\hat{g}\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>, and polynomial <span class="math notranslate nohighlight">\(\hat{g}\)</span> is obtained through <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span>. First, use the random number <span class="math notranslate nohighlight">\(r^{\mathrm{fold}}\)</span> to perform <span class="math notranslate nohighlight">\(k\)</span>-fold on function <span class="math notranslate nohighlight">\(f\)</span>, obtaining <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}}) : \mathcal{L}^k \rightarrow \mathbb{F}\)</span>. At this time, the range of the folded function is <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span>, but we want it to take values on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>. We just need to extend the domain of <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> to <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>, obtaining polynomial <span class="math notranslate nohighlight">\(\hat{g}: \mathcal{L}' \rightarrow \mathbb{F}\)</span>, which has degree less than <span class="math notranslate nohighlight">\(d/k\)</span>.</p></li>
+<li><p>Out-of-domain sample: The Verifier takes a random number <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> from <span class="math notranslate nohighlight">\(\mathbb{F}\backslash \mathcal{L}'\)</span> and sends it to the Prover.</p></li>
+<li><p>Out-of-domain reply: The Prover replies with <span class="math notranslate nohighlight">\(\beta \in \mathbb{F}\)</span>. If the Prover is honest, then <span class="math notranslate nohighlight">\(\beta := \hat{g}(r^{\mathrm{out}})\)</span>.</p></li>
+</ol>
+<blockquote>
+<div><p>📝 <strong>Notes</strong>
+The purpose of steps 3 and 4 here is to use Out of Domain Sampling to convert list decoding to unique decoding, that is, the Verifier selects a random number <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> from <span class="math notranslate nohighlight">\(\mathbb{F} \backslash \mathcal{L}\)</span> and requires the Prover to reply with <span class="math notranslate nohighlight">\(\beta\)</span>.</p>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Shift queries: The Verifier selects <span class="math notranslate nohighlight">\(t\)</span> random numbers from <span class="math notranslate nohighlight">\(\langle \omega^k \rangle\)</span>, i.e., <span class="math notranslate nohighlight">\(\forall i \in [t],r_i^{\mathrm{shift}} \leftarrow \langle \omega^k \rangle\)</span>. According to the Local property of the folding function, the Verifier can calculate <span class="math notranslate nohighlight">\(y_i := f_{\mathrm{fold}}(r_i^{\mathrm{shift}})\)</span> by querying <span class="math notranslate nohighlight">\(f\)</span>, where <span class="math notranslate nohighlight">\(f_{\mathrm{fold}} :=\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span>.</p></li>
+</ol>
+<p>In step 2, the Prover sent <span class="math notranslate nohighlight">\(g: \mathcal{L}' \rightarrow \mathbb{F}\)</span> and claims that it is consistent with <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>, but the Verifier cannot directly query the values of the folded function on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>. The Verifier can only calculate the values of <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> by querying <span class="math notranslate nohighlight">\(f\)</span>. Fortunately, we can use the Quotient tool here to ensure consistency.</p>
+<p>In steps 3 and 4, the Out-of-domain Sampling method is first used to limit the number of codewords within <span class="math notranslate nohighlight">\(\delta\)</span> range of <span class="math notranslate nohighlight">\(g\)</span> to at most one, denoted as <span class="math notranslate nohighlight">\(\hat{u}\)</span>. Then in step 5, query the values of <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span>, which is convenient for subsequent verification of whether <span class="math notranslate nohighlight">\(\hat{u}\)</span> is consistent with the folded function on <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span>. The verification of consistency is left to the Quotient function.</p>
+<p>Let’s form a set <span class="math notranslate nohighlight">\(\mathcal{G} := \{r^{\mathrm{out}},r_1^{\mathrm{shift}}, \ldots, r_t^{\mathrm{shift}}\}\)</span> of all these points that need to ensure consistency, and then define a function <span class="math notranslate nohighlight">\(p: \mathcal{G}\rightarrow \mathbb{F}\)</span> that satisfies:</p>
+<div class="math notranslate nohighlight">
+\[
+p(r^{\mathrm{out}}) = \beta,
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(r_i^{\mathrm{shift}}) = y_i.
+\]</div>
+<p>Define the next function <span class="math notranslate nohighlight">\(f'\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+f' := \mathrm{Quotient}(f, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.
+\]</div>
+<p>Due to the Local property of the Quotient function, to calculate the values of <span class="math notranslate nohighlight">\(f'\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>, we only need to query the values of <span class="math notranslate nohighlight">\(g\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>.</p>
+<p>At this point, we just need to test whether <span class="math notranslate nohighlight">\(f'\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-close to <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span>.</p>
+<p>Looking closely at the formula for <span class="math notranslate nohighlight">\(f'\)</span>, we can see that if the Prover is honest, <span class="math notranslate nohighlight">\(f' \in \mathrm{RS}[\mathbb{F}, \mathcal{L}', d/k - |\mathcal{G}|]\)</span>. There is actually a reduction in the degree of the polynomial here, and degree correction is needed to correct the degree of <span class="math notranslate nohighlight">\(f'\)</span> to <span class="math notranslate nohighlight">\(d/k\)</span>. This point will be discussed in the following text.</p>
+</section>
+<section id="soundness-analysis">
+<h2>Soundness Analysis<a class="headerlink" href="#soundness-analysis" title="Link to this heading">#</a></h2>
+<p>In this section, we will perform a soundness analysis for one iteration, that is, if the Prover cheats and <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>, we analyze the probability that <span class="math notranslate nohighlight">\(f'\)</span> is also relatively far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span>. [ACFY24] Lemma 1 gives the following conclusion:</p>
+<p><strong>Proposition 1</strong> [ACFY24, Lemma 1] If <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>, then except with probability <span class="math notranslate nohighlight">\((1 - \delta)^t +  \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span>, <span class="math notranslate nohighlight">\(f'\)</span> is (approximately) <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span>.</p>
+<p>Proof idea:</p>
+<ol class="arabic simple">
+<li><p>According to the distance-preserving property of the folding function, the function <span class="math notranslate nohighlight">\(f_{r^{\mathrm{fold}}} := \mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> obtained after folding <span class="math notranslate nohighlight">\(f\)</span> with the random number <span class="math notranslate nohighlight">\(r^{\mathrm{fold}}\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}^k,d/k]\)</span> with probability greater than <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|/|\mathbb{F}|)\)</span>.</p></li>
+<li><p>According to the property of Out-of-domain Sampling, the probability that <span class="math notranslate nohighlight">\(g\)</span> has at most one codeword <span class="math notranslate nohighlight">\(\hat{u}\)</span> within <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> range satisfying <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> is greater than <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span>.</p></li>
+</ol>
+<p>Now let’s analyze point 2. The function <span class="math notranslate nohighlight">\(g: \mathcal{L}' \rightarrow \mathbb{F}\)</span>, now consider its distance from the encoding space <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}', d/k]\)</span>. According to the Johnson bound, <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}', d/k]\)</span> is <span class="math notranslate nohighlight">\((\gamma, l)\)</span>-list-decodable, where <span class="math notranslate nohighlight">\(\gamma \approx 1 - \sqrt{\rho'}\)</span>, <span class="math notranslate nohighlight">\(l = \mathrm{poly}(|\mathcal{L}'|) =\mathrm{poly}(|\mathcal{L}|)\)</span>, which means there are at most <span class="math notranslate nohighlight">\(l\)</span> polynomials of degree less than <span class="math notranslate nohighlight">\(d/k\)</span> that are not more than <span class="math notranslate nohighlight">\(\gamma\)</span> away from <span class="math notranslate nohighlight">\(g\)</span>. Then for any two different polynomials <span class="math notranslate nohighlight">\(\hat{u}'\)</span> and <span class="math notranslate nohighlight">\(\hat{u}\)</span> chosen from these <span class="math notranslate nohighlight">\(l\)</span> polynomials, when randomly selecting <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> from <span class="math notranslate nohighlight">\(\mathbb{F} \backslash \mathcal{L}'\)</span>, the probability that their values at point <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> are both equal to <span class="math notranslate nohighlight">\(\beta\)</span> does not exceed <span class="math notranslate nohighlight">\(\frac{d/k - 1}{|\mathbb{F}| - |\mathcal{L}'|}\)</span>. There are <span class="math notranslate nohighlight">\(\binom{l}{2}\)</span> ways to choose these two polynomials, so this probability does not exceed</p>
+<div class="math notranslate nohighlight">
+\[
+\binom{l}{2} \cdot \frac{d/k - 1}{|\mathbb{F}| - |\mathcal{L}'|} = O\left(\frac{l^2 \cdot (d/k - 1)}{|\mathbb{F}| - |\mathcal{L}'|}\right) = \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|.
+\]</div>
+<p>Therefore, the probability that <span class="math notranslate nohighlight">\(g\)</span> has at most one codeword <span class="math notranslate nohighlight">\(\hat{u}\)</span> within <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> range satisfying <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> is greater than <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span>.</p>
+<p>If both item 1 and item 2 hold, this probability is greater than <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span>. Now we only need to prove that the probability that <span class="math notranslate nohighlight">\(f'\)</span> is (approximately) <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> is at least <span class="math notranslate nohighlight">\(1 - (1 - \delta)^t\)</span>.</p>
+<p>Let’s discuss two cases:</p>
+<ul>
+<li><p>If there is no codeword satisfying the requirement in item 2, that is, there is no codeword satisfying <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> within <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> range of <span class="math notranslate nohighlight">\(g\)</span>, and according to the construction of the protocol, <span class="math notranslate nohighlight">\(p(r^{\mathrm{out}}) = \beta\)</span>. Therefore, for any codeword within <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> range of <span class="math notranslate nohighlight">\(g\)</span>, we have <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) \neq p(r^{\mathrm{out}})\)</span>. Since</p>
+<div class="math notranslate nohighlight">
+\[
+    f' := \mathrm{Quotient}(g, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.
+    \]</div>
+<p>According to the consistency of the Quotient function, at this time <span class="math notranslate nohighlight">\(\hat{u}\)</span> and <span class="math notranslate nohighlight">\(p\)</span> are not completely consistent on <span class="math notranslate nohighlight">\(\mathcal{G}\)</span>, so <span class="math notranslate nohighlight">\(f' = \mathrm{Quotient}(f, \mathcal{G}, p)\)</span> is <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span>.</p>
+</li>
+<li><p>If there exists a codeword <span class="math notranslate nohighlight">\(\hat{u}\)</span> satisfying the requirement in item 2, there is already a codeword satisfying <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> within <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> range of <span class="math notranslate nohighlight">\(g\)</span>. According to</p>
+<div class="math notranslate nohighlight">
+\[
+    f' := \mathrm{Quotient}(g, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.
+    \]</div>
+<p>Now <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta = p(r^{\mathrm{out}})\)</span> is already satisfied. If for all <span class="math notranslate nohighlight">\(i \in [t]\)</span>, we have <span class="math notranslate nohighlight">\(\hat{u}(r_i^{\mathrm{shift}}) = y_i = p(r_i^{\mathrm{shift}})\)</span>, then <span class="math notranslate nohighlight">\(f' = \mathrm{Quotient}(f, \mathcal{G}, p)\)</span> is not more than <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span>. Otherwise, according to the consistency of the Quotient function, as long as for some <span class="math notranslate nohighlight">\(i\)</span> we have <span class="math notranslate nohighlight">\(\hat{u}(r_i^{\mathrm{shift}}) \neq y_i\)</span>, at this time <span class="math notranslate nohighlight">\(\hat{u}(r_i^{\mathrm{shift}}) \neq p(r_i^{\mathrm{shift}})\)</span>, it will cause <span class="math notranslate nohighlight">\(f'\)</span> to be <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span>.</p>
+<p>Since item 1 holds, we have <span class="math notranslate nohighlight">\(\Delta(f_{r^{\mathrm{fold}}}, \mathrm{RS}[\mathbb{F}, \mathcal{L}^k, d/k]) \ge \delta\)</span> for the folded function, so</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{aligned}
+         \Pr \left[\forall i \in [t], \hat{u}(r_i^{\mathrm{shift}}) = y_i \right] &amp; =  \Pr \left[\forall i \in [t], \hat{u}(r_i^{\mathrm{shift}}) = f_{r^{\mathrm{fold}}}(r_i^{\mathrm{shift}}) \right] \\
+         &amp; \le (1 - \delta)^t.
+    \end{aligned}
+    \end{split}\]</div>
+<p>Therefore, the probability that <span class="math notranslate nohighlight">\(f'\)</span> is (approximately) <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> is at least <span class="math notranslate nohighlight">\(1 - (1 - \delta)^t\)</span>.</p>
+</li>
+</ul>
+<p>Thus, Proposition 1 is proved. <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<p>In fact, the round-by-round soundness error of the protocol is approximately <span class="math notranslate nohighlight">\(\max \{\frac{\mathrm{poly}(|\mathcal{L}|)}{|\mathbb{F}|}, (1 - \delta)^t\}\)</span>.</p>
+</section>
+<section id="degree-correction">
+<h2>Degree correction<a class="headerlink" href="#degree-correction" title="Link to this heading">#</a></h2>
+<p>Now there’s a small problem left to solve. According to the definition of function <span class="math notranslate nohighlight">\(f'\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+    f' := \mathrm{Quotient}(g, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.  
+\]</div>
+<p>We can see that, strictly speaking, this converts the test of <span class="math notranslate nohighlight">\(f\)</span> to testing the distance of <span class="math notranslate nohighlight">\(f'\)</span> from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span>, rather than <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span>, which requires degree correction.</p>
+<p>Generally, let’s assume that the function we want to perform degree correction on is <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span>, its initial degree is <span class="math notranslate nohighlight">\(d\)</span>, and the target corrected degree is <span class="math notranslate nohighlight">\(d^* \ge d\)</span>. We want to construct an efficient degree correction algorithm that can output a function <span class="math notranslate nohighlight">\(f^*\)</span> satisfying:</p>
+<ol class="arabic simple">
+<li><p>If <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>, then <span class="math notranslate nohighlight">\(f^* \in \mathrm{RS}[\mathbb{F},\mathcal{L},d^*]\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span>, then with high probability, <span class="math notranslate nohighlight">\(f^*\)</span> is also <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d^*]\)</span>.</p></li>
+<li><p>Queries to <span class="math notranslate nohighlight">\(f^*\)</span> can be efficiently computed through queries to <span class="math notranslate nohighlight">\(f\)</span>.</p></li>
+</ol>
+<p>The STIR paper ([ACFY24], Section 2.3) proposes a method that not only satisfies the above three conditions but also uses the method of summing geometric series to make the calculation in item 3 more efficient.</p>
+<p>The method is to randomly sample an element <span class="math notranslate nohighlight">\(r \leftarrow \mathbb{F}\)</span> from the field and define</p>
+<div class="math notranslate nohighlight">
+\[
+f^*(x) = \sum_{i=0}^{e} r^i \cdot f_i(x) \tag{1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f_i(x) := x^i \cdot f(x)\)</span>, <span class="math notranslate nohighlight">\(e = d^* - d\)</span>. Expanding equation (1), we get</p>
+<div class="math notranslate nohighlight">
+\[
+f^*(x) = r^0 \cdot x^0 \cdot f(x) + r^1 \cdot x^1 \cdot f(x) + \cdots + r^e \cdot x^e \cdot f(x) \tag{2}
+\]</div>
+<p>According to the construction of <span class="math notranslate nohighlight">\(f^*\)</span>, item 1 naturally holds.</p>
+<p>For <span class="math notranslate nohighlight">\(\delta &lt; \min \{ 1 - \sqrt{\rho}, 1 - (1 + 1/d^*) \cdot \rho\}\)</span>, item 2 also holds. This can be obtained from the Correlated Agreement theorem in [BCIKS20], which we won’t elaborate on here.</p>
+<p>Next, let’s analyze item 3. From equation (2), we can see that to calculate the value of <span class="math notranslate nohighlight">\(f^*\)</span> at point <span class="math notranslate nohighlight">\(x\)</span>, after querying the value of <span class="math notranslate nohighlight">\(f(x)\)</span>, we need to sum <span class="math notranslate nohighlight">\(e + 1\)</span> terms, which takes <span class="math notranslate nohighlight">\(O(e)\)</span> time. If <span class="math notranslate nohighlight">\(e = \Omega(d)\)</span>, this is inefficient, but by using the method of summing geometric series, we can reduce the computational complexity to <span class="math notranslate nohighlight">\(O(\log e)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^*(x) &amp; = \sum_{i=0}^{e} r^i \cdot f_i(x) \\
+    &amp; = \sum_{i=0}^{e} r^i \cdot x^i \cdot f(x)\\
+    &amp; = f(x) \cdot \sum_{i=0}^{e} (r \cdot x)^i \\
+\end{aligned}
+\end{split}\]</div>
+<p>Using the geometric series sum formula for <span class="math notranslate nohighlight">\(\sum_{i=0}^{e} (r \cdot x)^i\)</span>, we can get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+f^*(x) = \begin{cases}
+    f(x) \cdot \frac{1 - (r \cdot x)^{e+1}}{1 - r \cdot x} &amp;  \text{if} \quad r \cdot x \neq 1 \\
+    f(x) \cdot (e + 1) &amp; \text{if} \quad r \cdot x = 1
+    \end{cases}
+\end{split}\]</div>
+<p>For the more complex <span class="math notranslate nohighlight">\(f(x) \cdot \frac{1 - (r \cdot x)^{e+1}}{1 - r \cdot x}\)</span>, the term <span class="math notranslate nohighlight">\((r \cdot x)^{e+1}\)</span> can be calculated using the repeated squaring method, which takes <span class="math notranslate nohighlight">\(O(\log e)\)</span> calculations. Then by querying the value of <span class="math notranslate nohighlight">\(f\)</span> at point <span class="math notranslate nohighlight">\(x\)</span> to get <span class="math notranslate nohighlight">\(f(x)\)</span>, it takes <span class="math notranslate nohighlight">\(O(\log e)\)</span> operations in total to calculate <span class="math notranslate nohighlight">\(f^*(x)\)</span>.</p>
+<p>This method can be extended to multiple functions of different degrees. For <span class="math notranslate nohighlight">\(m\)</span> functions <span class="math notranslate nohighlight">\(f_1, \ldots, f_m: \mathcal{L} \rightarrow \mathbb{F}\)</span> and degrees <span class="math notranslate nohighlight">\(d_1, \ldots, d_m\)</span>, we want to perform batch-degree-correction, finally obtaining a function <span class="math notranslate nohighlight">\(f^*\)</span> with degree <span class="math notranslate nohighlight">\(d^*\)</span>. Randomly sample a random number <span class="math notranslate nohighlight">\(r \leftarrow \mathbb{F}\)</span>, define <span class="math notranslate nohighlight">\(e_i = d^* - d_i\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+f^*(x) = \sum_{i = 0}^{e_1} r^i \cdot x^i \cdot f_1(x) + r^{1 + e_1} \sum_{i = 0}^{e_2} r^i \cdot x^i \cdot f_2(x) + \cdots + r^{m - 1 + \sum_{j = 1}^{m - 1}e_j} \sum_{i = 0}^{e_m} r^i \cdot x^i \cdot f_m(x).
+\]</div>
+<p>Similar to the degree correction of a single function above, for <span class="math notranslate nohighlight">\(\delta &lt; \min \{ 1 - \sqrt{\rho}, 1 - (1 + 1/d^*) \cdot \rho\}\)</span>, if any <span class="math notranslate nohighlight">\(f_i\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d_i]\)</span>, then <span class="math notranslate nohighlight">\(f^*\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span>-far from <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d^*]\)</span>. Similarly, using the method of summing geometric series, by querying <span class="math notranslate nohighlight">\(f_1, \ldots, f_m\)</span>, it takes <span class="math notranslate nohighlight">\(O(\sum_i \log e_i) = O(m \cdot \log d^*)\)</span> operations to calculate the value of <span class="math notranslate nohighlight">\(f^*\)</span> at point <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>STIR changes the evaluation domain of the function in each round, changing the original <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> in the FRI protocol to <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>. The function is still <span class="math notranslate nohighlight">\(k\)</span>-folded, but <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> is only half the size of the original. This reduces the rate of the encoding space, which can reduce the number of queries by the Verifier, and this is the core idea of STIR.</p>
+<p>In the construction of the STIR protocol, several powerful tools for RS encoding are used, making the entire protocol efficient and secure.</p>
+<ol class="arabic simple">
+<li><p>First, consistent with the FRI protocol, the function <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(k\)</span>-folded, but the resulting function needs to extend its evaluation domain from <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> to <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>. According to the distance-preserving property of the folding function, we can confidently perform this folding.</p></li>
+<li><p>Then, to reduce the Verifier’s work, the Out of Domain Sampling method is used to convert list decoding to unique decoding. This is where the Verifier selects a random number <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> from <span class="math notranslate nohighlight">\(\mathbb{F} \backslash \mathcal{L}\)</span> and requires the Prover to reply with <span class="math notranslate nohighlight">\(\beta\)</span> in the protocol.</p></li>
+<li><p>At this point, after changing the evaluation domain to <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span>, the problem faced is that the Verifier can only query the values of the <span class="math notranslate nohighlight">\(k\)</span>-folded function <span class="math notranslate nohighlight">\(\mathrm{f}_{r^{\mathrm{fold}}}\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span>. Fortunately, the powerful Quotient tool can be used to constrain the function sent by the Prover to be consistent with the folded function on <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span>. At this time, the Verifier selects <span class="math notranslate nohighlight">\(t\)</span> random numbers <span class="math notranslate nohighlight">\(r_{i}^{\mathrm{shift}}\)</span> from <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> for querying.</p></li>
+<li><p>Finally, combine <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> and <span class="math notranslate nohighlight">\(r_{i}^{\mathrm{shift}}\)</span>, and use the Quotient tool to constrain the values sent by the Prover at these points to be correct.</p></li>
+</ol>
+<p>Combining these tools, a soundness analysis of one iteration of the STIR protocol was performed. In fact, we can obtain that the round-by-round soundness error of STIR is <span class="math notranslate nohighlight">\(\max \{\frac{\mathrm{poly}(|\mathcal{L}|)}{|\mathbb{F}|}, (1 - \delta)^t\}\)</span>.</p>
+<p>Finally, to raise the degree of <span class="math notranslate nohighlight">\(f'\)</span> after iteration from <span class="math notranslate nohighlight">\(d/k - |\mathcal{G}|\)</span> to <span class="math notranslate nohighlight">\(d/k\)</span>, a degree correction method using geometric series summation that can be efficiently calculated was introduced.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ACFY24] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[BCS16] Eli Ben-Sasson, Alessandro Chiesa, and Nicholas Spooner. “Interactive Oracle Proofs”. In: <em>Proceedings of the 14th Theory of Cryptography Conference</em>. TCC ‘16-B. 2016, pp. 31–60.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. “DEEP-FRI: Sampling Outside the Box Improves Soundness”. In: <em>Proceedings of the 11th Innovations in Theoretical Computer Science Conference</em>. ITCS ‘20. 2020, 5:1–5:32.</p></li>
+<li><p><a class="reference external" href="https://gfenzi.io/papers/stir/">STIR: Reed–Solomon Proximity Testing with Fewer Queries</a></p></li>
+<li><p>Video: <a class="reference external" href="https://www.youtube.com/watch?v=OLklJjp8KB4&amp;amp;ab_channel=ZeroKnowledge">ZK11: STIR: Reed–Solomon Proximity Testing with Fewer Queries - Gal Arnon &amp; Giacomo Fenzi</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri-v-s-stir">FRI v.s. STIR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#powerful-tools-for-rs-encoding">Powerful Tools for RS Encoding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#folding">Folding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quotienting">Quotienting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-domain-sampling">Out of Domain Sampling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-dive-into-one-iteration-of-the-stir-protocol">Deep Dive into One Iteration of the STIR Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness-analysis">Soundness Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-correction">Degree correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

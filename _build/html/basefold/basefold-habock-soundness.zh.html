@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>笔记：Basefold 在 List Decoding 下的 Soundness 证明 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-habock-soundness.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-habock-soundness.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-habock-soundness.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>笔记：Basefold 在 List Decoding 下的 Soundness 证明</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lemma-1">Lemma 1 证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold-list-decoding-soundness">
+<h1>笔记：Basefold 在 List Decoding 下的 Soundness 证明<a class="headerlink" href="#basefold-list-decoding-soundness" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>在上一篇文章《Basefold 在 List Decoding 下的 Soundness 证明概览》中，梳理了 [H24] 论文中 soundness 证明的思路，本篇文章将沿着这个思路深入论文中的证明细节，主要是 [H24, Lemma 1] 的证明，其证明了 Basefold 协议在 commit 阶段的 soundness error。</p>
+<p><strong>Lemma 1</strong> [H24, Lemma 1] (Soundness commit phase). Take a proximity parameter <span class="math notranslate nohighlight">\(\theta=1-\left(1 + \frac{1}{2 \cdot m}\right) \cdot \sqrt{\rho}\)</span>, with <span class="math notranslate nohighlight">\(m\geq3\)</span>. Suppose that a (possibly computationally unbounded) algorithm <span class="math notranslate nohighlight">\(P^*\)</span> succeeds the commitment phase with <span class="math notranslate nohighlight">\(r\geq0\)</span> rounds with probability larger than</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon_C=\varepsilon_0+\varepsilon_1+\ldots+\varepsilon_r,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon_0=\varepsilon(\mathcal{C}_i,M,\theta)\)</span> is the soundness error from Theorem 3, and</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon_i:=\varepsilon(\mathcal{C}_i,1,B_i,\theta)+\frac{1}{|F|},
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_i,1,B_i,\theta)\)</span> being the soundness error from Theorem 4, where <span class="math notranslate nohighlight">\(B_i=\frac{|D|}{|D_i|}=2^i\)</span>. Then <span class="math notranslate nohighlight">\((g_0,\ldots,g_M)\)</span> belongs to <span class="math notranslate nohighlight">\(\mathcal{R}\)</span>.</p>
+<p>引理中提到的 [H24, Theorem 3] 就是在 list decoding 下针对 subcode 的 correlated agreement 定理，而 [H24, Theorem 4] 就是 [H24, Theorem 3] 的 weighted 版本。</p>
+<p>关系 <span class="math notranslate nohighlight">\(\mathcal{R}\)</span> 表示的含义是能得出 <span class="math notranslate nohighlight">\(P^*\)</span> 没有作恶，说明其承诺的多项式 <span class="math notranslate nohighlight">\((g_{0}, \ldots, g_{M})\)</span> 既离对应的编码空间距离不超过 <span class="math notranslate nohighlight">\(\theta\)</span> ，同时也满足在查询点 <span class="math notranslate nohighlight">\(\vec{\omega} = (\omega_1, \ldots, \omega_n)\)</span> 的值与承诺的值 <span class="math notranslate nohighlight">\(v_0, \ldots, v_M\)</span> 是一致的，即</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathcal{R}=\left\{\begin{array}{c}
+\exists p_0, \ldots, p_M \in \mathscr{F}[X]^{&lt;2^n} \text { s.t. } \\
+\left(g_0, \ldots, g_M\right): d\left(\left(g_0, \ldots, g_M\right),\left(p_0, \ldots, p_M\right)\right)&lt;\theta \\
+\wedge \bigwedge_{k=0}^M P_k\left(\omega_1, \ldots, \omega_n\right)=v_k
+\end{array}\right\}.
+\end{split}\]</div>
+<p>Lemma 1 说明的就是如果 <span class="math notranslate nohighlight">\(P^*\)</span> 在 commit 阶段成功的概率超过了 <span class="math notranslate nohighlight">\(\varepsilon_C\)</span> ，那么我们能相信 <span class="math notranslate nohighlight">\(P^*\)</span> 没有作弊，其声称的关系 <span class="math notranslate nohighlight">\(\mathcal{R}\)</span> 也是成立的。</p>
+<p>在这里，还需要用数学语言去定义 <span class="math notranslate nohighlight">\(P^*\)</span> 在 commit 阶段的第 <span class="math notranslate nohighlight">\(0 \le r \le n\)</span> 轮能成功的含义，这就是 [H24] 论文中给出的 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 的概念。从协议本身理解，<span class="math notranslate nohighlight">\(P^*\)</span> 能成功，意味着 verifier 拿到 <span class="math notranslate nohighlight">\(P^*\)</span> 发送过来的 <span class="math notranslate nohighlight">\(f_0, \Lambda_0, f_1, \Lambda_1,  f_2, \Lambda_2, \ldots, \Lambda_{r-1}, f_r\)</span> ，然后进行检查，一是进行 sumcheck 的检查，另一个是在 <span class="math notranslate nohighlight">\(D_0\)</span> 中随机选取 <span class="math notranslate nohighlight">\(x\)</span> ，FRI 的折叠是正确的。首先这里的参数 <span class="math notranslate nohighlight">\(\alpha = 1 - \theta \in (0,1)\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha = \left(1 + \frac{1}{2 \cdot m}\right) \cdot \sqrt{\rho}
+\]</div>
+<p>用 <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span> 表示和 Reed-Solomon 编码 <span class="math notranslate nohighlight">\(\mathcal{C}_i = \mathrm{RS}_{2^{n-i}}[F, D_i]\)</span> 相对应的多项式空间，其中 <span class="math notranslate nohighlight">\(D_i\)</span> 就是用映射 <span class="math notranslate nohighlight">\(\pi\)</span> 对 <span class="math notranslate nohighlight">\(D\)</span> 作用 <span class="math notranslate nohighlight">\(i\)</span> 次，即 <span class="math notranslate nohighlight">\(D_i = \pi^i(D), i = 0, \ldots, n\)</span> 。因此与 <span class="math notranslate nohighlight">\(\mathcal{C}_i' \subseteq \mathcal{C}_i\)</span> 相对应的多项式子空间定义为</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{F}_i' = \left\{p(X) \in \mathcal{F}_i: P(\omega_{i + 1}, \ldots, \omega_n) = 0 \right\}.
+\]</div>
+<ol class="arabic">
+<li><p>sumcheck 检查正确。意味着存在 <span class="math notranslate nohighlight">\(p_r(X) \in \mathcal{F}_r\)</span> ，其对应的多元多项式为 <span class="math notranslate nohighlight">\(P_r\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+    L((\omega_1, \ldots, \omega_r), (\lambda_1, \ldots, \lambda_r)) \cdot P_r(\omega_1, \ldots, \omega_n) = q_{r-1}(\lambda_r) 
+    \]</div>
+<p>根据 <span class="math notranslate nohighlight">\(q_i(X)\)</span> 与 <span class="math notranslate nohighlight">\(\Lambda_i(X)\)</span> 之间的关系，可以得到 <span class="math notranslate nohighlight">\(P_r\)</span> 需要满足</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{aligned}
+        L((\omega_1, \ldots, \omega_r), (\lambda_1, \ldots, \lambda_r)) \cdot &amp; P_r(\omega_{r + 1}, \ldots, \omega_n) = q_{r-1}(\lambda_r) \\
+        &amp; =  L((\omega_1, \ldots, \omega_r), (\lambda_1, \ldots, \lambda_r)) \cdot \Lambda_{r - 1}(\lambda_r)
+    \end{aligned} \tag{1}
+    \end{split}\]</div>
+</li>
+<li><p>折叠正确。需要满足</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \left| \left\{ x \in D_0 : \quad \begin{array}{c}
+        (f_0, \ldots, f_r) \text{ satisfy all folding checks along } x \\
+        \wedge f_r(\pi^r(x)) = p_r(\pi^r(x))
+    \end{array}\right\}\right| \ge \alpha \cdot |D_0| \tag{2}
+    \end{split}\]</div>
+<p>这里只有当在 <span class="math notranslate nohighlight">\(D_0\)</span> 中满足 folding check 的 <span class="math notranslate nohighlight">\(x\)</span> 的比例大于 <span class="math notranslate nohighlight">\(\alpha\)</span> ，经过 <span class="math notranslate nohighlight">\(\pi^r\)</span> 映射，到最后 verifier 才会通过。</p>
+</li>
+</ol>
+<p>当满足 1 和 2 两个条件时，就说这样的 <span class="math notranslate nohighlight">\((f_0, \Lambda_0, f_1, \Lambda_1,  f_2, \Lambda_2, \ldots, \Lambda_{r-1}, f_r)\)</span> 对于 <span class="math notranslate nohighlight">\((\lambda_0, \ldots, \lambda_r)\)</span> 来说 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 的。</p>
+<section id="lemma-1">
+<h2>Lemma 1 证明<a class="headerlink" href="#lemma-1" title="Link to this heading">#</a></h2>
+<p>Lemma 1 的证明采用的是数学归纳法，先证明当 <span class="math notranslate nohighlight">\(r = 0\)</span> 时结论是成立的，这里用到了 [H24, Therorem 3]。接着假设 Lemma 1 在 <span class="math notranslate nohighlight">\(0 \le r &lt; n\)</span> 时成立，证明 Lemma 1 在 <span class="math notranslate nohighlight">\(r + 1\)</span> 时结论也成立，在这个过程中就用到了带权重的 [H24, Theorem 4] ，其证明思路与上篇文章介绍的思路类似。例如在第 <span class="math notranslate nohighlight">\(r + 1\)</span> 轮，用随机数 <span class="math notranslate nohighlight">\(\lambda_{r + 1}\)</span> 折叠之后得到 <span class="math notranslate nohighlight">\(f_{r + 1}\)</span> 满足的条件入手，其离对应的编码空间距离比较近，并满足 sumcheck 约束，先推导出对应的 <span class="math notranslate nohighlight">\(f_{r + 1}'\)</span> 满足一些条件，这样就能使用针对 subcode 的 correlated agreement 定理了。应用定理的结论，进而得到在折叠之前的 <span class="math notranslate nohighlight">\(f_{r,0}\)</span> 与 <span class="math notranslate nohighlight">\(f_{r,1}\)</span> 满足的性质，以此再得出 <span class="math notranslate nohighlight">\(f_r\)</span> 满足的性质。此时应用归纳假设，能得到在第 <span class="math notranslate nohighlight">\(r\)</span> 轮满足引理的条件，从而得出在第 <span class="math notranslate nohighlight">\(r\)</span> 轮的结论成立，也就证明了在第 <span class="math notranslate nohighlight">\(r + 1\)</span> 轮引理成立。</p>
+<p>证明：首先证明当 <span class="math notranslate nohighlight">\(r = 0\)</span> 时引理是成立的。已知的条件是 <span class="math notranslate nohighlight">\(P^*\)</span> 在 commit 阶段成功的概率大于 <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_0,M,\theta)\)</span> ，想证明得到的结论是 <span class="math notranslate nohighlight">\((g_1, \ldots, g_M) \in \mathcal{R}\)</span> 。根据条件以及 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 的定义，可以得到以大于  <span class="math notranslate nohighlight">\(\varepsilon(\mathcal{C}_0,M,\theta)\)</span> 的概率 <span class="math notranslate nohighlight">\(P^*\)</span> 提供的 <span class="math notranslate nohighlight">\(f_0\)</span> 对 <span class="math notranslate nohighlight">\(\lambda_0\)</span> 来说是 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 的，那么对于考虑折叠之前的多项式 <span class="math notranslate nohighlight">\(g_k' = g_k - v_k\)</span> ，距离对应的 subcode <span class="math notranslate nohighlight">\(\mathcal{C}_0' \subseteq \mathcal{C}_0\)</span> 不超过 <span class="math notranslate nohighlight">\(\theta\)</span> (也就说明一致的地方大于 <span class="math notranslate nohighlight">\(\alpha\)</span> )的概率为</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr \left[ \lambda_0: \exists p_0' \in \mathcal{F}_0' \text{  s.t.  } \mathrm{agree} \left( \sum_{k = 0}^{M} g_k' \cdot \lambda_0^k, p_0'(X) \right) \ge \alpha  \right] &gt; \varepsilon(\mathcal{C}_0,M,\theta)
+\]</div>
+<p>这里考虑的是多项式  <span class="math notranslate nohighlight">\(g_k' = g_k - v_k\)</span> 而不是 <span class="math notranslate nohighlight">\(g_k\)</span> 的目的是，能让我们的分析进入线性子码 <span class="math notranslate nohighlight">\(\mathcal{C}_0'\)</span> 的范围内，这样我们就能用 [H24, Theorem 3] ，得到存在多项式</p>
+<div class="math notranslate nohighlight">
+\[
+p_0'(X), \ldots, p_M'(X) \in \mathcal{F}_0'
+\]</div>
+<p>以及存在集合 <span class="math notranslate nohighlight">\(D_0' \subseteq D\)</span> ，满足</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|D_0'|/|D| \ge \alpha\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p_k'(X)|_{D_0'} = g_k'(X)|_{D_0'}\)</span></p></li>
+</ol>
+<p>现在找到了多项式 <span class="math notranslate nohighlight">\(p_0'(X), \ldots, p_M'(X)\)</span> ，那么对于多项式</p>
+<div class="math notranslate nohighlight">
+\[
+p_0'(X) + v_0, \ldots, p_M'(X) + v_M \in \mathcal{F}_0
+\]</div>
+<p>就满足</p>
+<div class="math notranslate nohighlight">
+\[
+(p_k'(X) + v_k)|_{D_0'} = (g_k'(X) + v_k)|_{D_0'} = g_k(X)|_{D_0'} \quad 0 \le k \le M
+\]</div>
+<p><span class="math notranslate nohighlight">\(p_0'(X) + v_0\)</span> 对应的多元线性多项式 <span class="math notranslate nohighlight">\(P_k \in F[X_1, \ldots, X_n]\)</span> 也满足 <span class="math notranslate nohighlight">\(P_k(\vec{\omega}) = v_k\)</span> ，因此 <span class="math notranslate nohighlight">\((g_1, \ldots, g_M) \in \mathcal{R}\)</span> 。</p>
+<p>现在假设引理在 <span class="math notranslate nohighlight">\(0 \le r &lt; n\)</span> 时是成立的，想证明在 <span class="math notranslate nohighlight">\(r + 1\)</span> 时引理依然成立。根据引理的条件，在第 <span class="math notranslate nohighlight">\(r + 1\)</span> 轮，<span class="math notranslate nohighlight">\(P^*\)</span> 在 commit 阶段成功的概率超过 <span class="math notranslate nohighlight">\((\varepsilon_0 + \varepsilon_1 + \ldots + \varepsilon_r) + \varepsilon_{r + 1}\)</span> 。记 <span class="math notranslate nohighlight">\(\mathrm{tr}_r = (\lambda_0, f_0, \Lambda_0, \ldots, \lambda_r, f_r, \Lambda_r)\)</span> 组成的集合为 <span class="math notranslate nohighlight">\(\mathfrak{T}\)</span> ，因此在</p>
+<div class="math notranslate nohighlight">
+\[
+\operatorname{Pr}[\mathfrak{T}]&gt;\varepsilon_0+\ldots+\varepsilon_r
+\]</div>
+<p>的条件下，<span class="math notranslate nohighlight">\(P^*\)</span> 成功的概率大于 <span class="math notranslate nohighlight">\(\varepsilon_{r + 1}\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\Pr \left[ \lambda_{r+1}: 
+\begin{array}{c}
+    \exists f_{r + 1} \text{  s.t.  } (\lambda_0, f_0, \Lambda_0, \ldots, \lambda_r, f_r, \Lambda_r, f_{r + 1}) \\
+    \text{is $\alpha$-good for } (\lambda_0, \ldots, \lambda_{r + 1})
+\end{array}
+\right] &gt; \varepsilon_{r + 1}
+\end{split}\]</div>
+<p>由 <span class="math notranslate nohighlight">\(\alpha\)</span> - good 的定义可以得到，对于满足 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 的 <span class="math notranslate nohighlight">\(\lambda_{r + 1}\)</span> ，存在一个满足 sumcheck 约束的多项式 <span class="math notranslate nohighlight">\(p_{r + 1} \in \mathcal{F}_{r + 1}\)</span> ，使得</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0} + \lambda_{r + 1} \cdot f_{r,1}, p_{r + 1}) \ge \alpha \tag{3}
+\]</div>
+<p>这里的 <span class="math notranslate nohighlight">\(\nu_r\)</span> 是一个子概率测度，其 density 函数定义为，对 <span class="math notranslate nohighlight">\(y \in D_{r + 1}\)</span> 有</p>
+<div class="math notranslate nohighlight">
+\[
+\delta_r(y) : = \frac{|\{x \in \pi^{-(r + 1)}(y): (f_0, \ldots, f_r) \text{ satisfies all folding checks along } x \}|}{|\pi^{-(r+1)}(y)|}
+\]</div>
+<p>这里解释下式 <span class="math notranslate nohighlight">\((3)\)</span> 表示的实质上就是 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 定义中的式 <span class="math notranslate nohighlight">\((2)\)</span> 。根据 <span class="math notranslate nohighlight">\(\mathrm{agree}\)</span> 函数的定义，式 <span class="math notranslate nohighlight">\((3)\)</span> 等价于</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\nu_r(\{ y \in D_{r + 1}: ((1 - \lambda_{r + 1}) \cdot f_{r,0} + \lambda_{r + 1} \cdot f_{r,1})(y) =  p_{r + 1}(y)\})}{|D_{r + 1}|} \ge \alpha
+\]</div>
+<p>先将在 <span class="math notranslate nohighlight">\(D_{r + 1}\)</span> 中满足折叠关系的 <span class="math notranslate nohighlight">\(y\)</span> 组成一个集合，记为 <span class="math notranslate nohighlight">\(S_{r + 1}\)</span> ，再用 <span class="math notranslate nohighlight">\(\nu_r\)</span> 函数对这个集合进行计算。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \nu_r (S_{r + 1}) &amp; = \sum_{y \in S_{r + 1}} \delta_r(y)  \\
+    &amp; = \sum_{y \in S_{r + 1}} \frac{|\{x \in \pi^{-(r + 1)}(y): (f_0, \ldots, f_r) \text{ satisfies all folding checks along } x \}|}{|\pi^{-(r+1)}(y)|}  \\
+    &amp; = \sum_{y \in S_{r + 1}} \frac{|\{x \in \pi^{-(r + 1)}(y): (f_0, \ldots, f_r) \text{ satisfies all folding checks along } x \}|}{2^{r + 1}}  \\
+    &amp; := \sum_{y \in S_{r + 1}} \frac{|S_{y,0}|}{2^{r + 1}} \\
+    &amp; = \frac{\sum_{y \in S_{r + 1}} |S_{y,0}|}{2^{r + 1}}
+\end{aligned}
+\end{split}\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0} + \lambda_{r + 1} \cdot f_{r,1}, p_{r + 1}) &amp; = \frac{\nu_r(S_{r + 1})}{|D_{r + 1}|} \\
+    &amp; = \frac{\sum_{y \in S_{r + 1}} |S_{y,0}|}{2^{r + 1} \cdot |D_{r + 1}|} \\
+    &amp; = \frac{\sum_{y \in S_{r + 1}} |S_{y,0}|}{|D_{0}|}
+\end{aligned}
+\end{split}\]</div>
+<p>上式中分子 <span class="math notranslate nohighlight">\(\sum_{y \in S_{r + 1}} |S_{y,0}|\)</span> 表示的含义正是在 <span class="math notranslate nohighlight">\(D_0\)</span> 中满足第 <span class="math notranslate nohighlight">\(r + 1\)</span> 次折叠正确，同时 <span class="math notranslate nohighlight">\((f_0, \ldots, f_r)\)</span> 折叠检查也是正确的。<span class="math notranslate nohighlight">\((3)\)</span> 式就变为</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{y \in S_{r + 1}} |S_{y,0}| \ge \alpha \cdot |D_{0}|
+\]</div>
+<p>这与 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 定义中式 <span class="math notranslate nohighlight">\((2)\)</span> 是完全一致的。接下来根据在上篇文章中介绍的 soundness 证明思路，由于 <span class="math notranslate nohighlight">\(p_{r+1}(X)\)</span> 对应的多元线性多项式 <span class="math notranslate nohighlight">\(P_{r+1}\)</span> 满足 sumcheck 约束，因此满足</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    L((\omega_1, \ldots, \omega_{r+1}), (\lambda_1, \ldots, \lambda_{r + 1})) \cdot &amp; P_{r+1}(\omega_{r + 2}, \ldots, \omega_n) = q_{r}(\lambda_{r + 1}) \\
+    &amp; =  L((\omega_1, \ldots, \omega_{r + 1}), (\lambda_1, \ldots, \lambda_{r + 1})) \cdot \Lambda_{r}(\lambda_{r + 1})
+\end{aligned} 
+\end{split}\]</div>
+<p>推出</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    L((\omega_1, \ldots, \omega_{r}), (\lambda_1, \ldots, \lambda_{r})) \cdot L(\omega_{r+1}, \lambda_{r + 1}) \cdot &amp; P_{r+1}(\omega_{r + 2}, \ldots, \omega_n)  \\
+    &amp; =   L((\omega_1, \ldots, \omega_{r}), (\lambda_1, \ldots, \lambda_{r})) \cdot L(\omega_{r+1}, \lambda_{r + 1}) \cdot \Lambda_{r}(\lambda_{r + 1})
+\end{aligned} 
+\end{split}\]</div>
+<p>对于 <span class="math notranslate nohighlight">\(\lambda_{r + 1}\)</span> 的选择，有 <span class="math notranslate nohighlight">\(1/|F|\)</span> 的概率使得 <span class="math notranslate nohighlight">\(L(\omega_{r+1}, \lambda_{r + 1}) = 0\)</span> ，得出上式成立。因此除了 <span class="math notranslate nohighlight">\(1/|F|\)</span> 的概率，依然有超过</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon_{r + 1} - \frac{1}{|F|} = \varepsilon(\mathcal{C}_{i + 1}, 1, B_{r + 1}, \theta)
+\]</div>
+<p>的概率，使得多项式 <span class="math notranslate nohighlight">\(p_{r+1}' = p_{r + 1} - \Lambda_r(\lambda_{r + 1}) \in \mathcal{F}_{r + 1}'\)</span> ，以及 <span class="math notranslate nohighlight">\(f_{r,0}' = f_{r,0} - \Lambda_r(0)\)</span> ，<span class="math notranslate nohighlight">\(f_{r,1}' = f_{r,1} - \Lambda_r(1)\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0}' + \lambda_{r + 1} \cdot f_{r,1}', p_{r + 1}') \ge \alpha
+\]</div>
+<p>上面满足的条件可以写为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr \left[ \lambda_{r+1}: \quad
+    \begin{array}{c}
+        \exists p_{r + 1}' \in \mathcal{F}_{r+1}' \text{  s.t.  }  \\
+       \mathrm{agree}_{\nu_r}((1 - \lambda_{r + 1}) \cdot f_{r,0}' + \lambda_{r + 1} \cdot f_{r,1}', p_{r + 1}') \ge \alpha
+    \end{array}
+    \right] &gt; \varepsilon(\mathcal{C}_{i + 1}, 1, B_{r + 1}, \theta)
+\end{aligned}
+\end{split}\]</div>
+<p>这也就满足了 [H24, Theorem 4] 带权重的 correlated agreement 定理的条件，因此可以得到存在多项式 <span class="math notranslate nohighlight">\(p_{r,0}'(X), p_{r,1}'(X) \in \mathcal{F}_{r+1}'\)</span> ，以及集合 <span class="math notranslate nohighlight">\(A_{r + 1} \subseteq D_{r+1}\)</span> 满足：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\nu_r(A_{r+1}) \ge 1 - \theta\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p_{r,0}'(X)|_{A_{r+1}} = f_{r,0}'(X)|_{A_{r+1}}\)</span> , <span class="math notranslate nohighlight">\(p_{r,1}'(X)|_{A_{r+1}} = f_{r,1}'(X)|_{A_{r+1}}\)</span></p></li>
+</ol>
+<p>现在已经找到了多项式 <span class="math notranslate nohighlight">\(p_{r,0}'(X), p_{r,1}'(X)\)</span> ，因此存在多项式</p>
+<div class="math notranslate nohighlight">
+\[
+p_{r,0}(X) = p_{r,0}'(X) + \Lambda_r(0), \quad p_{r,1}(X) = p_{r,1}'(X) + \Lambda_r(1) \in \mathcal{F}_{r+1}
+\]</div>
+<p>而</p>
+<div class="math notranslate nohighlight">
+\[
+f_{r,0}(X) = f_{r,0}'(X) + \Lambda_r(0), \quad f_{r,1}(X) = f_{r,1}'(X) + \Lambda_r(1)
+\]</div>
+<p>根据 correlated agreement 给出的结论 2 ，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+p_{r,0}(X)|_{A_{r+1}} = f_{r,0}(X)|_{A_{r+1}}, \quad p_{r,1}(X)|_{A_{r+1}} = f_{r,1}(X)|_{A_{r+1}}
+\]</div>
+<p>对于 <span class="math notranslate nohighlight">\(p_{r,0}(X), p_{r,1}(X)\)</span> 相对应的多元线性多项式 <span class="math notranslate nohighlight">\(P_{r,0}\)</span> 以及 <span class="math notranslate nohighlight">\(P_{r,1}\)</span> ，根据 <span class="math notranslate nohighlight">\(\mathcal{F}_{r}'\)</span> 的定义，可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    P_{r,0}(\omega_{r+2}, \ldots, \omega_{n}) = \Lambda_r(0) \\
+    P_{r,1}(\omega_{r+2}, \ldots, \omega_{n}) = \Lambda_r(1)
+\end{aligned}
+\end{split}\]</div>
+<p>将集合 <span class="math notranslate nohighlight">\(A_{r+1}\)</span> 中的点通过 <span class="math notranslate nohighlight">\(\pi\)</span> 的逆映射得到 <span class="math notranslate nohighlight">\(A_r = \pi^{-1}(A_{r+1}) \subseteq D_r\)</span> ，在这些点一定满足 <span class="math notranslate nohighlight">\(f_r\)</span> 和</p>
+<div class="math notranslate nohighlight">
+\[
+p_r(X) = p_{r,0}(X^2) + X \cdot p_{r,1}(X^2) \in \mathcal{F}_{r}
+\]</div>
+<p>是一致的。对于与 <span class="math notranslate nohighlight">\(p_r(X)\)</span> 相对应的多元线性多项式 <span class="math notranslate nohighlight">\(P_r\)</span> ，其满足</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    P_r(\omega_{r + 1}, \omega_{r + 2}, \ldots, \omega_n) &amp; = (1 - \omega_{r + 1}) \cdot P_{r,0}(\omega_{r+2}, \ldots, \omega_{n}) + \omega_{r + 1} \cdot P_{r,1}(\omega_{r+2}, \ldots, \omega_{n}) \\
+    &amp; = (1 - \omega_{r + 1}) \cdot \Lambda_r(0) + \omega_{r + 1} \cdot \Lambda_r(1) \\
+    &amp; = L(\omega_{r + 1}, 0) \cdot \Lambda_r(0) +  L(\omega_{r + 1}, 1) \cdot \Lambda_r(1)
+\end{aligned}
+\end{split}\]</div>
+<p>由此可以得到在第 <span class="math notranslate nohighlight">\(r\)</span> 轮的 sumcheck 是满足的：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    L(\omega_{1}, \ldots, \omega_{r}, \lambda_1, \ldots, \lambda_r) &amp;\cdot P_r(\omega_{r + 1}, \omega_{r + 2}, \ldots, \omega_n)  \\
+    &amp; = L(\omega_{1}, \ldots, \omega_{r}, \lambda_1, \ldots, \lambda_r) \cdot L(\omega_{r + 1}, 0) \cdot \Lambda_r(0) \\
+    &amp; \quad +  L(\omega_{1}, \ldots, \omega_{r}, \lambda_1, \ldots, \lambda_r) \cdot L(\omega_{r + 1}, 1) \cdot \Lambda_r(1) \\
+    &amp; = q_r(0) + q_r(1) \\
+    &amp; = q_{r - 1}(\lambda_r)
+\end{aligned}
+\end{split}\]</div>
+<p>现在得到了在第 <span class="math notranslate nohighlight">\(r\)</span> 轮的 sumcheck 是满足的，接下来需要考虑折叠关系是否满足。考虑 <span class="math notranslate nohighlight">\(x \in \pi^{-1}(A_r)\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; \frac{|\{x \in \pi^{-r}(A_r): \text{all folding checks hold for } f_0, \ldots, f_r \}|}{|D_0|} \\
+    &amp; = \frac{1}{|D_0|} \cdot \sum_{y \in A_{r+1}} \delta(y) \cdot |\pi^{-(r+1)}(y)| \\
+    &amp; = \frac{2^{r + 1}}{|D_0|} \cdot \sum_{y \in A_{r+1}} \delta(y) \\
+    &amp; =  \frac{1}{|D_{r + 1}|} \cdot \sum_{y \in A_{r+1}} \delta(y) \\
+    &amp; = \nu_r(A_{r+1})
+\end{aligned}
+\end{split}\]</div>
+<p>前面通过 correlated agreement 定理已经得到 <span class="math notranslate nohighlight">\(\nu_r(A_{r+1}) \ge \alpha\)</span> ，因此在 <span class="math notranslate nohighlight">\(D_0\)</span> 中的 <span class="math notranslate nohighlight">\(x\)</span> 能满足 folding check 的比例超过 <span class="math notranslate nohighlight">\(\alpha\)</span> 。综合在第 <span class="math notranslate nohighlight">\(r\)</span> 轮的 sumcheck 约束以及折叠关系，得到 <span class="math notranslate nohighlight">\((f_0, \Lambda_0, \ldots, f_r, \Lambda_r)\)</span> 对于 <span class="math notranslate nohighlight">\((\lambda_0, \ldots, \lambda_r)\)</span> 是 <span class="math notranslate nohighlight">\(\alpha\)</span> -good 的。由于产生这样的 trace 的集合的概率</p>
+<div class="math notranslate nohighlight">
+\[
+\operatorname{Pr}[\mathfrak{T}]&gt;\varepsilon_0+\ldots+\varepsilon_r
+\]</div>
+<p>因此其满足引理的条件，由归纳假设，在第 <span class="math notranslate nohighlight">\(r\)</span> 轮引理成立，因此可以得到结论，<span class="math notranslate nohighlight">\((g_0, \ldots, g_M) \in \mathcal{R}\)</span> ，至此就证明了在第 <span class="math notranslate nohighlight">\(r + 1\)</span> 轮引理也是成立的。从而得证引理成立。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lemma-1">Lemma 1 证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

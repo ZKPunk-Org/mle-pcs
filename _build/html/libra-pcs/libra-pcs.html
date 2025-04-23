@@ -1,0 +1,791 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Libra-PCS &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'libra-pcs/libra-pcs';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Flibra-pcs/libra-pcs.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/libra-pcs/libra-pcs.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Libra-PCS</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-polynomials">1. MLE Polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#division-of-mle-polynomials">2. Division of MLE Polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#construction-of-libra-pcs">3. Construction of Libra-PCS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-mle-evaluation-form">4. Supporting MLE Evaluation Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-libra-pcs">
+<h1>Notes on Libra-PCS<a class="headerlink" href="#notes-on-libra-pcs" title="Link to this heading">#</a></h1>
+<section id="mle-polynomials">
+<h2>1. MLE Polynomials<a class="headerlink" href="#mle-polynomials" title="Link to this heading">#</a></h2>
+<p>Of course, an MLE polynomial can also be represented in “coefficient form”, which is expressed as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i_0=0}^{1}\sum_{i_1=0}^{1}\cdots \sum_{i_{n-1}=0}^{1} f_{i_0i_1\cdots i_{n-1}} X_0^{i_0}X_1^{i_1}\cdots X_{n-1}^{i_{n-1}}
+\]</div>
+<p>For the example of a three-dimensional MLE polynomial shown above, we can write it as:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, X_2) = f_0 + f_1X_0 + f_2X_1 + f_3X_2 + f_4X_0X_1 + f_5X_0X_2 + f_6X_1X_2 + f_7X_0X_1X_2
+\]</div>
+<p>where <span class="math notranslate nohighlight">\((f_0, f_1, \ldots, f_7)\)</span> is the coefficient vector of the MLE polynomial. Note that because MLE polynomials belong to multivariate polynomials, any representation needs to determine the ordering of terms in the polynomial in advance. In this article and subsequent discussions, we will base on the Lexicographic Order.</p>
+<p>For the “point-value form” representation of MLE polynomials, we can define it as:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i_0=0}^{1}\sum_{i_1=0}^{1}\cdots \sum_{i_{n-1}=0}^{1} a_{i_0i_1\cdots i_{n-1}}\cdot eq(i_0, i_1, \ldots, i_{n-1}, X_0, X_1, \ldots, X_{n-1})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(eq\)</span> is a set of Lagrange Polynomials for the n-dimensional Boolean HyperCube <span class="math notranslate nohighlight">\(\{0, 1\}^n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+eq(i_0, i_1, \ldots, i_{n-1}, X_0, X_1, \ldots, X_{n-1}) = \prod_{j=0}^{n-1} \Big((1-i_j)\cdot (1-X_j)+ i_j\cdot X_j\Big)
+\]</div>
+<p>There exists an <span class="math notranslate nohighlight">\(N\log(N)\)</span> conversion algorithm between the “point-value form” and “coefficient form” of MLE polynomials, which we won’t discuss in depth here.</p>
+</section>
+<section id="division-of-mle-polynomials">
+<h2>2. Division of MLE Polynomials<a class="headerlink" href="#division-of-mle-polynomials" title="Link to this heading">#</a></h2>
+<p>For a univariate polynomial <span class="math notranslate nohighlight">\(f(X)\in\mathbb{F}_p[X]\)</span>, if the value of <span class="math notranslate nohighlight">\(f(X)\)</span> at <span class="math notranslate nohighlight">\(X=u\)</span> is <span class="math notranslate nohighlight">\(v\)</span>, then we have the following equation:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X)= q(X)\cdot (X-u) + v 
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(q(X)\)</span> is the quotient polynomial of <span class="math notranslate nohighlight">\(f(X)\)</span> divided by <span class="math notranslate nohighlight">\((X-u)\)</span>, and <span class="math notranslate nohighlight">\(v\)</span> is the remainder.</p>
+<p>We can derive this equation simply. When we substitute <span class="math notranslate nohighlight">\(X=u\)</span> into the equation, we get <span class="math notranslate nohighlight">\(f(u)=v\)</span>. This shows that the problem of polynomial evaluation is equivalent to finding the remainder of polynomial division. Then, we can subtract this remainder from <span class="math notranslate nohighlight">\(f(X)\)</span>, and the resulting polynomial <span class="math notranslate nohighlight">\(g(X)=f(X)-v\)</span> can obviously be divided by <span class="math notranslate nohighlight">\((X-u)\)</span>, meaning there exists a quotient polynomial, denoted as <span class="math notranslate nohighlight">\(q(X)\)</span>.</p>
+<p>For a multivariate polynomial <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{n-1})\)</span>, the paper [PST13] provides a similar division relation equation:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1, \ldots, X_{n-1}) - f(u_0, u_1, \ldots, u_{n-1})= \sum_{k=0}^{n-1}q_k(X_0, X_1, \ldots, X_{n-1}) \cdot (X_k - u_k)
+\]</div>
+<p>If <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{n-1})\)</span> is an MLE polynomial, it can be simplified to the following equation:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) - \tilde{f}(u_0, u_1, \ldots, u_{n-1}) &amp; = \tilde{q}_{n-1}(X_0, X_1, \ldots, X_{\color{red}n-2}) \cdot (X_{n-1} - u_{n-1}) \\
+&amp; + \tilde{q}_{n-2}(X_0, X_1, \ldots, X_{\color{red}n-3}) \cdot (X_{n-2} - u_{n-2}) \\
+&amp; + \cdots \\
+&amp; + \tilde{q}_{1}(X_{\color{red}0}) \cdot (X_{1} - u_{1}) \\
+&amp; + \tilde{q}_{0} \cdot (X_{0} - u_{0}) \\
+\end{split}
+\end{split}\]</div>
+<p>This is because in the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span>, the highest degree of each unknown <span class="math notranslate nohighlight">\(X_k\)</span> is 1. For <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{k})\)</span>, after dividing by the factor <span class="math notranslate nohighlight">\((X_k-u_k)\)</span>, the remainder polynomial will no longer contain the unknown <span class="math notranslate nohighlight">\(X_k\)</span>. So when <span class="math notranslate nohighlight">\(f(X_0, X_1, \ldots, X_{n-1})\)</span> is sequentially divided by factors from <span class="math notranslate nohighlight">\((X_{n-1} - u_{n-1})\)</span> to <span class="math notranslate nohighlight">\((X_0 - u_0)\)</span>, the number of unknowns in the resulting quotient polynomials and remainder polynomials will decrease successively, until we finally get a constant quotient polynomial <span class="math notranslate nohighlight">\(\tilde{q}_0\)</span>. Of course, after n divisions, a constant remainder polynomial will appear, which is exactly the evaluation of the MLE polynomial at <span class="math notranslate nohighlight">\((u_0, u_1, \ldots, u_{n-1})\)</span>. This is known as Ruffini’s rule [Ruffini].</p>
+<p>Let’s assume this final evaluation is <span class="math notranslate nohighlight">\(v\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, \ldots, u_{n-1}) = v
+\]</div>
+</section>
+<section id="construction-of-libra-pcs">
+<h2>3. Construction of Libra-PCS<a class="headerlink" href="#construction-of-libra-pcs" title="Link to this heading">#</a></h2>
+<p>Similar to the construction of KZG10, Libra-PCS also requires a structured SRS. It should be noted that the Libra paper is based on the KOE security assumption, while the scheme introduced in this article is based on the AGM security assumption, so the scheme’s SRS has a smaller size and can also prove the correctness and Extractibility properties of the scheme under the AGM assumption.</p>
+<p>It is generated by a Trusted Setup:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+SRS = \left(
+\begin{array}{l}
+[1]_1, [\tau_0]_1, [\tau_1]_1, [\tau_0\tau_1]_1, [\tau_2]_1, [\tau_0\tau_2]_1, [\tau_1\tau_2]_1, [\tau_0\tau_1\tau_2]_1, \ldots, [\tau_0\tau_1\cdots\tau_{n-1}]_1, [\xi]_1\\[1.5ex]
+[1]_2,\ [\tau_0]_2,\ [\tau_1]_2,\ [\tau_2]_2,\ \ldots,\ [\tau_{n-1}]_2,\ [\xi]_2
+\end{array}
+\right)
+\end{split}\]</div>
+<p>With this SRS, we can calculate the commitment of an n-variable MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span>. That is, use the SRS as a basis for linear combination with its coefficient vector of length <span class="math notranslate nohighlight">\(N=2^n\)</span> to obtain an element on <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) &amp; = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + f_4X_2 + f_5X_0X_2 + f_6X_1X_2 \\
+&amp; + f_7X_0X_1X_2 + \cdots + f_{N-1}X_0X_1\cdots X_{n-1} \\
+\end{split}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\vec{f}=(f_0, f_1, f_2, \ldots, f_{N-1})\)</span> is the coefficient vector of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span>. The commitment is calculated as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+F=\mathsf{Commit}(\tilde{f}(X_0, X_1, \ldots, X_{n-1}); \rho) &amp; = f_0 \cdot [1]_1 + f_1 \cdot [\tau_0]_1 + f_2 \cdot [\tau_1]_1 + f_3 \cdot [\tau_0\tau_1]_1 \\
+&amp; + f_4 \cdot [\tau_2]_1 + f_5 \cdot [\tau_0\tau_2]_1 + f_6 \cdot [\tau_1\tau_2]_1 + f_7 \cdot [\tau_0\tau_1\tau_2]_1 \\
+&amp; + \cdots + f_{N-1} \cdot [\tau_0\tau_1\cdots\tau_{n-1}]_1 + \rho \cdot [\xi]_1
+\end{split}
+\end{split}\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\rho\)</span> is a random number used to hide the information of <span class="math notranslate nohighlight">\(\vec{f}\)</span>.</p>
+<p>Then if the Prover wants to prove <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, \ldots, u_{n-1}) = v\)</span>, they need to commit to the quotient polynomials <span class="math notranslate nohighlight">\(\tilde{q}_0, \tilde{q}_1, \ldots, \tilde{q}_{n-1}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+Q_0=\mathsf{Commit}(\tilde{q}_0; \eta_0) &amp; = \tilde{q}_0 \cdot [1]_1 + \eta_0 \cdot [\xi]_1 \\[1ex]
+Q_1=\mathsf{Commit}(\tilde{q}_1; \eta_1) &amp; = \tilde{q}_{1,0} \cdot [1]_1 + \tilde{q}_{1,1} \cdot [\tau_0]_1 +  \eta_1 \cdot [\xi]_1 \\[1ex]
+Q_2=\mathsf{Commit}(\tilde{q}_2; \eta_2) &amp; = \tilde{q}_{2,0} \cdot [1]_1 + \tilde{q}_{2,1} \cdot [\tau_0]_1 + \tilde{q}_{2,2} \cdot [\tau_1]_1 + \tilde{q}_{2,3} \cdot [\tau_0\tau_1]_1 + \eta_2 \cdot [\xi]_1 \\[1ex]
+\cdots &amp; = \cdots \\[1ex]
+Q_{n-1}=\mathsf{Commit}(\tilde{q}_{n-1}; \eta_{n-1}) &amp; = \tilde{q}_{n-1,0} \cdot [1]_1 + \tilde{q}_{n-1,1} \cdot [\tau_0]_1 + \tilde{q}_{n-1,2} \cdot [\tau_1]_1 + \cdots \\
+&amp; \ + \tilde{q}_{n-1,2^{n-1}-1} \cdot [\tau_0\tau_1\cdots\tau_{n-2}]_1 + \eta_{n-1} \cdot [\xi]_1 \\[1ex]
+\end{split}
+\end{split}\]</div>
+<p>To ensure that the Verifier can verify these Commitments, and to allow each Commitment to have a Blinding Factor, we need to modify the division equation of the MLE polynomial after adding these Blinding Factors:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+&amp;(q_0 + \eta_0\xi)(X_0-u_0) + (q_1 + \eta_1\xi)(X_1-u_1) + \cdots + (q_{n-1} + \eta_{n-1}\xi)(X_{n-1}-u_{n-1}) \\
+=\ &amp; q_0(X_0-u_0) + q_1(X_0)(X_1-u_1) + \cdots + q_{n-1}(X_0,\ldots,X_{n-2})(X_{n-1}-u_{n-1}) \\
+&amp; + \eta_0\xi(X_0-u_0) + \eta_1\xi(X_1-u_1) + \cdots + \eta_{n-1}\xi(X_{n-1}-u_{n-1}) \\
+=\ &amp; f(\vec{X}) - f(\vec{u}) + ({\color{red}\eta_0(X_0-u_0) + \eta_1(X_1-u_1) + \cdots + \eta_{n-1}(X_{n-1}-u_{n-1})})\cdot \xi \\
+=\ &amp; f(\vec{X}) + \rho\xi- f(\vec{u}) + ({\color{red}\eta_0(X_0-u_0) + \eta_1(X_1-u_1) + \cdots + \eta_{n-1}(X_{n-1}-u_{n-1})-\rho})\cdot \xi\\
+\end{split}
+\end{split}\]</div>
+<p>Therefore, the Prover needs to calculate an additional Commitment, collecting all the Blinding Factors, which is the red part on the right side of the equation above:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+R &amp; = \rho\cdot[1]_1 + (-\eta_0\cdot[\tau_0]_1 + (\eta_0\cdot u_0)[1]_1) + (-\eta_1\cdot[\tau_1]_1 + (\eta_1\cdot u_1)[1]_1) \\
+&amp; + \cdots + (-\eta_{n-1}\cdot[\tau_{n-1}]_1 + (\eta_{n-1}\cdot u_{n-1})[1]_1)
+\end{split}
+\end{split}\]</div>
+<p>Here <span class="math notranslate nohighlight">\(R\)</span> is clearly also an element on <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span>.</p>
+<p>So after the Prover sends <span class="math notranslate nohighlight">\((Q_0, Q_1, \ldots, Q_{n-1}, R)\)</span> to the Verifier, the Verifier can verify through the following Pairing equation:</p>
+<div class="math notranslate nohighlight">
+\[
+e(F - v[1]_1, [1]_2) \overset{?}{=} e(R, [\xi]_2) + \sum_{i=0}^{n-1} e(Q_i, [\tau_i]_2-u_i[1]_2)
+\]</div>
+</section>
+<section id="supporting-mle-evaluation-form">
+<h2>4. Supporting MLE Evaluation Form<a class="headerlink" href="#supporting-mle-evaluation-form" title="Link to this heading">#</a></h2>
+<p>In the Libra-PCS described above, when the Prover calculates the Commitment, they need to first obtain the “coefficient form” of the MLE polynomial before calculating the Commitment. However, in many Sumcheck protocols, the Evaluation Form of MLE is used, that is, the point-value form. In other words, the n-variable MLE polynomial is represented by its evaluation values on the n-dimensional Boolean Hypercube:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i_0=0}^{1}\sum_{i_1=0}^{1}\cdots \sum_{i_{n-1}=0}^{1} a_{i_0i_1\cdots i_{n-1}}\cdot eq(i_0, i_1, \ldots, i_{n-1}, X_0, X_1, \ldots, X_{n-1})
+\]</div>
+<p>If we need to convert the Evaluation form of the MLE polynomial to the Coefficient form, this conversion algorithm requires <span class="math notranslate nohighlight">\(O(n\cdot2^n)\)</span> time complexity. So is it possible to directly support the Evaluation form of MLE?</p>
+<p>The Evaluation form of MLE brings two difficult problems. The first is how to calculate a commitment for an Evaluation Form based on SRS, and the second is how to calculate n divisions of the MLE polynomial to obtain n quotient polynomials <span class="math notranslate nohighlight">\(q_0, q_1, \ldots, q_{n-1}\)</span>.</p>
+<p>Let’s look at the first problem: how to calculate the Commitment for the Evaluation Form. There are two ways to do this. A more direct way is to produce the Commitment of the Multilinear Basis of the MLE polynomial directly when calculating the SRS, rather than the Commitment of the Monomial Basis.</p>
+<p>For example, suppose n=3, then we produce a new set of SRS parameters to calculate the Commitment of the Evaluation Form of a three-variable MLE polynomial.</p>
+<div class="math notranslate nohighlight">
+\[
+SRS^{(3)} = ([eq_0(\tau_0,\tau_1, \tau_2)]_1, [eq_1(\tau_0,\tau_1, \tau_2)]_1, [eq_2(\tau_0,\tau_1, \tau_2)]_1, \ldots, [eq_{7}(\tau_0,\tau_1, \tau_2)]_1, [\xi]_1)
+\]</div>
+<p>To simplify the notation, we use <span class="math notranslate nohighlight">\(eq_i(\vec{X})\)</span> to represent <span class="math notranslate nohighlight">\(eq(i_0,i_1,\ldots,i_{n-1},X_0,X_1,\ldots,X_{n-1})\)</span>. Suppose we have a polynomial <span class="math notranslate nohighlight">\(f(X_0, X_1, X_2)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1, X_2) = a_0\cdot eq_0(X_0, X_1, X_2) + a_1\cdot eq_1(X_0, X_1, X_2) + \cdots + a_7\cdot eq_7(X_0, X_1, X_2)
+\]</div>
+<p>So we calculate its Commitment as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{cm}(f) = a_0\cdot [eq_0(\tau_0,\tau_1, \tau_2)]_1 + a_1\cdot [eq_1(\tau_0,\tau_1, \tau_2)]_1 + \cdots + a_7\cdot [eq_7(\tau_0,\tau_1, \tau_2)]_1 + \rho\cdot [\xi]_1
+\]</div>
+<p>However, we need to realize that <span class="math notranslate nohighlight">\(SRS^{(3)}\)</span> is not enough, because the Multilinear Basis like <span class="math notranslate nohighlight">\(eq_i(\vec{X})\)</span> is related to the size of the Domain. We should realize that if we want to commit to the Evaluation Form of a bivariate polynomial, we cannot use <span class="math notranslate nohighlight">\(SRS^{(3)}\)</span> to calculate. Instead, we need to produce another set of SRS parameters for bivariate MLE polynomials, denoted as <span class="math notranslate nohighlight">\(SRS^{(2)}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+SRS^{(2)} = ([eq_0(\tau_0,\tau_1)]_1, [eq_1(\tau_0,\tau_1)]_1, \ldots, [eq_{3}(\tau_0,\tau_1)]_1)
+\]</div>
+<p>Similarly, we also need a set of SRS parameters for univariate polynomials, denoted as <span class="math notranslate nohighlight">\(SRS^{(1)}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+SRS^{(1)} = ([eq_0(\tau_0)]_1, [eq_1(\tau_0)]_1)
+\]</div>
+<p>Finally, for constant polynomials, we only need <span class="math notranslate nohighlight">\([1]_1\)</span> as a Basis to calculate the commitment. We combine all these <span class="math notranslate nohighlight">\(SRS^{(k)}\)</span> based on k-MLE together, denoted as <span class="math notranslate nohighlight">\(SRS^*\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+SRS^* = \left(
+\begin{array}{l}
+[eq_0(\tau_0,\tau_1, \tau_2)]_1, [eq_1(\tau_0,\tau_1, \tau_2)]_1, [eq_2(\tau_0,\tau_1, \tau_2)]_1, \ldots, [eq_{7}(\tau_0,\tau_1, \tau_2)]_1, \\[1ex]
+[eq_0(\tau_0,\tau_1)]_1, [eq_1(\tau_0,\tau_1)]_1, \ldots, [eq_{3}(\tau_0,\tau_1)]_1, \\[1ex]
+[eq_0(\tau_0)]_1, [eq_1(\tau_0)]_1, \\[1ex]
+[1]_1, [\xi]_1 \\[1ex]
+[1]_2,\ [\tau_0]_2,\ [\tau_1]_2,\ [\tau_2]_2,\ \ldots,\ [\tau_{n-1}]_2,\ [\xi]_2
+\end{array}
+\right)
+\end{split}\]</div>
+<p>Next, suppose we have obtained three quotient polynomials <span class="math notranslate nohighlight">\(q_0, q_1(X_0), q_2(X_0,X_1)\)</span> of <span class="math notranslate nohighlight">\(f(X_0,X_1,X_2)\)</span>. Then we calculate the corresponding Commitments through their Evaluation Form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{cm}(q_0) &amp; = q_0\cdot [1]_1 + \eta_0\cdot [\xi]_1 \\[1.5ex]
+\mathsf{cm}(q_1) &amp; = q_{1,0}\cdot [eq_0(\tau_0)]_1 + q_{1,1}\cdot [eq_1(\tau_0)]_1 + \eta_1\cdot [\xi]_1 \\[1.5ex]
+\mathsf{cm}(q_2) &amp; = q_{2,0}\cdot [eq_0(\tau_0,\tau_1)]_1 + q_{2,1}\cdot [eq_1(\tau_0,\tau_1)]_1 + q_{2,2}\cdot [eq_2(\tau_0,\tau_1)]_1 + q_{2,3}\cdot [eq_3(\tau_0,\tau_1)]_1 + \eta_2\cdot [\xi]_1 \\[1.5ex]
+\end{split}
+\end{split}\]</div>
+<p>Next, let’s consider the second difficult problem: how to calculate n divisions of the MLE polynomial to obtain n quotient polynomials <span class="math notranslate nohighlight">\(q_0, q_1, \ldots, q_{n-1}\)</span> in Evaluation Form. The familiar polynomial long division is only applicable to the Coefficient Form of polynomials, while the Libra paper [XZZPS19] provides an <span class="math notranslate nohighlight">\(O(n)\)</span> algorithm that supports division of MLE polynomials in Evaluation Form.</p>
+<p>Let’s first consider a simple case, assuming a bivariate MLE polynomial <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> in Evaluation Form:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X_0, X_1) = a_0 \cdot (1-X_0)(1-X_1) + a_1 \cdot X_0(1-X_1) + a_2 \cdot (1-X_0)X_1 + a_3 \cdot X_0X_1
+\]</div>
+<p>The first step is to calculate <span class="math notranslate nohighlight">\(f(X_0, X_1)/(X_1-u_1)\)</span>,</p>
+<p>We expand the Evaluation Form of <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> according to the degree of <span class="math notranslate nohighlight">\(X_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f(X_0, X_1) &amp; = ({\color{blue}a_0(1-X_0) + a_1X_0})(1-X_1) + ({\color{red}a_2(1-X_0) + a_3X_0})X_1 \\
+&amp; = ({\color{blue}a_0(1-X_0) + a_1X_0}) + ({\color{red}a_2(1-X_0) + a_3X_0} - ({\color{blue}a_0(1-X_0) + a_1X_0})) \cdot X_1
+\end{split}
+\end{split}\]</div>
+<p>Then the quotient polynomial <span class="math notranslate nohighlight">\(q_1(X_0)\)</span> is equal to:</p>
+<div class="math notranslate nohighlight">
+\[
+q_1(X_0) = ({\color{red}a_2(1-X_0) + a_3X_0}) - ({\color{blue}a_0(1-X_0) + a_1X_0})
+\]</div>
+<p>We rearrange the terms of <span class="math notranslate nohighlight">\(q_1(X_0)\)</span> and can get:</p>
+<div class="math notranslate nohighlight">
+\[
+q_1(X_0) = ({\color{red}a_2}-{\color{blue}a_0})(1-X_0) + ({\color{red}a_3}-{\color{blue}a_1})X_0
+\]</div>
+<p>The above equation is exactly the Evaluation Form of <span class="math notranslate nohighlight">\(q_1(X_0)\)</span>, which is not difficult to calculate. We just need to subtract the first half of the Evaluation vector of <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span> from the second half to obtain the Evaluation vector of <span class="math notranslate nohighlight">\(q_1(X_0)\)</span>.</p>
+<p>Next, let’s look at the remainder polynomial after dividing <span class="math notranslate nohighlight">\(f(X_0, X_1)/(X_1-u_1)\)</span>, which is a univariate polynomial in terms of <span class="math notranslate nohighlight">\(X_0\)</span>, denoted as <span class="math notranslate nohighlight">\(f'(X_0)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f'(X_0) &amp;= f(X_0, X_1) - q_1(X_0)(X_1-u_1)  \\
+ &amp; = ({\color{blue}a_0(1-X_0) + a_1X_0}) + u_1\cdot \Big(({\color{red}a_2(1-X_0) + a_3X_0}) - ({\color{blue}a_0(1-X_0) + a_1X_0})\Big) \\
+ &amp; = (1-u_1)\cdot ({\color{blue}a_0(1-X_0) + a_1X_0}) + u_1\cdot ({\color{red}a_2(1-X_0) + a_3X_0}) \\
+ &amp; = ((1-u_1)\cdot {\color{blue}a_0} + u_1\cdot {\color{red}a_2})\cdot(1-X_0) + ((1-u_1)\cdot {\color{blue}a_1} + u_1\cdot {\color{red}a_3})\cdot X_0 \\
+\end{split}
+\end{split}\]</div>
+<p>After reorganization, we see that the Evaluation vector of the remainder polynomial <span class="math notranslate nohighlight">\(f'(X_0)\)</span> is exactly the combination of the first half and the second half of the Evaluation vector of <span class="math notranslate nohighlight">\(f(X_0, X_1)\)</span>, that is:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{evaluations}(f)= (a_0, a_1, a_2, a_3)
+\]</div>
+<p>Then
+$<span class="math notranslate nohighlight">\(
+\mathsf{evaluations}(f') = (\mathsf{fold}(u_1, a_0, a_2),\ \mathsf{fold}(u_1, a_1, a_3))
+\)</span>$</p>
+<p>Here the definition of the fold function <span class="math notranslate nohighlight">\(\mathsf{fold}\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}(u, a, b) = (1-u)\cdot a + u\cdot b
+\]</div>
+<p>Therefore, we can obtain a clear algorithm. Each time, split the Evaluation vector into two halves, subtract the lower half from the higher half to get the Evaluation vector of the quotient polynomial; fold the high and low halves to get the Evaluation vector of the remainder polynomial. Then continue recursively to get all the quotient polynomials. Below we give the Python implementation of this algorithm:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">decompose_by_div</span><span class="p">(</span><span class="n">evaluations</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">evaluations</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">log_2</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="n">quotients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">pow_2</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">half</span>  <span class="c1"># init quotient MLE (evalations)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half</span><span class="p">):</span>
+            <span class="n">q</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="n">half</span><span class="p">]</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="c1"># compute quotient MLE</span>
+            <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">e</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="n">half</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># fold by point[k-i-1]</span>
+        <span class="n">quotients</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+        <span class="n">half</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">quotients</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># e[0] = f(point)</span>
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[PST13] Papamanthou, Charalampos, Elaine Shi, and Roberto Tamassia. “Signatures of correct computation.” Theory of Cryptography Conference. Berlin, Heidelberg: Springer Berlin Heidelberg, 2013. <a class="reference external" href="https://eprint.iacr.org/2011/587">https://eprint.iacr.org/2011/587</a></p></li>
+<li><p>[XZZPS19] Tiancheng Xie, Jiaheng Zhang, Yupeng Zhang, Charalampos Papamanthou, and Dawn Song. “Libra: Succinct Zero-Knowledge Proofs with Optimal Prover Computation.” Cryptology ePrint Archive (2019). <a class="reference external" href="https://eprint.iacr.org/2019/317">https://eprint.iacr.org/2019/317</a></p></li>
+<li><p>[Ruffini] Ruffini’s rule. (<a class="reference external" href="https://en.wikipedia.org/wiki/Ruffini%27s_rule">https://en.wikipedia.org/wiki/Ruffini’s_rule</a>)</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./libra-pcs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-polynomials">1. MLE Polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#division-of-mle-polynomials">2. Division of MLE Polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#construction-of-libra-pcs">3. Construction of Libra-PCS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-mle-evaluation-form">4. Supporting MLE Evaluation Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

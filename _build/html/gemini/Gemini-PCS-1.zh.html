@@ -1,0 +1,819 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gemini-PCS (Part I) &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gemini/Gemini-PCS-1.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gemini-PCS (Part II)" href="Gemini-PCS-2.zh.html" />
+    <link rel="prev" title="Notes on Binius (Part II): Subspace Polynomial" href="../fri-binius/binius-02.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fgemini/Gemini-PCS-1.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/gemini/Gemini-PCS-1.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gemini-PCS (Part I)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gemini-PCS (Part I)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-and-tensor-product">MLE and Tensor Product</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#split-and-fold">Split-and-Fold 方法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tensor-product">Tensor Product 检查协议</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">多元到一元转换</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kzg">基于KZG实现</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">参考文献</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gemini-pcs-part-i">
+<h1>Gemini-PCS (Part I)<a class="headerlink" href="#gemini-pcs-part-i" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Tianyu ZHENG <a class="reference external" href="mailto:tian-yu&#46;zheng&#37;&#52;&#48;connect&#46;polyu&#46;hk">tian-yu<span>&#46;</span>zheng<span>&#64;</span>connect<span>&#46;</span>polyu<span>&#46;</span>hk</a></p></li>
+</ul>
+<p>Gemini [BCH+22] 是一种 elastic SNARK，所谓 elastic 是指证明者可以通过设置参数在证明时间和内存之间权衡，以满足不同使用场景的要求。</p>
+<p>作为 Gemini 的核心算法，Tensor Product Check 为我们提供了一种证明多元线性多项式（Multilinear Polynomial）求值的方法，如 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{\rho}) = u\)</span>。换句话说，该方法实现了从多元多项式到一元多项式的转换，从而启发我们构造一种新的多元多项式承诺方案。</p>
+<p>在具体构造上，Tensor Product Check 采用了与之前的工作（Sumcheck, Bulletproofs, FRI）类似的 split-and-fold 思想，达到了比较高效的通信和验证者复杂度，同时其证明者算法能够实现 elastic 性质。</p>
+<section id="mle-and-tensor-product">
+<h2>MLE and Tensor Product<a class="headerlink" href="#mle-and-tensor-product" title="Link to this heading">#</a></h2>
+<p>在 Zeromorph 笔记中我们提到，一个 Multilinear Extension 唯一地对应到一个从 Boolean 向量映射到有限域的函数，形如 <span class="math notranslate nohighlight">\(f: \{0,1\}^n \rightarrow \mathbb{F}_q\)</span>。下图是一个三维的 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0,X_1,X_2)\)</span> 的示例，这个多项式可以唯一地被 <span class="math notranslate nohighlight">\((a_0, a_1,...,a_7)\)</span> 这个 「点值向量」来表示。</p>
+<img src="image/mle.png" align=center width="40%">
+<p>同样地，一个 MLE 多项式也可以采用「系数式」来表示，例如上图可以写成</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,X_2) = f_0+f_1X_0+f_2X_1+f_3X_2+f_4X_0X_1+f_5X_0X_2 + f_6X_1X_2 + f_7X_0X_1X_2
+\]</div>
+<p>该表达式中单项式的排序基于 Lexicographic Order.</p>
+<p>除了「点值式」和「系数式」之外，接下来我们介绍一种新的表达形式——基于「张量积」（Tensor product）的表达式。</p>
+<p>简单来说，张量积是两个向量之间的一种特殊”乘法”，记作 <span class="math notranslate nohighlight">\(\vec{a} \otimes \vec{b}\)</span>。具体来说，我们可以先计算 <span class="math notranslate nohighlight">\(a b^T\)</span>（假设 <span class="math notranslate nohighlight">\(\vec{a}, \vec{b}\)</span> 均为列向量），接着将得到的矩阵按列相接成一个向量，该向量即为张量积的结果。例如 <span class="math notranslate nohighlight">\(\vec{a}=(a_1,a_2)\)</span> 和 <span class="math notranslate nohighlight">\(\vec{b}=(b_1, b_2, b_3)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}a_1 \\ a_2\end{bmatrix} \cdot \begin{bmatrix}b_1, b_2,b_3\end{bmatrix} = \begin{bmatrix}a_1b_1, a_1b_2, a_1b_3 \\ a_2b_1, a_2b_2, a_2b_3\end{bmatrix}
+\end{split}\]</div>
+<p>可得 <span class="math notranslate nohighlight">\(\vec{a} \otimes \vec{b} = (a_1b_1, a_2b_1, a_1b_2, a_2b_2, a_1b_3, a_2b_3)\)</span>。</p>
+<p>对比我们之前提到的「系数式」表达的 MLE 多项式， 我们会发现它的所有单项式都可以由一个连续的张量积得到：</p>
+<div class="math notranslate nohighlight">
+\[
+(1,X_0)\otimes(1,X_1)\otimes(1,X_2) = (1, X_0, X_1, X_0X_1, X_2, X_0X_2, X_1X_2, X_0X_1X_2)
+\]</div>
+<p>我们将左式简记为 <span class="math notranslate nohighlight">\(\otimes_{j=0}^2 (1,X_j)\)</span>。那么一个 MLE 多项式可以写成内积形式：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,X_2) = \langle \vec{f}, \otimes_{j=0}^2 (1,X_j) \rangle
+\]</div>
+<p>其中左边元素是系数向量 <span class="math notranslate nohighlight">\(\vec{f}\)</span> ，右边元素则是一个单项式向量 <span class="math notranslate nohighlight">\(\otimes_{j=0}^2 (1,X_j)\)</span>。</p>
+</section>
+<section id="split-and-fold">
+<h2>Split-and-Fold 方法<a class="headerlink" href="#split-and-fold" title="Link to this heading">#</a></h2>
+<p>在 Gemini 中，作者给出了一个基于一元多项式承诺方案（例如 KZG10）来检查张量积正确性的协议，基于该协议我们可以进一步构造实现多元到一元多项式转换。我们首先以提到的三维 MLE 多项式为例，解释 Tensor Product Check 的主要思路。</p>
+<p>假设证明者想要证明实例： <span class="math notranslate nohighlight">\(\vec{f} = (f_0,...,f_7)\)</span>，满足关系 <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle = u\)</span>，其中 <span class="math notranslate nohighlight">\(\rho_0,\rho_1, \rho_2\)</span> 在 <span class="math notranslate nohighlight">\(F\)</span> 有限域上。</p>
+<p>方便起见，我们将向量 <span class="math notranslate nohighlight">\(\vec{f}\)</span> 中元素的下标改写成小端序的二进制表示，即</p>
+<div class="math notranslate nohighlight">
+\[
+f_i = f_{i_0i_1i_2}, i = \langle (2^0, 2^1, 2^2), (i_0,i_1,i_2) \rangle
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(i_0,i_1,i_2 \in \{0,1\}\)</span>。</p>
+<p>将重新编号后的 tensor product 展开后，会得到下边这个等式</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{matrix} &amp;&amp;\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle &amp; \\ &amp; = &amp; f_{000}\rho_0^{0}\rho_1^{0}\rho_2^{0}&amp; + &amp;f_{100}\rho_0^{1}\rho_1^{0}\rho_2^{0}&amp; + &amp;f_{010}\rho_0^{0}\rho_1^{1}\rho_2^{0}&amp; + &amp;f_{110}\rho_0^{1}\rho_1^{1}\rho_2^{0} \\ &amp; + &amp; f_{001}\rho_0^{0}\rho_1^{0}\rho_2^{1}&amp; + &amp;f_{101}\rho_0^{1}\rho_1^{0}\rho_2^{1}&amp; + &amp;f_{011}\rho_0^{0}\rho_1^{1}\rho_2^{1}&amp; + &amp;f_{111}\rho_0^{1}\rho_1^{1}\rho_2^{1} \end{matrix}
+\end{split}\]</div>
+<p>我们会发现每个系数 <span class="math notranslate nohighlight">\(f_{i_0i_1i_2}\)</span> 的下标与相乘的 <span class="math notranslate nohighlight">\(\rho_0,\rho_1,\rho_2\)</span> 的指数是一一对应的，即</p>
+<div class="math notranslate nohighlight">
+\[
+f_{i_0i_1i_2} \cdot \rho_0^{i_0}\rho_1^{i_1} \rho_2^{i_2}, \text{ for all } i_0,i_1,i_2 \in \{ 0,1 \}
+\]</div>
+<p>因此，我们总能够将 <span class="math notranslate nohighlight">\(\vec{f}\)</span> 按 <span class="math notranslate nohighlight">\(\rho_j\)</span> 的指数 <span class="math notranslate nohighlight">\(i_j\)</span> 分成等长的两部分，且两部分分别满足一个 tensor product 子问题。例如 <span class="math notranslate nohighlight">\(\vec{f}\)</span> 根据 <span class="math notranslate nohighlight">\(\rho_0\)</span> 划分后，可以得到关于 <span class="math notranslate nohighlight">\(\vec{f}_1, \vec{f}_2\)</span> 的两个 tensor product 关系：</p>
+<div class="math notranslate nohighlight">
+\[
+\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle =  \langle\vec{f}_1, \otimes_{j=1}^{2}(1,\rho_j) \rangle + \rho_0 \langle\vec{f}_2, \otimes_{j=1}^{2}(1,\rho_j) \rangle
+\]</div>
+<p>注意到，这两个子问题中，内积的右边元素相同：均为 <span class="math notranslate nohighlight">\(\otimes_{j=1}^2 (1,\rho_j)\)</span>，因此它们可以进一步合并成一个 <span class="math notranslate nohighlight">\(\langle\vec{f}_1 + \rho_0 \vec{f}_2, \otimes_{j=1}^{2}(1,\rho_j) \rangle\)</span>。</p>
+<p>可以看到，对于一个 <span class="math notranslate nohighlight">\(N\)</span> 长度的向量 <span class="math notranslate nohighlight">\(\vec{f}\)</span>，我们将其分开为两个 <span class="math notranslate nohighlight">\(N/2\)</span> 长度的向量，再合并成一个向量。通过这一轮操作，我们把一个 <span class="math notranslate nohighlight">\(N\)</span> 大小的 tensor product 问题变成了 <span class="math notranslate nohighlight">\(N/2\)</span> 大小的问题。</p>
+<p>以此类推，该问题可以最终被减少到 <span class="math notranslate nohighlight">\(1\)</span> 大小。</p>
+<p><strong>【多元多项式 Split-and-fold】</strong></p>
+<p>之前提到过，我们可以将一个 tensor product 关系看作多元多项式的求值关系，即</p>
+<div class="math notranslate nohighlight">
+\[
+\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle = u \quad \Leftrightarrow \quad \tilde{f}(\rho_0,\rho_1,\rho_2) = u
+\]</div>
+<p>对于多元多项式 <span class="math notranslate nohighlight">\(\tilde{f}^{(0)} = \tilde{f}\)</span>，其在第 <span class="math notranslate nohighlight">\(j\in[1,3]\)</span> 轮时 split-and-fold 过程如下：</p>
+<ul class="simple">
+<li><p><strong>split:</strong> 证明者将多元多项式 <span class="math notranslate nohighlight">\(\tilde{f}^{(j-1)}\)</span> 分成两部分：第一部分的任意单项式中包含阶数为 0 的 <span class="math notranslate nohighlight">\(X_j\)</span>（记作 <span class="math notranslate nohighlight">\(\tilde{f}_e^{(j-1)}\)</span>），第二部分的任意单项式中包含阶数为 1 的 <span class="math notranslate nohighlight">\(X_{j-1}\)</span>（记作 <span class="math notranslate nohighlight">\(X_{j-1} \cdot \tilde{f}_o^{(j-1)}\)</span>），三者满足</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(j-1)} = \tilde{f}_{e}^{(j-1)} + X_{j-1} \cdot \tilde{f}_{o}^{(j-1)}
+\]</div>
+<ul class="simple">
+<li><p><strong>fold:</strong> 证明者将分开的两个多项式 <span class="math notranslate nohighlight">\(\tilde{f}_e^{(j-1)}, \tilde{f}_o^{(j-1)}\)</span> 线性组合，组合时使用的权重为 <span class="math notranslate nohighlight">\(\rho_{j-1}\)</span>, 得到新的多元多项式记作 <span class="math notranslate nohighlight">\(\tilde{f}^{(j)}(X) = \tilde{f}_e^{(j-1)}(X) + \rho_{j-1} \cdot \tilde{f}_o^{(j-1)}(X)\)</span>。</p></li>
+</ul>
+<p>下图我们给出 <span class="math notranslate nohighlight">\(j=1\)</span> 时的计算过程：</p>
+<img src="image/Gemini-multipoly.png" align=center width="60%">
+</section>
+<section id="tensor-product">
+<h2>Tensor Product 检查协议<a class="headerlink" href="#tensor-product" title="Link to this heading">#</a></h2>
+<p>通过上述递归算法，我们将检查 <span class="math notranslate nohighlight">\(N\)</span> 长度的 tensor product 关系的正确性归约到检查 <span class="math notranslate nohighlight">\(n = \left \lceil \log N \right \rceil\)</span>  次 split-and-fold 过程的正确性。</p>
+<p>实际上，这一分治解决问题的思想（split-and-fold）在很多之前的协议中出现过，如Sumcheck，Bulletproofs 和 FRI。不同的是 Gemini 给出了基于 KZG10 来证明 split-and-fold 过程的协议，该协议需要 <span class="math notranslate nohighlight">\(n= \log(|\vec{f}|)\)</span> 次交互。</p>
+<p>我们给出证明 tensor product 关系的 PIOP 协议如下：</p>
+<p><strong>【Tensor-product 检查协议】</strong></p>
+<p>目标关系：<span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle = u\)</span></p>
+<p>证明者输入：公共参数，实例 <span class="math notranslate nohighlight">\(x = (\rho_0,...,\rho_{n-1}, u)\)</span>, 秘密 <span class="math notranslate nohighlight">\(w = \vec{f}\)</span></p>
+<p>验证者输入：公共参数，实例 <span class="math notranslate nohighlight">\(x = (\rho_0,...,\rho_{n-1}, u)\)</span></p>
+<ol class="arabic simple">
+<li><p>证明者构造一元多项式 <span class="math notranslate nohighlight">\(f^{(0)}(X) = f(X)\)</span>。</p></li>
+<li><p>对 <span class="math notranslate nohighlight">\(j \in 1,...,n\)</span>，证明者计算</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+f^{(j)}(X) = f_e^{(j-1)}(X) + \rho_{j-1} \cdot f_o^{(j-1)}(X)
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(f_e^{(j-1)}, f_o^{(j-1)}\)</span> 分别为 <span class="math notranslate nohighlight">\(f^{(j-1)}\)</span> 的偶数阶项和奇数阶项构成的多项式，满足 <span class="math notranslate nohighlight">\(f^{(j-1)}(X) = f_e^{(j-1)}(X^2) + X \cdot f_o^{(j-1)}(X^2)\)</span>。</p>
+<ol class="arabic simple">
+<li><p>证明者向验证者发送 <span class="math notranslate nohighlight">\(f^{(0)},f^{(1)},...,f^{(n-1)}\)</span> 的 Oracles。</p></li>
+<li><p>验证者随机选取挑战值  <span class="math notranslate nohighlight">\(\beta \leftarrow \mathbb{F}\)</span> 并对 Oracles 进行以下查询：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e^{(j-1)}:= f^{(j-1)}(\beta), \bar{e}^{(j-1)} := f^{(j-1)}(-\beta), \hat{e}^{(j-1)} := f^{(j)}(\beta^2)
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(j=1,...,n\)</span>, 当 <span class="math notranslate nohighlight">\(j=n\)</span> 时，忽略查询 <span class="math notranslate nohighlight">\(f^{(n)}(\beta^2)\)</span> ，并直接令 <span class="math notranslate nohighlight">\(\hat{e}^{(n-1)} := u\)</span>。</p>
+<ol class="arabic simple">
+<li><p>对 <span class="math notranslate nohighlight">\(j = 0,...,n-1\)</span>，验证者检查</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{e}^{(j)} = \frac{e^{(j)} + \bar{e}^{(j)}}{2} + \rho_j \cdot \frac{e^{(j)}-\bar{e}^{(j)}}{2\beta}
+\]</div>
+<p>在每一轮中，证明者会分别为 split 之前，和 fold 之后得到的多项式生成 Oracles，具体来说，一个 split-and-fold 关系可以写成：</p>
+<blockquote>
+<div><p>给定 <span class="math notranslate nohighlight">\(f(X), f_e(X), f_o(X),f'(X)\)</span>，权重 <span class="math notranslate nohighlight">\(\rho\)</span>，它们满足如下关系</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; f(X)=f_e(X^2)+X\cdot f_o(X^2) \qquad \% \ \text{split} \\ f'(X) = f_e(X)+\rho \cdot f_o(X)\qquad \% \ \text{fold}
+&gt; \end{split}\]</div>
+</div></blockquote>
+<p>又因为偶次、奇次多项式分别满足（1） <span class="math notranslate nohighlight">\(f_e(X^2)=(f(X)+f(-X))/2\)</span>，（2）<span class="math notranslate nohighlight">\(f_o(X^2)=(f(X)-f(-X))/2X\)</span>，我们可以进一步地将上述两个等式写成一个，即</p>
+<div class="math notranslate nohighlight">
+\[
+f'(X^2)=\frac{f(X)+f(-X)}{2} + \rho \cdot \frac{f(X)-f(-X)}{2X}
+\]</div>
+<p>要检查该等式成立，验证者只需要在 <span class="math notranslate nohighlight">\(F\)</span> 有限域上随机选取一个挑战值 <span class="math notranslate nohighlight">\(\beta\)</span>，并检查 <span class="math notranslate nohighlight">\(X=\beta\)</span> 时 <span class="math notranslate nohighlight">\(f,f'\)</span> 的值是否满足关系即可。</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>多元到一元转换<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>在介绍多元到一元转换的协议的之前，我们再深入分析一下 tensor product 协议中隐藏的一些原理。虽然 tensor product 协议的目标是证明一个多元多项式的取值，但除了输入多元多项式的系数向量以外，协议中涉及的多项式均为一元的。</p>
+<p>我们不妨将 Split-and-fold 过程用一元多项式写出来：</p>
+<p><strong>【一元多项式 Split-and-fold】</strong> 在第 <span class="math notranslate nohighlight">\(j\)</span> 轮时：</p>
+<ul class="simple">
+<li><p><strong>split:</strong> 证明者将一元多项式 <span class="math notranslate nohighlight">\(f^{(j-1)}\)</span> 分成两部分：第一部分的任意单项式中包含阶数为偶数的 <span class="math notranslate nohighlight">\(X\)</span>（记作 <span class="math notranslate nohighlight">\(f_e^{(j-1)}\)</span>），第二部分的任意单项式中包含阶数为奇数的 <span class="math notranslate nohighlight">\(X\)</span>（记作 <span class="math notranslate nohighlight">\(X \cdot f_o^{(j-1)}\)</span>），三者满足</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+f^{(j-1)}(X) = f_e^{(j-1)}(X^2) + X \cdot f_o^{(j-1)}(X^2)
+\]</div>
+<ul class="simple">
+<li><p><strong>fold:</strong> 证明者将分开的两个多项式 <span class="math notranslate nohighlight">\(f_e^{(j-1)}, f_o^{(j-1)}\)</span> 线性组合，组合时使用的权重为 <span class="math notranslate nohighlight">\(\rho_{j-1}\)</span>, 得到新的一元多项式记作 <span class="math notranslate nohighlight">\(f^{(j)}(X) = f_e^{(j-1)}(X) + \rho_{j-1} \cdot f_o^{(j-1)}(X)\)</span>。【注】这里我们需要引入一个额外的映射 <span class="math notranslate nohighlight">\(X^2 \mapsto X\)</span>来得到 <span class="math notranslate nohighlight">\(f_e^{(j-1)}(X), f_o^{(j-1)}(X)\)</span>。</p></li>
+</ul>
+<p>因此，tensor product 协议可以看作是证明者同步地在一元多项式 <span class="math notranslate nohighlight">\(f\)</span> 上执行一个递归算法来模拟 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的计算过程，</p>
+<p>我们以三维多项式为例，描述第 <span class="math notranslate nohighlight">\(j=1\)</span> 轮时的计算过程：</p>
+<p>一元多项式中 split-and-fold 计算如下：</p>
+<img src="image/Gemini-unipoly.png" align=center width="60%">
+<p>与多元多项式 split-and-fold 对比，一元多项式第一轮中的自变量 <span class="math notranslate nohighlight">\(X\)</span> 就对应多元中的 <span class="math notranslate nohighlight">\(X_0\)</span>，在第二轮中则是 <span class="math notranslate nohighlight">\(X^2\)</span> 对应 <span class="math notranslate nohighlight">\(X_1\)</span>。实际上，这两个过程分别是对系数向量 <span class="math notranslate nohighlight">\(\vec{f}\)</span> 在不同「基」上的计算。</p>
+<p>当我们需要在基 <span class="math notranslate nohighlight">\(\{X_0,X_1,X_2\}\)</span> 上计算多元多项式的值时，我们只需要对应地在 <span class="math notranslate nohighlight">\(\{X^1,X^2,X^4\}\)</span> 上（即一元多项式上）同步地进行相同操作，便可以用一元多项式模拟出多元多项式的求值过程。</p>
+<p>更正式地说，我们就得到了一个多元基向量空间到一元基向量空间的映射关系：</p>
+<div class="math notranslate nohighlight">
+\[
+\iota: \{ X_0,X_1,X_2 \} \rightarrow \{ X^1, X^2, X^4\}
+\]</div>
+<p>因此，我们说 tensor product 协议为我们提供了一个从多元到一元的证明方法，即 multi-to-uni IOP。如下图所示，在理想情况下，我们希望证明者能够直接生成一个多元多项式的 Oracle 并发送给验证者。然而在工程中缺少高效的多元多项式承诺方案，证明者只能构造一个对 Tensor Product Check 的证明协议（也就是 Multi-Uni-IOP）来在一元多项式上模拟多元多项式求值的计算过程。</p>
+<p>证明者需要发送 <span class="math notranslate nohighlight">\(n\)</span> 个一元多项式的 Oracles，分别让验证者进行查询并检查。由于这些检查彼此独立，验证者可以一次性对所有 Oracles 在某个点 <span class="math notranslate nohighlight">\(\beta\)</span> 上进行查询，而不需要 <span class="math notranslate nohighlight">\(O(n)\)</span> 个点。</p>
+<img src="image/Gemini-PIOP.png" align=center width="60%">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="kzg">
+<h1>基于KZG实现<a class="headerlink" href="#kzg" title="Link to this heading">#</a></h1>
+<p>对前文给出的 IOP 协议，我们可以部署一元多项式承诺方案（KZG10）将其编译为一个 AoK（Argument of Knowledge）。KZG10 能够支持一个多项式在某个点上的求值证明，其优点是拥有常数大小的证明，且支持批量证明。缺点是需要可信初始化，且证明复杂度相对较高（需要 FFT 运算）。</p>
+<p>【注】由于我们将 IOP 编译为 Argument of Knowledge，因此 KZG10 需要满足 extractability，该性质的证明在 Marlin [CHM+19] 中给出。</p>
+<p>我们先简单回顾一下 KZG10 的证明原理：给定公共参数：<span class="math notranslate nohighlight">\(\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, G, H, e\)</span>。在初始化阶段随机选取 <span class="math notranslate nohighlight">\(\tau \in \mathbb{}F\)</span> 并计算 <span class="math notranslate nohighlight">\(\tau H \in \mathbb{G}_2\)</span> 和向量</p>
+<div class="math notranslate nohighlight">
+\[
+(G,\tau G,\ldots \tau^{D-1}G,\tau^{D}G)\in \mathbb{G}_1^{D+1}
+\]</div>
+<p>我们用中括号记号 <span class="math notranslate nohighlight">\([a]_1\)</span> 来表示一个椭圆曲线群元素的上的标量乘法 <span class="math notranslate nohighlight">\(a \cdot G\)</span>。KZG 证明过程如下：</p>
+<ol class="arabic simple">
+<li><p>证明者计算 <span class="math notranslate nohighlight">\(d\)</span> 阶一元多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\([f(\tau)]_1 = \sum_{j=0}^d f_j \cdot \tau^j G\)</span>。</p></li>
+<li><p>证明者在 <span class="math notranslate nohighlight">\(\rho\)</span> 点上公开多项式的值为 <span class="math notranslate nohighlight">\(f(\rho)=u\)</span>，并计算商多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q(X) = \frac{f(X)-f(\rho)}{X-\rho}
+\]</div>
+<p>生成求值证明 <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span>。</p>
+<ol class="arabic simple">
+<li><p>验证者检查求值证明 <span class="math notranslate nohighlight">\(e([f(\tau)]_1-[u]_1, [1]_2) = e([q(\tau)]_1, [\tau-\rho]_2)\)</span>。</p></li>
+</ol>
+<p>因此，要编译 IOP 协议只需要分别对协议中产生的多项式 <span class="math notranslate nohighlight">\(f^{(1)},...,f^{(n-1)}\)</span> 进行承诺，并在指定点 <span class="math notranslate nohighlight">\(\beta, -\beta, \beta^2\)</span> 上打开即可。但有两点仍然需要我们注意：（1）这些多项式的阶数并不相同，为了防止证明者作弊使用不满足满足阶数要求的多项式，需要采用 Marlin，Zeromorph [CHM+19, KT23] 中的方法来限制多项式的 Degree Bound。（2）大部分多项式都需要在 <span class="math notranslate nohighlight">\(\beta, -\beta, \beta^2\)</span> 这三个点上公开，如果对每个点分别生成求值证明会增加证明大小以及验证复杂度。多点求值证明技巧可以用来优化这个问题。</p>
+<p><strong>Degree Bound 证明:</strong> 为了证明 <span class="math notranslate nohighlight">\(deg(f)\leq d\)</span></p>
+<ul class="simple">
+<li><p>证明者提供 <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span> 并附加上 <span class="math notranslate nohighlight">\([\tau^{D-d}\cdot f(\tau)]_1\)</span>  发送给验证者</p></li>
+<li><p>验证者检查等式 <span class="math notranslate nohighlight">\(e([f(\tau)]_1, [\tau^{D-d}]_2) = e([\tau^{D-d}\cdot f(\tau)]_1, [1]_2)\)</span></p></li>
+</ul>
+<p>**多点求值证明：**为了证明 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(\beta_1, \beta_2, \beta_3\)</span> 公开为 <span class="math notranslate nohighlight">\(u_1,u_2,u_3\)</span></p>
+<ul class="simple">
+<li><p>证明者随机生成一个阶数与 <span class="math notranslate nohighlight">\(f(X)\)</span> 相同的多项式 <span class="math notranslate nohighlight">\(g(X)\)</span>，该多项式需要经过点 <span class="math notranslate nohighlight">\((\beta, u_1),(-\beta, u_2),(\beta^2, u_3)\)</span></p></li>
+<li><p>证明者提供 <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span> 和求值证明 <span class="math notranslate nohighlight">\([q(\tau)]_1 = \frac{f(\tau)-g(\tau)}{(\tau-\beta_1)(\tau-\beta_2)(\tau-\beta_3)}\)</span></p></li>
+<li><p>验证者检查等式 <span class="math notranslate nohighlight">\(e([f(\tau)]_1 - [g(\tau)]_1, [1]_2) = e([q(\tau)]_1, [(\tau-\beta_1)(\tau-\beta_2)(\tau-\beta_3)]_2)\)</span></p></li>
+</ul>
+<p>【注】上述两个技巧都需要在 Setup 阶段额外生成 <span class="math notranslate nohighlight">\((H,\tau H,\ldots \tau^{D-1}H,\tau^{D}H)\in \mathbb{G}_2^{D+1}\)</span>。</p>
+<p><strong>【协议描述】</strong></p>
+<p>下面我们先给出基于 KZG 编译的 Multi-to-Uni AoK 方案：</p>
+<p><strong>Instance</strong></p>
+<ul class="simple">
+<li><p>向量 <span class="math notranslate nohighlight">\(\vec{f}\)</span>  的一元多项式承诺 <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span>，长度 <span class="math notranslate nohighlight">\(N\)</span></p></li>
+<li><p>求值点向量 <span class="math notranslate nohighlight">\(\vec{\rho}\)</span></p></li>
+<li><p>求值结果 <span class="math notranslate nohighlight">\(\tilde{f}(\rho) = u\)</span></p></li>
+</ul>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>多元多项式的系数向量 <span class="math notranslate nohighlight">\(\vec{f}\)</span></p></li>
+</ul>
+<p><strong>交互过程</strong></p>
+<ol class="arabic simple">
+<li><p>证明者生成多项式 <span class="math notranslate nohighlight">\(f^{(1)},...,f^{(n-1)}\)</span> 并计算和发送它们的承诺 <span class="math notranslate nohighlight">\([f^{(1)}(\tau)]_1,\ldots,[f^{(n-1)}(\tau)]_1\)</span></p></li>
+<li><p>证明者计算并发送多项式 <span class="math notranslate nohighlight">\(f^{(0)},...,f^{(n-1)}\)</span> 的 degree bound 证明 <span class="math notranslate nohighlight">\([\tau^{D-N\cdot 2^{-j} + 1}\cdot f^{(j)}(\tau)]_1, j = 0,\ldots n-1\)</span></p></li>
+<li><p>验证者随机选取点 <span class="math notranslate nohighlight">\(\beta\)</span> 并发送给证明者</p></li>
+<li><p>证明者计算每个多项式的求值证明，其中</p></li>
+</ol>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\([q^{(0)}(\tau)]_1 = \frac{f^{(0)}(\tau)-g^{(0)}(\tau)}{(\tau-\beta)(\tau+\beta)}\)</span>                    % <span class="math notranslate nohighlight">\(f^{(0)}(\beta), f^{(0)}(-\beta)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\([q^{(j)}(\tau)]_1 = \frac{f^{(j)}(\tau)-g^{(j)}(\tau)}{(\tau-\beta)(\tau+\beta)(\tau-\beta^2)}\)</span>              % <span class="math notranslate nohighlight">\(f^{(j)}(\beta), f^{(j)}(-\beta), f^{(j)}(\beta^2), j=1,...,n-1\)</span></p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>验证者检查：</p></li>
+</ol>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f^{(0)},...,f^{(n-1)}\)</span> 的 degree bound 证明 <span class="math notranslate nohighlight">\([\tau^{D-N\cdot 2^{-j} + 1}\cdot f^{(j)}(\tau)]_1, j = 0,\ldots n-1\)</span> 的正确性</p></li>
+<li><p><span class="math notranslate nohighlight">\(f^{(0)},...,f^{(n-1)}\)</span> 的多点求值证明 <span class="math notranslate nohighlight">\([q^{(0)}(\tau)]_1,\ldots [q^{(n-1)}(\tau)]_1\)</span> 的正确性</p></li>
+<li><p>split-and-fold 关系的正确性，即对 <span class="math notranslate nohighlight">\(j = 0,...,n-1\)</span>，下列等式是否成立：</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\hat{e}^{(j)} = \frac{e^{(j)} + \bar{e}^{(j)}}{2} + \rho_j \cdot \frac{e^{(j)}-\bar{e}^{(j)}}{2\beta}
+\]</div>
+<p><strong>【性能分析】</strong></p>
+<ul class="simple">
+<li><p>证明大小：<span class="math notranslate nohighlight">\(3\log N \ \mathbb{G}_1\)</span>元素</p></li>
+<li><p>验证者计算量： <span class="math notranslate nohighlight">\(4 \log N \ \mathsf{Pairing},\ O(\log N) \ \mathsf{EccMul}^{\mathbb{G}_1 \text{ or } \mathbb{G}_2}\)</span></p></li>
+</ul>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id2">
+<h1>参考文献<a class="headerlink" href="#id2" title="Link to this heading">#</a></h1>
+<p>[BCH+22] Bootle, Jonathan, Alessandro Chiesa, Yuncong Hu, **et al. “Gemini: Elastic SNARKs for Diverse Environments.” <em>Cryptology ePrint Archive</em> (2022). <a class="reference external" href="https://eprint.iacr.org/2022/420">https://eprint.iacr.org/2022/420</a></p>
+<p>[KT23] Kohrita, Tohru, and Patrick Towa. “Zeromorph: Zero-knowledge multilinear-evaluation proofs from homomorphic univariate commitments.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/917">https://eprint.iacr.org/2023/917</a></p>
+<p>[CHM+19] Chiesa, Alessandro, Yuncong Hu, Mary Maller, et al. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./gemini"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../fri-binius/binius-02.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Notes on Binius (Part II): Subspace Polynomial</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Gemini-PCS-2.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gemini-PCS (Part II)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gemini-PCS (Part I)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-and-tensor-product">MLE and Tensor Product</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#split-and-fold">Split-and-Fold 方法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tensor-product">Tensor Product 检查协议</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">多元到一元转换</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kzg">基于KZG实现</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">参考文献</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

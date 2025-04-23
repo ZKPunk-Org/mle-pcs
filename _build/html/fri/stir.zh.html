@@ -1,0 +1,849 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>STIR: 提升码率来降低查询复杂度 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/stir.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification" href="whir.zh.html" />
+    <link rel="prev" title="Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心" href="fri-proximity-gap.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/stir.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/stir.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>STIR: 提升码率来降低查询复杂度</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri-v-s-stir">FRI v.s. STIR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rs">关于 RS 编码的强有力的工具</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#folding">Folding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quotienting">Quotienting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-domain-sampling">Out of Domain Sampling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">深入 STIR 协议的一次迭代</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">Soundness 分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-correction">Degree correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="stir">
+<h1>STIR: 提升码率来降低查询复杂度<a class="headerlink" href="#stir" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>本文主要受 <a class="reference external" href="https://eprint.iacr.org/2024/390">STIR 论文</a> 作者的博客文章 <a class="reference external" href="https://gfenzi.io/papers/stir/">STIR: Reed–Solomon Proximity Testing with Fewer Queries</a> 与演讲 <a class="reference external" href="https://www.youtube.com/watch?v=OLklJjp8KB4&amp;amp;ab_channel=ZeroKnowledge">ZK11: STIR: Reed–Solomon Proximity Testing with Fewer Queries - Gal Arnon &amp; Giacomo Fenzi</a> 的启发，介绍 STIR 协议。</p>
+<p>STIR 和 FRI 一样，也是解决 Reed-Solomon Proximity Testing 问题，不过与 FRI 相比，其有更低的查询复杂度，这会降低 argument 的大小与 Verifier 的哈希复杂度。那么 STIR 是如何实现这一点的呢？其实谜底就在谜面上，STIR 取了 <strong>S</strong>hift <strong>T</strong>o <strong>I</strong>mprove <strong>R</strong>ate 的首字母，STIR 的核心点就在其通过每次移动 evaluation domain，来提升码率。直观地理解，码率实际刻画的是码字中所含的真实信息的比例，码率降低，真实信息减少，对应码字中的冗余就增大了，Verifier 就更容易测试接受到的一个消息到该编码空间的 proximity 了，其测试能力变得更强了。换句话说，由于 Verifier 的测试能力变强，那么其只需要更少的查询次数就能达到目标的安全性了。下面通过对比 FRI 和 STIR，来看看 STIR 是如何降低码率的。</p>
+<section id="fri-v-s-stir">
+<h2>FRI v.s. STIR<a class="headerlink" href="#fri-v-s-stir" title="Link to this heading">#</a></h2>
+<p>对于一个有限域 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> ，取 <span class="math notranslate nohighlight">\(\mathcal{L} \subseteq \mathbb{F}\)</span> 为 evaluation domain，设其大小 <span class="math notranslate nohighlight">\(|\mathcal{L}| = n\)</span>，用 <span class="math notranslate nohighlight">\(d\)</span> 表示次数界限(不妨设 <span class="math notranslate nohighlight">\(n\)</span> 与 <span class="math notranslate nohighlight">\(d\)</span> 都是 <span class="math notranslate nohighlight">\(2\)</span> 的幂次)，那么 Reed-Solomon 编码空间 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 包含的是所有这样的函数 <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> ，函数 <span class="math notranslate nohighlight">\(f\)</span> 能与一个次数严格小于 <span class="math notranslate nohighlight">\(d\)</span> 的多项式在 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 上的求值完全一致。码率 <span class="math notranslate nohighlight">\(\rho := d/|\mathcal{L}|\)</span> 。</p>
+<p>协议的目标是解决 Reed-Solomon Proximity Testing 问题，其中 Verifier 是可以通过查询获得一个函数 <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> 的，那么 Verifier 的目标就是在尽可能少的位置上查询 <span class="math notranslate nohighlight">\(f\)</span> 的值，能够区分出 <span class="math notranslate nohighlight">\(f\)</span> 属于下面哪一种情况：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f\)</span> 是一个 Reed-Solomon 码字，即 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> ；</p></li>
+<li><p><span class="math notranslate nohighlight">\(f\)</span> 距离 Reed-Solomon 编码空间 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 中的所有码字的相对 Hamming 距离都有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远，即 <span class="math notranslate nohighlight">\(\Delta(f, \mathrm{RS}[\mathbb{F},\mathcal{L},d]) &gt; \delta\)</span> 。</p></li>
+</ol>
+<p>我们在 IOPP(Interactive Oracle Proofs of Proximity) 模型下考虑上述 Reed-Solomon Proximity Testing 问题，此时 Verifier 可以和 Prover 进行交互，并且能通过 oracle 获得 Prover 的消息，如下图所示。</p>
+<p><img alt="" src="../_images/stir-iopp-for-RS.excalidraw.svg" /></p>
+<p>Verifier 通过与 Prover 一系列交互之后，分两种情况：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> ，Verifier 接受 :)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta(f, \mathrm{RS}[\mathbb{F},\mathcal{L},d]) &gt; \delta\)</span> ，Verifier 大概率拒绝 :(</p></li>
+</ul>
+<p>我们在 <span class="math notranslate nohighlight">\(k\)</span> 折的情况下对比 FRI 协议和 STIR 协议，如下图所示。</p>
+<p><img alt="" src="../_images/stir-FRI-STIR.svg" /></p>
+<p>在 FRI 协议中，假设 <span class="math notranslate nohighlight">\(g_1\)</span> 是通过随机数 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 进行 <span class="math notranslate nohighlight">\(k\)</span> 折得到的，其中 <span class="math notranslate nohighlight">\(\mathcal{L}^{k} = \{x^k,x\in \mathcal{L}\}\)</span> 。因此将测试 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 转换为 <span class="math notranslate nohighlight">\(g_1 \in \mathrm{RS}[\mathbb{F},\mathcal{L}^k,d/k]\)</span> ，递归地来测试 <span class="math notranslate nohighlight">\(g_i \in \mathrm{RS}[\mathbb{F},\mathcal{L}^{k^i},d/k^i]\)</span> 。因此在第 <span class="math notranslate nohighlight">\(i\)</span> 轮，其码率</p>
+<div class="math notranslate nohighlight">
+\[
+\rho_i = \frac{\frac{d}{k^i}}{|\mathcal{L}_i|} = \frac{d}{k^i} \cdot \frac{k^i}{n} = \frac{d}{n} = \rho
+\]</div>
+<p>可以发现在每一轮中，码率 <span class="math notranslate nohighlight">\(\rho_i\)</span> 始终为 <span class="math notranslate nohighlight">\(\rho\)</span> ，保持不变。</p>
+<p>而在 STIR 协议中，注意 <span class="math notranslate nohighlight">\(g_1'\)</span> 仍然是 <span class="math notranslate nohighlight">\(k\)</span> 折，但是其 evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 的大小却不是缩小 <span class="math notranslate nohighlight">\(k\)</span> 倍，而是 <span class="math notranslate nohighlight">\(2\)</span> 倍。此时将测试 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 转换为测试 <span class="math notranslate nohighlight">\(g_1' \in \mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span> 。那么在第 <span class="math notranslate nohighlight">\(i\)</span> 轮，需要测试 <span class="math notranslate nohighlight">\(g_i' \in \mathrm{RS}[\mathbb{F},\mathcal{L}_{i}',d/k^i]\)</span> 。这时</p>
+<div class="math notranslate nohighlight">
+\[
+\rho_i = \frac{\frac{d}{k^i}}{|\mathcal{L}'_i|} = \frac{d}{k^i} \cdot \frac{2^i}{n} = \left( \frac{2}{k}\right)^i \cdot \frac{d}{n} = \left( \frac{2}{k}\right)^i \cdot \rho
+\]</div>
+<p>如果 <span class="math notranslate nohighlight">\(\frac{2}{k} &lt; 1\)</span> 即 <span class="math notranslate nohighlight">\(k &gt; 2\)</span> ，可以发现码率 <span class="math notranslate nohighlight">\(\rho_{i}\)</span> 每一轮都在减小，这就是 STIR 降低查询复杂的关键之处。</p>
+<p>当我们将上述的 IOPP 编译成 SNARK 时，需要用到 BCS 转换 ([BCS16], BCS transformation) ，分为两步：</p>
+<ol class="arabic simple">
+<li><p>将 Prover 的消息进行 Merkle 承诺，当 Verifier 想要查询时就打开这些承诺，这一步将 IOPP 转换为了一个简洁的交互论证(succinct interactive argument) 。</p></li>
+<li><p>使用 Fait-Shamir 转换将第一步得到的简洁的交互论证转换为非交互的。</p></li>
+</ol>
+<p>在BCS转换中，就需要 IOPP 有一个比较强的 soundness 性质，称为 round-by-round soundness，意思是要求 IOPP 在每一轮有比较小的 soundness error，这比要求整个 IOPP 有比较小的 soundness error 要求更强。我们假设要求 round-by-round soundness error 的界为 <span class="math notranslate nohighlight">\(2^{-\lambda}\)</span> 。每一轮可以重复查询 <span class="math notranslate nohighlight">\(t_{i}\)</span> 次，整个 IOPP 协议进行 <span class="math notranslate nohighlight">\(M\)</span> 轮，那么整个证明的总查询复杂度就为 <span class="math notranslate nohighlight">\(\sum_{i = 0}^M t_i\)</span> 。对于 <span class="math notranslate nohighlight">\(\delta\)</span> 达到 Johnson bound，即 <span class="math notranslate nohighlight">\(\delta = 1 - \sqrt{\rho}\)</span> ，通过计算可以得到</p>
+<ol class="arabic">
+<li><p>FRI 的查询复杂度为：</p>
+<div class="math notranslate nohighlight">
+\[
+        O \left( \lambda \cdot \frac{\log d}{- \log \sqrt{\rho}} \right)
+    \]</div>
+</li>
+<li><p>STIR 的查询复杂度为：</p>
+<div class="math notranslate nohighlight">
+\[
+        O \left( \lambda \cdot \log \left( \frac{\log d}{- \log \sqrt{\rho}} \right) + \log d \right)
+    \]</div>
+</li>
+</ol>
+<p>在 STIR 查询复杂度中，<span class="math notranslate nohighlight">\(d\)</span> 通常不大，因此占比比较大的是第一项 <span class="math notranslate nohighlight">\(\lambda \cdot \log \left( \frac{\log d}{- \log \sqrt{\rho}} \right)\)</span> ，可以发现其是 <span class="math notranslate nohighlight">\(\log \log\)</span> 级别的，而原来的 FRI 只是 <span class="math notranslate nohighlight">\(\log\)</span> 级别。</p>
+<p>在论文 [ACFY24] 6.4 节中的图 2 给出了 FRI 和 STIR 的对比试验结果，可以发现 STIR 降低查询复杂度导致了其在 argument 大小和 Verifier 计算的哈希数量相比 FRI 更优。这也比较好理解，更少的查询复杂度意味着：</p>
+<ol class="arabic simple">
+<li><p>减少整个 argument 大小是显然的。</p></li>
+<li><p>由于查询次数更少，那么 Verifier 需要打开的 Merkle 承诺就更少，计算对应的哈希数量就更少。</p></li>
+</ol>
+<p><img alt="" src="../_images/stir-comparison.png" /></p>
+</section>
+<section id="rs">
+<h2>关于 RS 编码的强有力的工具<a class="headerlink" href="#rs" title="Link to this heading">#</a></h2>
+<p>在这里先引入几个关于 RS 编码的强大工具，其能帮助我们理解具体的 STIR 协议构造。</p>
+<section id="folding">
+<h3>Folding<a class="headerlink" href="#folding" title="Link to this heading">#</a></h3>
+<p>对于一个函数 <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> ，给一个随机数 <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span> ，其 <span class="math notranslate nohighlight">\(k\)</span> 次折叠之后的函数记为 <span class="math notranslate nohighlight">\(f_r := \mathrm{Fold}(f,r) : \mathcal{L}^{k} \rightarrow \mathbb{F}\)</span> 。其定义为，对于每一个 <span class="math notranslate nohighlight">\(x \in \mathcal{L}^{k}\)</span> ，在 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 中能找到 <span class="math notranslate nohighlight">\(k\)</span> 个 <span class="math notranslate nohighlight">\(y\)</span> 满足 <span class="math notranslate nohighlight">\(y^k = x\)</span> ，由 <span class="math notranslate nohighlight">\(k\)</span> 对 <span class="math notranslate nohighlight">\((y, f(y))\)</span> 可以得到唯一的一个次数小于 <span class="math notranslate nohighlight">\(k\)</span> 的多项式 <span class="math notranslate nohighlight">\(\hat{p}\)</span> ，其满足 <span class="math notranslate nohighlight">\(\hat{p}(y) = f(y)\)</span> ，那么 <span class="math notranslate nohighlight">\(\hat{p}(r)\)</span> 就是函数 <span class="math notranslate nohighlight">\(f_r(x)\)</span> 的值。这个 Fold 函数的定义和 FRI 协议中的 Fold 函数定义完全一致，其有两个很好的性质。</p>
+<p>第一个性质是距离的保持。</p>
+<ol class="arabic simple">
+<li><p>如果折叠前的函数 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span> ，那么对于任意选取的随机数 <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span> ，都有折叠之后的函数依然是 RS 码，即 <span class="math notranslate nohighlight">\(f_r \in \mathrm{RS}[\mathbb{F}, \mathcal{L}^k, d/k]\)</span> 。</p></li>
+<li><p>对于 <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> ，如果 <span class="math notranslate nohighlight">\(f\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，那么以至少 <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/\mathbb{F}\)</span> 的概率对随机数 <span class="math notranslate nohighlight">\(r\)</span> 进行选择，有 <span class="math notranslate nohighlight">\(f_r\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}^k, d/k]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远。</p></li>
+</ol>
+<p>这个性质保证了我们可以大胆进行折叠，如果 Prover 作弊，提供了距离编码空间有 <span class="math notranslate nohighlight">\(\delta\)</span> 远的函数，极大概率其折叠之后的函数依然距离对应的编码空间有 <span class="math notranslate nohighlight">\(\delta\)</span> 远。</p>
+<p>第二个性质称为 Local，意思是如果要得到折叠后的函数在任意一点的值，只需要查询 <span class="math notranslate nohighlight">\(f\)</span> 在 <span class="math notranslate nohighlight">\(k\)</span> 个点的值就能计算得出，因为此时可以得到唯一一个次数小于 <span class="math notranslate nohighlight">\(k\)</span> 的多项式 <span class="math notranslate nohighlight">\(\hat{p}\)</span> ，再带入  <span class="math notranslate nohighlight">\(r\)</span> 计算得到 <span class="math notranslate nohighlight">\(\hat{p}(r)\)</span> 就是该点的值。此时 Prover 也不需要单独提供 <span class="math notranslate nohighlight">\(\mathrm{Fold}(f,r)\)</span> 的 oracle 了，Verifier 通过访问 <span class="math notranslate nohighlight">\(f\)</span> 的 oracle 就能得到了，这就减少了 argument 大小。</p>
+</section>
+<section id="quotienting">
+<h3>Quotienting<a class="headerlink" href="#quotienting" title="Link to this heading">#</a></h3>
+<p>对于函数 <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> ，以及 <span class="math notranslate nohighlight">\(p: S \rightarrow \mathbb{F}\)</span> ，其中 <span class="math notranslate nohighlight">\(S \subseteq \mathbb{F}\)</span> ，则关于函数 <span class="math notranslate nohighlight">\(f\)</span> 的 quotient 定义为：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{Quotient}(f, S, p)(x) := \frac{f(x) - \hat{p}(x)}{\prod_{a \in S}(X - a)},
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\hat{p}\)</span> 是满足对任意的 <span class="math notranslate nohighlight">\(a \in S\)</span> ，都有 <span class="math notranslate nohighlight">\(\hat{p}(a) = p(a)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(|S|\)</span> 的唯一的多项式。</p>
+<p>该函数的一个重要性质是一致性(Consistency) ，假设 <span class="math notranslate nohighlight">\(S\)</span> 与 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 不相交(其实也可以相交，结论会更复杂些，见[ACFY24] Lemma 4.4)，那么</p>
+<ol class="arabic simple">
+<li><p>如果 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span> ，其是一个次数小于 <span class="math notranslate nohighlight">\(d\)</span> 的多项式在 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 上的 evaluation，并且该多项式在 <span class="math notranslate nohighlight">\(S\)</span> 上与 <span class="math notranslate nohighlight">\(p\)</span> 一致，那么 <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, S, p) \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d - |S|]\)</span> 。</p></li>
+<li><p>如果对于任意一个离 <span class="math notranslate nohighlight">\(f\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 近的次数小于 <span class="math notranslate nohighlight">\(d\)</span> 的多项式 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，都有 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 与 <span class="math notranslate nohighlight">\(p\)</span> 在 <span class="math notranslate nohighlight">\(S\)</span> 上不完全一致，即对于一些 <span class="math notranslate nohighlight">\(a \in S\)</span> ，有 <span class="math notranslate nohighlight">\(\hat{u}(a) \neq p(a)\)</span> ，那么 <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, S, p)\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d - |S|]\)</span> 就有 <span class="math notranslate nohighlight">\(\delta\)</span> 远。</p></li>
+</ol>
+<p><img alt="" src="../_images/stir-quotient.svg" /></p>
+<p>对于上述第 2 点，在 <span class="math notranslate nohighlight">\(f\)</span> 的 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，这些码字组成的集合记为 <span class="math notranslate nohighlight">\(\mathrm{List}(f,d,\delta)\)</span> 。对于任意的 <span class="math notranslate nohighlight">\(\hat{u} \in \mathrm{List}(f,d,\delta)\)</span> ，只要在 <span class="math notranslate nohighlight">\(S\)</span> 上有一点，使得 <span class="math notranslate nohighlight">\(\hat{u}(a) \neq p(a)\)</span> ，商多项式 <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, S, p)\)</span> 的距离就被放大了，就有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远了，也就是如果这里被除了错误的值 <span class="math notranslate nohighlight">\(f(a) - p(a)\)</span> ，商多项式距离低次多项式所在的 RS 编码空间就很远了。</p>
+<p>注意到这里要求任意的 <span class="math notranslate nohighlight">\(\hat{u} \in \mathrm{List}(f,d,\delta)\)</span> ，都有 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 与 <span class="math notranslate nohighlight">\(p\)</span> 在 <span class="math notranslate nohighlight">\(S\)</span> 上不一致。而用 Out of Domain Sampling 的方法，我们可以将 <span class="math notranslate nohighlight">\(f\)</span> 在 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字以极大概率限制到最多一个，这会使得 Verifier 更容易去检测。我们将在下一小节详细介绍该方法。</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> 函数可以帮助我们实现在函数 <span class="math notranslate nohighlight">\(f\)</span> 上添加约束。例如想限制 <span class="math notranslate nohighlight">\(f\)</span> 在点 <span class="math notranslate nohighlight">\(a\)</span> 处的值为 <span class="math notranslate nohighlight">\(b\)</span> ，那么可以通过 <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, \{a\}, p)\)</span> 来实现，其中 <span class="math notranslate nohighlight">\(p(a) = b\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{Quotient}(f, \{a\}, p) = \frac{f(x) - p(x)}{x - a} 
+\]</div>
+<p>接着证明 <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, \{a\}, p) \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, d - 1]\)</span> 就可以了。如果 Prover 提供的 <span class="math notranslate nohighlight">\(f\)</span> 在 <span class="math notranslate nohighlight">\(a\)</span> 点的值不为 <span class="math notranslate nohighlight">\(b\)</span> ，即 <span class="math notranslate nohighlight">\(f(a) \neq b\)</span> ，那么 <span class="math notranslate nohighlight">\(f(a) \neq p(a)\)</span> ，就会导致 <span class="math notranslate nohighlight">\(\mathrm{Quotient}(f, \{a\}, p)\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d - 1]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，就容易被 Verifier 检测出来了。这里只添加了一个约束，自然可以添加多个约束，这样就能在 <span class="math notranslate nohighlight">\(f\)</span> 添加约束的同时将测试 <span class="math notranslate nohighlight">\(f\)</span> 转换为测试 <span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> 函数距离对应的 RS 编码空间有 <span class="math notranslate nohighlight">\(\delta\)</span> 近了。</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> 函数和折叠函数一样有 Local 性质。要计算 <span class="math notranslate nohighlight">\(\mathrm{Quotient}\)</span> 函数在点 <span class="math notranslate nohighlight">\(x \in \mathcal{L}\backslash\mathcal{S}\)</span> 的值，通过查询函数 <span class="math notranslate nohighlight">\(f\)</span> 在 <span class="math notranslate nohighlight">\(x\)</span> 点的值就可以计算得出。</p>
+</section>
+<section id="out-of-domain-sampling">
+<h3>Out of Domain Sampling<a class="headerlink" href="#out-of-domain-sampling" title="Link to this heading">#</a></h3>
+<p>Out of Domain Sampling 是一种强大的工具，其可以帮助我们限制 Prover 提供的函数 <span class="math notranslate nohighlight">\(f\)</span> 在 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字数量，这样就就可以将 List Decoding 转换为 Unique Decoding 了。</p>
+<p>对于函数 <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> ，Verifier 从区域 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 之外随机选取一个数 <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F} \backslash \mathcal{L}\)</span> ，Prover 返回值 <span class="math notranslate nohighlight">\(\beta\)</span> ，那么在 <span class="math notranslate nohighlight">\(f\)</span> 的 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字列表 <span class="math notranslate nohighlight">\(\mathrm{List}(f,d,\delta)\)</span> 中，大概率最多只有一个码字 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 满足 <span class="math notranslate nohighlight">\(\hat{u}(\alpha) = \beta\)</span> 。</p>
+<p><img alt="" src="../_images/stir-out-of-domain-sampling.svg" /></p>
+<p>可以用代数基本定理来说明这一点。我们只要证明在 <span class="math notranslate nohighlight">\(\mathrm{List}(f,d,\delta)\)</span> 中存在两个不同的码字 <span class="math notranslate nohighlight">\(\hat{u}'\)</span> 与 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，它们在 <span class="math notranslate nohighlight">\(\alpha\)</span> 点的值都相等的概率比较小就可以了，这也就说明了大概率最多有一个码字满足 <span class="math notranslate nohighlight">\(\hat{u}(\alpha) = \beta\)</span> 。</p>
+<p>先固定两个不同的码字 <span class="math notranslate nohighlight">\(\hat{u}'\)</span> 与 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，由于它们是不同的码字并且次数都小于 <span class="math notranslate nohighlight">\(d\)</span> ，则由代数基本定理可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\alpha \leftarrow \mathbb{F} \backslash \mathcal{L}} [\hat{u}'(\alpha) = \hat{u}(\alpha)] \le \frac{d - 1}{|\mathbb{F}| - |\mathcal{L}|}
+\]</div>
+<p>假设 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L},d]\)</span> 是 <span class="math notranslate nohighlight">\((\delta, l)\)</span> 可列表解码的，意思就是在 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字数量最多为 <span class="math notranslate nohighlight">\(l\)</span> 个，那么任意选取不同的两个码字 <span class="math notranslate nohighlight">\(\hat{u}'\)</span> 与 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 的选法就有 <span class="math notranslate nohighlight">\(\binom{l}{2}\)</span> 种。因此任意选取两个不同的码字 <span class="math notranslate nohighlight">\(\hat{u}'\)</span> 与 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，它们在 <span class="math notranslate nohighlight">\(\alpha\)</span> 点的值相等的概率不超过 <span class="math notranslate nohighlight">\(\binom{l}{2} \cdot \frac{d - 1}{|\mathbb{F}| - |\mathcal{L}|}\)</span> 。这个概率是非常小的，因此得证。</p>
+<p>如何去限制 Prover 发送过来的 <span class="math notranslate nohighlight">\(\beta\)</span> 真的是 <span class="math notranslate nohighlight">\(f\)</span> 在点 <span class="math notranslate nohighlight">\(a\)</span> 处的值呢？用上一小节引入的工具 Quotient 就能做到啦。</p>
+</section>
+</section>
+<section id="id1">
+<h2>深入 STIR 协议的一次迭代<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>在这一节中将应用前面提到的三个工具，深入 STIR 协议中的一次迭代。</p>
+<p>目标：</p>
+<ul class="simple">
+<li><p>初始给定一个函数 <span class="math notranslate nohighlight">\(f\)</span> ，想证明其在 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 中，其中 <span class="math notranslate nohighlight">\(\mathcal{L} =\langle \omega \rangle\)</span> 。</p></li>
+<li><p>经过一次迭代后，证明函数 <span class="math notranslate nohighlight">\(f' \in \mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span> ，其中 <span class="math notranslate nohighlight">\(\mathcal{L}' = \omega \cdot \langle \omega^2 \rangle\)</span> 。</p></li>
+</ul>
+<p>也就是函数 <span class="math notranslate nohighlight">\(f\)</span> 进行了 <span class="math notranslate nohighlight">\(k\)</span> 折，其次数降为 <span class="math notranslate nohighlight">\(d/k\)</span> ，但是一次迭代后的函数 <span class="math notranslate nohighlight">\(f'\)</span> 的 evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 的大小并不是缩小 <span class="math notranslate nohighlight">\(k\)</span> 倍，而是 <span class="math notranslate nohighlight">\(2\)</span> 倍。这就是前面提到的 STIR 协议的核心思想，通过提升码率来降低查询复杂度。</p>
+<p>关于 evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L} =\langle \omega \rangle\)</span> 与 <span class="math notranslate nohighlight">\(\mathcal{L}' = \omega \cdot \langle \omega^2 \rangle\)</span> ，这里举一个例子来说明。假设 <span class="math notranslate nohighlight">\(\omega^8 = 1\)</span> 。</p>
+<p><img alt="" src="../_images/stir-evaluation-domain.svg" /></p>
+<p>这样构造的 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 相比 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 大小减少了一半，但其实 <span class="math notranslate nohighlight">\(\langle \omega^2 \rangle\)</span> 也能满足减少一半的要求，为什么不选择 <span class="math notranslate nohighlight">\(\mathcal{L}' = \langle \omega^2 \rangle\)</span> 呢？假设我们进行 <span class="math notranslate nohighlight">\(k = 4\)</span> 折，我们能保证 <span class="math notranslate nohighlight">\(\mathcal{L}^4 = \{\omega^4, \omega^8\}\)</span> 与 <span class="math notranslate nohighlight">\(\mathcal{L}' = \{\omega^1, \omega^3,\omega^5, \omega^7\}\)</span> 不相交。这样做的好处是能避免构造 <span class="math notranslate nohighlight">\(\mathcal{L}^4 \cap \mathcal{L}'\)</span> 中的相交点定义的函数 <span class="math notranslate nohighlight">\(\mathrm{Fill}\)</span> ，这样 Verifier 就不用额外检查 <span class="math notranslate nohighlight">\(\mathrm{Fill}\)</span> 的函数值是否正确了([ACFY24] Remark 5.3 说明了这一点)。</p>
+<p>一次迭代的协议流程如下图所示：</p>
+<p><img alt="" src="../_images/stir-iteration.svg" /></p>
+<ol class="arabic simple">
+<li><p>取样折叠随机数(Sample folding randomness): Verifier 先从 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中随机选取一个数 <span class="math notranslate nohighlight">\(r^{\mathrm{fold}}\)</span> ，这个随机数将用于折叠函数 <span class="math notranslate nohighlight">\(f\)</span> 。</p></li>
+<li><p>发送折叠函数(Send folded function): Prover 发送折叠后的函数 <span class="math notranslate nohighlight">\(g: \mathcal{L}' \rightarrow \mathbb{F}\)</span> 。如果 Prover 是诚实的，那么函数 <span class="math notranslate nohighlight">\(g\)</span> 是多项式 <span class="math notranslate nohighlight">\(\hat{g}\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上的 evaluation 。这里 evaluation 的意思就是 <span class="math notranslate nohighlight">\(g\)</span> 与 <span class="math notranslate nohighlight">\(\hat{g}\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上的值完全一致，而多项式 <span class="math notranslate nohighlight">\(\hat{g}\)</span> 是通过 <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 得到的。首先用随机数 <span class="math notranslate nohighlight">\(r^{\mathrm{fold}}\)</span> 对函数 <span class="math notranslate nohighlight">\(f\)</span> 进行 <span class="math notranslate nohighlight">\(k\)</span> 次折叠，得到了 <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}}) : \mathcal{L}^k \rightarrow \mathbb{F}\)</span> ，此时折叠函数的取值范围是 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> ，我们想要的是在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上取值，这时只需将 <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 的定义域扩展(extension) 到 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上即可，就得到了多项式 <span class="math notranslate nohighlight">\(\hat{g}: \mathcal{L}' \rightarrow \mathbb{F}\)</span> ，其次数小于 <span class="math notranslate nohighlight">\(d/k\)</span> 。</p></li>
+<li><p>Out-of-domain sample: Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F}\backslash \mathcal{L}'\)</span> 中取一个随机数 <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> ，发送给 Prover 。</p></li>
+<li><p>Out-of-domain reply: Prover 答复 <span class="math notranslate nohighlight">\(\beta \in \mathbb{F}\)</span> 。如果 Prover 是诚实的，那么 <span class="math notranslate nohighlight">\(\beta := \hat{g}(r^{\mathrm{out}})\)</span> 。</p></li>
+</ol>
+<blockquote>
+<div><p>📝 <strong>Notes</strong>
+这里第 3 步和第 4 步的目的是为了用 Out of domain Sampling 来将 <span class="math notranslate nohighlight">\(g'\)</span> 在 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字数量限制为最多一个，能将列表解码转换为唯一解码。</p>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Shift queries: Verifier 从 <span class="math notranslate nohighlight">\(\langle \omega^k \rangle\)</span> 中选取 <span class="math notranslate nohighlight">\(t\)</span> 个随机数，即 <span class="math notranslate nohighlight">\(\forall i \in [t],r_i^{\mathrm{shift}} \leftarrow \langle \omega^k \rangle\)</span> 。根据折叠函数的 Local 性质，Verifier 通过查询 <span class="math notranslate nohighlight">\(f\)</span> 可计算得到 <span class="math notranslate nohighlight">\(y_i := f_{\mathrm{fold}}(r_i^{\mathrm{shift}})\)</span> ，其中 <span class="math notranslate nohighlight">\(f_{\mathrm{fold}} :=\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 。</p></li>
+</ol>
+<p>在第 2 步中 Prover 发送了 <span class="math notranslate nohighlight">\(g: \mathcal{L}' \rightarrow \mathbb{F}\)</span> 并且 Prover 声称其与 <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上的取值是一致的，但是 Verfier 无法直接查询折叠函数在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上的值， Verifier 只能通过查询 <span class="math notranslate nohighlight">\(f\)</span> 的方式来计算得到 <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 上的取值。好在这里可以用到 Quotient 工具来保证一致性。</p>
+<p>在第 3 步和第 4 步先用 Out-of-domain Sampling 的方法限制 <span class="math notranslate nohighlight">\(g\)</span> 在 <span class="math notranslate nohighlight">\(\delta\)</span> 范围内的码字数量最多为一个，设为 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，然后在第 5 步查询  <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 上的值，这里方便后续验证 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 与折叠函数在 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 上的值是否一致。验证是否一致就交给 Quotient 函数了。</p>
+<p>将所有这些要确保一致性的点组成集合 <span class="math notranslate nohighlight">\(\mathcal{G} := \{r^{\mathrm{out}},r_1^{\mathrm{shift}}, \ldots, r_t^{\mathrm{shift}}\}\)</span> ，然后定义函数 <span class="math notranslate nohighlight">\(p: \mathcal{G}\rightarrow \mathbb{F}\)</span> ，其满足：</p>
+<div class="math notranslate nohighlight">
+\[
+p(r^{\mathrm{out}}) = \beta,
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(r_i^{\mathrm{shift}}) = y_i.
+\]</div>
+<p>定义下一步的函数 <span class="math notranslate nohighlight">\(f'\)</span> 为</p>
+<div class="math notranslate nohighlight">
+\[
+f' := \mathrm{Quotient}(f, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.
+\]</div>
+<p>由于 Quotient 函数具有 Local 性质，因此想要计算 <span class="math notranslate nohighlight">\(f'\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上的值，只需要查询 <span class="math notranslate nohighlight">\(g\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 上的值就可以了。</p>
+<p>至此，接下来测试 <span class="math notranslate nohighlight">\(f'\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span> 是否有 <span class="math notranslate nohighlight">\(\delta\)</span> 近就可以了。</p>
+<p>细看 <span class="math notranslate nohighlight">\(f'\)</span> 的公式，可以发现 Prover 诚实情况下 <span class="math notranslate nohighlight">\(f' \in \mathrm{RS}[\mathbb{F}, \mathcal{L}', d/k - |\mathcal{G}|]\)</span> ，这里其实出现了多项式次数的降低，需要进行次数校正 (degree correction) ，将 <span class="math notranslate nohighlight">\(f'\)</span> 的次数校正为 <span class="math notranslate nohighlight">\(d/k\)</span> 。关于这一点将在后文进行介绍。</p>
+</section>
+<section id="soundness">
+<h2>Soundness 分析<a class="headerlink" href="#soundness" title="Link to this heading">#</a></h2>
+<p>在本小节将对一次迭代进行 soundness 分析，即如果 Prover 作弊， <span class="math notranslate nohighlight">\(f\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，来分析 <span class="math notranslate nohighlight">\(f'\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> 也比较远的概率。[ACFY24] Lemma 1 给出了如下的结论：</p>
+<p><strong>命题 1</strong> [ACFY24, Lemma 1] 如果 <span class="math notranslate nohighlight">\(f\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，那么除了概率为 <span class="math notranslate nohighlight">\((1 - \delta)^t +  \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span> 的情况，<span class="math notranslate nohighlight">\(f'\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> (大约) 有 <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span> 远。</p>
+<p>证明思路：</p>
+<ol class="arabic simple">
+<li><p>根据折叠函数保持距离的性质，对 <span class="math notranslate nohighlight">\(f\)</span> 用随机数 <span class="math notranslate nohighlight">\(r^{\mathrm{fold}}\)</span> 折叠之后得到的函数 <span class="math notranslate nohighlight">\(f_{r^{\mathrm{fold}}} := \mathrm{Fold}(f, r^{\mathrm{fold}})\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}^k,d/k]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远的概率超过 <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|/|\mathbb{F}|)\)</span> 。</p></li>
+<li><p>根据 Out-of-domain Sampling 的性质，<span class="math notranslate nohighlight">\(g\)</span> 在 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> 范围内最多有一个码字 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 满足 <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> 的概率超过 <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span> 。</p></li>
+</ol>
+<p>现在分析下第 2 点，函数 <span class="math notranslate nohighlight">\(g: \mathcal{L}' \rightarrow \mathbb{F}\)</span> ，现在考虑其与编码空间 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}', d/k]\)</span> 的距离。根据 Johnson 界，<span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}', d/k]\)</span> 是 <span class="math notranslate nohighlight">\((\gamma, l)\)</span> - 可列表解码(list-decodable)的，其中 <span class="math notranslate nohighlight">\(\gamma \approx 1 - \sqrt{\rho'}\)</span> , <span class="math notranslate nohighlight">\(l = \mathrm{poly}(|\mathcal{L}'|) =\mathrm{poly}(|\mathcal{L}|)\)</span> ，也就是最多有 <span class="math notranslate nohighlight">\(l\)</span> 个次数小于 <span class="math notranslate nohighlight">\(d/k\)</span> 的多项式距离 <span class="math notranslate nohighlight">\(g\)</span> 不超过 <span class="math notranslate nohighlight">\(\gamma\)</span> 。那么在 <span class="math notranslate nohighlight">\(l\)</span> 个多项式中任意选取两个不同的多项式 <span class="math notranslate nohighlight">\(\hat{u}'\)</span> 与 <span class="math notranslate nohighlight">\(\hat{u}\)</span> ，从 <span class="math notranslate nohighlight">\(\mathbb{F} \backslash \mathcal{L}'\)</span> 中选取随机数 <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> ，它们在 <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> 点的值都等于 <span class="math notranslate nohighlight">\(\beta\)</span> 的概率不超过 <span class="math notranslate nohighlight">\(\frac{d/k - 1}{|\mathbb{F}| - |\mathcal{L}'|}\)</span> 。这两个多项式的选取方法有 <span class="math notranslate nohighlight">\(\binom{l}{2}\)</span> 种，因此这个概率不超过</p>
+<div class="math notranslate nohighlight">
+\[
+\binom{l}{2} \cdot \frac{d/k - 1}{|\mathbb{F}| - |\mathcal{L}'|} = O\left(\frac{l^2 \cdot (d/k - 1)}{|\mathbb{F}| - |\mathcal{L}'|}\right) = \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|.
+\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(g\)</span> 在 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> 范围内最多有一个码字 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 满足 <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> 的概率超过 <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span> 。</p>
+<p>如果第 1 项和第 2 项都成立，那么这个概率超过 <span class="math notranslate nohighlight">\(1 - \mathrm{poly}(|\mathcal{L}|)/|\mathbb{F}|\)</span> ，现在只需证明 <span class="math notranslate nohighlight">\(f'\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> (大约) 有 <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span> 远的概率至少为 <span class="math notranslate nohighlight">\(1 - (1 - \delta)^t\)</span> 即可。</p>
+<p>下面分两种情况进行讨论：</p>
+<ul>
+<li><p>如果在第 2 项中没有码字满足要求，即在 <span class="math notranslate nohighlight">\(g\)</span> 的 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> 范围内没有码字满足 <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> ，而根据协议的构造，<span class="math notranslate nohighlight">\(p(r^{\mathrm{out}}) = \beta\)</span> 。因此对于 <span class="math notranslate nohighlight">\(g\)</span> 的 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> 范围内的任意一个码字有 <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) \neq p(r^{\mathrm{out}})\)</span> 。由于</p>
+<div class="math notranslate nohighlight">
+\[
+    f' := \mathrm{Quotient}(g, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.
+    \]</div>
+<p>根据 Quotient 函数的一致性，此时 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 与 <span class="math notranslate nohighlight">\(p\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{G}\)</span> 上不完全一致，那么 <span class="math notranslate nohighlight">\(f' = \mathrm{Quotient}(f, \mathcal{G}, p)\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> 就有 <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span> 远。</p>
+</li>
+<li><p>如果在第 2 项中存在一个码字 <span class="math notranslate nohighlight">\(\hat{u}\)</span> 满足要求，在 <span class="math notranslate nohighlight">\(g\)</span> 的 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho'}\)</span> 范围已经存在了一个码字满足 <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta\)</span> 。根据</p>
+<div class="math notranslate nohighlight">
+\[
+    f' := \mathrm{Quotient}(g, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.
+    \]</div>
+<p>现在已经满足 <span class="math notranslate nohighlight">\(\hat{u}(r^{\mathrm{out}}) = \beta = p(r^{\mathrm{out}})\)</span> ，如果对于任意的 <span class="math notranslate nohighlight">\(i \in [t]\)</span> ，有 <span class="math notranslate nohighlight">\(\hat{u}(r_i^{\mathrm{shift}}) = y_i = p(r_i^{\mathrm{shift}})\)</span> ，那么 <span class="math notranslate nohighlight">\(f' = \mathrm{Quotient}(f, \mathcal{G}, p)\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> 不超过 <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span> 。否则根据 Quotient 函数的一致性，一旦对于某一个 <span class="math notranslate nohighlight">\(i\)</span> 有 <span class="math notranslate nohighlight">\(\hat{u}(r_i^{\mathrm{shift}}) \neq y_i\)</span> ，此时 <span class="math notranslate nohighlight">\(\hat{u}(r_i^{\mathrm{shift}}) \neq p(r_i^{\mathrm{shift}})\)</span> ，就会导致 <span class="math notranslate nohighlight">\(f'\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> 有 <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span> 远。</p>
+<p>由于第 1 项成立，因此对于折叠函数有 <span class="math notranslate nohighlight">\(\Delta(f_{r^{\mathrm{fold}}}, \mathrm{RS}[\mathbb{F}, \mathcal{L}^k, d/k]) \ge \delta\)</span> ，因此</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+    \begin{aligned}
+         \Pr \left[\forall i \in [t], \hat{u}(r_i^{\mathrm{shift}}) = y_i \right] &amp; =  \Pr \left[\forall i \in [t], \hat{u}(r_i^{\mathrm{shift}}) = f_{r^{\mathrm{fold}}}(r_i^{\mathrm{shift}}) \right] \\
+         &amp; \le (1 - \delta)^t.
+    \end{aligned}
+    \end{split}\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(f'\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> (大约) 有 <span class="math notranslate nohighlight">\((1 - \sqrt{\rho'})\)</span> 远的概率至少为 <span class="math notranslate nohighlight">\(1 - (1 - \delta)^t\)</span> 。</p>
+</li>
+</ul>
+<p>至此命题 1 得证。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<p>实际上，协议的 round-by-round soundness error 大概就为 <span class="math notranslate nohighlight">\(\max \{\frac{\mathrm{poly}(|\mathcal{L}|)}{|\mathbb{F}|}, (1 - \delta)^t\}\)</span> 。</p>
+</section>
+<section id="degree-correction">
+<h2>Degree correction<a class="headerlink" href="#degree-correction" title="Link to this heading">#</a></h2>
+<p>现在还剩下一个小问题需要解决，那就是根据 <span class="math notranslate nohighlight">\(f'\)</span> 函数的定义</p>
+<div class="math notranslate nohighlight">
+\[
+    f' := \mathrm{Quotient}(g, \mathcal{G}, p) = \frac{g(x) - \hat{p}(x)}{\prod_{a \in \mathcal{G}}(X - a)}.  
+\]</div>
+<p>可以发现，准确来讲，这里是将对 <span class="math notranslate nohighlight">\(f\)</span> 的测试转换为了测试 <span class="math notranslate nohighlight">\(f'\)</span> 到 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k- |\mathcal{G}|]\)</span> 的距离，而不是 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L}',d/k]\)</span> ，这就需要进行次数校正(degree correction)了。</p>
+<p>一般地，不妨假设我们要进行次数校正的函数是 <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> ，其初始的次数是 <span class="math notranslate nohighlight">\(d\)</span> ，目标矫正的次数是 <span class="math notranslate nohighlight">\(d^* \ge d\)</span> ，我们想要构造一个高效的次数校正算法，能输出一个函数 <span class="math notranslate nohighlight">\(f^*\)</span> 满足：</p>
+<ol class="arabic simple">
+<li><p>如果 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> ，那么 <span class="math notranslate nohighlight">\(f^* \in \mathrm{RS}[\mathbb{F},\mathcal{L},d^*]\)</span> 。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(f\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，那么以极大的概率有 <span class="math notranslate nohighlight">\(f^*\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d^*]\)</span> 也有 <span class="math notranslate nohighlight">\(\delta\)</span> 远。</p></li>
+<li><p>对 <span class="math notranslate nohighlight">\(f^*\)</span> 的查询可以通过查询 <span class="math notranslate nohighlight">\(f\)</span> 来高效的计算出来。</p></li>
+</ol>
+<p>STIR 论文 ([ACFY24], 第 2.3 节) 中提出了一种方法，不仅满足上述三个条件，还利用几何级数求和的方法，使得第 3 项的计算更加高效。</p>
+<p>该方法是，随机采样一个域中的元素 <span class="math notranslate nohighlight">\(r \leftarrow \mathbb{F}\)</span> ，定义</p>
+<div class="math notranslate nohighlight">
+\[
+f^*(x) = \sum_{i=0}^{e} r^i \cdot f_i(x) \tag{1}
+\]</div>
+<p>其中，<span class="math notranslate nohighlight">\(f_i(x) := x^i \cdot f(x)\)</span> , <span class="math notranslate nohighlight">\(e = d^* - d\)</span> 。将 <span class="math notranslate nohighlight">\((1)\)</span> 式展开可得</p>
+<div class="math notranslate nohighlight">
+\[
+f^*(x) = r^0 \cdot x^0 \cdot f(x) + r^1 \cdot x^1 \cdot f(x) + \cdots + r^e \cdot x^e \cdot f(x) \tag{2}
+\]</div>
+<p>根据 <span class="math notranslate nohighlight">\(f^*\)</span> 的构造，自然第 1 项是成立的。</p>
+<p>对于 <span class="math notranslate nohighlight">\(\delta &lt; \min \{ 1 - \sqrt{\rho}, 1 - (1 + 1/d^*) \cdot \rho\}\)</span> ，第 2 项也是成立的。这可以通过 [BCIKS20] 中的 Correlated Agreement 定理得到的，这里就不详细展开了。</p>
+<p>接下来分析下第 3 项。通过 <span class="math notranslate nohighlight">\((2)\)</span> 式，可以发现如果要计算 <span class="math notranslate nohighlight">\(f^*\)</span> 在 <span class="math notranslate nohighlight">\(x\)</span> 点处的值，当查询到 <span class="math notranslate nohighlight">\(f(x)\)</span> 的值后，要进行 <span class="math notranslate nohighlight">\(e + 1\)</span> 项求和，需要花费 <span class="math notranslate nohighlight">\(O(e)\)</span> 的时间。如果 <span class="math notranslate nohighlight">\(e = \Omega(d)\)</span> ，这是低效的，但是通过几何级数求和的方法，可以将计算复杂度降到 <span class="math notranslate nohighlight">\(O(\log e)\)</span> 。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^*(x) &amp; = \sum_{i=0}^{e} r^i \cdot f_i(x) \\
+    &amp; = \sum_{i=0}^{e} r^i \cdot x^i \cdot f(x)\\
+    &amp; = f(x) \cdot \sum_{i=0}^{e} (r \cdot x)^i \\
+\end{aligned}
+\end{split}\]</div>
+<p>对 <span class="math notranslate nohighlight">\(\sum_{i=0}^{e} (r \cdot x)^i\)</span> 使用几何级数求和公式，可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+f^*(x) = \begin{cases}
+    f(x) \cdot \frac{1 - (r \cdot x)^{e+1}}{1 - r \cdot x} &amp;  \text{if} \quad r \cdot x \neq 1 \\
+    f(x) \cdot (e + 1) &amp; \text{if} \quad r \cdot x = 1
+    \end{cases}
+\end{split}\]</div>
+<p>对于比较复杂的 <span class="math notranslate nohighlight">\(f(x) \cdot \frac{1 - (r \cdot x)^{e+1}}{1 - r \cdot x}\)</span> ，其中 <span class="math notranslate nohighlight">\((r \cdot x)^{e+1}\)</span> 这一项可以通过反复平方的方法计算得到，需要 <span class="math notranslate nohighlight">\(O(\log e)\)</span> 次计算，再通过查询 <span class="math notranslate nohighlight">\(f\)</span> 在点 <span class="math notranslate nohighlight">\(x\)</span> 处的值得到 <span class="math notranslate nohighlight">\(f(x)\)</span> ，因此整体需要 <span class="math notranslate nohighlight">\(O(\log e)\)</span> 次操作来计算 <span class="math notranslate nohighlight">\(f^*(x)\)</span> 。</p>
+<p>将该方法可以扩展到多个不同次数的函数上。对于 <span class="math notranslate nohighlight">\(m\)</span> 个函数 <span class="math notranslate nohighlight">\(f_1, \ldots, f_m: \mathcal{L} \rightarrow \mathbb{F}\)</span> 以及次数 <span class="math notranslate nohighlight">\(d_1, \ldots, d_m\)</span> ，我们希望进行批量次数校正(batch-degree-correct)，最后得到一个函数 <span class="math notranslate nohighlight">\(f^*\)</span> ，次数为 <span class="math notranslate nohighlight">\(d^*\)</span> 。随机采样一个随机数 <span class="math notranslate nohighlight">\(r \leftarrow \mathbb{F}\)</span> ，定义 <span class="math notranslate nohighlight">\(e_i = d^* - d_i\)</span> 以及</p>
+<div class="math notranslate nohighlight">
+\[
+f^*(x) = \sum_{i = 0}^{e_1} r^i \cdot x^i \cdot f_1(x) + r^{1 + e_1} \sum_{i = 0}^{e_2} r^i \cdot x^i \cdot f_2(x) + \cdots + r^{m - 1 + \sum_{j = 1}^{m - 1}e_j} \sum_{i = 0}^{e_m} r^i \cdot x^i \cdot f_m(x).
+\]</div>
+<p>与上面单个函数的次数校正类似，对于 <span class="math notranslate nohighlight">\(\delta &lt; \min \{ 1 - \sqrt{\rho}, 1 - (1 + 1/d^*) \cdot \rho\}\)</span> ，如果有任意的 <span class="math notranslate nohighlight">\(f_i\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d_i]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，那么 <span class="math notranslate nohighlight">\(f^*\)</span> 距离 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F},\mathcal{L},d^*]\)</span> 就有 <span class="math notranslate nohighlight">\(\delta\)</span> 远。同样地，用几何级数求和的方式，通过查询 <span class="math notranslate nohighlight">\(f_1, \ldots, f_m\)</span> ，进行 <span class="math notranslate nohighlight">\(O(\sum_i \log e_i) = O(m \cdot \log d^*)\)</span> 次操作就可以计算出 <span class="math notranslate nohighlight">\(f^*\)</span> 在 <span class="math notranslate nohighlight">\(x\)</span> 点的值。</p>
+</section>
+<section id="id2">
+<h2>总结<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>STIR 通过在每一轮中改变函数的 evaluation domain ，将原来 FRI 协议中的 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 变为 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> ，函数依然是 <span class="math notranslate nohighlight">\(k\)</span> 折，但是 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 只有原来的一半大小，这样做降低了编码空间的码率，能减少 Verifier 的查询数量，这也是 STIR 的核心思想。</p>
+<p>在STIR 协议的构造中使用 RS 编码的几个有力的工具，使得整个协议是高效且安全的。</p>
+<ol class="arabic simple">
+<li><p>首先和 FRI 协议一致，先对函数 <span class="math notranslate nohighlight">\(f\)</span> 进行 <span class="math notranslate nohighlight">\(k\)</span> 折，但得到的函数需要将 evaluation domain 从  <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 扩展到 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> ，根据折叠函数具有距离保持的性质，这一过程我们可以放心的进行折叠。</p></li>
+<li><p>接着为了降低 Verifier 的工作，使用 Out of Domain Sampling 的方式将列表编码的方式转换为唯一解码，也就是协议中 Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F} \backslash \mathcal{L}\)</span> 中选取一个随机数 <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> ，要求 Prover 答复 <span class="math notranslate nohighlight">\(\beta\)</span> 。</p></li>
+<li><p>此时将 evaluation domain 变为 <span class="math notranslate nohighlight">\(\mathcal{L}'\)</span> 之后，面临的问题是 Verifier 只能查询 <span class="math notranslate nohighlight">\(k\)</span> 折函数 <span class="math notranslate nohighlight">\(\mathrm{f}_{r^{\mathrm{fold}}}\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 上的值，好在可以用 Quotient 这个强大的工具来约束 Prover 发送的函数在 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 上的值与折叠函数在 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 上的值是一致的。此时 Verifier 从 <span class="math notranslate nohighlight">\(\mathcal{L}^k\)</span> 中选取 <span class="math notranslate nohighlight">\(t\)</span> 个随机数 <span class="math notranslate nohighlight">\(r_{i}^{\mathrm{shift}}\)</span> 进行查询。</p></li>
+<li><p>最后结合 <span class="math notranslate nohighlight">\(r^{\mathrm{out}}\)</span> 与 <span class="math notranslate nohighlight">\(r_{i}^{\mathrm{shift}}\)</span> ，用 Quotient 工具来约束 Prover 在这些点发送的值是正确的。</p></li>
+</ol>
+<p>结合这些工具对一次迭代的 STIR 协议进行了 soundness 分析，其实可以得到 STIR 的 round-by-round soundness error 为 <span class="math notranslate nohighlight">\(\max \{\frac{\mathrm{poly}(|\mathcal{L}|)}{|\mathbb{F}|}, (1 - \delta)^t\}\)</span> 。</p>
+<p>最后为了将迭代后的 <span class="math notranslate nohighlight">\(f'\)</span> 从次数 <span class="math notranslate nohighlight">\(d/k - |\mathcal{G}|\)</span> 提升到 <span class="math notranslate nohighlight">\(d/k\)</span> ，介绍了利用几何级数求和方法能高效计算的 degree correction 方法。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ACFY24] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[BCS16] Eli Ben-Sasson, Alessandro Chiesa, and Nicholas Spooner. “Interactive Oracle Proofs”. In: <em>Proceedings of the 14th Theory of Cryptography Conference</em>. TCC ’16-B. 2016, pp. 31–60.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. “DEEP-FRI: Sampling Outside the Box Improves Soundness”. In: <em>Proceedings of the 11th Innovations in Theoretical Computer Science Conference</em>. ITCS ’20. 2020, 5:1–5:32.</p></li>
+<li><p><a class="reference external" href="https://gfenzi.io/papers/stir/">STIR: Reed–Solomon Proximity Testing with Fewer Queries</a></p></li>
+<li><p>Video: <a class="reference external" href="https://www.youtube.com/watch?v=OLklJjp8KB4&amp;amp;ab_channel=ZeroKnowledge">ZK11: STIR: Reed–Solomon Proximity Testing with Fewer Queries - Gal Arnon &amp; Giacomo Fenzi</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="fri-proximity-gap.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="whir.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri-v-s-stir">FRI v.s. STIR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rs">关于 RS 编码的强有力的工具</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#folding">Folding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quotienting">Quotienting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-domain-sampling">Out of Domain Sampling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">深入 STIR 协议的一次迭代</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">Soundness 分析</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-correction">Degree correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
