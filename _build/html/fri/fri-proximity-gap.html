@@ -1,0 +1,793 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Proximity Gaps and Correlated Agreement: The Core of FRI Security Proof &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/fri-proximity-gap';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/fri-proximity-gap.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/fri-proximity-gap.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Proximity Gaps and Correlated Agreement: The Core of FRI Security Proof</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximity-gaps">Proximity Gaps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#honest-prover">Honest Prover</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#malicious-prover">Malicious Prover</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#impact-of-increasing-delta">Impact of Increasing <span class="math notranslate nohighlight">\(\delta\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement">Correlated Agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-of-correlated-agreement-theorem-in-soundness">Application of Correlated Agreement Theorem in Soundness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="proximity-gaps-and-correlated-agreement-the-core-of-fri-security-proof">
+<h1>Proximity Gaps and Correlated Agreement: The Core of FRI Security Proof<a class="headerlink" href="#proximity-gaps-and-correlated-agreement-the-core-of-fri-security-proof" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>This article is mainly inspired by the video <a class="reference external" href="https://www.youtube.com/watch?v=8AMiZdWA1eM">Proximity Gaps &amp; Applications to Succinct Proofs</a>, combined with the paper [BCIKS20], introducing the concept of Proximity Gaps and the closely related Correlated Agreement theorem, which play a very important role in the security proof of FRI.</p>
+<p>In the FRI protocol, for a polynomial <span class="math notranslate nohighlight">\(f: \mathcal{D} \rightarrow \mathbb{F}_q\)</span>, let <span class="math notranslate nohighlight">\(f(x) = a_0 + a_1 x + a_2 x^2 + \ldots + a_{k-1}x^{k-1}\)</span>, which is a polynomial of degree less than <span class="math notranslate nohighlight">\(k\)</span>, evaluated on the domain <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, where <span class="math notranslate nohighlight">\(|\mathcal{D}| = n\)</span>, then <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span>. The Prover wants to prove to the Verifier that the degree of <span class="math notranslate nohighlight">\(f(x)\)</span> is indeed less than <span class="math notranslate nohighlight">\(k\)</span>. If <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span>, the Verifier outputs <code class="docutils literal notranslate"><span class="pre">accept</span></code>, if <span class="math notranslate nohighlight">\(f\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span> far from the corresponding code space <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span>, it outputs <code class="docutils literal notranslate"><span class="pre">reject</span></code>. What the Verifier can obtain is the oracle about a series of functions, and what the FRI protocol wants to achieve is that the Verifier queries the oracle as little as possible and can distinguish which of the above situations <span class="math notranslate nohighlight">\(f\)</span> belongs to.</p>
+<p>Let’s assume <span class="math notranslate nohighlight">\(k-1\)</span> is even, then</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f(x) &amp; = a_0 + a_1 x + a_2 x^2 + \ldots + a_{k-1}x^{k-1} \\
+    &amp; = (a_0 + a_2 x^2 + \cdots + a_{k-1}x ^{k-1}) + x (a_1 + a_3 x^2 + \cdots + a_{k-2}x^{k-3}) \\
+    &amp; := g(x^2) + xh(x^2) 
+\end{aligned}
+\end{split}\]</div>
+<p>We can find that the functions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    g(x) = a_0 + a_2 x + \cdots + a_{k-1}x ^{\frac{k-1}{2}} \\
+    h(x) = a_1 + a_3 x + \cdots + a_{k-2}x^{\frac{k-3}{2}}
+\end{aligned}
+\end{split}\]</div>
+<p>Initially, the Prover wants to prove to the Verifier that the degree of <span class="math notranslate nohighlight">\(f(x)\)</span> is less than <span class="math notranslate nohighlight">\(k\)</span>, now it can be decomposed into three sub-problems:</p>
+<ol class="arabic simple">
+<li><p>Prove that the degree of function <span class="math notranslate nohighlight">\(g(x)\)</span> is less than <span class="math notranslate nohighlight">\(k/2\)</span>, i.e., <span class="math notranslate nohighlight">\(g(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span></p></li>
+<li><p>Prove that the degree of function <span class="math notranslate nohighlight">\(h(x)\)</span> is less than <span class="math notranslate nohighlight">\(k/2\)</span>, i.e., <span class="math notranslate nohighlight">\(h(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span></p></li>
+<li><p>Prove that <span class="math notranslate nohighlight">\(f(x) = g(x^2) + x \cdot h(x^2)\)</span></p></li>
+</ol>
+<p>where <span class="math notranslate nohighlight">\(|{D}^{(1)}| = n/2\)</span>. The third item is to prove that the odd-even splitting is correct. Similarly, <span class="math notranslate nohighlight">\(g(x)\)</span> and <span class="math notranslate nohighlight">\(h(x)\)</span> can be decomposed into odd and even terms like <span class="math notranslate nohighlight">\(f(x)\)</span>, decomposing them into two polynomials of degree less than <span class="math notranslate nohighlight">\(k/4\)</span>, so we need to prove that 4 polynomials are of degree less than <span class="math notranslate nohighlight">\(k/4\)</span>, until finally decomposing to prove constant polynomials. This process is shown in the figure below, and we can see that the polynomials to be proved are growing in the form of powers of 2. In this process, in order to prove that the odd-even splitting is not problematic, we need to send oracles about all these polynomials to the Verifier, and we can imagine that there are too many polynomials being sent, which grow explosively as <span class="math notranslate nohighlight">\(k\)</span> increases.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-binary.svg" /></p>
+<p>Since our purpose is to prove that the degree of the polynomial is less than a certain number, our idea is that we don’t want to split the problem of <span class="math notranslate nohighlight">\(f(x)\)</span> like above, splitting it into two polynomials, we want to prove in the next step that a polynomial is of degree less than <span class="math notranslate nohighlight">\(k/2\)</span>, which can greatly reduce the number of polynomials sent. How to do this? We can ask the Verifier for a random number <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span>, make a linear combination of <span class="math notranslate nohighlight">\(g(x)\)</span> and <span class="math notranslate nohighlight">\(h(x)\)</span>, get <span class="math notranslate nohighlight">\(g(x) + r \cdot h(x)\)</span>, and decompose the problem of <span class="math notranslate nohighlight">\(f(x)\)</span> being of degree less than <span class="math notranslate nohighlight">\(k\)</span> into:</p>
+<ol class="arabic simple">
+<li><p>The degree of <span class="math notranslate nohighlight">\(f^{(1)}(x) = g(x) + r \cdot h(x)\)</span> is less than <span class="math notranslate nohighlight">\(k/2\)</span>, i.e., <span class="math notranslate nohighlight">\(f^{(1)}(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span></p></li>
+</ol>
+<p>At this time, the graph of the polynomials to be sent becomes like the figure below, and you can see that the oracle of the polynomials to be sent is greatly reduced.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-fold.svg" /></p>
+<p>Now the remaining question is, is this equivalent to the original method? Of course, if the Prover is honest, according to the linearity of RS encoding, <span class="math notranslate nohighlight">\(g(x),h(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span>, then their linear combination is still in <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span>. But what if the Prover cheats? For example, if <span class="math notranslate nohighlight">\(g(x)\)</span> is <span class="math notranslate nohighlight">\(\delta\)</span> far from the code space <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span>, we hope that after the linear combination with the random number <span class="math notranslate nohighlight">\(r\)</span>, <span class="math notranslate nohighlight">\(g(x) + r \cdot h(x)\)</span> is still <span class="math notranslate nohighlight">\(\delta\)</span> far, so that the Verifier can discover the Prover’s cheating. What we don’t want is that the folded <span class="math notranslate nohighlight">\(g(x) + r \cdot h(x)\)</span> becomes closer to the corresponding code space. Proximity Gaps tells us that the probability of this happening is very small, like winning the lottery, so we can boldly use random numbers for folding.</p>
+<section id="proximity-gaps">
+<h2>Proximity Gaps<a class="headerlink" href="#proximity-gaps" title="Link to this heading">#</a></h2>
+<p>Above we considered the case of folding two polynomials, in practice we will use random numbers to fold multiple times or batch multiple polynomials. Here let’s consider the general case, assuming there are <span class="math notranslate nohighlight">\(m\)</span> vectors <span class="math notranslate nohighlight">\((u_0, \ldots, u_{m-1})\)</span>, for each <span class="math notranslate nohighlight">\(u_i \in \mathbb{F}_q^{\mathcal{D}}\)</span>, it can be seen as a polynomial on <span class="math notranslate nohighlight">\(\mathcal{D} \rightarrow \mathbb{F}\)</span>, or as a vector of dimension <span class="math notranslate nohighlight">\(|\mathcal{D}| = n\)</span>. Make a linear combination of these <span class="math notranslate nohighlight">\(m\)</span> vectors, denoted as <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0, \ldots, u_{m-1}\}\)</span>, where <span class="math notranslate nohighlight">\(A\)</span> is an affine space in <span class="math notranslate nohighlight">\(\mathbb{F}^{\mathcal{D}}\)</span>, and let the code space be <span class="math notranslate nohighlight">\(V := \mathrm{RS}[\mathbb{F}, \mathcal{D},k]\)</span>.</p>
+<p>We are concerned about the distance relationship between elements in <span class="math notranslate nohighlight">\(A\)</span> and the code space <span class="math notranslate nohighlight">\(V\)</span>. As shown in the figure below, represent all codes in the code space <span class="math notranslate nohighlight">\(V\)</span> as points, draw a sphere with these points as the center and <span class="math notranslate nohighlight">\(\delta\)</span> as the radius. The space formed by <span class="math notranslate nohighlight">\(A\)</span> is represented by a two-dimensional plane. If the elements in <span class="math notranslate nohighlight">\(A\)</span> have a relative Hamming distance less than or equal to <span class="math notranslate nohighlight">\(\delta\)</span> from some codes in <span class="math notranslate nohighlight">\(V\)</span>, it means that they intersect with some Hamming balls in the figure, and all these intersections combined form the green shaded area in the figure. In other words, for each element <span class="math notranslate nohighlight">\(a\)</span> in the shaded area <span class="math notranslate nohighlight">\(S \subset A\)</span>, there must exist a <span class="math notranslate nohighlight">\(v \in V\)</span>, such that <span class="math notranslate nohighlight">\(\Delta(a, v) \leq \delta\)</span>.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-3D.svg" /></p>
+<p>Let’s form a set <span class="math notranslate nohighlight">\(\mathrm{C}_{\mathrm{Affine}}\)</span> consisting of all affine spaces in <span class="math notranslate nohighlight">\(\mathbb{F}^{\mathcal{D}}\)</span>. The Proximity Gaps conclusion [BCIKS20, Theorem 1.2] tells us that for any <span class="math notranslate nohighlight">\(A \in \mathrm{C}_{\mathrm{Affine}}\)</span> (such as <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0, \ldots, u_{m-1}\}\)</span>), either all elements in <span class="math notranslate nohighlight">\(A\)</span> are in the shaded area, or only a very small part of the elements in <span class="math notranslate nohighlight">\(A\)</span> are in the shaded area. It’s impossible to say that half of the elements in <span class="math notranslate nohighlight">\(A\)</span> are in the shaded area while the other half are not. Expressed in formula, it can only conform to one of the following two situations:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1\)</span></p></li>
+</ol>
+<p>We call <span class="math notranslate nohighlight">\(\delta\)</span> the proximity parameter, and <span class="math notranslate nohighlight">\(\epsilon\)</span> the error parameter, which is a very small number. Of course, there is a specific expression for <span class="math notranslate nohighlight">\(\epsilon\)</span>, which is related to <span class="math notranslate nohighlight">\(q,n,\rho,\delta\)</span>, that is, <span class="math notranslate nohighlight">\(\epsilon = \epsilon(q,n,\rho,\delta)\)</span>, where <span class="math notranslate nohighlight">\(\rho\)</span> represents the code rate, <span class="math notranslate nohighlight">\(\rho = \frac{k}{n}\)</span>.</p>
+<p>So what does the shaded area here represent? What is the relationship between this conclusion and the security analysis of FRI? Let’s analyze the application of the Proximity Gaps conclusion for the cases of honest Prover and cheating Prover.</p>
+<section id="honest-prover">
+<h3>Honest Prover<a class="headerlink" href="#honest-prover" title="Link to this heading">#</a></h3>
+<p>If it’s an honest Prover, then for each vector in <span class="math notranslate nohighlight">\((u_0, \ldots, u_{m-1})\)</span>, we have <span class="math notranslate nohighlight">\(u_i \in V\)</span>.</p>
+<p><img alt="" src="../_images/fri-proximity-affine-space.svg" /></p>
+<p>Due to the linearity of RS encoding, we know that after linear combination, it must still be in the code space <span class="math notranslate nohighlight">\(V\)</span>, so <span class="math notranslate nohighlight">\(A \subset V\)</span>. At this time, all elements in <span class="math notranslate nohighlight">\(A\)</span> are in <span class="math notranslate nohighlight">\(V\)</span>, so when the Verifier makes a random linear combination and arbitrarily selects a point <span class="math notranslate nohighlight">\(a \in A\)</span>, they will always get <span class="math notranslate nohighlight">\(a \in V\)</span>, and the Verifier will definitely accept. This situation corresponds to the second case in Proximity Gaps, taking <span class="math notranslate nohighlight">\(\delta = 0\)</span>, at this time</p>
+<div class="math notranslate nohighlight">
+\[
+    \Pr_{a \in A}[\Delta(a, V) = 0] = 1
+\]</div>
+</section>
+<section id="malicious-prover">
+<h3>Malicious Prover<a class="headerlink" href="#malicious-prover" title="Link to this heading">#</a></h3>
+<p>If the Prover cheats, suppose one vector in the <span class="math notranslate nohighlight">\(m\)</span> vectors <span class="math notranslate nohighlight">\(\vec{u} = (u_0, \ldots, u_{m-1})\)</span> sent by the Prover to the Verifier is <span class="math notranslate nohighlight">\(\delta\)</span> far from <span class="math notranslate nohighlight">\(V\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[
+\exists u_i^* \in \vec{u}, \quad \Delta(u_i^*, V) &gt; \delta
+\]</div>
+<p>Then in <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0,u_1, \ldots,u_{m-1}\}\)</span>, take <span class="math notranslate nohighlight">\(a^* = u_i^* \in A\)</span>, we must have</p>
+<div class="math notranslate nohighlight">
+\[
+\exists a^* \in A, \quad \Delta(a^*, V) &gt; \delta
+\]</div>
+<p>At this time, according to the Proximity Gaps conclusion, there is already an element in <span class="math notranslate nohighlight">\(A\)</span> that is not in the shaded area, so the case <span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1\)</span> is excluded, and it can only be <span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span>. This also means that even if only one of the <span class="math notranslate nohighlight">\(m\)</span> vectors is <span class="math notranslate nohighlight">\(\delta\)</span> far from the corresponding code space, most elements in <span class="math notranslate nohighlight">\(A\)</span> are <span class="math notranslate nohighlight">\(\delta\)</span> far from <span class="math notranslate nohighlight">\(V\)</span>. In other words, a point <span class="math notranslate nohighlight">\(a\)</span> randomly selected from <span class="math notranslate nohighlight">\(A\)</span> can represent the farthest distance from <span class="math notranslate nohighlight">\(V\)</span> among the <span class="math notranslate nohighlight">\(m\)</span> vectors.</p>
+<p>Now the Verifier randomly selects a point <span class="math notranslate nohighlight">\(a \in A\)</span> to check whether <span class="math notranslate nohighlight">\(\Delta(a,V)\)</span> is greater than <span class="math notranslate nohighlight">\(\delta\)</span>. Two situations will occur. One is that it falls into the shaded area in the figure, and the other is that it falls outside the shaded area.</p>
+<p><img alt="" src="../_images/fri-proximity-random-choose.svg" /></p>
+<p><strong>Case 1: <span class="math notranslate nohighlight">\(\Delta(a, V) \le \delta\)</span>.</strong> At this time, the point <span class="math notranslate nohighlight">\(a\)</span> selected by the Verifier is in the shaded area. We say that the Prover is very lucky at this time. Although the Prover provided an incorrect witness, which is <span class="math notranslate nohighlight">\(\delta\)</span> far from the code space, after random linear combination, it becomes <span class="math notranslate nohighlight">\(\delta\)</span> close to the code space, and at this time, the Prover can successfully deceive the Verifier. The occurrence of this situation is not good for the Verifier, but fortunately, the Proximity Gaps conclusion tells us that <span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span>, which means that the probability of randomly choosing a point that can enter the shaded area is very, very small. The Prover needs to be as lucky as winning the lottery, that is, at this time, the probability that the Prover can successfully deceive the Verifier will not exceed <span class="math notranslate nohighlight">\(\epsilon\)</span>.</p>
+<p><strong>Case 2: <span class="math notranslate nohighlight">\(\Delta(a, V) &gt; \delta\)</span>.</strong> At this time, the point <span class="math notranslate nohighlight">\(a\)</span> selected by the Verifier is outside the shaded area. Can the Prover still succeed in cheating? There is still a chance, because the Verifier received the oracle about <span class="math notranslate nohighlight">\(a\)</span>, but will not check all the values in <span class="math notranslate nohighlight">\(a\)</span>, only wants to query some values to see if it is in <span class="math notranslate nohighlight">\(V\)</span>. If the Verifier only queries once, since <span class="math notranslate nohighlight">\(\Delta(a, V) &gt; \delta\)</span>, more than <span class="math notranslate nohighlight">\(\delta\)</span> proportion of the components in <span class="math notranslate nohighlight">\(a\)</span> are not equal to the corresponding components of <span class="math notranslate nohighlight">\(v\)</span>, at this time the Verifier has a probability greater than <span class="math notranslate nohighlight">\(\delta\)</span> to catch the Prover cheating, which means that at this time the probability that the Prover can cheat successfully does not exceed <span class="math notranslate nohighlight">\(1 - \delta\)</span>.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-check.svg" /></p>
+<p>If the Verifier repeats the query <span class="math notranslate nohighlight">\(\kappa\)</span> times, the probability that the Prover can cheat successfully will not exceed <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span>.</p>
+<p>So, the probability that a cheating Prover can succeed is the joint probability of the above two cases, that is, it will not exceed</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon + (1 - \delta)^{\kappa}
+\]</div>
+<p>The above analysis is actually the general idea of the soundness analysis of the FRI protocol. In the paper, the occurrence of case 1 is called the occurrence of some “bad” events, and then assuming that the “bad” events did not occur, estimate the probability of case 2, and finally combine the two for analysis.</p>
+<p>We know that the FRI protocol is divided into two stages, one is the Commit stage and the other is the Query stage. We can correspond the above two cases to these two stages:</p>
+<ol class="arabic simple">
+<li><p>The above case 1 occurs in the Commit stage, where the Verifier will select random numbers to let the Prover fold the polynomials.</p></li>
+<li><p>The above case 2 corresponds to the Query stage, where the Verifier will randomly select some points for query checks.</p></li>
+</ol>
+<p>If it’s a batched version of the FRI protocol, to prove multiple polynomials <span class="math notranslate nohighlight">\(f_0^{(0)}, f_1^{(0)}, \ldots, f_t^{(0)}\)</span> are all polynomials of degree less than <span class="math notranslate nohighlight">\(k\)</span>, we can first use random numbers <span class="math notranslate nohighlight">\(\{x_1,\ldots, x_t\}\)</span> for aggregation, obtaining</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)}(x) = f_0^{(0)} + \sum_{i = 1}^{t} x_i \cdot f_i^{(0)}
+\]</div>
+<p>Then apply the general FRI protocol to <span class="math notranslate nohighlight">\(f^{(0)}(x)\)</span> to prove that it is a polynomial of degree less than <span class="math notranslate nohighlight">\(k\)</span>. The soundness analysis here also corresponds to the above case 1, that is, there may exist a situation where due to the selection of random numbers, <span class="math notranslate nohighlight">\(f^{(0)}(x)\)</span> is no longer <span class="math notranslate nohighlight">\(\delta\)</span> far from the corresponding RS code space.</p>
+</section>
+</section>
+<section id="impact-of-increasing-delta">
+<h2>Impact of Increasing <span class="math notranslate nohighlight">\(\delta\)</span><a class="headerlink" href="#impact-of-increasing-delta" title="Link to this heading">#</a></h2>
+<p>Let’s analyze what impact the increase of the proximity parameter <span class="math notranslate nohighlight">\(\delta\)</span> will bring. We have already analyzed that the probability of a cheating Prover successfully deceiving the Verifier does not exceed</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon + (1 - \delta)^{\kappa}
+\]</div>
+<p>This probability consists of two parts, the increase of <span class="math notranslate nohighlight">\(\delta\)</span> will lead to:</p>
+<p><img alt="" src="../_images/fri-proximity-gap-soundness.svg" /></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon \uparrow\)</span>. From a graphical understanding, <span class="math notranslate nohighlight">\(\delta\)</span> controls the radius of each Hamming ball. If <span class="math notranslate nohighlight">\(\delta\)</span> increases, then the Hamming balls become larger, and their intersection with the affine space <span class="math notranslate nohighlight">\(A\)</span> should be larger, which means the shaded area increases, which implies that <span class="math notranslate nohighlight">\(\epsilon\)</span> will increase.</p>
+<ul class="simple">
+<li><p>This is good news for the cheating Prover :). Because at this time, the Prover becomes luckier than before, with a greater probability of entering the green shaded area, and can successfully deceive the Verifier.</p></li>
+<li><p>Naturally, this is bad news for the Verifier :(.</p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\((1 - \delta)^{\kappa} \downarrow\)</span>. This expression is directly related to <span class="math notranslate nohighlight">\(\delta\)</span>, if <span class="math notranslate nohighlight">\(\delta\)</span> increases, then <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> will decrease.</p>
+<ul class="simple">
+<li><p>This is bad news for the cheating Prover :(. Because at this time, the probability of the Prover’s successful cheating will decrease.</p></li>
+<li><p>This is good news for the Verifier :). At this time, there is a greater probability of catching the Prover cheating. Under the same security requirements, the Verifier only needs fewer rounds of polling to meet the requirements.</p></li>
+</ul>
+</li>
+</ol>
+<p>It can be seen that the increase of <span class="math notranslate nohighlight">\(\delta\)</span> causes <span class="math notranslate nohighlight">\(\epsilon\)</span> to increase and <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> to decrease. In practice, <span class="math notranslate nohighlight">\(\epsilon\)</span> is very small, and <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> accounts for a larger proportion in the whole sum, so the overall will still decrease, which means that for the entire FRI protocol, the soundness decreases, indicating that it will be more secure.</p>
+<p>The above analysis is from the perspective of soundness. The video <a class="reference external" href="https://www.youtube.com/watch?v=8AMiZdWA1eM">Proximity Gaps &amp; Applications to Succinct Proofs</a> also mentions a point that the increase of <span class="math notranslate nohighlight">\(\delta\)</span> will make the corresponding Correlated Agreement related conclusions weaker.  Correlated Agreement is a stronger conclusion than Proximity Gaps (so far, their equivalence has not been proven). Let’s introduce the Correlated Agreement conclusion below.</p>
+</section>
+<section id="correlated-agreement">
+<h2>Correlated Agreement<a class="headerlink" href="#correlated-agreement" title="Link to this heading">#</a></h2>
+<p>For the affine space <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0,u_1, \ldots,u_{m-1}\}\)</span> mentioned earlier, to maintain consistency with [BCIKS20, Theorem 1.6], we don’t use a random number before the first vector <span class="math notranslate nohighlight">\(u_0\)</span>, let <span class="math notranslate nohighlight">\(A = u_0 + \mathrm{span}\{u_1, \ldots,u_{m-1}\}\)</span>.</p>
+<p>The Correlated Agreement theorem ([BCIKS20, Theorem 1.6]) says that if <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{a \in A}[\Delta(a, V) \le \delta] &gt; \epsilon,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is the <span class="math notranslate nohighlight">\(\epsilon\)</span> given in the Proximity Gaps conclusion, then there exist <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> and <span class="math notranslate nohighlight">\(v_0, \ldots, v_{m-1} \in V\)</span> such that</p>
+<ol class="arabic simple">
+<li><p><strong>Density</strong>: <span class="math notranslate nohighlight">\(\frac{|\mathcal{D}'|}{|\mathcal{D}|} \ge 1 - \delta\)</span>,</p></li>
+<li><p><strong>Agreement</strong>: For any <span class="math notranslate nohighlight">\(i \in \{0, \ldots, m - 1\}\)</span>, we have <span class="math notranslate nohighlight">\(u_i|_{\mathcal{D}'} = v_i|_{\mathcal{D}'}\)</span>.</p></li>
+</ol>
+<p>This means that if there are many elements falling into the shaded area, with a proportion larger than <span class="math notranslate nohighlight">\(\epsilon\)</span> in the Proximity Gaps conclusion, then there exist codewords <span class="math notranslate nohighlight">\(v_0, \ldots, v_{m-1}\)</span> in <span class="math notranslate nohighlight">\(V\)</span>, and there will be a subset <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> in the domain <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> with a very large proportion (more than <span class="math notranslate nohighlight">\(1 - \delta\)</span>), where each <span class="math notranslate nohighlight">\(u_i\)</span> is consistent with the corresponding <span class="math notranslate nohighlight">\(v_i\)</span> on <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>.</p>
+<p>According to the conclusion of Proximity Gaps, the elements in <span class="math notranslate nohighlight">\(A\)</span> fall into two categories:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1\)</span></p></li>
+</ol>
+<p>Now, if the proportion of elements falling into the shaded area is greater than <span class="math notranslate nohighlight">\(\epsilon\)</span> , we can naturally exclude the first case. This leads to the conclusion that all elements in <span class="math notranslate nohighlight">\(A\)</span> fall within the shaded area, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1 .\]</div>
+<p>The correlated agreement theorem provides a more specific conclusion. It describes the relationship between the elements <span class="math notranslate nohighlight">\(u_{i}\)</span> before folding and the codewords <span class="math notranslate nohighlight">\(v_{i}\)</span> found in the encoding space <span class="math notranslate nohighlight">\(V\)</span> .</p>
+<p>For example, if the Prover wants to prove that a polynomial <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(0)}, k]\)</span>, let <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)} = \{x_1, \ldots, x_n\}\)</span>, calculate <span class="math notranslate nohighlight">\(\{f(x_1), \ldots, f(x_n)\}\)</span>, the Prover will send the oracle of these values to the Verifier. In practice, Merkle trees are used to implement the oracle.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-f.svg" /></p>
+<p>Split <span class="math notranslate nohighlight">\(f\)</span> to obtain two polynomials <span class="math notranslate nohighlight">\(g(x)\)</span> and <span class="math notranslate nohighlight">\(h(x)\)</span>. In the honest case, <span class="math notranslate nohighlight">\(g,h \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span>, where <span class="math notranslate nohighlight">\(|\mathcal{D}^{(1)}| = |\mathcal{D}^{(0)}| / 2 = n/2\)</span>.</p>
+<p>The Correlated Agreement conclusion tells us that for the affine space <span class="math notranslate nohighlight">\(A = \{g + z \cdot h : z \in \mathbb{F}\}\)</span> formed by <span class="math notranslate nohighlight">\(g(x)\)</span> and <span class="math notranslate nohighlight">\(h(x)\)</span>, if more than <span class="math notranslate nohighlight">\(\epsilon\)</span> proportion of elements in <span class="math notranslate nohighlight">\(A\)</span> fall into the “shaded area”, i.e., satisfying <span class="math notranslate nohighlight">\(\Delta(a, V) \ge \delta\)</span>, then there exist <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> as shown in the figure below, and <span class="math notranslate nohighlight">\(\bar{g},\bar{h} \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span>. Let’s assume <span class="math notranslate nohighlight">\(\mathcal{D}' = \{\alpha_1, \alpha_2, \ldots, \alpha_i\}\)</span>, then according to the conclusion <span class="math notranslate nohighlight">\(|\mathcal{D}'| / |\mathcal{D}^{(1)}| \ge 1 - \delta\)</span>, we have index <span class="math notranslate nohighlight">\(i \ge (1 - \delta)n/2\)</span>. On all <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span>, <span class="math notranslate nohighlight">\(g\)</span> is consistent with <span class="math notranslate nohighlight">\(\bar{g}\)</span>, and <span class="math notranslate nohighlight">\(h\)</span> is consistent with <span class="math notranslate nohighlight">\(\bar{h}\)</span>, which is represented in green in the figure, meaning that when evaluating at these points in the <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> set, their values are the same.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-correlated-agreement.svg" /></p>
+<p>Back to the analysis of <span class="math notranslate nohighlight">\(\delta\)</span> increase, we can see that as <span class="math notranslate nohighlight">\(\delta\)</span> increases, the <span class="math notranslate nohighlight">\(1 - \delta\)</span> in the first condition <strong>Density</strong> of the Correlated Agreement conclusion will become smaller, which makes the subset <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> that can be ensured to exist in the conclusion smaller, making the obtained conclusion weaker.</p>
+<p>In the [BCIKS20] paper, it is said that the Proximity Gap theorem ([BCIKS20, Theorem 1.2]) is derived from the Correlated Agreement theorem ([BCIKS20, Theorem 1.6]), but it is not known yet whether the Proximity Gap theorem can derive the Correlated Agreement theorem. If the Proximity Gap cannot derive the Correlated Agreement theorem, it means that the Correlated Agreement theorem is a stronger conclusion than the Proximity Gap theorem. If it can be derived, it means that these two theorems are equivalent.</p>
+<p><img alt="" src="../_images/fri-proximity-gap-relation.svg" /></p>
+<p>In fact, there are many versions of the Correlated Agreement theorem, taking different <span class="math notranslate nohighlight">\(A\)</span> can lead to different theorems, <span class="math notranslate nohighlight">\(A\)</span> can be:</p>
+<ol class="arabic simple">
+<li><p>Lines: <span class="math notranslate nohighlight">\(A = \{u_0 + z u_1: z \in \mathbb{F}\}\)</span></p></li>
+<li><p>Low-degree parameterized curves: <span class="math notranslate nohighlight">\(\mathrm{curve}(\mathbf{u}) = \left\{u_z: = \sum_{i = 0}^{m-1}z^i \cdot u_i  | z \in \mathbb{F}_q   \right\}\)</span></p></li>
+<li><p>Affine space: <span class="math notranslate nohighlight">\(u_0 + \mathrm{span}\{u_1, \cdots, u_{m-1}\}\)</span></p></li>
+</ol>
+<p>At the same time, regarding the condition of the Correlated Agreement theorem</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{a \in A}[\Delta(a, V) \le \delta] &gt; \epsilon,
+\]</div>
+<p>Here we measure the relative Hamming distance between <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(V\)</span>, we can also make this measure more general by adding weights. Give a weight function <span class="math notranslate nohighlight">\(\mu: \mathcal{D} \rightarrow [0,1]\)</span>, define the relative <em><span class="math notranslate nohighlight">\(\mu\)</span> -agreement</em> between two vectors <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(u,v) := \frac{1}{|\mathcal{D}|} \sum_{x: u(x) = v(x)} \mu(x)
+\]</div>
+<p>When taking <span class="math notranslate nohighlight">\(\mu \equiv 1\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(u,v) = \frac{1}{|\mathcal{D}|} \sum_{x: u(x) = v(x)} \mu(x) = \frac{1}{|\mathcal{D}|} \sum_{x: u(x) = v(x)} 1 = 1 - \Delta(u,v) 
+\]</div>
+<p>The value of this measure is exactly equal to 1 minus the relative Hamming distance. Similarly, define the maximum agreement between a vector <span class="math notranslate nohighlight">\(u\)</span> and the code space <span class="math notranslate nohighlight">\(V\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(u,V):= \max_{v \in V} \mathrm{agree}_{\mu}(u,v)
+\]</div>
+<p>Changing the condition in the theorem to:</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{a \in A}[\mathrm{agree}_{\mu} \le \alpha] &gt; \epsilon,
+\]</div>
+<p>We will get the corresponding Weighted correlated agreement theorem (see [BCIKS20, Section 7]). It can be seen that the Correlated agreement theorem is very flexible. In the paper [BCIKS20, Theorem 8.3], for the soundness proof of the batched FRI protocol, it first defines the required weight function <span class="math notranslate nohighlight">\(\mu\)</span>, uses the Weighted Correlated Agreement theorem to prove, rather than using the Proximity Gap theorem to prove. And this theorem generally appears in proof by contradiction, it can powerfully help us find the codewords <span class="math notranslate nohighlight">\(v_{i}\)</span> of the code space, and satisfy the properties mentioned in the theorem conclusion, which can help us find contradictions through derivation.</p>
+</section>
+<section id="application-of-correlated-agreement-theorem-in-soundness">
+<h2>Application of Correlated Agreement Theorem in Soundness<a class="headerlink" href="#application-of-correlated-agreement-theorem-in-soundness" title="Link to this heading">#</a></h2>
+<p>Here’s a brief description of the application of the Correlated Agreement theorem in the soundness proof, which is not so rigorous, and the actual security analysis will be more complex.</p>
+<p>As mentioned before, the soundness analysis of the FRI protocol is divided into two parts:</p>
+<ol class="arabic simple">
+<li><p>In the batch stage or Commit stage, due to the improper selection of random numbers, polynomials that were originally far from the code space become closer to the corresponding code space after folding, that is, entering the “shaded area”.</p></li>
+<li><p>In the Query stage, due to random checks, the Prover’s cheating was not caught.</p></li>
+</ol>
+<p>The Correlated Agreement theorem is mainly applied in the probability analysis of the first part. It will first define the “bad” event <span class="math notranslate nohighlight">\(E^{(i)}\)</span>: before folding <span class="math notranslate nohighlight">\(\Delta^*(f^{(i)}, \mathrm{RS}^{(i)}) &gt; \delta\)</span>, split <span class="math notranslate nohighlight">\(f^{(i)}\)</span> into <span class="math notranslate nohighlight">\(g^{(i+1)}\)</span> and <span class="math notranslate nohighlight">\(h^{(i+1)}\)</span>, then use a random number <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span> for folding to get <span class="math notranslate nohighlight">\(\mathrm{fold}_{r}(f^{(i)})\)</span>, and the following occurs</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\Delta^*\)</span> is used, its definition is different from the Hamming distance, it is related to the random query of the Query stage of FRI, which will not be explained in detail here. Assume that the probability of a “bad” event <span class="math notranslate nohighlight">\(E^{(i)}\)</span> occurring does not exceed <span class="math notranslate nohighlight">\(\epsilon\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr[E^{(i)}] = \Pr_{r \in \mathbb{F}}[\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta] \le \epsilon \tag{1}
+\]</div>
+<p>If the FRI protocol folds <span class="math notranslate nohighlight">\(d\)</span> times, then the probability of some “bad” events occurring does not exceed <span class="math notranslate nohighlight">\(d \cdot \epsilon\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[
+\bigcup_{i = 0}^{d} \Pr[E^{(i)}] \le d \cdot \epsilon
+\]</div>
+<p>This way, the probability analysis of the first part is done, then assume that these “bad” events do not occur, analyze the probability of the second part, and finally combine the two parts of probability to get the conclusion of soundness.</p>
+<p>Now the remaining key problem is how to prove equation (1), that is, to prove that if <span class="math notranslate nohighlight">\(\Delta^*(f^{(i)}, \mathrm{RS}^{(i)}) &gt; \delta\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{r \in \mathbb{F}}[\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta] \le \epsilon \tag{2}
+\]</div>
+<p>The idea is to use proof by contradiction, assuming that equation (2) does not hold, that is</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{r \in \mathbb{F}}[\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta] &gt; \epsilon
+\]</div>
+<p>This satisfies the condition of the Correlated Agreement theorem, which means that there exist <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}^{(i+1)}\)</span>, and <span class="math notranslate nohighlight">\(\bar{g}^{(i+1)}, \bar{h}^{(i+1)} \in \mathrm{RS}^{(i+1)}\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{g}^{(i+1)}|_{\mathcal{D}'} = {g}^{(i+1)}|_{\mathcal{D}'} , \quad \bar{h}^{(i+1)}|_{\mathcal{D}'} = {h}^{(i+1)}|_{\mathcal{D}'}
+\]</div>
+<p>and <span class="math notranslate nohighlight">\(|\mathcal{D}'| \ge (1-\delta) |\mathcal{D}^{(i+1)}|\)</span>. With these codewords <span class="math notranslate nohighlight">\(\bar{g}^{(i+1)}\)</span> and <span class="math notranslate nohighlight">\(\bar{h}^{(i+1)}\)</span> in the code space, we can get a polynomial <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{f}^{(i)}(x) = \bar{g}^{(i+1)}(x^2) + x \cdot \bar{h}^{(i+1)}(x^2)
+\]</div>
+<p>Due to the linearity of encoding, <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> must also be a codeword, and <span class="math notranslate nohighlight">\(\bar{f}^{(i)} \in \mathrm{RS}^{(i)}\)</span>, and at the same time we have</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{f}^{(i)}|_{\mathcal{D}'} = {f}^{(i)}|_{\mathcal{D}'} 
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(|\mathcal{D}'| \ge (1-\delta) |\mathcal{D}^{(i+1)}|\)</span>, we can get <span class="math notranslate nohighlight">\(\Delta^*(f^{(i)}, \mathrm{RS}^{(i)}) \le \Delta^*(f^{(i)}, \bar{f}^{(i)}) \le \delta\)</span>, which contradicts the assumption, so equation (2) holds.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>Proximity gap plays a crucial role in the FRI protocol, allowing us to confidently use random numbers to fold polynomials, which greatly reduces the number of oracles sent by the Prover and also reduces the number of queries by the Verifier. In addition, Proximity gap is closely related to the Correlated Agreement theorem and plays a key role in the soundness analysis of FRI.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>Video: <a class="reference external" href="https://www.youtube.com/watch?v=8AMiZdWA1eM">Proximity Gaps &amp; Applications to Succinct Proofs</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximity-gaps">Proximity Gaps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#honest-prover">Honest Prover</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#malicious-prover">Malicious Prover</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#impact-of-increasing-delta">Impact of Increasing <span class="math notranslate nohighlight">\(\delta\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement">Correlated Agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#application-of-correlated-agreement-theorem-in-soundness">Application of Correlated Agreement Theorem in Soundness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

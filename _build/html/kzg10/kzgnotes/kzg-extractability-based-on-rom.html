@@ -1,0 +1,856 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KZG Extractability based on ROM &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'kzg10/kzgnotes/kzg-extractability-based-on-rom';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fkzg10/kzgnotes/kzg-extractability-based-on-rom.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/kzg10/kzgnotes/kzg-extractability-based-on-rom.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>KZG Extractability based on ROM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">KZG Extractability based on ROM</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness">Special Soundness</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-proofs-and-knowledge-soundness"><strong>Interactive Proofs and Knowledge Soundness</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-knowledge-soundness-taking-schnorr-protocol-as-an-example"><strong>Proof of Knowledge Soundness (Taking Schnorr Protocol as an Example)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-knowledge-soundness-to-special-soundness">From Knowledge Soundness to <strong>Special Soundness</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#lps24-kzg10-with-special-soundness">LPS24: KZG10 with Special Soundness</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness-of-kzg">Special Soundness of KZG</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#rewinding-lemma">Rewinding Lemma</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="kzg-extractability-based-on-rom">
+<h1>KZG Extractability based on ROM<a class="headerlink" href="#kzg-extractability-based-on-rom" title="Link to this heading">#</a></h1>
+<p>KZG10 and other polynomial commitment proofs are often used to construct SNARKs, typically by compiling polynomial oracles in an Interactive Oracle Proof using PCS.</p>
+<p>Considering security, the Knowledge Soundness of the IOP itself is easy to guarantee. However, for the SNARK obtained after compiling the IOP with PCS, proving its Knowledge Soundness property is not as straightforward.</p>
+<p>Compared to the IOP model where the prover sends an oracle containing an entire polynomial (in the IOP model, the length of the oracle is the same as the polynomial, but the verifier doesn’t read it entirely), in SNARK, the prover only sends commitments to the polynomials, which contain very little information: just the values of the polynomial at a few points.</p>
+<p>Therefore, we can only guarantee the Knowledge Soundness of SNARK if we ensure that the polynomial commitment itself is “extractable”. (For a detailed argument, refer to Interactive Oracle Proofs by Eli Ben-Sasson et al.)</p>
+<p>Unfortunately, Kate et al. did not prove that the KZG10 protocol has extractability. Therefore, to use KZG10 in constructing SNARKs, we must reprove its security.</p>
+<p>A series of previous works, including Sonic [MBK+19], Plonk [GWC19], Marlin [CHM+19], proposed schemes to prove that the KZG10 scheme satisfies extractability based on non-falsifiable assumptions (Knowledge Assumptions) or based on idealized group models (Idealized Group Model) such as GGM, AGM. It can be said that most SNARK systems constructed based on the KZG scheme currently indirectly rely on the idealized group model.</p>
+<p>At the same time, SNARK systems use the Fiat-Shamir transform to achieve non-interactive proofs, which means they also rely on another strong idealized model, namely the Random Oracle Model (ROM). This situation puts us in a rather bad position: our SNARK systems would have the flaws of both models! In recent years, some papers have attacked them separately.</p>
+<p>Compared to the idealized group model, the ROM model assumption is weaker (which means stronger security). If we can prove the security of the KZG scheme under the ROM model, we can remove the SNARK system’s dependence on the idealized group model, thus increasing our confidence in its security.</p>
+<p>In this context, Lipmaa, Parisella, and Siim published their work “Constant-Size zk-SNARKs in ROM from Falsifiable Assumptions” (hereinafter referred to as [LPS24]) this year, making a significant step towards our goal. Their contributions include:</p>
+<ol class="arabic simple">
+<li><p>Proving the special soundness property of the KZG scheme under the ROM model based on a newly proposed falsifiable assumption</p></li>
+<li><p>Further proving that the KZG scheme satisfies black-box extractability, for use in compiling IOPs</p></li>
+<li><p>Making partial progress in proving the knowledge soundness property of Plonk under the ROM model</p></li>
+</ol>
+<p>In this article, we will focus on introducing the work of the first point.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="special-soundness">
+<h1>Special Soundness<a class="headerlink" href="#special-soundness" title="Link to this heading">#</a></h1>
+<p>To introduce special soundness, we first need to understand interactive proofs and their security definitions.</p>
+<section id="interactive-proofs-and-knowledge-soundness">
+<h2><strong>Interactive Proofs and Knowledge Soundness</strong><a class="headerlink" href="#interactive-proofs-and-knowledge-soundness" title="Link to this heading">#</a></h2>
+<p><strong>【Definition 1: Public-coin Interactive Proofs】</strong></p>
+<p>An interactive protocol between two parties (prover and verifier) for proving a target relation <span class="math notranslate nohighlight">\(R\)</span> is called an Interactive Proof, denoted as <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>, where <span class="math notranslate nohighlight">\(P,V\)</span> are the prover and verifier algorithms respectively. Specifically,</p>
+<ul class="simple">
+<li><p>Prover input: public statement (denoted as <span class="math notranslate nohighlight">\(x\)</span>), secret witness (denoted as <span class="math notranslate nohighlight">\(w\)</span>)</p></li>
+<li><p>Verifier input: public statement (denoted as <span class="math notranslate nohighlight">\(x\)</span>)</p></li>
+<li><p>The prover and verifier interact through a series of exchanges, and the collection of all interaction messages is called a transcript</p></li>
+<li><p>The verifier outputs 1 for acceptance, 0 for rejection.</p></li>
+</ul>
+<p>If all random numbers used by the verifier during the interaction are public, we call such an interactive protocol a Public-coin Interactive Proof. Additionally, if the prover sends <span class="math notranslate nohighlight">\(k\)</span> messages and the verifier sends <span class="math notranslate nohighlight">\(k-1\)</span> messages during the entire interaction, we call it a <span class="math notranslate nohighlight">\((2k-1)\)</span>-step protocol.</p>
+<p>As is well known, to ensure that an interactive proof is secure, it needs to satisfy two security properties:</p>
+<ul class="simple">
+<li><p><strong>Completeness:</strong> For any honest prover <span class="math notranslate nohighlight">\(P\)</span> executing the protocol, and if there <strong>exists</strong> <span class="math notranslate nohighlight">\(w\)</span> such that <span class="math notranslate nohighlight">\((x,w)\)</span> satisfies relation <span class="math notranslate nohighlight">\(R\)</span>, then <span class="math notranslate nohighlight">\(P\)</span> can cause the verifier to output acceptance by executing the protocol.</p></li>
+<li><p><strong>Soundness:</strong> For any potentially malicious prover, and if there <strong>does not exist</strong> <span class="math notranslate nohighlight">\(w\)</span> such that <span class="math notranslate nohighlight">\((x,w)\)</span> satisfies relation <span class="math notranslate nohighlight">\(R\)</span>, then <span class="math notranslate nohighlight">\(P\)</span> cannot cause the verifier to output acceptance by executing the protocol.</p></li>
+</ul>
+<p>The above two security properties ensure the basic security of interactive proofs, but the definition of Soundness can only ensure that a certain statement <span class="math notranslate nohighlight">\(x\)</span> indeed belongs to relation <span class="math notranslate nohighlight">\(R\)</span>, and cannot meet the security requirements of some application scenarios. For example, in an identity authentication system, we require the prover to prove their identity: that is, they “possess” a private key <span class="math notranslate nohighlight">\(sk\)</span> corresponding to the public key <span class="math notranslate nohighlight">\(pk\)</span> satisfying <span class="math notranslate nohighlight">\(pk = sk\cdot G\)</span>. If the proof only ensures the Soundness property, then the verifier only knows the conclusion that “<span class="math notranslate nohighlight">\(pk\)</span> belongs to the cyclic group <span class="math notranslate nohighlight">\(\mathbb{G}\)</span> constituted by the generator <span class="math notranslate nohighlight">\(G\)</span>”. But this conclusion cannot guarantee that the prover actually possesses the private key <span class="math notranslate nohighlight">\(sk\)</span>. In fact, we can prove <span class="math notranslate nohighlight">\(pk \in \mathbb{G}\)</span> without knowing <span class="math notranslate nohighlight">\(sk\)</span>, for example, using Fermat’s Little Theorem.</p>
+<p>Therefore, we need a stronger security definition, namely **”**Knowledge Soundness”</p>
+<p><strong>【Definition 2: Knowledge Soundness】</strong></p>
+<p>For an interactive proof <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>, if there exists a polynomial-time algorithm <span class="math notranslate nohighlight">\(P^*\)</span> that can forge a proof to make the verifier accept with a non-negligible probability <span class="math notranslate nohighlight">\(\epsilon\)</span> without knowing the <span class="math notranslate nohighlight">\(w\)</span> corresponding to <span class="math notranslate nohighlight">\(x\)</span>, then there must exist a polynomial-time extractor algorithm <span class="math notranslate nohighlight">\(E\)</span>, which uses <span class="math notranslate nohighlight">\(P^*\)</span> as a rewindable Oracle, can extract a <span class="math notranslate nohighlight">\(w\)</span> satisfying <span class="math notranslate nohighlight">\(x\)</span> with a non-negligible probability <span class="math notranslate nohighlight">\(\epsilon'\)</span>. We call <span class="math notranslate nohighlight">\(|\epsilon'-\epsilon|\)</span> the soundness error, and if the size of this error is negligible, then <span class="math notranslate nohighlight">\(\Pi\)</span> satisfies the Knowledge Soundness property.</p>
+<p>【Note】If a Public-coin Interactive Proof satisfies Completeness and Soundness for any adversary, we call it a Proof of Knowledge. If Soundness is only satisfied for polynomial-time adversaries, we call it an Argument of Knowledge.</p>
+<p>It can be seen that the key to the definition of Knowledge Soundness lies in emphasizing the feasibility of constructing an extractor algorithm. That is to say, if a malicious prover claims that it is feasible to forge a legal proof without knowing <span class="math notranslate nohighlight">\(w\)</span>, then constructing an extractor for <span class="math notranslate nohighlight">\(w\)</span> based on this malicious prover is equally feasible, which contradicts the claim of the malicious prover. This ensures that any prover who can output a legal proof must “possess” the secret value <span class="math notranslate nohighlight">\(w\)</span>.</p>
+</section>
+<section id="proof-of-knowledge-soundness-taking-schnorr-protocol-as-an-example">
+<h2><strong>Proof of Knowledge Soundness (Taking Schnorr Protocol as an Example)</strong><a class="headerlink" href="#proof-of-knowledge-soundness-taking-schnorr-protocol-as-an-example" title="Link to this heading">#</a></h2>
+<p>We have already given a relatively specific definition of Knowledge Soundness. So how do we prove that an interactive proof protocol satisfies this property? Obviously, the most direct answer is to construct an extractor, but how to construct an extractor is a deep subject (plainly speaking, LPS24 is doing this). To facilitate explaining the work of LPS24, let’s start with a relatively simple example to explain the proof idea of knowledge soundness.</p>
+<p>As shown in the figure below, the Schnorr protocol [Sch90] is a 3-step interactive proof conducted between the prover and the verifier. By executing this protocol, the prover can prove to the verifier that she possesses a secret value <span class="math notranslate nohighlight">\(w\)</span> satisfying the discrete logarithm relation <span class="math notranslate nohighlight">\(W=wG\)</span></p>
+<p><img alt="schnorr.png" src="../../_images/schnorr.png" /></p>
+<p>Their interaction process is as follows</p>
+<ul class="simple">
+<li><p>The prover generates a random value <span class="math notranslate nohighlight">\(r \leftarrow \mathbb{F}\)</span>, calculates <span class="math notranslate nohighlight">\(R=rG\)</span> and sends it to the verifier</p></li>
+<li><p>The verifier generates a random value <span class="math notranslate nohighlight">\(c \leftarrow \mathbb{F}\)</span> as a challenge and sends it to the prover</p></li>
+<li><p>The prover calculates the public value <span class="math notranslate nohighlight">\(z = r+cw\)</span> and sends it to the verifier</p></li>
+</ul>
+<p>Finally, the verifier checks <span class="math notranslate nohighlight">\(zG \overset{?}{=} R +cW\)</span> based on the messages received in the protocol. For convenience, we denote the transcript of the Schnorr protocol as <span class="math notranslate nohighlight">\((R,c,z)\)</span>.</p>
+<p>It’s easy to prove that the Schnorr protocol satisfies the Completeness property, which we won’t elaborate on here.</p>
+<p>Next, we focus on the Knowledge Soundness property:</p>
+<p>According to Definition 2, we first give the conclusion: If there exists a polynomial-time algorithm <span class="math notranslate nohighlight">\(P^*\)</span> that can forge a legal Schnorr proof, then there must exist a polynomial-time extractor algorithm <span class="math notranslate nohighlight">\(E\)</span> that can extract the satisfying secret value <span class="math notranslate nohighlight">\(w\)</span> by rewinding <span class="math notranslate nohighlight">\(P^*\)</span>.</p>
+<p>So how to construct an <span class="math notranslate nohighlight">\(E\)</span> to complete the proof? It might be difficult to write out the algorithm directly, so let’s break down this work into the following steps:</p>
+<ul class="simple">
+<li><p>First, we construct a sub-algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span>, given two transcripts about <span class="math notranslate nohighlight">\(W\)</span> as input, denoted as <span class="math notranslate nohighlight">\((R,c_1,z_1), (R,c_2,z_2)\)</span>, requiring <span class="math notranslate nohighlight">\(R\)</span> to be the same and <span class="math notranslate nohighlight">\(c_1,c_2\)</span> to be different. This sub-algorithm should be able to output <span class="math notranslate nohighlight">\(w\)</span> satisfying <span class="math notranslate nohighlight">\(W=wG\)</span></p></li>
+<li><p>Then, we construct another sub-algorithm <span class="math notranslate nohighlight">\(E_{rw}\)</span>, <span class="math notranslate nohighlight">\(E_{rw}\)</span> calls <span class="math notranslate nohighlight">\(P^*\)</span> as an Oracle, first obtains a legal transcript <span class="math notranslate nohighlight">\((R, c_1, z_1)\)</span>, then <span class="math notranslate nohighlight">\(E_{rw}\)</span> rewinds <span class="math notranslate nohighlight">\(P^*\)</span> to the second step of the Schnorr protocol, tries to send a challenge value different from <span class="math notranslate nohighlight">\(c_1\)</span> to <span class="math notranslate nohighlight">\(P^*\)</span> with the same <span class="math notranslate nohighlight">\(R\)</span>, until <span class="math notranslate nohighlight">\(P^*\)</span> outputs another legal transcript <span class="math notranslate nohighlight">\((R, c_2, z_2)\)</span></p></li>
+<li><p>Finally, the <span class="math notranslate nohighlight">\(E\)</span> algorithm first runs <span class="math notranslate nohighlight">\(E_{rw}\)</span> to obtain two transcripts that meet the conditions, and then runs <span class="math notranslate nohighlight">\(E_{ss}\)</span> to obtain <span class="math notranslate nohighlight">\(w\)</span></p></li>
+</ul>
+<p>【Implementing sub-algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span>】</p>
+<p>The implementation of sub-algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span> often appears in the security proofs of various papers. Simply put, <span class="math notranslate nohighlight">\(E_{ss}\)</span> can obtain the public values <span class="math notranslate nohighlight">\(z_1, z_2\)</span> from the two input transcripts. Assuming <span class="math notranslate nohighlight">\(P^*\)</span> honestly calculated these two values, they should satisfy the following form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+z_1 = r + c_1 w' \\ z_2 = r+c_2w'
+\end{split}\]</div>
+<p>By solving the equation, we can calculate <span class="math notranslate nohighlight">\(w' = (z_1-z_2)/(c_1-c_2)\)</span> as a possible secret value, and we only need to check <span class="math notranslate nohighlight">\(w'G\overset{?}{=}W\)</span> to know if it’s legal. If they are equal, <span class="math notranslate nohighlight">\(E'\)</span> directly outputs the legal secret value <span class="math notranslate nohighlight">\(w=w'\)</span>, and the algorithm completes. If they are not equal, <span class="math notranslate nohighlight">\(E'\)</span> can use the obtained result to construct a reduction to break the discrete logarithm assumption:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{(z_1-z_2)}{c_1-c_2} G = W
+\]</div>
+<p>Since the probability of breaking the discrete logarithm assumption is negligible, we can conclude that the difference between the success probability of <span class="math notranslate nohighlight">\(E_{ss}\)</span> and the success probability of <span class="math notranslate nohighlight">\(P^*\)</span> is also negligible.</p>
+<p>【Obtaining transcripts】</p>
+<p>We have implemented the first step, now let’s look at the second step, which requires algorithm <span class="math notranslate nohighlight">\(E_{rw}\)</span> to call <span class="math notranslate nohighlight">\(P^*\)</span> to obtain two legal transcripts. It should be noted that Definition 2 assumes that <span class="math notranslate nohighlight">\(P^*\)</span> can only successfully output legal proofs with probability <span class="math notranslate nohighlight">\(\epsilon\)</span> each time, which means that <span class="math notranslate nohighlight">\(P^*\)</span> cannot always succeed. Moreover, the running time of <span class="math notranslate nohighlight">\(P^*\)</span> is assumed to be within polynomial time, which also limits that <span class="math notranslate nohighlight">\(E_{rw}\)</span> cannot call <span class="math notranslate nohighlight">\(P^*\)</span> indefinitely, because considering the feasibility of the algorithm, the total running time of <span class="math notranslate nohighlight">\(E_{rw}\)</span> also needs to be within polynomial time.</p>
+<p>Therefore, to successfully complete the second step, we must prove the following two points</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> is a polynomial-time algorithm</p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> also successfully outputs <span class="math notranslate nohighlight">\(w\)</span> with a non-negligible probability</p></li>
+</ol>
+</section>
+<section id="from-knowledge-soundness-to-special-soundness">
+<h2>From Knowledge Soundness to <strong>Special Soundness</strong><a class="headerlink" href="#from-knowledge-soundness-to-special-soundness" title="Link to this heading">#</a></h2>
+<p>The paper [Cra96] gives a quite elegant proof of the properties of the <span class="math notranslate nohighlight">\(E_{rw}\)</span> algorithm. Since the process is quite long and similar to the content of [LPS24] that will be introduced later, we won’t describe it here. In any case, the above process is summarized as a lemma:</p>
+<p>【Rewinding Lemma】</p>
+<p>For a 3-step interactive proof <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>, if there exists a polynomial-time algorithm <span class="math notranslate nohighlight">\(P^*\)</span> that can forge a legal transcript with a non-negligible probability, then there must exist a polynomial-time extractor algorithm <span class="math notranslate nohighlight">\(E_{rw}\)</span> that can obtain another legal transcript (satisfying the same <span class="math notranslate nohighlight">\(R\)</span> and different <span class="math notranslate nohighlight">\(c\)</span>) by rewinding <span class="math notranslate nohighlight">\(P^*\)</span>, and the success probability of <span class="math notranslate nohighlight">\(E_{rw}\)</span> is also non-negligible.</p>
+<p>The Rewinding Lemma is not limited to the Schnorr protocol. In fact, for any 3-step Sigma protocol, the extractor algorithm <span class="math notranslate nohighlight">\(E_{rw}\)</span> can rewind to obtain additional <span class="math notranslate nohighlight">\(k-1\)</span> (polynomial number) legal transcripts.</p>
+<p>Therefore, the Rewinding Lemma actually simplifies the process of proving Knowledge Soundness for researchers designing specific protocols. For protocols designed based on the Sigma model, we usually only need to give the construction of sub-algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span> in the security proof. To formally describe this process, cryptographers proposed a new definition, namely Special Soundness</p>
+<p><strong>Definition 3: Special Soundness</strong></p>
+<p>For a 3-step interactive proof <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>, if there exists a polynomial-time extraction algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span>, given its input as <span class="math notranslate nohighlight">\(x\)</span> and two legal transcripts, denoted as <span class="math notranslate nohighlight">\((R,c_1,z_1), (R,c_2,z_2)\)</span>, can output the secret value <span class="math notranslate nohighlight">\(w\)</span>, then we say <span class="math notranslate nohighlight">\(\Pi\)</span> satisfies Special Soundness.</p>
+<p>【Note】The above definition is also called 2-special soundness. If the input of extraction algorithm <span class="math notranslate nohighlight">\(E\)</span> includes <span class="math notranslate nohighlight">\(k\)</span> transcripts, it is called <span class="math notranslate nohighlight">\(k\)</span>-special soundness</p>
+<p>With the development of interactive proofs, researchers are not limited to constructing only 3-step protocols. To meet this demand, Special Soundness has been further extended to <span class="math notranslate nohighlight">\((2n-1)\)</span>-step interactive proofs. That is, for the <span class="math notranslate nohighlight">\(j\in[1,n]\)</span> round, the extractor algorithm <span class="math notranslate nohighlight">\(E_{rw}\)</span> needs to obtain additional <span class="math notranslate nohighlight">\(k_j-1\)</span> transcripts by rewinding <span class="math notranslate nohighlight">\(P^*\)</span>. Finally, the input of sub-algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span> is no longer a simple transcript vector, but a transcript tree with height <span class="math notranslate nohighlight">\(n\)</span>, denoted as <span class="math notranslate nohighlight">\((k_1,...,k_n)-\)</span>transcript tree. Correspondingly, the property satisfied by this protocol is called <span class="math notranslate nohighlight">\((k_1,...,k_n)-\)</span>special soundness. For the specific definition of this part, interested readers can read [BCC+16] and [ACK21]. The [LPS24] introduced in this article only uses <span class="math notranslate nohighlight">\(k\)</span>-special soundness.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="lps24-kzg10-with-special-soundness">
+<h1>LPS24: KZG10 with Special Soundness<a class="headerlink" href="#lps24-kzg10-with-special-soundness" title="Link to this heading">#</a></h1>
+<p>We have already introduced the basic process of the KZG10 polynomial commitment scheme in our previous articles. In [LPS24], the authors first write the KZG10 scheme in a form that conforms to interactive proofs, where the prover has public input <span class="math notranslate nohighlight">\(ck = (p, [(\sigma^i)_{i=0}^n]_1, [1,\sigma]_2)\)</span> (i.e., parameters <span class="math notranslate nohighlight">\(p \leftarrow Pgen(1^{\lambda})\)</span> and <span class="math notranslate nohighlight">\(SRS\)</span>), secret input <span class="math notranslate nohighlight">\(f(X)\)</span> polynomial, and the verifier only has public input <span class="math notranslate nohighlight">\(ck\)</span>. The two parties conduct the following interactive protocol:</p>
+<ul class="simple">
+<li><p>The prover calculates the polynomial commitment <span class="math notranslate nohighlight">\(C = [f(\sigma)]_1\)</span> and sends it to the verifier</p></li>
+<li><p>The verifier chooses a random <span class="math notranslate nohighlight">\(r\)</span> as the evaluation point and sends it to the prover</p></li>
+<li><p>The prover calculates and sends the value <span class="math notranslate nohighlight">\(v = f(r)\)</span>, proof <span class="math notranslate nohighlight">\(\pi = [q(\sigma)]_1\)</span>, where <span class="math notranslate nohighlight">\(q(X) = (f(X)-v)/(X-r)\)</span></p></li>
+</ul>
+<p>The verifier checks <span class="math notranslate nohighlight">\(e(C-[v]_1, [1]_2) \overset{?}{=} e(\pi, [\sigma-r]_2)\)</span> based on the interaction data</p>
+<p>Similarly, we call the collection of interaction messages between the two parties a transcript. If a transcript <span class="math notranslate nohighlight">\(tr\)</span> can pass verification, it is called accepting. Furthermore, if a vector <span class="math notranslate nohighlight">\(\vec{tr}\)</span> containing <span class="math notranslate nohighlight">\(n+1\)</span> transcripts satisfies the following two requirements, it is admissible:</p>
+<ol class="arabic simple">
+<li><p>All transcripts in <span class="math notranslate nohighlight">\(\vec{tr}\)</span> contain the same polynomial commitment <span class="math notranslate nohighlight">\(C\)</span></p></li>
+<li><p>For any two transcripts <span class="math notranslate nohighlight">\(tr_i, tr_j, i,j\in [0,n]\)</span>, their evaluation points are different, i.e., <span class="math notranslate nohighlight">\(r_i \neq r_j\)</span></p></li>
+</ol>
+<p>In addition to defining the interactive form of the KZG10 scheme, the authors of [LPS24] also proposed a new difficult problem assumption, named Adaptive Rational Strong Diffie-Hellman assumption, abbreviated as ARSDH assumption, defined as follows</p>
+<p>【<span class="math notranslate nohighlight">\((n+1)\)</span>-ARSDH assumption】</p>
+<p>If for any polynomial-time adversary algorithm <span class="math notranslate nohighlight">\(A\)</span>, given parameters <span class="math notranslate nohighlight">\(p \leftarrow Pgen(1^{\lambda})\)</span>, SRS generated by random value <span class="math notranslate nohighlight">\(\sigma\)</span>, <span class="math notranslate nohighlight">\(([(\sigma^i)_{i=0}^n]_1, [1,\sigma]_2)\)</span>, <span class="math notranslate nohighlight">\(A\)</span> is required to output a pair <span class="math notranslate nohighlight">\([g]_1, [\varphi]_1\)</span>, and a set <span class="math notranslate nohighlight">\(S\)</span> of size <span class="math notranslate nohighlight">\(n+1\)</span>, satisfying the following relation:</p>
+<div class="math notranslate nohighlight">
+\[
+[g]_1 \neq [0]_1 \wedge e([g]_1, [1]_2) = e([\varphi]_1, [Z_S(\sigma)]_2)
+\]</div>
+<p>If the probability of <span class="math notranslate nohighlight">\(A\)</span> succeeding is negligible, then the <span class="math notranslate nohighlight">\((n+1)\)</span>-ARSDH assumption is said to hold for the bilinear group parameter generation algorithm <span class="math notranslate nohighlight">\(p \leftarrow Pgen(1^{\lambda})\)</span>.</p>
+<p>ARSDH is a relaxation of a known assumption RSDH, where RSDH requires that <span class="math notranslate nohighlight">\(A\)</span> cannot choose the set <span class="math notranslate nohighlight">\(S\)</span> by itself. In addition, [LPS24] also proves that <span class="math notranslate nohighlight">\((n+1)\)</span>-ARSDH can imply the <span class="math notranslate nohighlight">\((n+1)\)</span>-SDH assumption (ARSDH implies SDH), that is, if SDH can be broken, then ARSDH can also be broken. Because SDH can imply the evaluation binding property of KZG10, we get the following conclusion</p>
+<div class="math notranslate nohighlight">
+\[
+(n+1)\text{-ARSDH} \rightarrow (n+1)\text{-SDH} \rightarrow \text{KZG10's binding}
+\]</div>
+<p>The preparatory knowledge has been introduced. Next, following the proof idea of the Schnorr protocol introduced earlier, we first give the construction of the extractor algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span> based on transcripts, that is, proving that KZG satisfies special soundness, and then prove the rewinding lemma.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="special-soundness-of-kzg">
+<h1>Special Soundness of KZG<a class="headerlink" href="#special-soundness-of-kzg" title="Link to this heading">#</a></h1>
+<p>First, let’s give the definition:</p>
+<p>For a polynomial commitment scheme <span class="math notranslate nohighlight">\(PC\)</span>, if there exists a polynomial-time extraction algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span>, given its input as <span class="math notranslate nohighlight">\(ck\)</span> and a vector <span class="math notranslate nohighlight">\(\vec{tr}\)</span> of length <span class="math notranslate nohighlight">\(n+1\)</span> of transcripts, satisfying</p>
+<ol class="arabic simple">
+<li><p>Any <span class="math notranslate nohighlight">\(tr_j \in \vec{tr}\)</span> is accepting (passes verification)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{tr}\)</span> is admissible (<span class="math notranslate nohighlight">\(C\)</span> is the same, <span class="math notranslate nohighlight">\(r\)</span> is different)</p></li>
+</ol>
+<p><span class="math notranslate nohighlight">\(E\)</span> can output the secret value <span class="math notranslate nohighlight">\(f(X)\)</span>, satisfying <span class="math notranslate nohighlight">\(C = \mathrm{Com}(ck; f) \wedge f(r_j) = v_j, \forall j \in [0,n]\)</span>, then we say <span class="math notranslate nohighlight">\(PC\)</span> satisfies <span class="math notranslate nohighlight">\((n+1)\)</span>-Special Soundness</p>
+<p>Obviously, the idea of designing the <span class="math notranslate nohighlight">\(E_{ss}\)</span> algorithm is to try to extract a polynomial <span class="math notranslate nohighlight">\(f'(X)\)</span> from <span class="math notranslate nohighlight">\(\vec{tr}\)</span>, and <span class="math notranslate nohighlight">\(f'(X)\)</span> is either a legal secret value or an instance that breaks the <span class="math notranslate nohighlight">\((n+1)\text{-ARSDH}\)</span> assumption.</p>
+<p>Let’s write out the verification relation corresponding to each <span class="math notranslate nohighlight">\(tr_j\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+e({\color{red} C-[v_0]_1}, [1]_2) = e({\color{blue}\pi_0}, [\sigma-r_0]_2) \\ \vdots \\ e({\color{red}C-[v_n]_1}, [1]_2) = e({\color{blue}\pi_n}, [\sigma-r_n]_2)
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(I = [0,n]\)</span>, <span class="math notranslate nohighlight">\(L_0(X),\ldots,L_n(X)\)</span> be the Lagrange polynomials interpolating the values <span class="math notranslate nohighlight">\(S=\{v_i\}_{i\in I}\)</span> on the set <span class="math notranslate nohighlight">\(I\)</span>, the expression of <span class="math notranslate nohighlight">\(L_j(X)\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\color{purple} L_j(X) = \frac{\prod_{i\in I/\{j\}} (X-r_i)}{\prod_{i\in I/\{j\}} (r_j-r_i)}
+\]</div>
+<p>Now, multiply both sides of each verification equation by the value of the Lagrange polynomial at <span class="math notranslate nohighlight">\(\sigma\)</span>, for example, the <span class="math notranslate nohighlight">\(j\in[0,n]\)</span>-th equation is</p>
+<div class="math notranslate nohighlight">
+\[
+e({\color{red}C-[v_j]_1}, [1]_2)\cdot {\color{purple}L_j(\sigma)} = e({\color{blue}\pi_j}, [\sigma-r_j]_2) \cdot {\color{purple}L_j(\sigma)}
+\]</div>
+<p>And add all <span class="math notranslate nohighlight">\(n+1\)</span> equations, we can get</p>
+<div class="math notranslate nohighlight">
+\[
+e(\sum_{j \in I}{\color{red}(C-[v_j]_1)}\cdot {\color{purple}L_j(\sigma)}, [1]_2) = e(\sum_{j \in I} {\color{blue}\pi_j} \cdot {\color{purple}L_j(\sigma)}, [\sigma-r_j]_2)
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\sum_{j \in I} {\color{red} [v_j]_1} \cdot {\color{purple} L_j(\sigma)} = [{\color{purple} L(\sigma)}]_1\)</span>, the left side is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+LHS = e({\color{red}C}-\sum_{j \in I}{\color{red} [v_j]_1}\cdot {\color{purple}L_j(\sigma)}, [1]_2)  \\ = e({\color{red}C}-{\color{purple}[L(\sigma)]_1}, [1]_2) 
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\sum_{j\in I} \left( {\color{blue} \pi_j} / {\color{purple} \prod_{i\in I/\{j\}}(r_j -r_i)} \right) = {\color{blue} \varphi}\)</span>, the right side is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+RHS  = e(\sum_{j \in I} {\color{blue}\pi_j} \cdot {\color{purple}L_j(\sigma)}, [\sigma-r_j]_2) \\ = e([\sum_{j \in I} {\color{blue}q_j(\sigma)} \cdot {\color{purple}\frac{\prod_{i\in I/\{j\}} (\sigma-r_i)}{\prod_{i\in I/\{j\}} (r_j-r_i)}}]_1, [\sigma-r_j]_2) \\ = e([\sum_{j\in I} \frac{\color{blue} q_j(\sigma)}{\color{purple} \prod_{i \in I/\{j\}}(r_j-r_i)}]_1, [Z_S(\sigma)]_2) \\ = e([{\color{blue} \varphi}]_1, [Z_S(\sigma)]_2)
+\end{split}\]</div>
+<p>Finally, we get the equation</p>
+<div class="math notranslate nohighlight">
+\[
+LHS = e({\color{red}C}-{\color{purple}[L(\sigma)]_1}, [1]_2) = e([{\color{blue} \varphi}]_1, [Z_S(\sigma)]_2) = RHS
+\]</div>
+<p>Based on this equation, the extraction algorithm <span class="math notranslate nohighlight">\(E_{ss}\)</span> first obtains <span class="math notranslate nohighlight">\(v_0,\ldots,v_n\)</span> from <span class="math notranslate nohighlight">\(n+1\)</span> transcripts, and calculates <span class="math notranslate nohighlight">\({\color{purple} L(X)}\)</span> and <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 = [\sum_{j\in I}v_j \cdot L_j(\sigma)]_1\)</span>. Compare <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 \overset{?}{=} {\color{red} C}\)</span>, and perform the following operations based on the result</p>
+<ul>
+<li><p>If <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 = {\color{red} C}\)</span>, <span class="math notranslate nohighlight">\(E_{ss}\)</span> directly outputs <span class="math notranslate nohighlight">\({\color{purple} L(X)}\)</span> as the secret polynomial, and the algorithm completes.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 \neq {\color{red} C}\)</span>, <span class="math notranslate nohighlight">\(E_{ss}\)</span> uses <span class="math notranslate nohighlight">\({\color{purple} L(X)}\)</span> to construct a reduction to break the <span class="math notranslate nohighlight">\((n+1)\text{-ARSDH}\)</span> assumption:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(E_{ss}\)</span> calculates <span class="math notranslate nohighlight">\({\color{red} [g]_1} = {\color{red} C}-[{\color{purple} L(\sigma)}]_1,\)</span> and outputs <span class="math notranslate nohighlight">\({\color{red} [g]_1}, [{\color{blue} \varphi}]_1\)</span> as an instance to break <span class="math notranslate nohighlight">\((n+1)\text{-ARSDH}\)</span></p></li>
+<li><p>Obviously, the above instance satisfies</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    e({\color{red} [g]_1}, [1]_2) = e([{\color{blue} \varphi}]_1, [Z_S(\sigma)]_2)
+    \]</div>
+</li>
+</ul>
+<p>Proof completed.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="rewinding-lemma">
+<h1>Rewinding Lemma<a class="headerlink" href="#rewinding-lemma" title="Link to this heading">#</a></h1>
+<p>The above proof ensures that KZG10 satisfies <span class="math notranslate nohighlight">\((n+1)\)</span>-special soundness, but to further ensure knowledge soundness, we also need to prove that it is feasible for <span class="math notranslate nohighlight">\(E_{rw}\)</span> to obtain <span class="math notranslate nohighlight">\(n+1\)</span> satisfying transcripts by rewinding, that is, the rewinding lemma.</p>
+<p>Specifically, for the following <span class="math notranslate nohighlight">\(E_{rw}\)</span> algorithm, we need to prove that it can succeed with a non-negligible probability in polynomial time</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> randomly selects <span class="math notranslate nohighlight">\(r\)</span> and calls <span class="math notranslate nohighlight">\(P^*\)</span> to obtain <span class="math notranslate nohighlight">\(tr_0\)</span></p></li>
+<li><p>Check the validity of <span class="math notranslate nohighlight">\(tr_0\)</span>, if valid, continue; if not valid, return to step 1 and select another <span class="math notranslate nohighlight">\(r'\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> runs a loop algorithm, selecting a new <span class="math notranslate nohighlight">\(r\)</span> in each round, and rewinds <span class="math notranslate nohighlight">\(P^*\)</span> to obtain a new transcript, with the termination condition being</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> obtains <span class="math notranslate nohighlight">\((n+1)\)</span> transcripts that meet the requirements (i.e., satisfying accepting and admissible) → Algorithm succeeds</p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> has traversed all possible <span class="math notranslate nohighlight">\(r\)</span>, but still hasn’t obtained <span class="math notranslate nohighlight">\((n+1)\)</span> transcripts that meet the requirements → Algorithm fails</p></li>
+</ol>
+</li>
+</ol>
+<p>The [LPS24] paper adopts the same proof idea as [ACK21], letting <span class="math notranslate nohighlight">\(H\)</span> be a Boolean matrix with row indices as the set <span class="math notranslate nohighlight">\(\{ \vec{r} = ( r_p, r_{ck}, r_A) \in \{ 0,1 \}^{poly(\lambda)} \}\)</span>, where <span class="math notranslate nohighlight">\(r_p, r_{ck},r_A\)</span> are the random numbers used by the <span class="math notranslate nohighlight">\(Pgen\)</span> algorithm, <span class="math notranslate nohighlight">\(SRS\)</span>, and the adversary respectively. The column indices of <span class="math notranslate nohighlight">\(H\)</span> are the challenge value space <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>. When <span class="math notranslate nohighlight">\(P^*\)</span> generates a legal transcript for challenge value <span class="math notranslate nohighlight">\(r\)</span> under a certain random number setting <span class="math notranslate nohighlight">\(\vec{r}\)</span>, we set the corresponding element in <span class="math notranslate nohighlight">\(H\)</span> to 1, i.e., <span class="math notranslate nohighlight">\(H[\vec{r}][r] = 1\)</span>.</p>
+<p>Next, we analyze the success probability and running time of the <span class="math notranslate nohighlight">\(E_{rw}\)</span> algorithm respectively</p>
+<p>【Probability Analysis】</p>
+<p>Define events as follows:</p>
+<ul class="simple">
+<li><p>Event A: <span class="math notranslate nohighlight">\(tr_0\)</span> passes verification</p></li>
+<li><p>Event B: <span class="math notranslate nohighlight">\(\forall j \in [1,n]\)</span>, <span class="math notranslate nohighlight">\(tr_j\)</span> passes verification</p></li>
+</ul>
+<p>Then the probability of <span class="math notranslate nohighlight">\(E_{rw}\)</span> succeeding is calculated as the probability of <span class="math notranslate nohighlight">\(A \rightarrow B\)</span>, that is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Pr[A \rightarrow B] = Pr[A \wedge (A \rightarrow B)] + Pr[\neg{A} \wedge (A \rightarrow B)] \\ = Pr[A \wedge B] + Pr(\neg{A})
+\end{split}\]</div>
+<p>【Note】: The truth table of <span class="math notranslate nohighlight">\(A \rightarrow B\)</span> is</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(A\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(B\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(A \rightarrow B\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>T</p></td>
+<td><p>T</p></td>
+<td><p>T</p></td>
+</tr>
+<tr class="row-odd"><td><p>T</p></td>
+<td><p>F</p></td>
+<td><p>F</p></td>
+</tr>
+<tr class="row-even"><td><p>F</p></td>
+<td><p>T</p></td>
+<td><p>T</p></td>
+</tr>
+<tr class="row-odd"><td><p>F</p></td>
+<td><p>F</p></td>
+<td><p>T</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Consider the probability <span class="math notranslate nohighlight">\(Pr[A \wedge B]\)</span>, the event <span class="math notranslate nohighlight">\(A \wedge B\)</span> occurs if and only if <span class="math notranslate nohighlight">\(P^*\)</span> outputs a legal <span class="math notranslate nohighlight">\(tr_0\)</span> under the random parameter setting <span class="math notranslate nohighlight">\(\vec{r}\)</span>, and the row <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> where <span class="math notranslate nohighlight">\(\vec{r}\)</span> is located has at least <span class="math notranslate nohighlight">\(n+1\)</span> “1” elements.</p>
+<p><img alt="special sound.png" src="../../_images/special_sound.png" /></p>
+<p>Let <span class="math notranslate nohighlight">\(R_j\)</span> be the number of rows in <span class="math notranslate nohighlight">\(H\)</span> that contain <span class="math notranslate nohighlight">\(j\)</span> “1” elements, for example, <span class="math notranslate nohighlight">\(R_2 = 3\)</span> in the above figure. The number of rows containing <span class="math notranslate nohighlight">\(\ge n+1\)</span> “1” elements can be calculated as <span class="math notranslate nohighlight">\(\sum_{j=n+1}^{|\mathbb{F}|} j \cdot R_j\)</span>, the probability <span class="math notranslate nohighlight">\(Pr[A \wedge B]\)</span> is calculated as follows</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Pr[A \wedge B]=\frac{\sum_{j=n+1}^{|\mathbb{F}|} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|} \\ =\frac{\sum_{j=0}^{|\mathbb{F}|} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|} - \frac{\sum_{j=0}^{n} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|} \\= Pr[A] - \frac{\sum_{j=0}^{n} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|}
+\end{split}\]</div>
+<p>And because <span class="math notranslate nohighlight">\(\sum_{j=0}^{n} j \cdot R_j = \sum_{j=1}^{n} j \cdot R_j \leq \sum_{j=1}^{n} n \cdot R_j \leq n|\vec{r}|\)</span></p>
+<p>We can get the lower bound of <span class="math notranslate nohighlight">\(Pr[A \wedge B]\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+Pr[A \wedge B] \ge Pr[A] - \frac{n|\vec{r}|}{|\vec{r}||\mathbb{F}|} = Pr[A] - \frac{n}{|\mathbb{F}|} 
+\]</div>
+<p>Finally, we get the lower bound of the success probability of <span class="math notranslate nohighlight">\(E_{rw}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Pr[A \rightarrow B] = Pr[A \wedge B] + Pr(\neg{A}) \\ \ge Pr[A] - \frac{n}{|\mathbb{F}|} + Pr[\neg A]  \\ = 1-\frac{n}{|\mathbb{F}|}
+\end{split}\]</div>
+<p>【Running Time Analysis】</p>
+<p>For the <span class="math notranslate nohighlight">\(E_{rw}\)</span> algorithm, it can be considered that its running time is mainly related to the time of calling the <span class="math notranslate nohighlight">\(P^*\)</span> algorithm. And because <span class="math notranslate nohighlight">\(P^*\)</span> is a polynomial-time algorithm, we only need to calculate the number of times <span class="math notranslate nohighlight">\(E_{rw}\)</span> calls the <span class="math notranslate nohighlight">\(P^*\)</span> algorithm, denoted as <span class="math notranslate nohighlight">\(Q\)</span>, to deduce that the time complexity of <span class="math notranslate nohighlight">\(E_{rw}\)</span> algorithm is <span class="math notranslate nohighlight">\(poly(\lambda)\cdot Q\)</span>.</p>
+<p>Consider that <span class="math notranslate nohighlight">\(E_{rw}\)</span> successfully obtains a legal <span class="math notranslate nohighlight">\(tr_0\)</span> in step 2 (i.e., event <span class="math notranslate nohighlight">\(A\)</span> occurs), <span class="math notranslate nohighlight">\(E_{rw}\)</span> continues to run the loop in step 3. Since <span class="math notranslate nohighlight">\(E_{rw}\)</span> needs to call the <span class="math notranslate nohighlight">\(P^*\)</span> algorithm once in each round of the loop, we can obtain <span class="math notranslate nohighlight">\(Q\)</span> by calculating the expected number of loop iterations.</p>
+<p>Let’s first discuss the problem of calculating the number of loop iterations separately: Given a random parameter <span class="math notranslate nohighlight">\(\vec{r}\)</span>, assuming the corresponding row vector <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> in <span class="math notranslate nohighlight">\(H\)</span> contains <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}|\)</span> “1” elements, <span class="math notranslate nohighlight">\(|\mathbb{F}|\)</span> is the length of the vector <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span>. On the premise of already selecting one “1” element in <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> (i.e., <span class="math notranslate nohighlight">\(tr_0\)</span>), solve for the expected number of times <span class="math notranslate nohighlight">\(E_{rw}\)</span> selects <span class="math notranslate nohighlight">\(n\)</span> “1” elements from the remaining <span class="math notranslate nohighlight">\(|\mathbb{F}|-1\)</span> items.</p>
+<p>To calculate the expectation of <span class="math notranslate nohighlight">\(Q\)</span>, we need to introduce the concept of Negative HyperGeometric distribution (NHG distribution)</p>
+<p><strong>NHG distribution:</strong> Given a blind box containing <span class="math notranslate nohighlight">\(N\)</span> balls, of which <span class="math notranslate nohighlight">\(K\)</span> balls are marked, it is required to take out only one ball at a time, and not put it back, until <span class="math notranslate nohighlight">\(k\leq K\)</span> marked balls are taken out. Let <span class="math notranslate nohighlight">\(X\)</span> be the total number of all balls taken out when the ball-taking ends, the expectation of <span class="math notranslate nohighlight">\(X\)</span> is <span class="math notranslate nohighlight">\(E[NHG_{N,K,k}] = k(N+1)/(K+1)\)</span>.</p>
+<p>Correspondingly, when the number of “1” elements contained in <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> is greater than <span class="math notranslate nohighlight">\(n\)</span>, <span class="math notranslate nohighlight">\(Q\)</span> conforms to the NHG distribution. Assuming that each <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> contains <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}|\)</span> “1” elements, we can calculate the expectation of <span class="math notranslate nohighlight">\(Q\)</span> as follows:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> contains at least <span class="math notranslate nohighlight">\(n+1\)</span> “1” elements, <span class="math notranslate nohighlight">\(E[Q|A \wedge \vec{r}] = E[NHG_{N,K,k}] + 1 = n/\delta_{\vec{r}} + 1\)</span>, where <span class="math notranslate nohighlight">\(N = \mathbb{F}-1, K = \delta_{\vec{r}}|\mathbb{F}|-1, k=n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> contains less than <span class="math notranslate nohighlight">\(n+1\)</span> “1” elements, i.e., <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}| \leq n\)</span>, algorithm <span class="math notranslate nohighlight">\(E_{rw}\)</span> will keep executing the loop until traversing all elements in <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span>, obviously <span class="math notranslate nohighlight">\(E[Q|A \wedge \vec{r}] = |\mathbb{F}| \leq n/\delta_{\vec{r}}\)</span></p></li>
+</ul>
+<p>The above considers the case when event <span class="math notranslate nohighlight">\(A\)</span> occurs. Since for any <span class="math notranslate nohighlight">\(\vec{r}\)</span>, <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> contains <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}|\)</span> “1” elements, the probability of event <span class="math notranslate nohighlight">\(A\)</span> occurring is <span class="math notranslate nohighlight">\(Pr[A] = \delta_{\vec{r}}\)</span>, calculate</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+E[Q|\vec{r}] = E[Q|A \wedge \vec{r}]\cdot Pr[A] + E[Q|\neg A \wedge \vec{r}]\cdot Pr[\neg A] \\ \leq \frac{n}{\delta_{\vec{r}}}\cdot \delta_{\vec{r}} + 1\cdot (1-\delta_{\vec{r}}) = n+1- \delta_{\vec{r}} \leq n+1
+\end{split}\]</div>
+<p>For all <span class="math notranslate nohighlight">\(\vec{r} \in \{ 0,1 \}^{poly(\lambda)}\)</span>, calculate the expectation of <span class="math notranslate nohighlight">\(Q\)</span> as follows</p>
+<div class="math notranslate nohighlight">
+\[
+E[Q] = \sum_{\vec{r}} E[Q|\vec{r}]\cdot Pr[\vec{r}] \leq \sum_{1}^{|\vec{r}|} \frac{n+1}{|\vec{r}|} = n+1
+\]</div>
+<p>Proof completed.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<p>[CHM+19] Chiesa, Alessandro, Yuncong Hu, Mary Maller, et al. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p>
+<p>[MBK+19] Maller Mary, Sean Bowe, Markulf Kohlweiss, et al. “Sonic: Zero-Knowledge SNARKs from Linear-Size Universal and Updatable Structured Reference Strings.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/099">https://eprint.iacr.org/2019/099</a></p>
+<p>[GWC19] Ariel Gabizon, Zachary J. Williamson, Oana Ciobotaru. “PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/953">https://eprint.iacr.org/2019/953</a></p>
+<p>[LPS24] Helger Lipmaa, Roberto Parisella, Janno Siim. “Constant-Size zk-SNARKs in ROM from Falsifiable Assumptions.” Cryptology ePrint Archive (2024). <a class="reference external" href="https://eprint.iacr.org/2024/173">https://eprint.iacr.org/2024/173</a></p>
+<p>[ACK21] <em>Thomas Attema, Ronald Cramer, and Lisa Kohl</em> “A Compressed Sigma-Protocol Theory for Lattices” Cryptology ePrint Archive (2021). <a class="reference external" href="https://eprint.iacr.org/2021/307">https://eprint.iacr.org/2021/307</a></p>
+<p>[Sch90] Claus-Peter Schnorr. “Efficient identification and signatures for smart cards.” In Gilles Brassard, editor, CRYPTO’89, volume 435 of LNCS, pages 239–252. Springer, Heidelberg, August 1990.</p>
+<p>[Cra96] Ronald Cramer. “Modular Design of Secure yet Practical Cryptographic Protocols”. PhD thesis, CWI and University of Amsterdam, 1996.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./kzg10/kzgnotes"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">KZG Extractability based on ROM</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness">Special Soundness</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-proofs-and-knowledge-soundness"><strong>Interactive Proofs and Knowledge Soundness</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-knowledge-soundness-taking-schnorr-protocol-as-an-example"><strong>Proof of Knowledge Soundness (Taking Schnorr Protocol as an Example)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-knowledge-soundness-to-special-soundness">From Knowledge Soundness to <strong>Special Soundness</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#lps24-kzg10-with-special-soundness">LPS24: KZG10 with Special Soundness</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness-of-kzg">Special Soundness of KZG</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#rewinding-lemma">Rewinding Lemma</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,856 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KZG Extractability based on ROM &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'kzg10/kzgnotes/kzg-extractability-based-on-rom.zh';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fkzg10/kzgnotes/kzg-extractability-based-on-rom.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/kzg10/kzgnotes/kzg-extractability-based-on-rom.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>KZG Extractability based on ROM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">KZG Extractability based on ROM</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness">Special Soundness</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-proofs-and-knowledge-soundness"><strong>Interactive Proofs and Knowledge Soundness</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#knowledge-soundness-schnorr"><strong>Knowledge Soundness 证明（以 Schnorr 协议为例）</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#knowledge-soundness-special-soundness">从 Knowledge Soundness 到 <strong>Special Soundness</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#lps24-kzg10-with-special-soundness">LPS24: KZG10 with Special Soundness</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness-of-kzg">Special Soundness of KZG</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#rewinding-lemma">Rewinding Lemma</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">参考文献</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="kzg-extractability-based-on-rom">
+<h1>KZG Extractability based on ROM<a class="headerlink" href="#kzg-extractability-based-on-rom" title="Link to this heading">#</a></h1>
+<p>KZG10 等多项式承诺证明多用于构造 SNARK，通常我们会将一个 Interactive Oracle Proof 中的多项式 Oracle 用 PCS 编译。</p>
+<p>考虑到安全性，IOP 本身的 Knowledge Soundness 是容易保证的。然而，对于 IOP 用 PCS 编译之后得到的 SNARK，要证明它的 Knowledge Soundness 性质就没有那么容易了。</p>
+<p>相比较于 IOP 中证明者发送包含一整个多项式的 Oracle 在 IOP 模型中，oracle 的长度和多项式是相同的，只不过验证者没有完全读取它），SNARK 中证明者只发送了多项式的承诺，该承诺只包含很少一部分信息：仅仅是多项式在几个点上的取值。</p>
+<p>因此，我们只有保证多项式承诺本身是“可提取的“（Extractable），才能够保证 SNARK 的 Knowledge Soundness。（详细论证可以参考 Interactive Oracle Proofs by Eli Ben-Sasson et al.）</p>
+<p>不幸的是，Kate 等人并没有证明 KZG10 协议具有 extractability，因此，要把 KZG10 用在构造 SNARK 上，我们必须对其安全性进行重新证明。</p>
+<p>一系列之前的工作，包括 Sonic [MBK+19], Plonk [GWC19], Marlin [CHM+19] 提出了基于 non-falsifiable 假设（Knowledge Assumptions）或者基于理想群模型（Idealized Group Model）如GGM，AGM，证明 KZG10 方案 满足 extractability 的方案。可以说，目前大部分基于 KZG 方案构造的 SNARK 系统都间接地依赖理想群模型。</p>
+<p>与此同时，SNARK 系统在实现非交互式证明的时候还使用了 Fiat-Shamir 变换，这意味着它们还依赖于另一个强理想化模型，即随机预言机模型（ROM）。这种现状使我们处于一个相当糟糕的境地：我们的 SNARK 系统会同时具有两个模型的缺陷！近些年来，一些论文分别对它们进行了攻击。</p>
+<p>而相对于理想群模型来说，ROM 的模型假设更弱（也就意味着安全性更强）。如果能够在 ROM 模型下证明 KZG 方案的安全性，就能够移除 SNARK 系统对理想群模型的依赖，从而增加我们对其安全性的信心。</p>
+<p>在这个背景下，Lipmaa，Parisella，Siim 在今年发表了他们的工作 “Constant-Size zk-SNARKs in ROM from Falsifiable Assumptions”（下文简称 [LPS24]），向我们的目标推进了一大步。他们的贡献包括：</p>
+<ol class="arabic simple">
+<li><p>基于一个新提出的 falsifiable 假设证明了 KZG 方案在 ROM 模型下的 special soundness 性质</p></li>
+<li><p>进一步证明了 KZG 方案满足 black-box extractability，以用于编译 IOP</p></li>
+<li><p>在证明 Plonk 在 ROM 模型下的 knowledge soundness 性质上取得了部分进展</p></li>
+</ol>
+<p>本文中，我们将着重介绍第一点的工作。</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="special-soundness">
+<h1>Special Soundness<a class="headerlink" href="#special-soundness" title="Link to this heading">#</a></h1>
+<p>要介绍 special soundness，我们首先需要了解交互式证明以及其安全定义。</p>
+<section id="interactive-proofs-and-knowledge-soundness">
+<h2><strong>Interactive Proofs and Knowledge Soundness</strong><a class="headerlink" href="#interactive-proofs-and-knowledge-soundness" title="Link to this heading">#</a></h2>
+<p><strong>【定义1：Public-coin Interactive Proofs】</strong></p>
+<p>一个证明目标关系 <span class="math notranslate nohighlight">\(R\)</span>，并由两方参与（证明者和验证者）的交互式协议被称为交互式证明（Interactive Proofs) ，记作 <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>，其中 <span class="math notranslate nohighlight">\(P,V\)</span> 分别是证明者和验证者算法。具体地，</p>
+<ul class="simple">
+<li><p>证明者输入：公共 statement（记作 <span class="math notranslate nohighlight">\(x\)</span>），秘密 witness（记作 <span class="math notranslate nohighlight">\(w\)</span>）</p></li>
+<li><p>验证者输入：公共 statement（记作 <span class="math notranslate nohighlight">\(x\)</span>）</p></li>
+<li><p>证明者和验证者进行经过一系列交互，将所有交互的消息合集称为一个 transcript</p></li>
+<li><p>验证者输出 1 表示接受，0 表示拒绝。</p></li>
+</ul>
+<p>如果在交互中，所有验证者使用的随机数均为公开的，那么我们称该交互式协议为 Public-coin Interactive Proof。此外，假设在整个交互中证明者的发送了 <span class="math notranslate nohighlight">\(k\)</span> 条消息，验证者发送了 <span class="math notranslate nohighlight">\(k-1\)</span> 条消息，那么我们称其为 <span class="math notranslate nohighlight">\((2k-1)\)</span>-步协议。</p>
+<p>众所周知，要保证一个交互式证明是安全的，它需要满足两个安全性质：</p>
+<ul class="simple">
+<li><p><strong>Completeness：<strong>对于任意一个诚实执行协议的证明者 <span class="math notranslate nohighlight">\(P\)</span>，且</strong>存在</strong> <span class="math notranslate nohighlight">\(w\)</span> 令 <span class="math notranslate nohighlight">\((x,w)\)</span> 满足关系 <span class="math notranslate nohighlight">\(R\)</span>，那么 <span class="math notranslate nohighlight">\(P\)</span> 能够通过执行协议令验证者输出接受。</p></li>
+<li><p><strong>Soundness：<strong>对于任意一个可能恶意的证明者，且</strong>不存在</strong> <span class="math notranslate nohighlight">\(w\)</span> 令 <span class="math notranslate nohighlight">\((x,w)\)</span> 满足关系 <span class="math notranslate nohighlight">\(R\)</span>，那么 <span class="math notranslate nohighlight">\(P\)</span> 不能通过执行协议令验证者输出接受。</p></li>
+</ul>
+<p>上面两个安全性质保证了交互式证明基本的安全性，然而 Soundness 的定义只能够保证某个statement <span class="math notranslate nohighlight">\(x\)</span> 的确是属于关系 <span class="math notranslate nohighlight">\(R\)</span> 的，并不能达到一部分应用场景的安全需求。例如，在身份认证系统中，我们要求证明者证明其身份：即 ”拥有” 对应公钥 <span class="math notranslate nohighlight">\(pk\)</span> 的私钥 <span class="math notranslate nohighlight">\(sk\)</span> 满足 <span class="math notranslate nohighlight">\(pk = sk\cdot G\)</span>。如果该证明只保证了 Soundness 性质，那么验证者只知道了 “<span class="math notranslate nohighlight">\(pk\)</span> 属于生成元 <span class="math notranslate nohighlight">\(G\)</span> 所构成的循环群 <span class="math notranslate nohighlight">\(\mathbb{G}\)</span>” 这一结论。但这个结论并不能保证证明者就一定拥有私钥 <span class="math notranslate nohighlight">\(sk\)</span>。实际上，我们可以在不知道 <span class="math notranslate nohighlight">\(sk\)</span> 的情况下证明 <span class="math notranslate nohighlight">\(pk \in \mathbb{G}\)</span>，例如用费马小定理。</p>
+<p>因此我们需要一个更强的安全定义，即 **“**Knowledge Soundness”</p>
+<p><strong>【定义2：Knowledge Soundness】</strong></p>
+<p>对于一个交互式证明 <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>，如果存在多项式时间算法 <span class="math notranslate nohighlight">\(P^*\)</span> 在不知道 <span class="math notranslate nohighlight">\(x\)</span> 对应 <span class="math notranslate nohighlight">\(w\)</span> 的情况下，能够以一个不可忽略的概率 <span class="math notranslate nohighlight">\(\epsilon\)</span> 伪造证明令验证者接受，那么一定存在一个多项式时间提取器算法 <span class="math notranslate nohighlight">\(E\)</span>，该提取器将 <span class="math notranslate nohighlight">\(P^*\)</span> 作为一个可倒带的（rewindable）Oracle 调用，能够以不可忽略的概率 <span class="math notranslate nohighlight">\(\epsilon'\)</span> 提取出一个满足 <span class="math notranslate nohighlight">\(x\)</span> 的 <span class="math notranslate nohighlight">\(w\)</span>。我们将 <span class="math notranslate nohighlight">\(|\epsilon'-\epsilon|\)</span> 称作 soundness error，如果该 error 的大小可忽略不计，那么 <span class="math notranslate nohighlight">\(\Pi\)</span> 满足 Knowledge Soundness 性质。</p>
+<p>【注】如果一个 Public-coin Interactive Proof 对任意敌手都满足 Completeness 和 Soundness，那么我们称其为 Proof of Knowledge，如果Soundness只对多项式时间敌手满足，那么称其为 Argument of Knowledge。</p>
+<p>可以看出，Knowledge Soundness 定义的关键在于强调构造提取器算法的可行性，也就是说，如果一个恶意证明者声称在不知道 <span class="math notranslate nohighlight">\(w\)</span> 的情况下伪造合法证明是可行的，那么基于该恶意证明者构造一个提取 <span class="math notranslate nohighlight">\(w\)</span> 提取器同样是可行的，这就与恶意证明者的声称是相矛盾的。从而保证，任何能输出合法证明的证明者，一定是“拥有”秘密值 <span class="math notranslate nohighlight">\(w\)</span> 的。</p>
+</section>
+<section id="knowledge-soundness-schnorr">
+<h2><strong>Knowledge Soundness 证明（以 Schnorr 协议为例）</strong><a class="headerlink" href="#knowledge-soundness-schnorr" title="Link to this heading">#</a></h2>
+<p>前文已经给出了较为具体的 Knowledge Soundness 定义，那么我们该如何证明一个交互式证明协议满足该性质呢？显然，最直接的答案是构造一个提取器即可，但如何构造提取器是又是一门很深的学问（直白地说，LPS24 就是在做这件事）。为了方便解释 LPS24 的工作，我们先从一个相对简单的例子入手，来解释 knowledge soundness 的证明思路。</p>
+<p>如下图所示 Schnorr 协议 [Sch90] 是一个 3步的交互式证明，在证明者和验证者两方之间进行，通过执行该协议，证明者能够向验证者证明她拥有一个满足离散对数关系 <span class="math notranslate nohighlight">\(W=wG\)</span> 的秘密值 <span class="math notranslate nohighlight">\(w\)</span></p>
+<p><img alt="schnorr.png" src="../../_images/schnorr.png" /></p>
+<p>他们的交互过程如下</p>
+<ul class="simple">
+<li><p>证明者生成随机值 <span class="math notranslate nohighlight">\(r \leftarrow \mathbb{F}\)</span>，并计算 <span class="math notranslate nohighlight">\(R=rG\)</span> 发送给验证者</p></li>
+<li><p>验证者生成随机值 <span class="math notranslate nohighlight">\(c \leftarrow \mathbb{F}\)</span> 作为挑战值发送给证明者</p></li>
+<li><p>证明者计算公开值 <span class="math notranslate nohighlight">\(z = r+cw\)</span> 并发送给验证者</p></li>
+</ul>
+<p>最后验证者根据在协议中收到的消息检查 <span class="math notranslate nohighlight">\(zG \overset{?}{=} R +cW\)</span>，方便起见，我们将 Schnorr 协议的 transcript 记作 <span class="math notranslate nohighlight">\((R,c,z)\)</span>。</p>
+<p>很容易证明，Schnorr 协议满足 Completeness 性质，我们在次不过多赘述。</p>
+<p>接下来我们重点考虑 Knowledge Soundness 性质：</p>
+<p>根据定义2，我们先给出结论：如果存在多项式时间算法 <span class="math notranslate nohighlight">\(P^*\)</span> 能够伪造合法的 Schnorr 证明，那么一定存在一个多项式时间提取器算法 <span class="math notranslate nohighlight">\(E\)</span> 通过倒带 <span class="math notranslate nohighlight">\(P^*\)</span>，能够提取出满足的秘密值 <span class="math notranslate nohighlight">\(w\)</span>。</p>
+<p>那么该如何构造一个 <span class="math notranslate nohighlight">\(E\)</span> 来完成证明呢？要直接写出算法可能有些困难，我们不妨将该工作拆分成下面几步：</p>
+<ul class="simple">
+<li><p>首先，我们构造一个子算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span>，给定两个关于 <span class="math notranslate nohighlight">\(W\)</span> 的 transcripts 作为输入，记作 <span class="math notranslate nohighlight">\((R,c_1,z_1), (R,c_2,z_2)\)</span>，要求 <span class="math notranslate nohighlight">\(R\)</span> 相同，<span class="math notranslate nohighlight">\(c_1,c_2\)</span> 不同，该子算法能够输出 <span class="math notranslate nohighlight">\(w\)</span> 满足 <span class="math notranslate nohighlight">\(W=wG\)</span></p></li>
+<li><p>接着，我们构造另一个子算法 <span class="math notranslate nohighlight">\(E_{rw}\)</span>，<span class="math notranslate nohighlight">\(E_{rw}\)</span> 将 <span class="math notranslate nohighlight">\(P^*\)</span> 作为 Oracle 进行调用，先获取一个合法的 transcript <span class="math notranslate nohighlight">\((R, c_1, z_1)\)</span>，之后 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 倒带 <span class="math notranslate nohighlight">\(P^*\)</span> 到 Schnorr 协议的第二步，尝试在相同 <span class="math notranslate nohighlight">\(R\)</span> 的情况下向 <span class="math notranslate nohighlight">\(P^*\)</span> 发送与 <span class="math notranslate nohighlight">\(c_1\)</span> 不同的挑战值，直到 <span class="math notranslate nohighlight">\(P^*\)</span> 输出另一个合法的 transcript <span class="math notranslate nohighlight">\((R, c_2, z_2)\)</span></p></li>
+<li><p>最后， <span class="math notranslate nohighlight">\(E\)</span> 算法先运行  <span class="math notranslate nohighlight">\(E_{rw}\)</span> 获取两个满足条件的 transcripts 之后，再运行 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 获得 <span class="math notranslate nohighlight">\(w\)</span></p></li>
+</ul>
+<p>【实现子算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span>】</p>
+<p>子算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 的实现经常在各种论文的安全证明中出现，简单来说，<span class="math notranslate nohighlight">\(E_{ss}\)</span> 从两个输入 transcripts 中可以得到的公开值 <span class="math notranslate nohighlight">\(z_1, z_2\)</span>，假设 <span class="math notranslate nohighlight">\(P^*\)</span> 诚实地计算了这两个值，那么它们应该满足如下形式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+z_1 = r + c_1 w' \\ z_2 = r+c_2w'
+\end{split}\]</div>
+<p>解方程能够计算出 <span class="math notranslate nohighlight">\(w' = (z_1-z_2)/(c_1-c_2)\)</span> 作为一个可能的秘密值，只需要检查 <span class="math notranslate nohighlight">\(w'G\overset{?}{=}W\)</span> 即可得知其是否合法。如果相等，那么 <span class="math notranslate nohighlight">\(E'\)</span> 直接输出合法的秘密值 <span class="math notranslate nohighlight">\(w=w'\)</span>，算法完成。如果不相等，那么 <span class="math notranslate nohighlight">\(E'\)</span> 可以利用得到的结果构造一个归约来破解离散对数假设：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{(z_1-z_2)}{c_1-c_2} G = W
+\]</div>
+<p>由于破解离散对数假设的概率是可以忽略的，可以得到 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 成功的概率和 <span class="math notranslate nohighlight">\(P^*\)</span> 成功的概率之差也是可以忽略的。</p>
+<p>【获取 transcripts】</p>
+<p>我们已经实现了第一步，接下来看第二步，其中要求算法 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 调用 <span class="math notranslate nohighlight">\(P^*\)</span> 获取两个合法的 transcripts，需要注意的是，定义2中假设 <span class="math notranslate nohighlight">\(P^*\)</span> 每次运行只能以概率 <span class="math notranslate nohighlight">\(\epsilon\)</span> 成功输出合法证明，也就是说 <span class="math notranslate nohighlight">\(P^*\)</span> 并不能每次都一定成功，此外，<span class="math notranslate nohighlight">\(P^*\)</span> 的运行时间假设在多项式时间内，这也就限制了 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 不可能无限地调用 <span class="math notranslate nohighlight">\(P^*\)</span>，因为考虑算法的可行性，<span class="math notranslate nohighlight">\(E_{rw}\)</span> 的总运行时间也需要在多项式时间内。</p>
+<p>所以，要顺利完成第二步，我们必须证明以下两点</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> 是一个多项式时间算法</p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> 同样以一个不可忽略的概率成功输出 <span class="math notranslate nohighlight">\(w\)</span></p></li>
+</ol>
+</section>
+<section id="knowledge-soundness-special-soundness">
+<h2>从 Knowledge Soundness 到 <strong>Special Soundness</strong><a class="headerlink" href="#knowledge-soundness-special-soundness" title="Link to this heading">#</a></h2>
+<p>论文 [Cra96] 对 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 算法的性质给出了相当优雅的证明，由于其过程比较长，且和之后要介绍的 [LPS24] 内容类似，我们不在这此描述。总之，上述过程被归纳为一个引理：</p>
+<p>【Rewinding Lemma】</p>
+<p>对于一个3-步交互式证明 <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>，如果存在多项式时间算法 <span class="math notranslate nohighlight">\(P^*\)</span> 能够以一个不可忽略的概率伪造合法 transcript，那么一定存在一个多项式时间的提取器算法 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 通过倒带 <span class="math notranslate nohighlight">\(P^*\)</span> 得到另一个合法的 transcript（满足 <span class="math notranslate nohighlight">\(R\)</span> 相同，<span class="math notranslate nohighlight">\(c\)</span> 不同），<span class="math notranslate nohighlight">\(E_{rw}\)</span> 成功的概率同样是不可忽略的。</p>
+<p>Rewinding Lemma 并不局限于 Schnorr-协议，实际上对任何3-步 Sigma 协议，提取器算法 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 都可以倒带得到额外 <span class="math notranslate nohighlight">\(k-1\)</span> 个（多项式数量）合法的 transcripts。</p>
+<p>因此，Rewinding Lemma 实际上为构建具体协议的研究者们简化了证明 Knowledge Soundness 的过程，对于基于 Sigma 模型下设计的协议，我们通常只需要在安全证明中给出子算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 的构造即可。为了形式化描述这一过程，密码学家们提出了一个新的定义，即 Special Soundness</p>
+<p><strong>定义3：Special Soundness</strong></p>
+<p>对于一个3-步交互式证明 <span class="math notranslate nohighlight">\(\Pi = (P, V)\)</span>，如果存在一个多项式时间提取算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span>，给定其输入为 <span class="math notranslate nohighlight">\(x\)</span> 和两个合法的 transcript，记作 <span class="math notranslate nohighlight">\((R,c_1,z_1), (R,c_2,z_2)\)</span>，能够输出秘密值 <span class="math notranslate nohighlight">\(w\)</span>，那么我们称 <span class="math notranslate nohighlight">\(\Pi\)</span> 满足Special Soundness。</p>
+<p>【注】上面的定义也称作 2-special soundness，如果提取算法 <span class="math notranslate nohighlight">\(E\)</span> 的输入包含 <span class="math notranslate nohighlight">\(k\)</span> 个 transcripts，那么称作 <span class="math notranslate nohighlight">\(k\)</span>-special soundness</p>
+<p>随着交互式证明的发展，研究者们也并不局限于只构造3-步协议，为了满足这一需求，Special Soundness 被进一步拓展到 <span class="math notranslate nohighlight">\((2n-1)\)</span>-步交互式证明上，即，对于第 <span class="math notranslate nohighlight">\(j\in[1,n]\)</span> 轮，提取器算法 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 需要通过倒带 <span class="math notranslate nohighlight">\(P^*\)</span> 获取额外 <span class="math notranslate nohighlight">\(k_j-1\)</span> 个 transcripts，最终子算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 的输入不再是一个简单的 transcript 向量，而是一个高度为 <span class="math notranslate nohighlight">\(n\)</span> 的 transcript 树，记作 <span class="math notranslate nohighlight">\((k_1,...,k_n)-\)</span>transcript tree。相应的该协议满足的性质被称为 <span class="math notranslate nohighlight">\((k_1,...,k_n)-\)</span>special soundness。关于这部分的具体定义，感兴趣的读者可以去阅读 [BCC+16] 和 [ACK21]，本篇介绍的 [LPS24] 只用到了 <span class="math notranslate nohighlight">\(k\)</span>-special soundness。</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="lps24-kzg10-with-special-soundness">
+<h1>LPS24: KZG10 with Special Soundness<a class="headerlink" href="#lps24-kzg10-with-special-soundness" title="Link to this heading">#</a></h1>
+<p>我们在之前的文章中已经介绍了 KZG10 多项式承诺方案的基本流程，在 [LPS24] 中，作者首先将 KZG10 方案写成符合交互式证明的形式，其中证明者拥有公共输入 <span class="math notranslate nohighlight">\(ck = (p, [(\sigma^i)_{i=0}^n]_1, [1,\sigma]_2)\)</span>（即参数 <span class="math notranslate nohighlight">\(p \leftarrow Pgen(1^{\lambda})\)</span> 和 <span class="math notranslate nohighlight">\(SRS\)</span>），秘密输入为 <span class="math notranslate nohighlight">\(f(X)\)</span> 多项式，验证者只拥有公开输入 <span class="math notranslate nohighlight">\(ck\)</span>，两方进行如下交互协议：</p>
+<ul class="simple">
+<li><p>证明者计算多项式承诺 <span class="math notranslate nohighlight">\(C = [f(\sigma)]_1\)</span> 并发送给验证者</p></li>
+<li><p>验证者选择随机 <span class="math notranslate nohighlight">\(r\)</span> 作为求值点发送给证明者</p></li>
+<li><p>证明者计算并发送取值 <span class="math notranslate nohighlight">\(v = f(r)\)</span>，证明 <span class="math notranslate nohighlight">\(\pi = [q(\sigma)]_1\)</span> ，其中 <span class="math notranslate nohighlight">\(q(X) = (f(X)-v)/(X-r)\)</span></p></li>
+</ul>
+<p>验证者根据交互数据检查 <span class="math notranslate nohighlight">\(e(C-[v]_1, [1]_2) \overset{?}{=} e(\pi, [\sigma-r]_2)\)</span></p>
+<p>类似的我们将双方之间的交互消息集合称作 transcript，如果某个transcript <span class="math notranslate nohighlight">\(tr\)</span> 能够通过验证，则称它是 accepting。进一步地，如果一个包含了 <span class="math notranslate nohighlight">\(n+1\)</span> 个 transcripts 的向量 <span class="math notranslate nohighlight">\(\vec{tr}\)</span> 满足下边两个要求，则它是 admissible 的：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{tr}\)</span> 中的所有 transcript 包含的多项式承诺 <span class="math notranslate nohighlight">\(C\)</span> 相同</p></li>
+<li><p>对任意两个 transcript <span class="math notranslate nohighlight">\(tr_i, tr_j, i,j\in [0,n]\)</span>，他们的求值点不相同，即 <span class="math notranslate nohighlight">\(r_i \neq r_j\)</span></p></li>
+</ol>
+<p>除了定义交互形式的 KZG10 方案，[LPS24] 的作者还提出了一种新的困难问题假设，名为 Adaptive Rational Strong Diffie-Hellman 假设，简称 ARSDH 假设，其定义如下</p>
+<p>【<span class="math notranslate nohighlight">\((n+1)\)</span>-ARSDH 假设】</p>
+<p>如果对于任何多项式时间敌手算法 <span class="math notranslate nohighlight">\(A\)</span>，给定参数 <span class="math notranslate nohighlight">\(p \leftarrow Pgen(1^{\lambda})\)</span>，由随机值 <span class="math notranslate nohighlight">\(\sigma\)</span> 生成的 SRS，<span class="math notranslate nohighlight">\(([(\sigma^i)_{i=0}^n]_1, [1,\sigma]_2)\)</span>，要求 <span class="math notranslate nohighlight">\(A\)</span> 输出一对 <span class="math notranslate nohighlight">\([g]_1, [\varphi]_1\)</span>，以及一个 <span class="math notranslate nohighlight">\(n+1\)</span> 大小的集合 <span class="math notranslate nohighlight">\(S\)</span>，满足如下关系：</p>
+<div class="math notranslate nohighlight">
+\[
+[g]_1 \neq [0]_1 \wedge e([g]_1, [1]_2) = e([\varphi]_1, [Z_S(\sigma)]_2)
+\]</div>
+<p>如果 <span class="math notranslate nohighlight">\(A\)</span> 成功的概率是可以忽略的，那么称 <span class="math notranslate nohighlight">\((n+1)\)</span>-ARSDH 假设对于双线性群参数生成算法 <span class="math notranslate nohighlight">\(p \leftarrow Pgen(1^{\lambda})\)</span>成立。</p>
+<p>ARSDH 是对一个已知的假设 RSDH 的放宽，RSDH 中要求 <span class="math notranslate nohighlight">\(A\)</span> 不能够自行选择集合 <span class="math notranslate nohighlight">\(S\)</span>。此外，[LPS24] 中还证明了 <span class="math notranslate nohighlight">\((n+1)\)</span>-ARSDH 能够推出 <span class="math notranslate nohighlight">\((n+1)\)</span>-SDH 假设（ARSDH implies SDH），即如果SDH 可以被破解，那么 ARSDH 也能够被破解。因为 SDH 能够推出 KZG10 的 evaluation binding 性质，所以我们得到如下结论</p>
+<div class="math notranslate nohighlight">
+\[
+(n+1)\text{-ARSDH} \rightarrow (n+1)\text{-SDH} \rightarrow \text{KZG10's binding}
+\]</div>
+<p>预备知识已经介绍完毕，接下来，我们按照前文介绍的 Schnorr 协议的证明思路，首先给出基于 transcripts 的提取器算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 的构造，即证明 KZG 满足 special soundness，然后证明 rewinding lemma。</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="special-soundness-of-kzg">
+<h1>Special Soundness of KZG<a class="headerlink" href="#special-soundness-of-kzg" title="Link to this heading">#</a></h1>
+<p>首先给出定义：</p>
+<p>对于一个多项式承诺方案 <span class="math notranslate nohighlight">\(PC\)</span>，如果存在一个多项式时间提取算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span>，给定其输入为 <span class="math notranslate nohighlight">\(ck\)</span> 和一个长度为 <span class="math notranslate nohighlight">\(n+1\)</span> 的 transcript 向量 <span class="math notranslate nohighlight">\(\vec{tr}\)</span>，满足</p>
+<ol class="arabic simple">
+<li><p>任意 <span class="math notranslate nohighlight">\(tr_j \in \vec{tr}\)</span> 满足 accepting（验证通过）</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{tr}\)</span> 满足 admissible（<span class="math notranslate nohighlight">\(C\)</span> 相同， <span class="math notranslate nohighlight">\(r\)</span> 不同）</p></li>
+</ol>
+<p><span class="math notranslate nohighlight">\(E\)</span> 能够输出秘密值 <span class="math notranslate nohighlight">\(f(X)\)</span>，满足 <span class="math notranslate nohighlight">\(C = \mathrm{Com}(ck; f) \wedge f(r_j) = v_j, \forall j \in [0,n]\)</span>，那么我们称 <span class="math notranslate nohighlight">\(PC\)</span> 满足 <span class="math notranslate nohighlight">\((n+1)\)</span>-Special Soundness</p>
+<p>显然，设计 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 算法的思路是，尝试 <span class="math notranslate nohighlight">\(\vec{tr}\)</span> 中提取出一个多项式 <span class="math notranslate nohighlight">\(f'(X)\)</span>，且 <span class="math notranslate nohighlight">\(f'(X)\)</span> 要么是一个合法的秘密值，要么是一个破解 <span class="math notranslate nohighlight">\((n+1)\text{-ARSDH}\)</span> 假设的实例。</p>
+<p>我们不妨将每个 <span class="math notranslate nohighlight">\(tr_j\)</span> 对应的验证关系写出来：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+e({\color{red} C-[v_0]_1}, [1]_2) = e({\color{blue}\pi_0}, [\sigma-r_0]_2) \\ \vdots \\ e({\color{red}C-[v_n]_1}, [1]_2) = e({\color{blue}\pi_n}, [\sigma-r_n]_2)
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(I = [0,n]\)</span>，<span class="math notranslate nohighlight">\(L_0(X),\ldots,L_n(X)\)</span> 是在集合 <span class="math notranslate nohighlight">\(I\)</span> 上对取值 <span class="math notranslate nohighlight">\(S=\{v_i\}_{i\in I}\)</span> 插值的 Lagrange 多项式，<span class="math notranslate nohighlight">\(L_j(X)\)</span> 的表达式为</p>
+<div class="math notranslate nohighlight">
+\[
+\color{purple} L_j(X) = \frac{\prod_{i\in I/\{j\}} (X-r_i)}{\prod_{i\in I/\{j\}} (r_j-r_i)}
+\]</div>
+<p>现在，将每个验证关系等式两边同时乘上 Lagrange 多项式在 <span class="math notranslate nohighlight">\(\sigma\)</span> 上的取值，例如第 <span class="math notranslate nohighlight">\(j\in[0,n]\)</span> 个等式为</p>
+<div class="math notranslate nohighlight">
+\[
+e({\color{red}C-[v_j]_1}, [1]_2)\cdot {\color{purple}L_j(\sigma)} = e({\color{blue}\pi_j}, [\sigma-r_j]_2) \cdot {\color{purple}L_j(\sigma)}
+\]</div>
+<p>并将所有 <span class="math notranslate nohighlight">\(n+1\)</span> 个等式相加，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+e(\sum_{j \in I}{\color{red}(C-[v_j]_1)}\cdot {\color{purple}L_j(\sigma)}, [1]_2) = e(\sum_{j \in I} {\color{blue}\pi_j} \cdot {\color{purple}L_j(\sigma)}, [\sigma-r_j]_2)
+\]</div>
+<p>令 <span class="math notranslate nohighlight">\(\sum_{j \in I} {\color{red} [v_j]_1} \cdot {\color{purple} L_j(\sigma)} = [{\color{purple} L(\sigma)}]_1\)</span>，左式为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+LHS = e({\color{red}C}-\sum_{j \in I}{\color{red} [v_j]_1}\cdot {\color{purple}L_j(\sigma)}, [1]_2)  \\ = e({\color{red}C}-{\color{purple}[L(\sigma)]_1}, [1]_2) 
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(\sum_{j\in I} \left( {\color{blue} \pi_j} / {\color{purple} \prod_{i\in I/\{j\}}(r_j -r_i)} \right) = {\color{blue} \varphi}\)</span>， 右式为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+RHS  = e(\sum_{j \in I} {\color{blue}\pi_j} \cdot {\color{purple}L_j(\sigma)}, [\sigma-r_j]_2) \\ = e([\sum_{j \in I} {\color{blue}q_j(\sigma)} \cdot {\color{purple}\frac{\prod_{i\in I/\{j\}} (\sigma-r_i)}{\prod_{i\in I/\{j\}} (r_j-r_i)}}]_1, [\sigma-r_j]_2) \\ = e([\sum_{j\in I} \frac{\color{blue} q_j(\sigma)}{\color{purple} \prod_{i \in I/\{j\}}(r_j-r_i)}]_1, [Z_S(\sigma)]_2) \\ = e([{\color{blue} \varphi}]_1, [Z_S(\sigma)]_2)
+\end{split}\]</div>
+<p>最终得到等式</p>
+<div class="math notranslate nohighlight">
+\[
+LHS = e({\color{red}C}-{\color{purple}[L(\sigma)]_1}, [1]_2) = e([{\color{blue} \varphi}]_1, [Z_S(\sigma)]_2) = RHS
+\]</div>
+<p>基于该等式，提取算法 <span class="math notranslate nohighlight">\(E_{ss}\)</span> 首先从 <span class="math notranslate nohighlight">\(n+1\)</span> 个 transcripts 中获得 <span class="math notranslate nohighlight">\(v_0,\ldots,v_n\)</span>，并计算 <span class="math notranslate nohighlight">\({\color{purple} L(X)}\)</span> 以及 <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 = [\sum_{j\in I}v_j \cdot L_j(\sigma)]_1\)</span>。对比 <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 \overset{?}{=} {\color{red} C}\)</span>，并根据结果进行如下操作</p>
+<ul>
+<li><p>如果 <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 = {\color{red} C}\)</span>，<span class="math notranslate nohighlight">\(E_{ss}\)</span> 直接输出 <span class="math notranslate nohighlight">\({\color{purple} L(X)}\)</span> 作为秘密多项式，算法完成。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\([{\color{purple} L(\sigma)}]_1 \neq {\color{red} C}\)</span>，<span class="math notranslate nohighlight">\(E_{ss}\)</span> 利用 <span class="math notranslate nohighlight">\({\color{purple} L(X)}\)</span> 构造一个归约来破解 <span class="math notranslate nohighlight">\((n+1)\text{-ARSDH}\)</span> 假设：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(E_{ss}\)</span> 计算 <span class="math notranslate nohighlight">\({\color{red} [g]_1} = {\color{red} C}-[{\color{purple} L(\sigma)}]_1,\)</span> 并输出 <span class="math notranslate nohighlight">\({\color{red} [g]_1}, [{\color{blue} \varphi}]_1\)</span> 作为破解 <span class="math notranslate nohighlight">\((n+1)\text{-ARSDH}\)</span> 的实例</p></li>
+<li><p>显然，上述实例满足</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    e({\color{red} [g]_1}, [1]_2) = e([{\color{blue} \varphi}]_1, [Z_S(\sigma)]_2)
+    \]</div>
+</li>
+</ul>
+<p>证明完毕。</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="rewinding-lemma">
+<h1>Rewinding Lemma<a class="headerlink" href="#rewinding-lemma" title="Link to this heading">#</a></h1>
+<p>上述证明保证了 KZG10 满足 <span class="math notranslate nohighlight">\((n+1)\)</span>-special soundness，但要进一步保证 knowledge soundness，我们还需要证明 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 通过倒带获取 <span class="math notranslate nohighlight">\(n+1\)</span> 个满足的 transcripts 是可行的，即 rewinding lemma。</p>
+<p>具体来说，对于如下 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 算法，需要证明其再多项式时间内能够以不可忽略的概率成功</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> 随机选取 <span class="math notranslate nohighlight">\(r\)</span> 并调用 <span class="math notranslate nohighlight">\(P^*\)</span> 获得 <span class="math notranslate nohighlight">\(tr_0\)</span></p></li>
+<li><p>检查 <span class="math notranslate nohighlight">\(tr_0\)</span> 的合法性，如果合法，则继续；如果不合法，则回到第 1 步选择另一个 <span class="math notranslate nohighlight">\(r'\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> 运行循环算法，每一轮选取一个新的 <span class="math notranslate nohighlight">\(r\)</span>，并倒带 <span class="math notranslate nohighlight">\(P^*\)</span> 获得新的 transcript，终止条件为</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> 得到 <span class="math notranslate nohighlight">\((n+1)\)</span> 个符合要求的 transcripts（即满足 accepting 和 admissible）→ 算法成功</p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{rw}\)</span> 遍历了所有可能的 <span class="math notranslate nohighlight">\(r\)</span>，但仍没有得到 <span class="math notranslate nohighlight">\((n+1)\)</span> 个符合要求 transcripts → 算法失败</p></li>
+</ol>
+</li>
+</ol>
+<p>[LPS24] 论文中采取了和 [ACK21] 相同的证明思路，令 <span class="math notranslate nohighlight">\(H\)</span>  为一个布尔矩阵，其行索引为集合 <span class="math notranslate nohighlight">\(\{ \vec{r} = ( r_p, r_{ck}, r_A) \in \{ 0,1 \}^{poly(\lambda)} \}\)</span>，其中 <span class="math notranslate nohighlight">\(r_p, r_{ck},r_A\)</span> 分别是 <span class="math notranslate nohighlight">\(Pgen\)</span> 算法，<span class="math notranslate nohighlight">\(SRS\)</span> 和敌手使用的随机数。<span class="math notranslate nohighlight">\(H\)</span>  的列索引为挑战值空间 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>。当 <span class="math notranslate nohighlight">\(P^*\)</span> 在某个随机数设置 <span class="math notranslate nohighlight">\(\vec{r}\)</span> 下对挑战值 <span class="math notranslate nohighlight">\(r\)</span>  生成了合法的 transcript，我们便讲 <span class="math notranslate nohighlight">\(H\)</span>   中所对应的元素置为 1，即 <span class="math notranslate nohighlight">\(H[\vec{r}][r] = 1\)</span>。</p>
+<p>接下来，我们分别对 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 算法的成功概率和运行时间进行分析</p>
+<p>【概率分析】</p>
+<p>定义事件如下：</p>
+<ul class="simple">
+<li><p>事件 A：<span class="math notranslate nohighlight">\(tr_0\)</span> 验证通过</p></li>
+<li><p>事件 B：<span class="math notranslate nohighlight">\(\forall j \in [1,n]\)</span>，<span class="math notranslate nohighlight">\(tr_j\)</span> 验证通过</p></li>
+</ul>
+<p>那么 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 成功的概率计算即 <span class="math notranslate nohighlight">\(A \rightarrow B\)</span> 的概率，即</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Pr[A \rightarrow B] = Pr[A \wedge (A \rightarrow B)] + Pr[\neg{A} \wedge (A \rightarrow B)] \\ = Pr[A \wedge B] + Pr(\neg{A})
+\end{split}\]</div>
+<p>【注】：<span class="math notranslate nohighlight">\(A \rightarrow B\)</span> 的真值表为</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(A\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(B\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(A \rightarrow B\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>T</p></td>
+<td><p>T</p></td>
+<td><p>T</p></td>
+</tr>
+<tr class="row-odd"><td><p>T</p></td>
+<td><p>F</p></td>
+<td><p>F</p></td>
+</tr>
+<tr class="row-even"><td><p>F</p></td>
+<td><p>T</p></td>
+<td><p>T</p></td>
+</tr>
+<tr class="row-odd"><td><p>F</p></td>
+<td><p>F</p></td>
+<td><p>T</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>考虑概率 <span class="math notranslate nohighlight">\(Pr[A \wedge B]\)</span>， <span class="math notranslate nohighlight">\(A \wedge B\)</span> 事件发生当且仅当 <span class="math notranslate nohighlight">\(P^*\)</span> 在随机参数 <span class="math notranslate nohighlight">\(\vec{r}\)</span> 设置下输出合法 <span class="math notranslate nohighlight">\(tr_0\)</span>，且 <span class="math notranslate nohighlight">\(\vec{r}\)</span> 所在行 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 中至少有 <span class="math notranslate nohighlight">\(n+1\)</span> 个 “1” 元素。</p>
+<p><img alt="special sound.png" src="../../_images/special_sound.png" /></p>
+<p>不妨设 <span class="math notranslate nohighlight">\(R_j\)</span> 为 <span class="math notranslate nohighlight">\(H\)</span> 中所有包含 <span class="math notranslate nohighlight">\(j\)</span> 个 “1” 元素的行的数量，例如上图中 <span class="math notranslate nohighlight">\(R_2 = 3\)</span>，所有包含 <span class="math notranslate nohighlight">\(\ge n+1\)</span> 个 “1” 元素的行的数量可以计算为 <span class="math notranslate nohighlight">\(\sum_{j=n+1}^{|\mathbb{F}|} j \cdot R_j\)</span> ，概率 <span class="math notranslate nohighlight">\(Pr[A \wedge B]\)</span> 计算如下</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Pr[A \wedge B]=\frac{\sum_{j=n+1}^{|\mathbb{F}|} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|} \\ =\frac{\sum_{j=0}^{|\mathbb{F}|} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|} - \frac{\sum_{j=0}^{n} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|} \\= Pr[A] - \frac{\sum_{j=0}^{n} j \cdot R_j }{|\vec{r}|\cdot |\mathbb{F}|}
+\end{split}\]</div>
+<p>又因为 <span class="math notranslate nohighlight">\(\sum_{j=0}^{n} j \cdot R_j = \sum_{j=1}^{n} j \cdot R_j \leq \sum_{j=1}^{n} n \cdot R_j \leq n|\vec{r}|\)</span></p>
+<p>可以得到 <span class="math notranslate nohighlight">\(Pr[A \wedge B]\)</span> 的下界</p>
+<div class="math notranslate nohighlight">
+\[
+Pr[A \wedge B] \ge Pr[A] - \frac{n|\vec{r}|}{|\vec{r}||\mathbb{F}|} = Pr[A] - \frac{n}{|\mathbb{F}|} 
+\]</div>
+<p>最后得到 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 成功概率的下界</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+Pr[A \rightarrow B] = Pr[A \wedge B] + Pr(\neg{A}) \\ \ge Pr[A] - \frac{n}{|\mathbb{F}|} + Pr[\neg A]  \\ = 1-\frac{n}{|\mathbb{F}|}
+\end{split}\]</div>
+<p>【运行时间分析】</p>
+<p>对于 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 算法，可以认为它的运行时间主要与调用 <span class="math notranslate nohighlight">\(P^*\)</span> 算法的时间相关，又因为 <span class="math notranslate nohighlight">\(P^*\)</span> 是多项式时间算法，因此我们只需要计算 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 调用 <span class="math notranslate nohighlight">\(P^*\)</span> 算法的次数，记作 <span class="math notranslate nohighlight">\(Q\)</span>，就可以得出 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 算法时间复杂度为 <span class="math notranslate nohighlight">\(poly(\lambda)\cdot Q\)</span>。</p>
+<p>考虑 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 第 2 步中成功获得合法的 <span class="math notranslate nohighlight">\(tr_0\)</span>（即事件 <span class="math notranslate nohighlight">\(A\)</span> 发生），<span class="math notranslate nohighlight">\(E_{rw}\)</span> 继续运行第 3 步中的循环，由于在每一轮循环中 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 需要调用一次 <span class="math notranslate nohighlight">\(P^*\)</span> 算法，因此通过计算循环次数的期望即得到 <span class="math notranslate nohighlight">\(Q\)</span>。</p>
+<p>我们先单独讨论计算循环次数这个问题：给定一个随机参数 <span class="math notranslate nohighlight">\(\vec{r}\)</span>，假设 <span class="math notranslate nohighlight">\(H\)</span> 中对应行向量 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 包含 <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}|\)</span> 个 “1” 元素，<span class="math notranslate nohighlight">\(|\mathbb{F}|\)</span> 是向量 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 的长度。在已经选取 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 中某一个 “1” 元素的前提下（即 <span class="math notranslate nohighlight">\(tr_0\)</span>），求解<span class="math notranslate nohighlight">\(E_{rw}\)</span> 再从剩余 <span class="math notranslate nohighlight">\(|\mathbb{F}|-1\)</span> 项中选取出 <span class="math notranslate nohighlight">\(n\)</span> 个 “1” 元素的期望次数。</p>
+<p>要计算 <span class="math notranslate nohighlight">\(Q\)</span> 的期望，需要引入 Negative HyperGeometric distribution （NHG 分布）的概念</p>
+<p>**NHG 分布：**给定一个包含 <span class="math notranslate nohighlight">\(N\)</span> 个球的盲盒，其中有 <span class="math notranslate nohighlight">\(K\)</span> 个球被标记，要求每次只摸出一个球，且不放回，直到摸出 <span class="math notranslate nohighlight">\(k\leq K\)</span> 个被标记的球结束。将摸球结束时一共摸出的所有球的数量记作 <span class="math notranslate nohighlight">\(X\)</span>，<span class="math notranslate nohighlight">\(X\)</span> 的期望为 <span class="math notranslate nohighlight">\(E[NHG_{N,K,k}] = k(N+1)/(K+1)\)</span>。</p>
+<p>相应的，当 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 中包含的 “1” 元素大于 <span class="math notranslate nohighlight">\(n\)</span> 时，<span class="math notranslate nohighlight">\(Q\)</span> 符合 NHG 分布。假设每个 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 中包含 <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}|\)</span> 个 “1” 元素，我们可以计算 <span class="math notranslate nohighlight">\(Q\)</span> 的期望如下：</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 至少包含 <span class="math notranslate nohighlight">\(n+1\)</span>  个 “1” 元素，<span class="math notranslate nohighlight">\(E[Q|A \wedge \vec{r}] = E[NHG_{N,K,k}] + 1 = n/\delta_{\vec{r}} + 1\)</span>，其中 <span class="math notranslate nohighlight">\(N = \mathbb{F}-1, K = \delta_{\vec{r}}|\mathbb{F}|-1, k=n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 包含少于 <span class="math notranslate nohighlight">\(n+1\)</span>  个 “1” 元素，即 <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}| \leq n\)</span>，算法 <span class="math notranslate nohighlight">\(E_{rw}\)</span> 会不停执行循环直到遍历 <span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 中所有元素，显然 <span class="math notranslate nohighlight">\(E[Q|A \wedge \vec{r}] = |\mathbb{F}| \leq n/\delta_{\vec{r}}\)</span></p></li>
+</ul>
+<p>上面考虑的是事件 <span class="math notranslate nohighlight">\(A\)</span> 发生的情况下，由于对任意 <span class="math notranslate nohighlight">\(\vec{r}\)</span>，<span class="math notranslate nohighlight">\(H[\vec{r}]\)</span> 中包含 <span class="math notranslate nohighlight">\(\delta_{\vec{r}}|\mathbb{F}|\)</span> 个 “1” 元素，因此 <span class="math notranslate nohighlight">\(A\)</span> 发生的概率为 <span class="math notranslate nohighlight">\(Pr[A] = \delta_{\vec{r}}\)</span>，计算</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+E[Q|\vec{r}] = E[Q|A \wedge \vec{r}]\cdot Pr[A] + E[Q|\neg A \wedge \vec{r}]\cdot Pr[\neg A] \\ \leq \frac{n}{\delta_{\vec{r}}}\cdot \delta_{\vec{r}} + 1\cdot (1-\delta_{\vec{r}}) = n+1- \delta_{\vec{r}} \leq n+1
+\end{split}\]</div>
+<p>对于所有 <span class="math notranslate nohighlight">\(\vec{r} \in \{ 0,1 \}^{poly(\lambda)}\)</span>，计算 <span class="math notranslate nohighlight">\(Q\)</span> 的期望如下</p>
+<div class="math notranslate nohighlight">
+\[
+E[Q] = \sum_{\vec{r}} E[Q|\vec{r}]\cdot Pr[\vec{r}] \leq \sum_{1}^{|\vec{r}|} \frac{n+1}{|\vec{r}|} = n+1
+\]</div>
+<p>证明完毕。</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>参考文献<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>[CHM+19] Chiesa, Alessandro, Yuncong Hu, Mary Maller, et al. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p>
+<p>[MBK+19] Maller Mary, Sean Bowe, Markulf Kohlweiss, et al. “Sonic: Zero-Knowledge SNARKs from Linear-Size Universal and Updatable Structured Reference Strings.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/099">https://eprint.iacr.org/2019/099</a></p>
+<p>[GWC19] Ariel Gabizon, Zachary J. Williamson, Oana Ciobotaru. “PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/953">https://eprint.iacr.org/2019/953</a></p>
+<p>[LPS24] Helger Lipmaa, Roberto Parisella, Janno Siim. “Constant-Size zk-SNARKs in ROM from Falsifiable Assumptions.” Cryptology ePrint Archive (2024). <a class="reference external" href="https://eprint.iacr.org/2024/173">https://eprint.iacr.org/2024/173</a></p>
+<p>[ACK21] <em>Thomas Attema, Ronald Cramer, and Lisa Kohl</em> “A Compressed Sigma-Protocol Theory for Lattices” Cryptology ePrint Archive (2021). <a class="reference external" href="https://eprint.iacr.org/2021/307">https://eprint.iacr.org/2021/307</a></p>
+<p>[Sch90] Claus-Peter Schnorr. “Efficient identification and signatures for smart cards.” In Gilles Brassard, editor, CRYPTO’89, volume 435 of LNCS, pages 239–252. Springer, Heidelberg, August 1990.</p>
+<p>[Cra96] Ronald Cramer. “Modular Design of Secure yet Practical Cryptographic Protocols”. PhD thesis, CWI and University of Amsterdam, 1996.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./kzg10/kzgnotes"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">KZG Extractability based on ROM</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness">Special Soundness</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-proofs-and-knowledge-soundness"><strong>Interactive Proofs and Knowledge Soundness</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#knowledge-soundness-schnorr"><strong>Knowledge Soundness 证明（以 Schnorr 协议为例）</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#knowledge-soundness-special-soundness">从 Knowledge Soundness 到 <strong>Special Soundness</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#lps24-kzg10-with-special-soundness">LPS24: KZG10 with Special Soundness</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#special-soundness-of-kzg">Special Soundness of KZG</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#rewinding-lemma">Rewinding Lemma</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">参考文献</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

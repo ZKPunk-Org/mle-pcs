@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>多项式除法与 Ruffini 法则 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'math/mle_div';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fmath/mle_div.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/math/mle_div.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>多项式除法与 Ruffini 法则</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">一元多项式除法与 Ruffini 法则</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle">MLE 多项式除法</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ruffini">
+<h1>多项式除法与 Ruffini 法则<a class="headerlink" href="#ruffini" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>一元多项式除法与 Ruffini 法则<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>根据 Ruffini 法则，一元多项式除法和多项式求值之间具有紧密的关系。</p>
+<p>如果我们利用多项式长除法来计算 <span class="math notranslate nohighlight">\(f(X)/(X-d)\)</span>，那么我们可以得到一个商多项式 <span class="math notranslate nohighlight">\(q(X)\)</span> 和一个余数 <span class="math notranslate nohighlight">\(r\)</span>，满足：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = (X-d)\cdot q(X) + r
+\]</div>
+<p>这是大家熟知的多项式余数定理，即余数恰好等于 <span class="math notranslate nohighlight">\(f(d)\)</span>。所以当 <span class="math notranslate nohighlight">\(f(X)\)</span> 减去余数之后，就可以被 <span class="math notranslate nohighlight">\((X-d)\)</span> 整除。那么商多项式 <span class="math notranslate nohighlight">\(q(X)\)</span> 和 <span class="math notranslate nohighlight">\(f(d)\)</span> 之间的是否也有一定的联系呢？
+先上一个结论：商多项式 <span class="math notranslate nohighlight">\(q(X)\)</span> 恰好是 <span class="math notranslate nohighlight">\(f(X)\)</span> 在 <span class="math notranslate nohighlight">\(X=d\)</span> 处求值过程中，所产生的中间计算结果。</p>
+<p>我们用系数形式来表示 <span class="math notranslate nohighlight">\(f(X)\)</span>，那么</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = a_0 + a_1X + a_2X^2 + \ldots + a_nX^n
+\]</div>
+<p>变化下形式可得：</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = a_0 + X(a_1 + X(a_2 + \ldots + X(a_{n-1} + Xa_n)\ldots)
+\]</div>
+<p>如果要计算「多项式求值」 <span class="math notranslate nohighlight">\(f(d)\)</span>, 我们从左到右依次代入 <span class="math notranslate nohighlight">\(X=d\)</span> 到上面等式，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+    q_{n-1} &amp;= d\cdot 0 + a_n\\
+    q_{n-2} &amp;= d\cdot q_{n-1} + a_{n-1} \\
+    \vdots &amp; \vdots \\
+    q_1     &amp;= d\cdot q_2 + a_2 \\
+    q_0     &amp;= d\cdot q_1 + a_1 \\
+    v       &amp;= d\cdot q_0 + a_0 \\
+\end{split}
+\end{split}\]</div>
+<p>而 <span class="math notranslate nohighlight">\((q_0, q_1, \ldots, q_{n-1})\)</span> 正是商多项式 <span class="math notranslate nohighlight">\(q(X)\)</span> 的系数。换句话说，多项式的线性除法过程，其实正是多项式求值过程。</p>
+<p>我们看一个简单例子，比如 <span class="math notranslate nohighlight">\(f(X) = 5 + 3X + 2X^2 + X^3\)</span>，我们要计算 <span class="math notranslate nohighlight">\(f(-2)\)</span>，即等同于计算 <span class="math notranslate nohighlight">\(f(X)/(X+2)\)</span>，计算过程如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{lll}
+    q_2 &amp;= (-2)\cdot 0 + 1 &amp;= 1\\
+    q_1 &amp;= (-2)\cdot 1 + 2 &amp;= 0\\
+    q_0 &amp;= (-2)\cdot 0 + 3 &amp;= 3\\
+    v   &amp; = (-2)\cdot 3 + 5 &amp;= -1\\
+\end{array}
+\end{split}\]</div>
+<p>我们于是得到最后一行的结果 <span class="math notranslate nohighlight">\(f(-2) = -1\)</span>，并且在计算过程中附带得到了商多项式  <span class="math notranslate nohighlight">\(q(X) = 3 + X^2\)</span>。</p>
+<p>我们可以写一个简单的循环来实现这个计算过程：</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">fn</span> <span class="nf">div_poly</span><span class="p">(</span><span class="n">f</span>: <span class="kp">&amp;</span><span class="p">[</span><span class="n">Scalar</span><span class="p">],</span><span class="w"> </span><span class="n">d</span>: <span class="nc">Scalar</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="p">(</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Scalar</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">Scalar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">rem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Scalar</span>::<span class="n">zero</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">quo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span>::<span class="n">new</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">coeffs</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">rev</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rem</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="n">quo</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">rem</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">(</span><span class="n">quo</span><span class="p">,</span><span class="w"> </span><span class="n">rem</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其实，Ruffini 法则不只针对线性多项式除法适用，也适用于除数多项式时任意次数的除法。这种一般化的算法被称为 Synthetic Division。</p>
+<p>以上，我们一直在讨论一元多项式的除法，那么 MLE 的除法呢？幸运的是，Ruffini 法则同样适用于 MLE 多项式除法，MLE 多项式除法的计算过程等同于 MLE 多项式求值过程。</p>
+</section>
+<section id="mle">
+<h2>MLE 多项式除法<a class="headerlink" href="#mle" title="Link to this heading">#</a></h2>
+<p>先热身一下，当我们用一个 MLE 除以一个一元线性多项式时，我们可以把 MLE 视为一个一元多项式，其它变元被看成是互相无法计算的常数。这样我们可以用一元多项式除法来快速得到商多项式（<span class="math notranslate nohighlight">\(n-1\)</span> 元 MLE）和余数。</p>
+<p>比如</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, X_2) = 2\cdot X_0X_2 + 3\cdot X_1 + 4\cdot X_0
+\]</div>
+<p>除法如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{2\cdot X_0X_2 + 3\cdot X_1 + 4\cdot X_0}{(X_2-a)} = \frac{(2\cdot X_0)X_2 + (3\cdot X_1 + 4\cdot X_0)}{(X_2-a)} = 2\cdot X_0, 3X_1 + (4+ 2a)X_0
+\]</div>
+<p>其中余数为 <span class="math notranslate nohighlight">\(3X_1 + (4+ 2a)X_0\)</span>，商多项式也是一个 MLE 为 <span class="math notranslate nohighlight">\(2\cdot X_0\)</span>。那么接下来我们还可以对余数多项式继续做除法，这次我们除以 <span class="math notranslate nohighlight">\((X_1-b)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{3X_1 + (4+ 2a)X_0}{(X_1-b)} = 3, (4+ 2a)X_0 + 3b
+\]</div>
+<p>余数多项式为 <span class="math notranslate nohighlight">\((4+ 2a)X_0 + 3b\)</span>，商多项式为 <span class="math notranslate nohighlight">\(3\)</span>。最后，我们继续除法，除数多项式为 <span class="math notranslate nohighlight">\((X_0-c)\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{(4+ 2a)X_0 + 3b}{(X_0-c)} = 4+2a, 3b + (4+2a)c 
+\]</div>
+<p>余数为 <span class="math notranslate nohighlight">\(3b + (4+2a)c\)</span>，商多项式为 <span class="math notranslate nohighlight">\(4+2a\)</span>。</p>
+<p>至此，我们计算了三次完整的 MLE 多项式除法，分别除以 <span class="math notranslate nohighlight">\((X_2-a)\)</span>，<span class="math notranslate nohighlight">\((X_1-b)\)</span> 与 <span class="math notranslate nohighlight">\((X_0-c)\)</span>。得到了三个商多项式，和最后的余数。现看看最后的余数，它恰好等于 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{X})\)</span> 在 <span class="math notranslate nohighlight">\((c,b,a)\)</span> 处的取值。
+这完美符合 Ruffini 法则。</p>
+<div class="math notranslate nohighlight">
+\[
+r= 3b + (4+2a)c  = \tilde{f}(c, b, a)
+\]</div>
+<p>三个商多项式如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+    q_2(X_0,X_1) &amp;= 2\cdot X_0\\
+    q_1(X_0) &amp;= 3\\
+    q_0 &amp;= 4+2a\\
+\end{split}
+\end{split}\]</div>
+<p>不过计算多项式除法不是那么直观，那么接下来我们利用 Ruffini 法则来通过计算 MLE 求值，并且同时计算出商多项式，这个计算过程更加清晰。MLE 的计算过程可以看成是一个折叠的过程，对于每一个变元 <span class="math notranslate nohighlight">\(X_k\in\{X_{n-1},\ldots, X_0\}\)</span>，我们都可以把多项式看成一个一元线性多项式</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{X},X_k)=A + B\cdot X_k
+\]</div>
+<p>当我们把 <span class="math notranslate nohighlight">\(X_k = \alpha\)</span> 代入后，可以得到：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{X},X_k)=A + \alpha\cdot B
+\]</div>
+<p>如果我们把 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 用系数向量来表示，那么这个过程可以看作是关于 <span class="math notranslate nohighlight">\(\alpha\)</span> 因子的折叠。例如 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2) = 2\cdot X_0X_2 + 3\cdot X_1 + 4\cdot X_0\)</span>，那么它的系数向量为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{cccccccc}
+(&amp;0, &amp;4, &amp;3, &amp;0, &amp;0, &amp;2, &amp;0, &amp;0 &amp;) \\
+&amp;1, &amp;X_0, &amp;X_1, &amp;X_0X_1, &amp;X_2, &amp;X_0X_2, &amp;X_1X_2, &amp;X_0X_1X_2&amp; \\
+\end{array}
+\end{split}\]</div>
+<p>这些系数分别对应于第二排的单项式。接下来，假如要计算 <span class="math notranslate nohighlight">\(f(c, b, a)\)</span>，我们可以用一个 split-and-fold 的思想来完成计算过程。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(0,4,3,0) + a\cdot {\color{blue}(0,2,0,0)} &amp; = (0, 4+2a, 3, 0)\\    
+(0, 4+2a) + b\cdot {\color{blue}(3, 0)} &amp; = (3b, 4+2a)\\
+(3b) + c\cdot {\color{blue}(4+2a)} &amp; = 3b+ (4+2a)c\\    
+\end{split}
+\end{split}\]</div>
+<p>每一轮，我们都将向量对半拆成两半，把左边的一半加上右边一半乘以一个因子，这样递归三轮，我们会最终得到计算结果 <span class="math notranslate nohighlight">\(3b+ (4+2a)c\)</span>，这个结果也恰好等于前面的多项式除法计算的余数。我们前面提到过，根据 Ruffini 法则，商多项式应该是求值计算过程中的中间结果，那么这个折叠过程中，哪里能找到商多项式的踪迹呢？</p>
+<p>商多项式是蓝色标记的向量作为「系数向量」的 MLE 多项式，也就是每一轮 split-and-fold 过程中，右边的半个向量。我们来验证一下，第一行的商多项式是 <span class="math notranslate nohighlight">\(2\cdot X_0\)</span>，它是单项式 <span class="math notranslate nohighlight">\((1,X_0,X_1,X_0X_1)\)</span> 的系数，因此第一个商多项式为 <span class="math notranslate nohighlight">\(2X_0\)</span>；第二行商多项式是 <span class="math notranslate nohighlight">\((3,0)\)</span>，这是一个常数多项式；第三行的商多项式是 <span class="math notranslate nohighlight">\((4+2a)\)</span>，也是一个常数多项式。这与我们前面手动做除法得到的结果一模一样。</p>
+<blockquote>
+<div><p>TODO: q_k = f(… 1+u_k, …) - f(… u_k, …)</p>
+</div></blockquote>
+<p>不过，在 ZeroMorph 协议中，MLE 是用「点值形式」来表示，如果我们要用上面的方法来计算除法，则需要先将 MLE 从点值形式转换为系数形式。这个转换过程（类似一元多项式的FFT）的一般化算法的时间复杂度为 <span class="math notranslate nohighlight">\(O(N\log^2N)\)</span>，即 <span class="math notranslate nohighlight">\(O(2^n\cdot n^2)\)</span>。并且在计算得到商多项式之后，我们还要将 <span class="math notranslate nohighlight">\(n-1\)</span>个商多项式再通过逆向转换，从系数形式得到点值形式。这会引入不可忽略的转换开销。</p>
+<p>其实，我们可以利用 split-and-fold 的思想，直接在 MLE 的「点值形式」上进行求值计算，并且同时计算出商多项式，完全避免「点值形式」和「系数形式」的来回转换。</p>
+<p>我们看看 MLE 的点值形式上是如何计算求值的：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,\ldots, X_{n-2}, X_{n-1}) = \sum_{\vec{i}\in\{0,1\}^n} f_{\vec{i}} \cdot \tilde{eq}(\vec{i}, \vec{X})
+\]</div>
+<p>假设 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的点值形式为向量 <span class="math notranslate nohighlight">\((f_{000}, f_{100}, \ldots, f_{111})\)</span>，对应的 HyperCube 为 <span class="math notranslate nohighlight">\(\{0,1\}^3\)</span>。</p>
+<p>我们从右向左对 <span class="math notranslate nohighlight">\(X_{n-1},\ldots, X_0\)</span> 逐个代入对应的值，比如我们先代入 <span class="math notranslate nohighlight">\(X_{n-1}=u_{n-1}\)</span>，那么 <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_0,X_1,\ldots, X_{n-2})\)</span> 的点值式为</p>
+<div class="math notranslate nohighlight">
+\[
+(1-u_{n-1})\cdot(f_0, f_1, \ldots, f_{2^{n-2}-1}) +  u_k\cdot(f_{2^{n-2}}, f_{2^{n-2}+1}, \ldots, f_{2^{n-1}-1})
+\]</div>
+<p>这个计算过程也是一个 split-and-fold 的过程，可以一直递归下去，直到向量被折叠成一维。</p>
+<p>我们再次用前面的 MLE 多项式，<span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2) = 2\cdot X_0X_2 + 3\cdot X_1 + 4\cdot X_0\)</span>，它的点值形式为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{cccccccc}
+(&amp;0, &amp;4, &amp;3, &amp;7, &amp;0, &amp;6, &amp;3, &amp;9 &amp;) \\
+&amp;f_{000}, &amp;f_{100}, &amp;f_{010}, &amp;f_{110}, &amp;f_{001}, &amp;f_{101}, &amp;f_{011}, &amp;f_{111}&amp; \\
+\end{array}
+\end{split}\]</div>
+<p>比如，我们代入 <span class="math notranslate nohighlight">\((X_0=1,X_1=0,X_2=1)\)</span>，那么 <span class="math notranslate nohighlight">\(\tilde{f}(1, 0, 1)=2+4=6\)</span> 正好对应点值向量的第 <span class="math notranslate nohighlight">\(f_{101}\)</span> 号元素。</p>
+<p>下面，我们代入 <span class="math notranslate nohighlight">\((X_0=c,X_1=b,X_2=a)\)</span>，用 split-and-fold 的方式完成求值过程的计算：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(1-a)\cdot(0,4,3,7) + a\cdot (0,6,3,9) &amp; = (0, 4+2a, 3, 7+2a)\\    
+(1-b)\cdot(0, 4+2a) + b\cdot (3, 7+2a) &amp; = (3b, (1-b)(4+2a)+b(7+2a)) = (3b, 4+2a+3b)\\
+(1-c)\cdot(3b) + c\cdot (4+2a+3b) &amp; =  3b - 3bc +4c+2ac + 3bc = 3b+ (4+2a)c\\    
+\end{split}
+\end{split}\]</div>
+<p>不出意料，最终的结果仍然是 <span class="math notranslate nohighlight">\(3b+ (4+2a)c\)</span>，不过这次我们不太容易在上面的计算过程中找到商多项式。</p>
+<p>每一行的商多项式是右边向量减去左边向量，我们依次看看每一行：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+q_2(X_0,X_1): &amp; (0, 6, 3, 9) - (0, 4, 3, 7) = (0, 2, 0, 2)\\
+q_1(X_0):     &amp; (3, 7+2a) - (0, 4+2a) = (3, 3)\\
+q_0:          &amp; (4+2a+3b) - (3b) = 4+2a\\
+\end{split}
+\end{split}\]</div>
+<p>记住，这是商多项式的点值形式，我们可以通过多项式插值，把它们转换成「系数形式」，并且和前面的商多项式做比较。</p>
+<p>还有一种方法，是我们前面描述过的，将一个低维的 HyperCube 映射到一个高维的 HyperCube，实际上是低维 Cube 的重复， 因此我们看到 <span class="math notranslate nohighlight">\(q_2(X_0,X_1)\)</span> 的点值形式是 <span class="math notranslate nohighlight">\((0, 2, 0, 2)\)</span>，这正好是一个 2 维 HyperCube 的重复，表示 <span class="math notranslate nohighlight">\(X_1\)</span> 这个变元的相关系数均为零，所以我们可以快速得到 <span class="math notranslate nohighlight">\(q_2(X_0,X_1) = 2X_0\)</span>。同样，<span class="math notranslate nohighlight">\(q_1(X_0)\)</span> 的点值形式是 <span class="math notranslate nohighlight">\((3,3)\)</span> 也是重复的模式，说明含有 <span class="math notranslate nohighlight">\(X_0\)</span> 变元的单项式系数均为零， 因此 <span class="math notranslate nohighlight">\(q_1(X_0) = 3\)</span>，最后加上 <span class="math notranslate nohighlight">\(q_0() = 4+2a\)</span>，它们和前面通过系数形式计算得到的商多项式是完全一致的。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./math"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">一元多项式除法与 Ruffini 法则</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mle">MLE 多项式除法</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,2073 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>[BBHR18] FRI 论文 soundness 解析 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/BBHR18-FRI.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="[BCIKS20] Proximity Gaps 论文 soundness 解析" href="BCIKS20-proximity-gaps.zh.html" />
+    <link rel="prev" title="Basefold 笔记：IOPP 可靠性分析" href="../basefold/basefold-05.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/BBHR18-FRI.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/BBHR18-FRI.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>[BBHR18] FRI 论文 soundness 解析</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">首要问题</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri">FRI 性质</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">FRI 协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">定义和记号</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">COMMIT 阶段</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query">QUERY 阶段</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">FRI 协议的主要性质</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-wise">Block-wise 距离测度</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">定理 1 完备性证明</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">命题 1 的引入</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">引理 1 的证明</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">定理 1 Soundness 证明分析</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-consistency">round consistency  与 失真集</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">soundness 证明思路</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lemma-4">唯一解码半径 —— Lemma 4 的证明</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lemma-3">超过唯一解码半径 —— Lemma 3 的证明</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">参考文献</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bbhr18-fri-soundness">
+<h1>[BBHR18] FRI 论文 soundness 解析<a class="headerlink" href="#bbhr18-fri-soundness" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>本篇文章主要讲解 Eli Ben-Sasson 等人在 2018 年发表的论文 [BBHR18b] ，重点放在对 FRI
+协议的 completeness 和 soundness 证明上。他们在这篇论文中针对 Reed-Solomon (RS) 编码提出了一种新的 IOPP (Interactive Oracle Proof of Proximity, IOPP)，称之为 FRI (Fast RS IOPP, FRI)。随后，在 [BBHR18a] 中使用 FRI 协议构建了一个实用的 ZK 系统，即我们熟知的 STARK。</p>
+<section id="id1">
+<h2>首要问题<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>对于在有限域 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中的求值 (evaluation) 集合 <span class="math notranslate nohighlight">\(S\)</span> ，假设 <span class="math notranslate nohighlight">\(S\)</span> 中的元素个数为 <span class="math notranslate nohighlight">\(N\)</span> ，给定一个码率参数 <span class="math notranslate nohighlight">\(\rho \in (0,1]\)</span> ，编码 <span class="math notranslate nohighlight">\(\text{RS}[\mathbb{F},S,\rho]\)</span> 表示的是所有函数 <span class="math notranslate nohighlight">\(f: S \rightarrow \mathbb{F}\)</span> 的集合，其中 <span class="math notranslate nohighlight">\(f\)</span> 是次数 <span class="math notranslate nohighlight">\(d &lt; \rho N\)</span> 的多项式的求值 (evaluations)，即存在次数 <span class="math notranslate nohighlight">\(d &lt; \rho N\)</span> 的多项式 <span class="math notranslate nohighlight">\(\hat{f}\)</span> 使得 <span class="math notranslate nohighlight">\(f\)</span> 与 <span class="math notranslate nohighlight">\(\hat{f}\)</span> 在 <span class="math notranslate nohighlight">\(S\)</span> 上的值是一致的。</p>
+<p>论文主要关注的就是 <em>RS proximity problem</em>：假设我们能获得关于函数 <span class="math notranslate nohighlight">\(f: S \rightarrow \mathbb{F}\)</span> 的 oracle ，需要 Verifier 用较少的查询复杂度，同时有很高的把握能辨别出 <span class="math notranslate nohighlight">\(f\)</span> 属于下面哪一种情况：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f \in \text{RS}[\mathbb{F},S,\rho]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta(f, \text{RS}[\mathbb{F},S,\rho]) &gt; \delta\)</span></p></li>
+</ol>
+<p>也就是要么 <span class="math notranslate nohighlight">\(f\)</span> 是 RS 编码 <span class="math notranslate nohighlight">\(\text{RS}[\mathbb{F},S,\rho]\)</span>  中的一个码字，要么距离所有 <span class="math notranslate nohighlight">\(\text{RS}[\mathbb{F},S,\rho]\)</span> 中的码字的相对 Hamming 距离都大于接近参数 <span class="math notranslate nohighlight">\(\delta\)</span> 。一个自然的想法是 verifier 可以轮讯 <span class="math notranslate nohighlight">\(d + 1\)</span> 次，然后判断 <span class="math notranslate nohighlight">\(f\)</span> 属于上述哪一种情况，如果属于第一种，则接受，如果属于第二种，则拒绝。此时的轮讯复杂度为 <span class="math notranslate nohighlight">\(d + 1 = \rho N\)</span> 。在计算 Testing 方法的复杂度时，没有额外的信息提供给 verifier ，那么说 prover 尝试让 verifier 相信 <span class="math notranslate nohighlight">\(f \in \text{RS}[\mathbb{F}, S,\rho]\)</span> 所消耗的计算复杂度为 <span class="math notranslate nohighlight">\(0\)</span> ，交互的轮数为 <span class="math notranslate nohighlight">\(0\)</span> ，以及产生的证明长度为 <span class="math notranslate nohighlight">\(0\)</span> 。对比此方法 (Testing, [RS92]) 与FRI 的复杂度，如下表所示([BBHR18b])。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>prover 计算复杂度</p></th>
+<th class="head"><p>证明长度</p></th>
+<th class="head"><p>verifier计算复杂度</p></th>
+<th class="head"><p>查询复杂度</p></th>
+<th class="head"><p>轮询复杂度</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Testing [RS92]</p></td>
+<td><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\rho N \cdot \log^{O(1)}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\rho N\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>FRI [BBHR18b]</p></td>
+<td><p><span class="math notranslate nohighlight">\(&lt;6 \cdot N\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(&lt;\frac{N}{3}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\le 21 \cdot \log N\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(2 \log N\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{\log N}{2}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可以看出，FRI 中 prover 的计算复杂度是严格线性的并且 verfier 的计算复杂度是严格对数的，而查询复杂度是对数级别的([BBHR18b])。</p>
+</section>
+<section id="fri">
+<h2>FRI 性质<a class="headerlink" href="#fri" title="Link to this heading">#</a></h2>
+<p>上文提到 FRI 是一种 IOPP，下面给出 IOPP 的定义。</p>
+<p><strong>Definition 1</strong> [BBHR18b, Definition 1.1] (Interactive Oracle Proof of Proximity (IOPP)). An <span class="math notranslate nohighlight">\(\textbf{r}\)</span>-round Interactive Oracle Proof of Proximity (IOPP) <span class="math notranslate nohighlight">\(\textbf{S} = (\text{P}, \text{V})\)</span> is a (<span class="math notranslate nohighlight">\(r + 1\)</span>)-round IOP. We say <span class="math notranslate nohighlight">\(\textbf{S}\)</span> is an (<span class="math notranslate nohighlight">\(\textbf{r}\)</span>-round) IOPP for the error correcting code <span class="math notranslate nohighlight">\(C= \{f:S \rightarrow \Sigma\}\)</span> with soundness <span class="math notranslate nohighlight">\(\textbf{s}^{-}: (0,1] \rightarrow [0,1]\)</span> with respect to distance measure <span class="math notranslate nohighlight">\(\Delta\)</span> , if the following conditions hold:</p>
+<ul class="simple">
+<li><p><strong>First message format:</strong> the first prover message, denote <span class="math notranslate nohighlight">\(f^{(0)}\)</span> , is a purported codeword of <span class="math notranslate nohighlight">\(C\)</span> , i.e., <span class="math notranslate nohighlight">\(f^{(0)}: S \rightarrow \Sigma\)</span></p></li>
+<li><p><strong>Completeness:</strong> <span class="math notranslate nohighlight">\(\Pr[\left \langle \text{P} \leftrightarrow \text{V} \right \rangle = \text{accept}|\Delta(f^{(0)}, C) = 0] = 1\)</span></p></li>
+<li><p><strong>Soundness:</strong> For any <span class="math notranslate nohighlight">\(\text{P}^*\)</span> , <span class="math notranslate nohighlight">\(\Pr[\left \langle \text{P}^* \leftrightarrow \text{V} \right \rangle = \text{reject}|\Delta(f^{(0)}, C) = \delta] \ge \textbf{s}^{-}(\delta)\)</span></p></li>
+</ul>
+<p>意思是 Prover 和 Verifier 会进行 <span class="math notranslate nohighlight">\(\textbf{r}\)</span> -轮的交互，需要满足三个条件。</p>
+<ol class="arabic simple">
+<li><p>第一个消息 <span class="math notranslate nohighlight">\(f^{(0)}\)</span>  是 Prover 初始声称的在 <span class="math notranslate nohighlight">\(C\)</span> 中的码字。</p></li>
+<li><p>完备性：说的是对于诚实的 Prover ，如果 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 在 <span class="math notranslate nohighlight">\(C\)</span> 中，那么 Verifier 一定会输出 accept 。</p></li>
+<li><p>Soundness：分析的是作恶的 Prover ，经过交互之后 Verifier 拒绝的概率是多少。定义中的 soundness <span class="math notranslate nohighlight">\(\textbf{s}^{-}: (0,1] \rightarrow [0,1]\)</span> 是一个函数，自变量 <span class="math notranslate nohighlight">\(\delta \in (0,1]\)</span> ，这也表示在分析 soundness 时，我们考虑的是作恶的 Prover ，也就是初始的 <span class="math notranslate nohighlight">\(\Delta(f^{(0)}, C) = \delta &gt; 0\)</span> ，在这种情况下 Prover 和 Verifier 进行交互，来算拒绝的概率是多少，这个概率的下界就是 <span class="math notranslate nohighlight">\(\textbf{s}^{-}(\delta) \in [0,1]\)</span> ，由于这里表示的是概率，自然 <span class="math notranslate nohighlight">\(\textbf{s}^{-}(\delta)\)</span> 函数值在闭区间 <span class="math notranslate nohighlight">\([0,1]\)</span> 中。</p></li>
+</ol>
+</section>
+<section id="id2">
+<h2>FRI 协议<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>下面摘录下论文 [BBHR18b] 中对 FRI 协议的描述。</p>
+<section id="id3">
+<h3>定义和记号<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p><strong>Interpolant</strong> For a function <span class="math notranslate nohighlight">\(f : S \rightarrow \mathbb{F}\)</span> , <span class="math notranslate nohighlight">\(S \subset \mathbb{F}\)</span> , let <span class="math notranslate nohighlight">\(\text{interpolant}^f\)</span> denote the <em>interpolant</em> of <span class="math notranslate nohighlight">\(f\)</span> , defined as the unique polynomial <span class="math notranslate nohighlight">\(P(X) = \sum_{i=0}^{|S|-1} a_iX^i\)</span> of degree less than <span class="math notranslate nohighlight">\(|S|\)</span> whose evaluation on <span class="math notranslate nohighlight">\(S\)</span> equals <span class="math notranslate nohighlight">\(f|_S\)</span> , i.e., <span class="math notranslate nohighlight">\(\forall x \in S, f(x) = P(x)\)</span> . We assume the interpolant <span class="math notranslate nohighlight">\(P(X)\)</span> is represented as a formal sum, i.e., by the sequence of monomial coefficients <span class="math notranslate nohighlight">\(a_0, \cdots, a_{|S|-1}\)</span> .</p>
+<p><strong>Subspace polynomials</strong> Given a set <span class="math notranslate nohighlight">\(L_0 \subset \mathbb{F}\)</span> , let <span class="math notranslate nohighlight">\(\text{Zero}_{L_0} \triangleq \prod_{x \in L_0} (X - x)\)</span> be the unique non-zero monic polynomial of degree <span class="math notranslate nohighlight">\(|L_0|\)</span> that vanishes on <span class="math notranslate nohighlight">\(L_0\)</span> . When <span class="math notranslate nohighlight">\(L_0\)</span> is an additive coset contained in a binary field, the polynomial <span class="math notranslate nohighlight">\(\text{Zero}_{L_0}(X)\)</span> is an <em>affine subspace polynomial</em>, a special type of a linearized polynomial. We shall use the following properties of such polynomials, referring the interested reader to [LN97, Chapter 3.4] for proofs and additional background:</p>
+<ol class="arabic simple">
+<li><p>The map <span class="math notranslate nohighlight">\(x \mapsto \text{Zero}_{L_0}(x)\)</span> maps each additive coset <span class="math notranslate nohighlight">\(S\)</span> of <span class="math notranslate nohighlight">\(L_0\)</span> to a single field element, which will be denoted by <span class="math notranslate nohighlight">\(y_S\)</span> .</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(L \supset L_0\)</span> are additive cosets, then <span class="math notranslate nohighlight">\(\text{Zero}_{L_0}(L) \triangleq \{ \text{Zero}_{L_0}(z) | z \in L \}\)</span> is an additive coset and <span class="math notranslate nohighlight">\(\dim(\text{Zero}_{L_0}(L)) = \dim(L) - \dim(L_0)\)</span> .</p></li>
+</ol>
+<p><strong>Subspace specification</strong> Henceforth, the letter <span class="math notranslate nohighlight">\(L\)</span> always denotes an additive coset in a binary field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> , we assume all mentioned additive cosets are specified by an additive shift <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span> and a basis <span class="math notranslate nohighlight">\(\beta_1, \cdots, \beta_k \in \mathbb{F}^k\)</span> so that <span class="math notranslate nohighlight">\(L = \left\{ \alpha + \sum_{i=1}^k b_i\beta_i | b_1, \cdots, b_k \in \mathbb{F}_2 \right\}\)</span> ; we assume <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\vec{\beta} = (\beta_1, \cdots, \beta_k)\)</span> are agreed upon by prover and verifier.</p>
+</section>
+<section id="commit">
+<h3>COMMIT 阶段<a class="headerlink" href="#commit" title="Link to this heading">#</a></h3>
+<p>协议的轮数为 <span class="math notranslate nohighlight">\(r \triangleq \left \lfloor \frac{k^{(0)} - \mathcal{R}}{\eta}\right\rfloor\)</span> ，其中 <span class="math notranslate nohighlight">\(\mathcal{R} = \log(1/\rho)\)</span> ，<span class="math notranslate nohighlight">\(\rho\)</span> 表示码率。在 COMMIT 阶段的第 <span class="math notranslate nohighlight">\(i\)</span> 轮，<span class="math notranslate nohighlight">\(i \in \{0, \cdots, r - 1\}\)</span> ，Verifier 可以访问一个由 Prover 提交的函数 <span class="math notranslate nohighlight">\(f^{(i)}: L^{(i)} \rightarrow \mathbb{F}\)</span> 的 oracle，其中 <span class="math notranslate nohighlight">\(\dim(L^{(i)}) = k^{(i)} = k^{(0)} - \eta \cdot i\)</span> ，并且空间 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 是预先固定的，特别地，它们不依赖于 Verifier 的消息。</p>
+<blockquote>
+<div><p><strong>FRI-COMMIT:</strong>
+Common input:</p>
+<ul class="simple">
+<li><p>Parameters <span class="math notranslate nohighlight">\(\mathcal{R}, \eta, i\)</span> , all are positive integers:
+– rate parameter <span class="math notranslate nohighlight">\(\mathcal{R}\)</span> : logarithm of RS code rate (<span class="math notranslate nohighlight">\(\rho = 2^{-\mathcal{R}}\)</span>)
+– localization parameter <span class="math notranslate nohighlight">\(\eta\)</span> : dimension of <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> (i.e., <span class="math notranslate nohighlight">\(|L_0^{(i)}| = 2^{\eta}\)</span>); let <span class="math notranslate nohighlight">\(r \triangleq \left \lfloor \frac{k^{(0)} - \mathcal{R}}{\eta}\right\rfloor\)</span> denote round complexity
+– <span class="math notranslate nohighlight">\(i \in \{0, \cdots, r\}\)</span>: round counter</p></li>
+<li><p>A parametrization of <span class="math notranslate nohighlight">\(\text{RS}^{(i)} \triangleq \text{RS}[\mathbb{F},L^{(i)},\rho = 2^{-\mathcal{R}}]\)</span> , denote <span class="math notranslate nohighlight">\(k^{(i)} = \log_2 |L^{(i)}|\)</span> (notice <span class="math notranslate nohighlight">\(k^{(i)} = \dim (L^{(i)})\)</span>);</p></li>
+<li><p><span class="math notranslate nohighlight">\(L_0^{(i)} \subset L^{(i)}\)</span> , <span class="math notranslate nohighlight">\(\dim(L_0^{(i)})=\eta\)</span> ; let <span class="math notranslate nohighlight">\(q^{(i)}(X) = \text{Zero}_{L_0^{(i)}}(X)\)</span> and denote <span class="math notranslate nohighlight">\(L^{(i+1)} = q^{(i)}(L^{(i)})\)</span></p></li>
+</ul>
+<p>Prover input: <span class="math notranslate nohighlight">\(f^{(i)}:L^{(i)} \rightarrow \mathbb{F}\)</span>, a purported codeword of <span class="math notranslate nohighlight">\(\text{RS}^{(i)}\)</span></p>
+<p>Loop: While <span class="math notranslate nohighlight">\(i \le r\)</span> :</p>
+<ol class="arabic simple">
+<li><p>Verifier sends a uniformly random <span class="math notranslate nohighlight">\(x^{(i)} \in \mathbb{F}\)</span></p></li>
+<li><p>Prover defines the function <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> with domain <span class="math notranslate nohighlight">\(L^{(i+1)}\)</span> thus, for each <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> :</p></li>
+</ol>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(S_y = \{x \in L^{(i)} | q^{(i)}(x) = y\}\)</span> be the coset of <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> mapped by <span class="math notranslate nohighlight">\(q^{(i)}\)</span> to <span class="math notranslate nohighlight">\(\{y\}\)</span> ;</p></li>
+<li><p><span class="math notranslate nohighlight">\(P_y^{(i)}(X) \triangleq \text{interpolant}^{f^{(i)}|_{S_y}}\)</span> ;</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}(y) \triangleq P_y^{(i)}(x^{(i)})\)</span> ;</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>If <span class="math notranslate nohighlight">\(i = r\)</span> then:</p></li>
+</ol>
+<ul class="simple">
+<li><p>let <span class="math notranslate nohighlight">\(f^{(r)} = f_{f^{(r-1)},x^{(r-1)}}^{(r)}\)</span> for <span class="math notranslate nohighlight">\(f^{(r)} = f_{f^{(r-1)},x^{(r-1)}}^{(r)}\)</span> defined in step 2 above;</p></li>
+<li><p>let <span class="math notranslate nohighlight">\(P^{(r)}(X) = \sum_{j \ge 0} a_j^{(r)}X^j \triangleq \text{interpolant}^{f^{(r)}}(X)\)</span> ;</p></li>
+<li><p>let <span class="math notranslate nohighlight">\(d = \rho \cdot |L^{(r)}| - 1\)</span> ;</p></li>
+<li><p>prover commits to first <span class="math notranslate nohighlight">\(d + 1\)</span> coefficients of <span class="math notranslate nohighlight">\(P^{(r)}(X)\)</span> , namely, to <span class="math notranslate nohighlight">\(\langle a_0^{(r)}, \cdots, a_d^{(r)} \rangle\)</span></p></li>
+<li><p>COMMIT phase terminates;</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Else (<span class="math notranslate nohighlight">\(i &lt; r\)</span> ):</p></li>
+</ol>
+<ul class="simple">
+<li><p>let <span class="math notranslate nohighlight">\(f^{(i+1)} = f^{(i+1)}_{f^{(i)}, x^{(i)}}\)</span> for <span class="math notranslate nohighlight">\(f^{(i+1)}_{f^{(i)}, x^{(i)}}\)</span> defined in step 2 above;</p></li>
+<li><p>prover commits to oracle <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span></p></li>
+<li><p>both parties repeat the COMMIT protocol with common input</p>
+<ul>
+<li><p>parameters <span class="math notranslate nohighlight">\((\mathcal{R}, \eta, i + 1)\)</span></p></li>
+<li><p>a parametrization of <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)} \triangleq \text{RS}[\mathbb{F},L^{(i+1)},\rho = 2^{-\mathcal{R}}]\)</span> and <span class="math notranslate nohighlight">\(L_0^{(i+1)} \subset L^{(i+1)}\)</span> , <span class="math notranslate nohighlight">\(\dim(L_0^{(i+1)})=\eta\)</span>
+and prover input <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> defined at the beginning of this step;</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="query">
+<h3>QUERY 阶段<a class="headerlink" href="#query" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p><strong>FRI-QUERY:</strong>
+verifier input:</p>
+<ul class="simple">
+<li><p>parameters <span class="math notranslate nohighlight">\(\mathcal{R}, \eta\)</span> as defined in the COMMIT phase</p></li>
+<li><p>repetition parameter <span class="math notranslate nohighlight">\(l\)</span></p></li>
+<li><p>sequence of rate-<span class="math notranslate nohighlight">\(\rho\)</span> RS-codes <span class="math notranslate nohighlight">\(\text{RS}^{(0)}, \cdots, \text{RS}^{(r)}\)</span>, where <span class="math notranslate nohighlight">\(\text{RS}^{(i)} \triangleq \text{RS}[\mathbb{F},L^{(i)},\rho]\)</span> and <span class="math notranslate nohighlight">\(\log_2|L^{(i)}| = k^{(i)} = k^{(0)} - \eta\)</span>; (notice <span class="math notranslate nohighlight">\(k^{(i)} = \dim(L^{(i)})\)</span>);</p></li>
+<li><p>sequence of affine spaces <span class="math notranslate nohighlight">\(L_0^{(0)}, \cdots, L_0^{(r-1)}\)</span>, each <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> is of dimension <span class="math notranslate nohighlight">\(\eta\)</span> and contained in <span class="math notranslate nohighlight">\(L^{(i)}\)</span> ;</p></li>
+<li><p>transcript of verifier messages <span class="math notranslate nohighlight">\(x^{(0)}, \cdots, x^{(r-1)} \in \mathbb{F}\)</span></p></li>
+<li><p>access to oracles <span class="math notranslate nohighlight">\(f^{(0)}, \cdots, f^{(r-1)}\)</span></p></li>
+<li><p>access to last oracle <span class="math notranslate nohighlight">\(P^{(r)}(X) = \sum_{j \ge 0} a_j^{(r)}X^j\)</span> for <span class="math notranslate nohighlight">\(d = \rho \cdot |L^{(r)}| - 1\)</span> ;</p></li>
+</ul>
+<p>Terminal function reconstruction:</p>
+<ul class="simple">
+<li><p>query <span class="math notranslate nohighlight">\(a_0^{(r)}, \cdots, a_d^{(r)}\)</span> ;(a total of <span class="math notranslate nohighlight">\(d + 1 \le 2^{\eta}\)</span> queries)</p></li>
+<li><p>let <span class="math notranslate nohighlight">\(P'(X) \triangleq \sum_{j \ge 0} a_j^{(r)}X^j\)</span> ;</p></li>
+<li><p>let <span class="math notranslate nohighlight">\(f^{(r)}\)</span> be the evaluation of <span class="math notranslate nohighlight">\(P'(X)\)</span> on <span class="math notranslate nohighlight">\(L^{(r)}\)</span> ; (notice <span class="math notranslate nohighlight">\(f^{(r)} \in \text{RS}^{(r)}\)</span> )</p></li>
+</ul>
+<p>Repeat <span class="math notranslate nohighlight">\(l\)</span> times: {</p>
+<ol class="arabic simple">
+<li><p>Sample uniformly random <span class="math notranslate nohighlight">\(s^{(0)} \in L^{(0)}\)</span> and for <span class="math notranslate nohighlight">\(i = 0, \cdots, r - 1\)</span> let</p></li>
+</ol>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(s^{i + 1} = q^{(i)}(s^{(i)})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S^{(i)}\)</span> be the coset of <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> in <span class="math notranslate nohighlight">\(L^{(i)}\)</span> that contains <span class="math notranslate nohighlight">\(s^{(i)}\)</span></p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>For <span class="math notranslate nohighlight">\(i = 0, \cdots, r - 1\)</span> ,</p></li>
+</ol>
+<ul class="simple">
+<li><p>query <span class="math notranslate nohighlight">\(f^{(i)}\)</span> on all of <span class="math notranslate nohighlight">\(S^{(i)}\)</span>; (a total of <span class="math notranslate nohighlight">\(2\eta\)</span> queries)</p></li>
+<li><p>compute <span class="math notranslate nohighlight">\(P^{(i)}(X) \triangleq \text{interpolant}^{f^{(i)}|_{S^{(i)}}}\)</span>; (notice <span class="math notranslate nohighlight">\(\deg(P^{(i)}) &lt; 2^{\eta}\)</span>)</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p><strong>round consistency</strong>: If for some <span class="math notranslate nohighlight">\(i \in \{ 0, \cdots, r - 1\}\)</span> it holds that</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+&gt; \begin{equation}
+&gt;  f^{(i+1)}(s^{(i+1)}) \neq P^{(i)}(x^{(i)})
+&gt; \end{equation}
+&gt; \]</div>
+<p>then reject and abort;</p>
+<p>}</p>
+<p>Return accept</p>
+</div></blockquote>
+</section>
+</section>
+<section id="id4">
+<h2>FRI 协议的主要性质<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>下面的定理给出了 FRI 协议的主要性质，包括完备性(Completeness)、Soundness、Prover 复杂度以及 Verifier 复杂度。其实论文中还给出了一个稍微简略的版本，见论文 [BBHR18b] Theorem 1.3，该定理可以通过在下述定理中设置 <span class="math notranslate nohighlight">\(\eta = 2\)</span> 与 <span class="math notranslate nohighlight">\(l = 1\)</span> 证明得到的，这里就主要阐述这个更加复杂的版本。</p>
+<p><strong>Theorem 1</strong> [BBHR18b, Theorem3.3] (Main properties of the <strong>FRI</strong> protocol). The following properties hold when the <strong>FRI</strong> protocol is invoked on oracle <span class="math notranslate nohighlight">\(f^{(0)}:L^{(0)} \rightarrow \mathbb{F}\)</span> with localization parameter <span class="math notranslate nohighlight">\(\eta\)</span> and rate parameter <span class="math notranslate nohighlight">\(\mathcal{R}\)</span> (and rate <span class="math notranslate nohighlight">\(\rho = 2^{- \mathcal{R}}\)</span>) such that <span class="math notranslate nohighlight">\(\rho |L^{(0)}| &gt; 16\)</span> :</p>
+<ol class="arabic">
+<li><p><strong>Completeness</strong> If <span class="math notranslate nohighlight">\(f^{(0)} \in \text{RS}^{(0)} \triangleq \text{RS}[\mathbb{F}, L^{(0)}, \rho = 2^{- \mathcal{R}}]\)</span> and <span class="math notranslate nohighlight">\(f^{(1)},  \cdots, f^{(r)}\)</span> are computed by the prover specified in the COMMIT phase, then the <strong>FRI</strong> verifier outputs <strong>accept</strong> with probability 1.</p></li>
+<li><p><strong>Soundness</strong> Suppose <span class="math notranslate nohighlight">\(\delta^{(0)} \triangleq \Delta^{(0)}(f^{0}, \text{RS}^{(0)}) &gt; 0\)</span> . Then with probability at least</p>
+<div class="math notranslate nohighlight">
+\[
+	\begin{equation}
+	1 - \frac{3|L^{(0)}|}{\mathbb{F}} 
+	\end{equation}
+	\]</div>
+<p>over the randomness of the verifier during the COMMIT phase, and for any (adaptively chosen) prover oracles <span class="math notranslate nohighlight">\(f^{(1)}, \cdots, f^{(r)}\)</span> the QUERY protocol with repetition parameter <span class="math notranslate nohighlight">\(l\)</span> outputs <strong>accept</strong> with probability at most</p>
+<div class="math notranslate nohighlight">
+\[
+	\left (1 - \min \left \{\delta^{(0)}, \frac{1-3\rho-2^{\eta}/\sqrt{|L^{(0)}|}}{4} \right \}\right )^{l}
+	\]</div>
+<p>Consequently, the soundness of <strong>FRI</strong> is at least</p>
+<div class="math notranslate nohighlight">
+\[
+	\begin{equation}
+		\textbf{s}^{-}(\delta^{(0)}) \triangleq 1 - \left ( \frac{3|L^{(0)}|}{|\mathbb{F}|} + \left (1 - \min \left \{\delta^{(0)}, \frac{1-3\rho-2^{\eta}/\sqrt{|L^{(0)}|}}{4} \right \}\right )^{l} \right). 
+	\end{equation}
+	\]</div>
+</li>
+<li><p><strong>Prover complexity</strong> The <span class="math notranslate nohighlight">\(i^{th}\)</span> step of commit phase can be computed by a parallel random access machine (PRAM) with concurrent read and exclusive write (CREW) in <span class="math notranslate nohighlight">\(2\eta + 3\)</span> cycles — each cycle involves a single arithmetic operation in <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> — using <span class="math notranslate nohighlight">\(2|L^{(i)}| + \eta\)</span> processors and a total of <span class="math notranslate nohighlight">\(4|L^{(i)}|\)</span> arithmetic operations over <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>.
+Consequently, the total prover complexity is at most <span class="math notranslate nohighlight">\(6|L^{(0)}|\)</span> arithmetic operations, which can be carried out in at most <span class="math notranslate nohighlight">\(4 |L^{(0)}|\)</span> cycles on a PRAM-CREW with <span class="math notranslate nohighlight">\(2n + 3\)</span> processors.</p></li>
+<li><p><strong>Verifier complexity</strong> Verifier communication during the COMMIT phase equals <span class="math notranslate nohighlight">\(\textbf{r}\)</span> field elements; query complexity (during QUERY phase) equals <span class="math notranslate nohighlight">\(l 2^{\eta} \textbf{r} = l 2^{\eta} \left ( 1 + \left \lfloor \frac{\log |L^{(0)}| - \mathcal{R}}{\eta} \right \rfloor \right )\)</span>. On a PRAM with exclusive read and exclusive write (EREW) with <span class="math notranslate nohighlight">\(l \textbf{r}\cdot2 \eta\)</span> processors, the verifier’s decision is obtained after <span class="math notranslate nohighlight">\(2\eta + 3 + \log l\)</span> cycles and a total of <span class="math notranslate nohighlight">\(l\cdot \textbf{r} \cdot (6 \cdot 2\eta + 6 \eta + 6)\)</span> arithmetic operations in <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>.</p></li>
+</ol>
+<p>在第 2 项，Soundness 结论中，先给了一个参数 <span class="math notranslate nohighlight">\(\delta^{(0)} \triangleq \Delta^{(0)}(f^{0}, \text{RS}^{(0)}) &gt; 0\)</span> ，这里的 <span class="math notranslate nohighlight">\(\Delta^{(0)}(f^{0}, \text{RS}^{(0)})\)</span> 其实并不是常见的相对 Hamming 距离，下面给出此测度的定义，同时说明它与相对 Hamming 距离之间的关系。</p>
+<section id="block-wise">
+<h3>Block-wise 距离测度<a class="headerlink" href="#block-wise" title="Link to this heading">#</a></h3>
+<p><strong>Definition 2</strong> [BBHR18b, Definition3.2] (Block-wise distance measure). Let <span class="math notranslate nohighlight">\(\mathcal{S} = \{S_1, \cdots, S_m\}\)</span> be a partition of a set <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(\Sigma\)</span> be an alphabet. The relative <span class="math notranslate nohighlight">\(\mathcal{S}\)</span>-Hamming distance measure on <span class="math notranslate nohighlight">\(\Sigma^{S}\)</span> is defined for <span class="math notranslate nohighlight">\(f, g \in \Sigma^{S}\)</span> as the relative Hamming distance over <span class="math notranslate nohighlight">\(\Sigma^{S_1} \times \cdots \times \Sigma^{S_m}\)</span> ,</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta^{\mathcal{S}}(f,g) \triangleq \Pr_{i \in [m]}[f|_{S_i} \neq g|_{S_i}] = \frac{|\{i \in [m] | f|_{S_i} \neq g|_{S_i}\}|}{m}. 
+\]</div>
+<p>Thus, for <span class="math notranslate nohighlight">\(\mathcal{F} \subset \Sigma^{S}\)</span> let <span class="math notranslate nohighlight">\(\Delta^{\mathcal{S}}(g,\mathcal{F}) = \min \{ \Delta^{\mathcal{S}}(g,f) | f \in \mathcal{F}\}\)</span>.</p>
+<p>为了更好的理解这个定义，在 FRI 协议中，考虑在 <span class="math notranslate nohighlight">\(\mathbb{F}^{L^{(i)}}\)</span> 上的 block-wise 距离，即用 FRI 协议中在第 <span class="math notranslate nohighlight">\(i\)</span> 步的 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 来替代上述定义中的集合 <span class="math notranslate nohighlight">\(S\)</span> ，用 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 替换上述定义中的字母表 <span class="math notranslate nohighlight">\(\Sigma\)</span>。在第 <span class="math notranslate nohighlight">\(i\)</span> 步，我们能够确定集合 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 。<span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 其实可以设为映射 <span class="math notranslate nohighlight">\(q^{(i)}\)</span> 的核，也就是在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 集合中那些被 <span class="math notranslate nohighlight">\(q^{i}\)</span> 映射为 <span class="math notranslate nohighlight">\(L^{(i+1)}\)</span> 中单位元 <span class="math notranslate nohighlight">\(e\)</span> 的元素的集合，用数学符号表示出来即</p>
+<div class="math notranslate nohighlight">
+\[
+L_0^{(i)} = \{x \in L^{(i)} | q^{(i)}(x) = e\}.
+\]</div>
+<p>那么通过 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 的陪集可以对集合 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 进行划分，假设划分成 <span class="math notranslate nohighlight">\(m\)</span> 个集合，则对 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 的划分可记为 <span class="math notranslate nohighlight">\(\mathcal{S}^{(i)} = \{L_0^{(i)}, \cdots, L_{m-1}^{(i)}\}\)</span> 。那么简记</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta^{(i)}(f,g)  \triangleq  \Delta^{\mathcal{S}^{(i)}}(f,g) 
+\]</div>
+<p>对于两个函数 <span class="math notranslate nohighlight">\(f,g : L^{(i)} \rightarrow \mathbb{F}\)</span> ，定义域均为 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> ，值域均为 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> ，现在这个 Block-wise 距离说的是这两个函数在 <span class="math notranslate nohighlight">\(\mathcal{S}^{(i)}\)</span> 中这些陪集中不完全一致的陪集个数的比值。例如在 <span class="math notranslate nohighlight">\(\mathcal{S}^{(i)} = \{L_0^{(i)}, \cdots, L_{m-1}^{(i)}\}\)</span> 中 (假设 <span class="math notranslate nohighlight">\(m \ge 2\)</span>)，只有在 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 与 <span class="math notranslate nohighlight">\(L_1^{(i)}\)</span> 这两个集合上函数 <span class="math notranslate nohighlight">\(f\)</span> 与 <span class="math notranslate nohighlight">\(g\)</span> 对应的函数值不完全相同，即 <span class="math notranslate nohighlight">\(f|_{L_0^{(i)}} \neq g|_{L_0^{(i)}}\)</span> 且 <span class="math notranslate nohighlight">\(f|_{L_1^{(i)}} \neq g|_{L_1^{(i)}}\)</span> ，在其余的陪集上函数 <span class="math notranslate nohighlight">\(f\)</span> 与 <span class="math notranslate nohighlight">\(g\)</span> 完全一致，那么可以计算出 <span class="math notranslate nohighlight">\(\Delta^{(i)}(f,g) = \frac{2}{m}\)</span> 。</p>
+<p>上面的 <span class="math notranslate nohighlight">\(\Delta^{(i)}(f, g)\)</span> 说的是 <span class="math notranslate nohighlight">\(\mathbb{F}^{L^{(i)}}\)</span> 中两个元素的测度，下面解释下定义中关于集合中一个元素 <span class="math notranslate nohighlight">\(f^{(i)} \in \mathbb{F}^{L^{(i)}}\)</span> 与一个子集 <span class="math notranslate nohighlight">\(\text{RS}^{(i)} \subset \mathbb{F}^{L^{(i)}}\)</span> (<span class="math notranslate nohighlight">\(\text{RS}^{(i)} = RS[\mathbb{F}, L^{(i)}, \rho]\)</span> 自然是 <span class="math notranslate nohighlight">\(\mathbb{F}^{L^{(i)}}\)</span> 的子集)对应的 block-wise 距离测度，表示成</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)}) \triangleq \Delta^{\mathcal{S}^{(i)}}(f^{(i)},\text{RS}^{(i)}) = \min \{ \Delta^{\mathcal{S}^{(i)}}(f^{(i)},g^{(i)}) | g^{(i)} \in \text{RS}^{(i)}\},
+\]</div>
+<p>其含义是取遍集合 <span class="math notranslate nohighlight">\(\text{RS}^{(i)}\)</span> 中所有的码字 <span class="math notranslate nohighlight">\(g^{(i)}\)</span> ，算出这些 <span class="math notranslate nohighlight">\(\Delta^{\mathcal{S}^{(i)}}(f^{(i)},g^{(i)})\)</span> ，其中最小的那个值就是 <span class="math notranslate nohighlight">\(\Delta^{\mathcal{S}^{(i)}}(f^{(i)},\text{RS}^{(i)})\)</span> 。
+关于该 Block-wise 距离测度，一个重要的不等式是</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	1 - \rho \ge  \Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})  \ge \Delta_H(f^{(i)},\text{RS}^{(i)}) \tag{4}
+\end{equation}
+\]</div>
+<p>该等式会在 FRI 的 Soundness 证明中反复用到，比较重要，这里给出其证明。</p>
+<p><em><strong>证明</strong></em>：先证明不等式的左半边，即 <span class="math notranslate nohighlight">\(1 - \rho \ge  \Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})\)</span> 。总是存在这样一个多项式 <span class="math notranslate nohighlight">\(g^{(i)} \in \text{RS}^{(i)}\)</span> ，其次数 <span class="math notranslate nohighlight">\(deg(g^{(i)}) &lt; \rho |L^{(i)}|\)</span> ，同时 <span class="math notranslate nohighlight">\(\Delta^{\mathcal{(i)}}(f^{(i)},g^{(i)}) = 1 - \rho\)</span> 。下面说明 <span class="math notranslate nohighlight">\(g^{(i)}\)</span> 的存在性。我们进行如下的构造：
+在划分集合<span class="math notranslate nohighlight">\(\mathcal{S}^{(i)} = \{L_0^{(i)}, \cdots, L_{m-1}^{(i)}\}\)</span> 中，按顺序可得到集合序列 <span class="math notranslate nohighlight">\(\{ L_0^{(i)}, \cdots, L_{m-1}^{(i)}\} = \{x_0, x_1, \cdots, x_{|L^{(i)}| - 1}\}\)</span> ，连续选择前 <span class="math notranslate nohighlight">\(\rho |L^{(i)}|\)</span> 个点 <span class="math notranslate nohighlight">\(\{x_0,x_1, \cdots, x_{\rho |L^{(i)}| - 1}\}\)</span>，得到这些点对应的 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 的值 <span class="math notranslate nohighlight">\(\{f^{(i)}(x_0),f^{(i)}(x_1),\cdots, f^{(i)}(x_{\rho |L^{(i)}| - 1})\}\)</span> ，拿到这些点值对可以进行 Lagrange 插值，得到一个次数 <span class="math notranslate nohighlight">\(&lt; \rho |L^{(i)}|\)</span> 的多项式 <span class="math notranslate nohighlight">\(g^{(i)}\)</span> ，同时易得这样构造的 <span class="math notranslate nohighlight">\(g^{(i)} \in \text{RS}^{(i)} = RS[\mathbb{F}, L^{(i)}, \rho]\)</span> 。同时根据前面的构造发现在集合 <span class="math notranslate nohighlight">\(\{L_0^{(i)}, \cdots, L_{\rho m - 1}^{(i)}\} = \{x_0, x_1, \cdots, x_{\rho |L^{(i)}| - 1} \}\)</span> 上函数 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 与 <span class="math notranslate nohighlight">\(g^{(i)}\)</span> 的函数值是完全相等的 (这里 <span class="math notranslate nohighlight">\(\rho |L^{(i)}|\)</span> 个点刚好完全占满在 <span class="math notranslate nohighlight">\(\rho m\)</span> 个集合中，不会出现最后一些点只占最后一个集合的一部分的情况，这是由于选取 <span class="math notranslate nohighlight">\(\rho\)</span> 、<span class="math notranslate nohighlight">\(|L^{(i)}|\)</span> 都是 <span class="math notranslate nohighlight">\(2\)</span> 的幂次形式，能够整除)，那么可计算出</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta^{(i)}(f^{(i)}, g^{(i)}) = \frac{|\{j \in [m] | f^{(i)}|_{L_j^{(i)}} \neq g^{(i)}|_{L_j^{(i)}}\}|}{m} = 1 - \rho.
+\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(\Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})\)</span> 计算的 <span class="math notranslate nohighlight">\(\text{RS}^{(i)}\)</span> 中元素与 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 在测度 <span class="math notranslate nohighlight">\(\Delta^{(i)}\)</span> 下的最小值，那肯定不会超过找到的 <span class="math notranslate nohighlight">\(g^{(i)} \in \text{RS}^{(i)}\)</span> 的距离，也就证明了不等式的左半边 <span class="math notranslate nohighlight">\(1 - \rho \ge  \Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})\)</span> 。
+接下来证明不等式的右半边 <span class="math notranslate nohighlight">\(\Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})  \ge \Delta_H(f^{(i)},\text{RS}^{(i)})\)</span> 。 假设 <span class="math notranslate nohighlight">\(\Delta^{(i)}(f^{(i)}, g^{(i)} \in \text{RS}^{(i)}) = \delta\)</span>，不失一般性，假设 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 与 <span class="math notranslate nohighlight">\(g^{(i)}\)</span> 在陪集 <span class="math notranslate nohighlight">\(\{L_0^{(i)}, \cdots, L_{\delta m - 1}^{(i)}\} = \{x_0, \cdots, x_{\delta |L^{(i)}| - 1}\}\)</span> 上不完全一致，在剩余的集合 <span class="math notranslate nohighlight">\(\{L_0^{(i)}, \cdots, L_{m-1}^{(i)}\} \backslash \{L_0^{(i)}, \cdots, L_{\delta m - 1}^{(i)}\}\)</span> 上是完全一致的。那么考虑在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 上的所有点时，<span class="math notranslate nohighlight">\(g^{(i)}\)</span> 最多在 <span class="math notranslate nohighlight">\(\{L_0^{(i)}, \cdots, L_{\delta m - 1}^{(i)}\} = \{x_0, \cdots, x_{\delta |L^{(i)}| - 1}\}\)</span> 这 <span class="math notranslate nohighlight">\(\delta |L^{(i)}|\)</span> 点上都与 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 不一致，因此也就说明了 <span class="math notranslate nohighlight">\(\Delta_H(f^{(i)},g^{(i)}) \le \delta\)</span> ，进而如果设 <span class="math notranslate nohighlight">\(\Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)}) = \delta^*\)</span> 可得出 <span class="math notranslate nohighlight">\(\Delta_H(f^{(i)},\text{RS}^{(i)}) \le \delta^* = \Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})\)</span> 。 <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+</section>
+<section id="id5">
+<h2>定理 1 完备性证明<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>下面说明定理 1 中完备性证明的思路，复述下完备性：</p>
+<blockquote>
+<div><p><strong>Completeness</strong> If <span class="math notranslate nohighlight">\(f^{(0)} \in \text{RS}^{(0)} \triangleq \text{RS}[\mathbb{F}, L^{(0)}, \rho = 2^{- \mathcal{R}}]\)</span> and <span class="math notranslate nohighlight">\(f^{(1)},  \cdots, f^{(r)}\)</span> are computed by the prover specified in the COMMIT phase, then the <strong>FRI</strong> verifier outputs <strong>accept</strong> with probability 1.</p>
+</div></blockquote>
+<p>完备性说的是对于诚实的 Prover ，初始的函数 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 是在 <span class="math notranslate nohighlight">\(\text{RS}^{(0)}\)</span> 编码空间中的，那么通过 FRI 的 COMMIT 阶段会产生一些列的函数 <span class="math notranslate nohighlight">\(f^{(1)},  \cdots, f^{(r)}\)</span> ，那么 Verifier 在 QUERY 阶段结束后肯定会输出 <strong>accept</strong> 。</p>
+<p>首先给出了一个递归的引理，再用该引理来证明完备性，引理表述的是在第 <span class="math notranslate nohighlight">\(i\)</span> 步如果 <span class="math notranslate nohighlight">\(f^{(i)} \in \text{RS}^{(i)}\)</span> ，那么在 COMMIT 阶段，Verifier 会从 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中随机选取 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 发给 Prover ，Prover 用该随机数来构造下一步的函数 <span class="math notranslate nohighlight">\(f^{(i+1)}_{f^{(i)}, x^{(i)}}\)</span> ，那么对于 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中任意一个 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> ，都有构造出来的 <span class="math notranslate nohighlight">\(f^{(i+1)}_{f^{(i)}, x^{(i)}}\)</span> 都在 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 空间中。递归的引理正式表述如下，关于该引理的证明留在后面进行说明。</p>
+<p><strong>Lemma 1</strong> [BBHR18b, Lemma 4.1] (Inductive argument). If <span class="math notranslate nohighlight">\(f^{(i)} \in \text{RS}^{(i)}\)</span> then for all <span class="math notranslate nohighlight">\(x^{(i)} \in \mathbb{F}\)</span> it holds that <span class="math notranslate nohighlight">\(f^{(i+1)}_{f^{(i)}, x^{(i)}} \in \text{RS}^{(i+1)}\)</span> .</p>
+<p>完备性证明的思路是，在 QUERY 阶段，Verifier 主要是在检查第 3 步的 round consistency 是否成立，一旦某一步的 <span class="math notranslate nohighlight">\(i \in \{0, \cdots, r - 1\}\)</span> 不成立就会直接输出 reject，直到对所有的 <span class="math notranslate nohighlight">\(i\)</span> 的检测都通过，最终才会输出 accept 。那么对于 <span class="math notranslate nohighlight">\(i &lt; r - 1\)</span> ，根据 COMMIT 阶段 <span class="math notranslate nohighlight">\(f^{(i + 1)}\)</span> 的构造过程，round consistency 都会通过。对于 <span class="math notranslate nohighlight">\(i = r - 1\)</span>，根据根据完备性的初始条件 <span class="math notranslate nohighlight">\(f^{(0)} \in \text{RS}^{(0)}\)</span> ，该定理递归的说明了 <span class="math notranslate nohighlight">\(f^{(r)} \in RS^{(r)}\)</span> ，最后根据该结论说明在 QUERY 阶段也会检测通过 round consistency，最终 Verifier 也就一定会输出 accept 了。具体的完备性证明如下。</p>
+<p><em><strong>定理 1 第一项完备性证明</strong></em>： 对于诚实的 Prover，对于任意的一个函数 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> ，在 COMMIT 阶段的第 2 步中，对于任意的 <span class="math notranslate nohighlight">\(i &lt; r - 1\)</span> ，构造出</p>
+<div class="math notranslate nohighlight">
+\[
+f_{f^{(i)}, x^{(i)}}^{(i + 1)} (y) \triangleq P_y^{(i)}(x^{(i)}).
+\]</div>
+<p>根据该构造，那么一定能在 QUERY 阶段的第 3 步一定会通过 round consistency ，即</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i+1)}(s^{(i+1)}) = P^{(i)}(x^{(i)})
+\]</div>
+<p>成立。</p>
+<p>下面只需证明对于 <span class="math notranslate nohighlight">\(i = r - 1\)</span> 时，round consistency 也能通过。根据完备性的假设知 <span class="math notranslate nohighlight">\(f^{(0)} \in \text{RS}^{(0)}\)</span> ，由 Lemma 1 递归可得 <span class="math notranslate nohighlight">\(f^{(r)} \in RS^{(r)}\)</span> ，那么一定存在一个次数 <span class="math notranslate nohighlight">\(&lt;\rho |L^{(r)}|\)</span> 的多项式 <span class="math notranslate nohighlight">\(P^{(r)}(X)\)</span> 使得 <span class="math notranslate nohighlight">\(f^{(r)}(X)\)</span> 与 <span class="math notranslate nohighlight">\(P^{(r)}(X)\)</span> 在 <span class="math notranslate nohighlight">\(L^{(r)}\)</span> 上是完全一致的。因此 Prover 会在 COMMIT 阶段的第 3 步发送 <span class="math notranslate nohighlight">\(P^{(r)}(X)\)</span> 的 <span class="math notranslate nohighlight">\(d + 1 = \rho |L^{(r)}|\)</span> 个系数 <span class="math notranslate nohighlight">\(\langle a_0^{(r)}, \cdots, a_d^{(r)} \rangle\)</span> ，Verifier 在 QUERY 阶段的 “Terminal function reconstruction” 阶段会根据发送过来的 <span class="math notranslate nohighlight">\(d + 1\)</span> 个系数构造出 <span class="math notranslate nohighlight">\(P'(X) \triangleq \sum_{j \le d} a_j^{(r)}X^j\)</span> ，再根据 <span class="math notranslate nohighlight">\(P'(X)\)</span> 得到函数 <span class="math notranslate nohighlight">\(f'^{(r)}\)</span> ，函数 <span class="math notranslate nohighlight">\(f'^{(r)}\)</span> 是 <span class="math notranslate nohighlight">\(P'(X)\)</span> 在 <span class="math notranslate nohighlight">\(L^{(r)}\)</span> 上的估计 (evaluation) 。那么可以推断出 <span class="math notranslate nohighlight">\(f'^{(r)}|_{L^{(r)}} = P'(X) = P^{(r)}(X) = f^{(r)}|_{L^{(r)}}\)</span> 。自然会通过第 <span class="math notranslate nohighlight">\(i = r - 1\)</span> 轮的 round consistency ，即</p>
+<div class="math notranslate nohighlight">
+\[
+f'^{(r)}(s^{(i+1)}) = P^{(r-1)}(x^{i})
+\]</div>
+<p>从而得证 Verifier 最后一定会输出 accept 。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<section id="id6">
+<h3>命题 1 的引入<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>在证明引理 1 前先给出一个重要的命题，再用该命题来证明引理 1 。在下述命题中，用小写字母 <span class="math notranslate nohighlight">\(x, y\)</span> 来表示域中的元素，用大写字母 <span class="math notranslate nohighlight">\(X,Y\)</span> 来表示自变量。</p>
+<p><strong>Claim 1</strong> [BBHR18b, Claim 4.2].  For every <span class="math notranslate nohighlight">\(f^{(i)}: L^{(i)} \rightarrow \mathbb{F}\)</span> there exists <span class="math notranslate nohighlight">\(Q^{(i)}(X,Y) \in \mathbb{F}[X,Y]\)</span>  satisfying</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f^{(i)}(x) = Q^{(i)}(x,q^{(i)}(x))\)</span> for all <span class="math notranslate nohighlight">\(x \in L^{(i)}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\deg_X(Q^{(i)}) &lt; |L_0^{(i)}|\)</span></p></li>
+<li><p>If <span class="math notranslate nohighlight">\(f^{(i)} \in RS[\mathbb{F},L^{(i)},\rho]\)</span> then <span class="math notranslate nohighlight">\(\deg_Y(Q^{(i)}) &lt; \rho |L^{(i+1)}|\)</span></p></li>
+</ol>
+<p>该命题对于理解 FRI 协议是比较重要的。Vitalik 在其博客文章 <a class="reference external" href="https://vitalik.eth.limo/general/2017/11/22/starks_part_2.html">STARKs, Part II: Thank Goodness It’s FRI-day</a> 的 A First Look at Sublinearity 小节中给出了一个具体的例子，其协议过程已初具 FRI 协议的雏形，我们在这里用命题 1 的视角来重新看看这个例子。
+假设有限域 <span class="math notranslate nohighlight">\(L\)</span> 的大小为 <span class="math notranslate nohighlight">\(N = 10^9\)</span> ， 设多项式 <span class="math notranslate nohighlight">\(f(X): L \rightarrow \mathbb{F}\)</span> ，且其次数 <span class="math notranslate nohighlight">\(&lt; 10^6\)</span> ，那么有 <span class="math notranslate nohighlight">\(f \in RS[\mathbb{F}, L, \rho = 10^{-3}]\)</span> 。根据命题 1 可得，一定存在一个二元多项式 <span class="math notranslate nohighlight">\(g(X,Y) \in \mathbb{F}[X,Y]\)</span> 满足：</p>
+<ol class="arabic simple">
+<li><p>对于 <span class="math notranslate nohighlight">\(\forall x \in L\)</span> 都有 <span class="math notranslate nohighlight">\(g(x,q(x)) = f(x)\)</span> ，其中 <span class="math notranslate nohighlight">\(q(x) = x^{1000}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\deg_X(g) &lt; |L_0| = 10^3\)</span></p></li>
+<li><p>由于 <span class="math notranslate nohighlight">\(f \in RS[\mathbb{F}, L, \rho = 10^{-3}]\)</span> ，则 <span class="math notranslate nohighlight">\(\deg_Y(g) &lt; \rho |L^{(1)}| = 10^{-3} \times 10^6 = 10^3\)</span>
+现在 Prover 想向 Verifier 证明 <span class="math notranslate nohighlight">\(f(x)\)</span> 的次数确实是小于 <span class="math notranslate nohighlight">\(10^6\)</span> 的。在文章中用了直观的几何图形来说明证明的过程。</p></li>
+</ol>
+<p><img alt="" src="../_images/BBHR18-FRI-fri3.png" /></p>
+<p>在图中，正方形的横向表示的是自变量 <span class="math notranslate nohighlight">\(X\)</span> ，取值范围就是 <span class="math notranslate nohighlight">\(L\)</span> ，总共有 <span class="math notranslate nohighlight">\(10^9\)</span> 个，而纵向表示的是自变量 <span class="math notranslate nohighlight">\(Y\)</span> ，其取值范围是 <span class="math notranslate nohighlight">\(\{x^{1000} | x \in L\}\)</span> 。正方形中的一个点 <span class="math notranslate nohighlight">\((x,y)\)</span> 对应的值表示的就是计算出的 <span class="math notranslate nohighlight">\(g(x,y)\)</span> 的值。对于在正方形的对角线上的点 <span class="math notranslate nohighlight">\((x, y)\)</span>，满足 <span class="math notranslate nohighlight">\(x = y\)</span> ，那么 <span class="math notranslate nohighlight">\(g(x,y) = g(x, x^{1000}) = f(x)\)</span> 。</p>
+<p>证明的过程如下：</p>
+<ol class="arabic simple">
+<li><p>Prover 承诺上述正方形中关于 <span class="math notranslate nohighlight">\(g(X,Y)\)</span> 的所有点的估计，例如使用 Merkle 树来进行承诺。</p></li>
+<li><p>Verifier 随机选取大约几十行和列，对于选择的每一行或列，Verifier 会要求例如 <span class="math notranslate nohighlight">\(1010\)</span> 个点的样本，确保在每种情况下所需的点之一位于对角线上。比如 Verifier 选取第 <span class="math notranslate nohighlight">\(5\)</span> 列，那么此时 <span class="math notranslate nohighlight">\(x = x_4\)</span> ，此时需要选取 <span class="math notranslate nohighlight">\(1010\)</span> 个样本点，那么这些点的横坐标已经确定了，只需随机纵坐标就行，在纵坐标中选取 <span class="math notranslate nohighlight">\(y = x_4^{1000}\)</span> 就确保了该点 <span class="math notranslate nohighlight">\((x_4,x_4^{1000})\)</span> 在对角线上了。</p></li>
+<li><p>Prover 回复 Verifier 要求的点对应的值 <span class="math notranslate nohighlight">\(g(x,y)\)</span> ，并带上对应的 Merkle 分支，证明它们是 Prover 原来承诺的数据的一部分。</p></li>
+<li><p>Verifier 检查 Merkle 分支是否匹配，同时对于每一行或每一列，Verifier 验证 Prover 提供的这些点是否真的对应一个次数 <span class="math notranslate nohighlight">\(&lt;1000\)</span> 的多项式。Verifier 可以通过对这些点进行插值来验证这一点。</p></li>
+</ol>
+<p>原文提到：</p>
+<blockquote>
+<div><p>This gives the verifier a statistical proof that (i) most rows are populated mostly by points on degree <span class="math notranslate nohighlight">\(&lt;1000\)</span> polynomials, (ii) most columns are populated mostly by points on degree <span class="math notranslate nohighlight">\(&lt;1000\)</span> polynomials, and (iii) the diagonal line is mostly on these polynomials. This thus convinces the verifier that most points on the diagonal actually do correspond to a degree <span class="math notranslate nohighlight">\(&lt;1,000,000\)</span> polynomial.</p>
+</div></blockquote>
+<p>这几点与结论可以联系命题 1 给出的那三项：</p>
+<ol class="arabic simple">
+<li><p>对于大多数行，对应的是次数 <span class="math notranslate nohighlight">\(&lt;1000\)</span> 的多项式，也就是说明 <span class="math notranslate nohighlight">\(\deg_X(g) &lt; 1000\)</span> 。</p></li>
+<li><p>对于大多数列，对应的是次数 <span class="math notranslate nohighlight">\(&lt;1000\)</span> 的多项式，也就是说明 <span class="math notranslate nohighlight">\(\deg_Y(g) &lt; 1000\)</span> 。</p></li>
+<li><p>对角线主要由这些多项式上的点组成，也就是说明这些点的值满足 <span class="math notranslate nohighlight">\(g(x,x^{1000})\)</span> 。</p></li>
+</ol>
+<p>这也就能说明对角线上的大多数点 <span class="math notranslate nohighlight">\((x, x^{1000})\)</span> 对应一个次数 <span class="math notranslate nohighlight">\(&lt;10^6\)</span> 的多项式，又因为 <span class="math notranslate nohighlight">\(f(x) = g(x,x^{1000})\)</span> ，也就让 Verifier 相信多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 的次数是 <span class="math notranslate nohighlight">\(&lt; 10^6\)</span> 的了。</p>
+<p>综上，如果我们想要证明多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 的次数小于某个值，根据命题 1 ，一定存在一个二元多项式 <span class="math notranslate nohighlight">\(g(X,Y)\)</span> 能与 <span class="math notranslate nohighlight">\(f(X)\)</span> 产生联系，首先就是 <span class="math notranslate nohighlight">\(f(x) = g(x,q(x))\)</span> ，剩下两个结论是关于 <span class="math notranslate nohighlight">\(g(X,Y)\)</span> 的次数 <span class="math notranslate nohighlight">\(\deg_X(g)\)</span> 与 <span class="math notranslate nohighlight">\(\deg_Y(g)\)</span> 的两个结论，这就分别对应着图中横线与竖线所表示的多项式的次数。其实可以就上述步骤进行递归，这部分对应文章中 And Even More Efficiency 小节，描述的也就是 FRI 协议的过程。</p>
+<p><img alt="" src="../_images/BBHR18-FRI-fri_recrsion.png" /></p>
+<p>下面给出命题 1 的证明。</p>
+<p><em><strong>命题 1 证明</strong></em>：令 <span class="math notranslate nohighlight">\(P^{(i)} = \text{interpolant}^{f^{(i)}}\)</span> ，即将函数 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 在  <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 进行插值，得到多项式 <span class="math notranslate nohighlight">\(P^{(i)}\)</span> 。用 <span class="math notranslate nohighlight">\(\mathbb{F}[X,Y]\)</span> 表示在有限域 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 上的二元多项式环；先按照多项式的总次数对其中的单项式进行排序，再按照 <span class="math notranslate nohighlight">\(X\)</span>-次数进行排序。令</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+Q^{(i)}(X,Y) = P^{(i)}(X) \qquad \text{mod} \; Y - q^{(i)}(X)
+\end{equation}
+\]</div>
+<p>为 <span class="math notranslate nohighlight">\(P^{(i)}(X)\)</span> 除以 <span class="math notranslate nohighlight">\(Y - q^{(i)}(X)\)</span> 的余式。通过该定义，可以得出一定存在一个商式 <span class="math notranslate nohighlight">\(R(X,Y) \in \mathbb{F}[X,Y]\)</span> 使得</p>
+<div class="math notranslate nohighlight">
+\[
+P^{(i)}(X) = Q^{(i)}(X,Y) + (Y - q^{(i)}(X)) \cdot R(X,Y).
+\]</div>
+<p>对于 <span class="math notranslate nohighlight">\(\forall x \in L^{(i)}\)</span> 以及 <span class="math notranslate nohighlight">\(y = q^{(i)}(x)\)</span> ，带入上式中的最右边一项，可以得到 <span class="math notranslate nohighlight">\((Y - q^{(i)}(X)) \cdot R(X,Y) = (y - q^{(i)}(x)) \cdot R(x,y) = 0\)</span> 。因此 <span class="math notranslate nohighlight">\(P^{(i)}(x) = Q^{(i)}(x,y) = Q^{(i)}(x,q^{(i)}(x))\)</span> ，而 <span class="math notranslate nohighlight">\(P^{(i)}(X)\)</span> 是由 <span class="math notranslate nohighlight">\(f^{(i)}(X)\)</span> 在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 上插值得到的，那么 <span class="math notranslate nohighlight">\(f^{(i)}(x) = P^{(i)}(x) = Q^{(i)}(x, q^{i}(x))\)</span> ，也就证明了命题中的第 1 项。
+由单项式的排序，可得定义的余式 <span class="math notranslate nohighlight">\(Q\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\deg_X(Q^{(i)}(X,Y)) &lt; \deg(q^{(i)}) = |L_0^{(i)}|,
+\]</div>
+<p>因此命题 1 的第 2 项成立。</p>
+<p>最后证明命题 1 的第 3 项。由条件 <span class="math notranslate nohighlight">\(f^{(i)} \in RS[\mathbb{F},L^{(i)},\rho]\)</span> 可得 <span class="math notranslate nohighlight">\(\deg(P^{(i)}) &lt; \rho |L^{(i)}|\)</span> 。根据除法法则以及单项式排序规则，得</p>
+<div class="math notranslate nohighlight">
+\[
+\deg_Y(Q^{(i)}) = \left \lfloor \frac{\deg(P^{(i)})}{\deg(q^{(i)})}\right \rfloor = \left \lfloor \frac{\deg(P^{(i)})}{|L_0^{(i)}|}\right \rfloor &lt; \left \lfloor \frac{\rho |L^{(i)}|}{|L_0^{(i)}|}\right \rfloor = \left \lfloor \rho |L^{(i+1)}|\right \rfloor \le \rho |L^{(i+1)}|.
+\]</div>
+<p>因此得证命题 1 第 3 项。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="id7">
+<h3>引理 1 的证明<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p>使用命题 1 的记号。由命题的第 3 项得，对于任意的 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 有 <span class="math notranslate nohighlight">\(\deg_Y(Q^{(i)}) &lt; \rho \cdot |L^{(i+1)}|\)</span> 。下面证明</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\forall y \in L^{(i+1)} , f^{(i+1)}(y) = Q^{(i)}(x^{(i)}, y)
+\end{equation}
+\]</div>
+<p>上式如果成立就证明了 <span class="math notranslate nohighlight">\(\deg(f^{(i+1)}) \le \deg_Y(Q^{(i)}) &lt; \rho \cdot |L^{(i+1)}|\)</span> ，这就证明了 <span class="math notranslate nohighlight">\(\deg(f^{(i+1)}) \in \text{RS}^{(i+1)}\)</span> 。</p>
+<p>为了证明上式，先固定 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> ，令 <span class="math notranslate nohighlight">\(S_y \in \mathcal{S}^{(i)}\)</span> 是满足 <span class="math notranslate nohighlight">\(q^{(i)}(S_y) = \{y\}\)</span> 的集合，它也是在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 中 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 的陪集。由 <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> 的构造可知</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i+1)}(y) = \text{interpolant}^{f^{(i)}|_{S_y}}(x^{(i)}).
+\]</div>
+<p>由命题 1 的第 1 项得</p>
+<div class="math notranslate nohighlight">
+\[
+\forall x \in S_y, \quad f^{(i)}(x) = P^{(i)} = Q^{(i)}(x,y)
+\]</div>
+<p>由命题 1 的第 2 项，可知 <span class="math notranslate nohighlight">\(\deg_X(Q^{(i)}) &lt; |L_0^{(i)}| = |S_y|\)</span> ，因此可以将 <span class="math notranslate nohighlight">\(X\)</span> 当作一个形式自变量，得到</p>
+<div class="math notranslate nohighlight">
+\[
+\text{interpolant}^{f^{(i)}|_{S_y}}(X) = Q^{(i)}(X,y)
+\]</div>
+<p>再令 <span class="math notranslate nohighlight">\(X = x^{(i)}\)</span> ，左右两边的多项式 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 上的估计肯定是相同的。从而得到</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i+1)}(y) = \text{interpolant}^{f^{(i)}|_{S_y}}(x^{(i)}) = Q^{(i)}(x^{(i)},y)
+\]</div>
+<p>自然，当对于任意的 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+\forall y \in L^{(i+1)} , f^{(i+1)}(y) = Q^{(i)}(x^{(i)}, y)
+\]</div>
+<p>因此得证。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+</section>
+<section id="soundness">
+<h2>定理 1 Soundness 证明分析<a class="headerlink" href="#soundness" title="Link to this heading">#</a></h2>
+<p>本节主要说明定理 1 中 soundness 的证明思路。首先给出几个在证明中用到的定义，接着说明两个重要的引理，最后根据这两个引理来证明 soundness。</p>
+<section id="round-consistency">
+<h3>round consistency  与 失真集<a class="headerlink" href="#round-consistency" title="Link to this heading">#</a></h3>
+<p>soundness 分析的难点就在于怎么准确的估计出对于任意作恶的 prover ， 通过和 verifier 交互，最终通过该协议的概率。想要准确的进行估计，我们就需要考虑在协议的过程中，哪些地方可能会产生误差，如果我们将这些误差过程都毫无遗失的都估计出出错的概率，最后再综合来分析，就能得到 soundness 了。在这个过程中，为了对这些可能出现误差的情况进行概率估计分析，我们需要准确地描述出这些估计，也就是我们需要对其进行量化，下面就给出在这个过程中必要的一些定义。</p>
+<p>在第 <span class="math notranslate nohighlight">\(i\)</span> 步，给出关于 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 与 <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> 的 oracle ，以及 Verifier 给出的随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 。</p>
+<blockquote>
+<div><p>❓ <strong>疑问</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 这里论文是否写错，改为 <span class="math notranslate nohighlight">\(f^{(i-1)}\)</span> ？</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>inner-layer distance</strong>  第 <span class="math notranslate nohighlight">\(i\)</span>th 的 <em>inner-layer distance</em> 就是 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 距离 <span class="math notranslate nohighlight">\(\text{RS}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta^{(i)}\)</span>-距离。</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} \triangleq \Delta^{(i)}(f^{i},\text{RS}^{(i)})
+\]</div>
+<p>该定义就是前文提到的第 <span class="math notranslate nohighlight">\(i\)</span> 步的 block-wise 距离。</p>
+<ul class="simple">
+<li><p><strong>round error</strong> 对于 <span class="math notranslate nohighlight">\(i &gt; 0\)</span> ，第  <span class="math notranslate nohighlight">\(i\)</span>th <em>round 误差集</em> (<em>round error set</em>) 是 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 的一个子集，定义如下</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+ A_{\text{err}}^{(i)}\left(f^{(i)},f^{(i-1)},x^{(i-1)}\right) \triangleq \left \{ y_S^{(i)} \in L^{(i)} | \text{interpolant} ^{f^{(i-1)|_S}}\left(x^{(i-1)}\right) \neq f^{(i)}\left(y_S^{(i)}\right)\right \}
+\]</div>
+<p>round error set 描述的就是在第 <span class="math notranslate nohighlight">\(i\)</span> 轮中 Verifier 会在检查 round consistency 测试失败的那些 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 中的元素。相应的概率就是 <span class="math notranslate nohighlight">\(i\)</span>th round error <span class="math notranslate nohighlight">\(\text{err}^{(i)}\)</span> 。</p>
+<div class="math notranslate nohighlight">
+\[
+\text{err}^{(i)}\left(f^{(i)},f^{(i-1)},x^{(i-1)}\right) \triangleq \frac{|A_{\text{err}}^{(i)}|}{|L^{(i)}|}
+\]</div>
+<ul class="simple">
+<li><p><strong>closest codeword</strong> 令 <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> 表示在 <span class="math notranslate nohighlight">\(\Delta^{(i)}(\cdot)\)</span>-测度下在 <span class="math notranslate nohighlight">\(\text{RS}^{(i)}\)</span> 中距离 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 最近的码字。我们知道<span class="math notranslate nohighlight">\(\Delta^{(i)}(\cdot)\)</span>-测度是在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 的陪集划分集合 <span class="math notranslate nohighlight">\(\mathcal{S}^{(i)}\)</span> 中的一种度量，令 <span class="math notranslate nohighlight">\(\mathcal{S}_B^{(i)} \subset \mathcal{S}^{(i)}\)</span> 表示 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 与码字 <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> 在划分 <span class="math notranslate nohighlight">\(\mathcal{S}^{(i)}\)</span> 中不一致的“坏” (“bad”) 的陪集，即</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\mathcal{S}_B^{(i)} = \left\{ S \in \mathcal{S}^{i} | f^{(i)}|_S \neq \bar{f}^{(i)}|_S \right \}
+\end{equation}
+\]</div>
+<p>将这些在 <span class="math notranslate nohighlight">\(\mathcal{S}^{(i)}\)</span> 中“坏”的陪集放在一起组成集合为 <span class="math notranslate nohighlight">\(D^{(i)} = \cup_{S \in \mathcal{S}_B^{(i)}}S\)</span> ，可以发现 <span class="math notranslate nohighlight">\(D^{(i)}\)</span> 是 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 的子集，其中每一个元素是一个“坏”的陪集。</p>
+<p>如果 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; (1-\rho) /2\)</span> ，那么根据上文关于 block-wise 距离 <span class="math notranslate nohighlight">\(\Delta^{(i)}\)</span> 的不等式，可得</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta_H^{(i)} \le \delta^{(i)} &lt; (1-\rho) /2,
+\]</div>
+<p>根据相对 Hamming 距离的界，此时可以唯一解码，根据 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 可以解码出唯一的 <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> ，那么此时自然 <span class="math notranslate nohighlight">\(\mathcal{S}_B^{(i)}\)</span> 是唯一的，进而 <span class="math notranslate nohighlight">\(\Delta_H^{(i)}\)</span> 也就能唯一确定了。</p>
+<ul class="simple">
+<li><p><strong>失真集</strong> 对于 <span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span> ，<span class="math notranslate nohighlight">\(f^{(i)}\)</span> 的<em>失真集</em> (<em>distortion set</em>) 为</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	B \left[ f^{(i)}; \epsilon \right ] \triangleq \left\{ x^{(i)} \in \mathbb{F} | \Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) &lt; \epsilon \right\}
+\end{equation}
+\]</div>
+<p>注意上述使用的测度是相对 Hamming 距离。可以这样来理解这个失真集，我们知道 Verifier 会从有限域 <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> 中选取随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 发送给 Prover ，Prover 根据 Verifier 发送的 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 以及 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 去构造下一步的 <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> ，接着我们看构造的下一步的 <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 之间的相对 Hamming 距离，如果我们给定一个值 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，我们看 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中哪些 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 会导致构造的 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 距离编码空间 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 的最小相对 Hamming 距离小于给定的参数 <span class="math notranslate nohighlight">\(\epsilon\)</span> 。进一步理解，那就是考虑域 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 上所有的 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> ，看看哪些 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 会距离全体编码空间 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 有一定距离，这个距离参数最大就是 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，根据 <span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span> 的条件，我们知道 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 到编码空间至少就有一个正数的距离，肯定不在 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 的空间中。</p>
+<p>那么失真集考虑的是哪些可能出现误差的情况呢？它是从 Verifier 的行为的角度出发，考虑的是 Verifier 在挑选随机数的过程中可能由于随机数的选择导致的不再在编码空间的情况。</p>
+</section>
+<section id="id8">
+<h3>soundness 证明思路<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>刚刚讲了失真集考虑是从 Verifier 选取随机数过程中可能造成的误差，那么另一个角度就是 Prover 在构造过程或者说 COMMIT 承诺阶段产生的误差。也就是当我们要估计 soundness 时，考虑以下两种会发生误差的情况：</p>
+<ol class="arabic simple">
+<li><p>Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中选取随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 导致的误差。</p></li>
+<li><p>Prover 在 COMMIT 阶段导致的误差。</p></li>
+</ol>
+<p>由此有了 soundness 分析的大致思路，先估计第 1 种情况发生的概率，再假设第 1 种情况不会发生，发生第 2 种情况的概率。最后再来分析两种情况都同时发生的概率，也就得到了我们想要的 soundness 。</p>
+<p>为了估计出第 1 种情况的概率，首先给出关于失真集的一对引理，这两对引理考虑的是不同的 <span class="math notranslate nohighlight">\(\epsilon\)</span>。我们知道在对 code 解码的过程中，会先有一个相对 Hamming 距离的参数 <span class="math notranslate nohighlight">\(\delta\)</span>，对 <span class="math notranslate nohighlight">\(\delta\)</span> 的值分两种情况：</p>
+<ol class="arabic simple">
+<li><p>如果 <span class="math notranslate nohighlight">\(\delta \le (1 - \rho) / 2\)</span>，则解码是唯一的，即 unique decoding 。</p></li>
+<li><p>如果 <span class="math notranslate nohighlight">\(\delta &gt; (1 - \rho) / 2\)</span>，此时解码出来是一个列表，是 List decoding。</p></li>
+</ol>
+<blockquote>
+<div><p>📖 <strong>Notes</strong></p>
+<p>为了更好地理解 List Decoding，这里给出其定义：</p>
+<p><strong>Definition 2</strong> [Essential Coding Theory, Definition 7.2.1] Given <span class="math notranslate nohighlight">\(0 \le \rho \le 1\)</span>, <span class="math notranslate nohighlight">\(L \ge 1\)</span>, a code <span class="math notranslate nohighlight">\(C \subseteq \Sigma^n\)</span> is <span class="math notranslate nohighlight">\((\rho, L)\)</span>-list decodable if for every received word <span class="math notranslate nohighlight">\(\vec{y} \in \Sigma^n\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; |\{c \in C | \Delta(\vec{y},c) \le \rho n\}| \le L.
+&gt; \]</div>
+<p>意思就是提前给定一个相对 Hamming 距离参数 <span class="math notranslate nohighlight">\(\delta\)</span> ，以及列表的长度上限 <span class="math notranslate nohighlight">\(L\)</span>，对于每一个接收到的消息 <span class="math notranslate nohighlight">\(\vec{y}\)</span> ，在编码空间 <span class="math notranslate nohighlight">\(C\)</span> 中，只要码字 <span class="math notranslate nohighlight">\(c\)</span> 与消息 <span class="math notranslate nohighlight">\(\vec{y}\)</span> 之间的相对 Hamming 距离小于等于 <span class="math notranslate nohighlight">\(\rho n\)</span> ，我们就认为 <span class="math notranslate nohighlight">\(c\)</span> 是有效的解码。同时要求符合该距离条件的有效编码 <span class="math notranslate nohighlight">\(c\)</span> 的个数不能超过 <span class="math notranslate nohighlight">\(L\)</span> ，我们就说这个编码是 <span class="math notranslate nohighlight">\((\rho n, L)\)</span>-list decodable。</p>
+<p>根据 Hamming 距离，有这样一个性质：</p>
+<p><strong>Proposition 1</strong> [Essential Coding Theory, Proposition 1.4.2] Given a code <span class="math notranslate nohighlight">\(C\)</span>, the following are equivalent:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C\)</span> has minimum distance <span class="math notranslate nohighlight">\(d \ge 2\)</span>,</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(d\)</span> is odd, <span class="math notranslate nohighlight">\(C\)</span> can correct <span class="math notranslate nohighlight">\((d−1)/2\)</span> errors.</p></li>
+<li><p><span class="math notranslate nohighlight">\(C\)</span> can detect <span class="math notranslate nohighlight">\(d − 1\)</span> errors.</p></li>
+<li><p><span class="math notranslate nohighlight">\(C\)</span> can correct <span class="math notranslate nohighlight">\(d − 1\)</span> erasures.</p></li>
+</ol>
+<p>假设 <span class="math notranslate nohighlight">\(C\)</span> 的相对 Hamming 距离为 <span class="math notranslate nohighlight">\(\delta\)</span> ，那么 <span class="math notranslate nohighlight">\(\delta = d / n\)</span> 。根据上述的性质，知道对于 <span class="math notranslate nohighlight">\(C\)</span> ，可以纠正最坏情况的错误的编码的比例为 <span class="math notranslate nohighlight">\(\le \frac{\delta}{2}\)</span> 。又由 Singleton bound 知，</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \delta \le 1 - \rho
+&gt; \]</div>
+<p>因此，当错误的编码比例 <span class="math notranslate nohighlight">\(\le \frac{1-\rho}{2}\)</span> 时，此时这些错误是可以纠正的，也就是可以唯一编码。</p>
+</div></blockquote>
+<p>下面正式给出这一对引理。Lemma 3 描述的是解码半径超过唯一解码界 <span class="math notranslate nohighlight">\((1-\rho)/2\)</span> 的情况，而 Lemma 4 说的是解码半径小于 <span class="math notranslate nohighlight">\((1-\rho)/2\)</span> 的情况，即唯一解码。</p>
+<p><strong>Lemma 3</strong> [BBHR18b, Lemma 4.3] (Soundness above unique decoding radius). For any <span class="math notranslate nohighlight">\(\epsilon \le \frac{2^{\eta}}{|\mathbb{F}|}\)</span> and <span class="math notranslate nohighlight">\(f^{(i)}\)</span> such that <span class="math notranslate nohighlight">\(\delta^{(i)}&gt;0\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Pr_{x^{(i)} \in \mathbb{F}} \left[ x^{(i)} \in B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ] \right] \le \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\end{equation}
+\]</div>
+<p><strong>Lemma 4</strong> [BBHR18b, Lemma 4.4] (Soundness within unique decoding radius). If <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; (1 - \rho) / 2\)</span> then</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Pr_{x^{(i)} \in \mathbb{F}} \left[ x^{(i)} \in B \left[ f^{(i)}; \delta^{(i)} \right ] \right] \le \frac{|L^{(i)}|}{|\mathbb{F}|}.
+\end{equation}
+\]</div>
+<p>Moreover, suppose that for <span class="math notranslate nohighlight">\(i &lt; r\)</span> the sequences <span class="math notranslate nohighlight">\(\vec{f} = (f^{(i)}, \cdots, f^{(r)})\)</span> and <span class="math notranslate nohighlight">\(\vec{x} = (x^{(i)}, \cdots, x^{(r - 1)})\)</span> satisfy</p>
+<ol class="arabic simple">
+<li><p>for all <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> we have <span class="math notranslate nohighlight">\(\delta^{(j)} &lt; \frac{1-\rho}{2}\)</span></p></li>
+<li><p>for all <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r - 1\}\)</span> we have <span class="math notranslate nohighlight">\(\bar{f}^{(j+1)} = f_{\bar{f}^{(j)},x^{(j)}}^{(j+1)}\)</span></p></li>
+<li><p>for all <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> we have <span class="math notranslate nohighlight">\(x^{(j)} \notin B[f^{(i)};\delta^{(j)}]\)</span></p></li>
+</ol>
+<p>then</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Pr_{s^{(i)} \in D^{(i)}} \left[ \text{QUERY}(\vec{f}, \vec{x}) = \text{reject} \right] = 1
+\end{equation}
+\]</div>
+<p>and consequently</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Pr_{s^{(i)} \in L^{(i)}} \left[ \text{QUERY}(\vec{f}, \vec{x}) = \text{reject} \right] \ge \frac{|D^{(i)}|}{| L^{(i)} |} = \delta^{(i)}
+\end{equation}
+\]</div>
+<p>根据失真集的定义，这两个引理说得是在不同的解码半径 <span class="math notranslate nohighlight">\(\epsilon\)</span> 下 Verifier 选取随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 进入失真集的概率。</p>
+<p>Lemma 4 后面的 moreover 跟着的结论说的是如果满足如下的条件：</p>
+<ol class="arabic simple">
+<li><p>对于所有的 <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> ，满足唯一解码，也就是 <span class="math notranslate nohighlight">\(\delta^{(j)} &lt; \frac{1 - \rho}{2}\)</span>.</p></li>
+<li><p>对于所有的 <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r - 1\}\)</span> ，在 <span class="math notranslate nohighlight">\(\text{RS}^{(j)}\)</span> 中，选取距离 <span class="math notranslate nohighlight">\(f^{(j)}\)</span> 最近的码字 <span class="math notranslate nohighlight">\(\bar{f}^{(j)}\)</span>，与随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 构造的下一步的函数为 <span class="math notranslate nohighlight">\(f_{\bar{f}^{(j)},x^{(j)}}^{(j+1)}\)</span> ，假设其等于在 <span class="math notranslate nohighlight">\(\text{RS}^{(j+1)}\)</span> 中距离 <span class="math notranslate nohighlight">\(f^{(j+1)}\)</span> 最近的码字，即满足 <span class="math notranslate nohighlight">\(\bar{f}^{(j+1)} = f_{\bar{f}^{(j)},x^{(j)}}^{(j+1)}\)</span>.</p></li>
+<li><p>对于所有的 <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r - 1\}\)</span> ，满足随机数 <span class="math notranslate nohighlight">\(x^{(j)}\)</span> 没有进入失真集，即 <span class="math notranslate nohighlight">\(x^{(j)} \notin B[f^{(i)};\delta^{(j)}]\)</span>.</p></li>
+</ol>
+<p>那么得到的结论就是在 QUERY 阶段，如果从“坏”的陪集 <span class="math notranslate nohighlight">\(D^{(i)}\)</span> 里去选择 <span class="math notranslate nohighlight">\(s^{i}\)</span> ，那么 Veriifer 一定会在 QUERY 阶段拒绝，即</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Pr_{s^{(i)} \in D^{(i)}} \left[ \text{QUERY}(\vec{f}, \vec{x}) = \text{reject} \right] = 1
+\end{equation}
+\]</div>
+<p>从而可以得到如果 <span class="math notranslate nohighlight">\(s^{i}\)</span> 是从整个 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 中选取的，QUERY 阶段 Verifier 拒绝的概率至少为 <span class="math notranslate nohighlight">\(\frac{|D^{(i)}|}{| L^{(i)} |}\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Pr_{s^{(i)} \in L^{(i)}} \left[ \text{QUERY}(\vec{f}, \vec{x}) = \text{reject} \right] \ge \frac{|D^{(i)}|}{| L^{(i)} |} = \delta^{(i)}.
+\end{equation}
+\]</div>
+<p>现在已经做好准备工作了，开始证明协议的 soundness。到目前为止，考虑之前提到可能发生误差的情况，soundness 证明思路如下。</p>
+<ol class="arabic">
+<li><p>在 COMMIT 阶段，Verifier 可能选到失真集中的随机数。
+现在 Lemma 3 和 Lemma 4 的结论可以帮助我们去估计发生这种情况的概率。我们称 Verifier 选到失真集中的随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 为发生了“坏”的事件，Verifier 总共会选择 <span class="math notranslate nohighlight">\(r\)</span> 个随机数，记为 <span class="math notranslate nohighlight">\(x^{(0)}, \cdots, x^{(r-1)}\)</span> ，每一轮将随机数选到了失真集中的事件分别记为 <span class="math notranslate nohighlight">\(E^{(0)}, \cdots, E^{(r-1)}\)</span> ，我们估计发生了一些“坏”的事件的概率的界，其概率最多为</p>
+<div class="math notranslate nohighlight">
+\[
+	\frac{3|L^{(0)}|}{|\mathbb{F}|}.
+	\]</div>
+</li>
+<li><p>在 QUERY 阶段，Verifier 可能会拒绝。
+假设情况 1 不会发生，在这种条件下，估计 QUERY 阶段 Verifier 拒绝的概率的界，只进行完整的一轮的拒绝概率至少为</p>
+<div class="math notranslate nohighlight">
+\[
+	\min \left \{\delta^{(0)}, \frac{1-3\rho-2^{\eta}/\sqrt{|L^{(0)}|}}{4} \right \}.
+	\]</div>
+</li>
+<li><p>同时考虑情况 1 和情况 2 都会发生，同时考虑 Verifier 在 QUERY 阶段重复了 <span class="math notranslate nohighlight">\(l\)</span> 次，那么可以得到 FRI 协议的 soundness 至少为</p>
+<div class="math notranslate nohighlight">
+\[
+	\textbf{s}^{-}(\delta^{(0)}) \triangleq 1 - \left ( \frac{3|L^{(0)}|}{|\mathbb{F}|} + \left (1 - \min \left \{\delta^{(0)}, \frac{1-3\rho-2^{\eta}/\sqrt{|L^{(0)}|}}{4} \right \}\right )^{l} \right).
+	\]</div>
+</li>
+</ol>
+<blockquote>
+<div><p>🤔 <strong>Thoughts</strong></p>
+<p>真的会发生一种情况，那就是 Verifier 选取了一些随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> ，进入了失真集中，然后由一个距离 RS code 比较远（假设 <span class="math notranslate nohighlight">\(\epsilon\)</span> 远）的 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 以及 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 构造出的 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 的这个距离没有保持，比原来更小，也就是失真了，这个时候如果我们运行 QUERY 步骤，我们没有能力能够辨别这种情况，也就是如果是一个多项式 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 它本身没有在 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 中，同时呢它又距离 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 小于 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，Veriifier 具备的能力是能够辨别出一个多项式它距离 RS code 空间有 <span class="math notranslate nohighlight">\(\epsilon\)</span> 那么远，现在它困惑了，迷失了，它认为 Prover 没有作弊，因为这个时候确实小于给的一个参数 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，最后它输出了 accept。</p>
+</div></blockquote>
+<blockquote>
+<div><p>😎 <strong>关于整体 soundness 概率推导的想法</strong></p>
+<p>首先考虑一个最简单的 ZK 协议 (该例子与图片来自 <a class="reference external" href="https://www.youtube.com/watch?v=uchjTIlPzFo&amp;amp;ab_channel=BerkeleyRDICenteronDecentralization%26AI">Zero Knowledge Proofs - Introduction and History of ZKP</a>)</p>
+<p><img alt="" src="../_images/BBHR18-FRI-tosscoin-1.png" />
+我们现在考虑 soundness 分析，说的是在 Prover 给出一个不是有两种颜色的纸的情况下，计算 Verifier 拒绝的概率。这里假设 Prover 用的是一张只有一个颜色的纸来和 Veriifier 进行交互，那么每次 Prover 最多有 <span class="math notranslate nohighlight">\(1/2\)</span> 的概率能够通过，也就是 Veriifer 能够输出 accpet.最终得到的概率如下图所示。</p>
+<p><img alt="" src="../_images/BBHR18-FRI-tosscoin-2.png" />
+如果我们来分析 soundness ，那就是 Verifier 拒绝的概率，接受的概率最多为 <span class="math notranslate nohighlight">\(1/2\)</span> ，那么一次交互拒绝的概率就至少为 <span class="math notranslate nohighlight">\(1/2\)</span> 。如果要重复 <span class="math notranslate nohighlight">\(k\)</span> 次，那么 soundness 为，对于任意的 <span class="math notranslate nohighlight">\(P^*\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[  
+&gt; \Pr[\left \langle \text{P}^* \leftrightarrow \text{V} \right \rangle = \text{reject}|\text{This page only contains 1 color}] \ge 1 - \left(\frac{1}{2}\right)^k
+&gt; \]</div>
+<p>类似于这个简单的例子分析 soundness 的过程，我们来看看 FRI 的 soundness。简单例子的概率考虑的是在输入错误的知识的情况下，从 Verifier 抛随机硬币中我们有概率能使得 Verifier 最后接受。对于 FRI 协议来说，就是在我们输入一个 <span class="math notranslate nohighlight">\(f^{(0)} \notin \text{RS}^{(0)}\)</span> ，它不在 <span class="math notranslate nohighlight">\(\text{RS}^{(0)}\)</span> 中，那么如何衡量呢，我们衡量它在 block-wise 测度下距离 <span class="math notranslate nohighlight">\(\text{RS}^{(0)}\)</span> 有多远，即<span class="math notranslate nohighlight">\(\delta^{(0)} \triangleq \Delta^{(0)}(f^{0}, \text{RS}^{(0)}) &gt; 0\)</span>。接着我们类似地考虑 Veriifier 抛随机数能让 Prover 有空子可钻。由于 Verifier 抛了一些随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 使得 Prover 能够用错误的 <span class="math notranslate nohighlight">\(f^{(0)} \notin \text{RS}^{(0)}\)</span> 通过协议。也就是一些“坏”的事件发生了，使得选到的随机数进入了失真集，那么 Verifier 通过的概率最多为 <span class="math notranslate nohighlight">\(\frac{3|L^{(0)}|}{|\mathbb{F}|}\)</span>.</p>
+<p>还有一个是发生在 QUERY 阶段 Verifier 会拒绝的概率，上面那个例子 Verifier 直接判断 Prover 发的 coin’ 与 Verifier 自己手里有的 coin 是否相等，是直接的，也没有引入什么随机性，如果计算不相等，就会直接拒绝，不会说还有钻空子的机会。那么我们现在审视下 FRI 协议中的 QUERY 阶段是否有什么会是包含随机性的呢？我们会发现在 QUERY 阶段，Verifier 会从 <span class="math notranslate nohighlight">\(L^{(0)}\)</span> 中选取随机数 <span class="math notranslate nohighlight">\(s^{(0)}\)</span> ，然后再进行计算检查 round consistency 是否能够通过，这个 <span class="math notranslate nohighlight">\(s^{(0)}\)</span> 引入的随机性的过程就是我们去估计在 QUERY 阶段 Verifier 会拒绝的概率的关键。</p>
+<p>为了能够更加清晰地分析清楚，假设 COMMIT 阶段 Verifier 选取的随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 都没有落入失真集。接着我们看看 QUERY 阶段引入的随机，也就是 <span class="math notranslate nohighlight">\(s^{(0)}\)</span> 的选取。可以用 Lemma 4 的 moreover 的结论来看，如果其中的三个条件都成立，给出了一个拒绝的可能性，那就是至少为 <span class="math notranslate nohighlight">\(\delta^{(0)}\)</span> ，然后再来考虑这三个条件不同时满足的情况下 Verifier 会拒绝的概率至少是多少。这时在证明的过程中会用到集合 <span class="math notranslate nohighlight">\(A_{\text{err}}^{(i)}\)</span> 和 <span class="math notranslate nohighlight">\(D^{(i)}\)</span> 。</p>
+</div></blockquote>
+<p>下面正式给出 Soundness 证明。</p>
+<p><em><strong>定理 1 Soundness 证明</strong></em>：设 <span class="math notranslate nohighlight">\(\epsilon = \frac{2^{\eta}}{|L^{(r/2)}|}\)</span> ；为简单起见，假设 <span class="math notranslate nohighlight">\(r\)</span> 是偶数（使用 <span class="math notranslate nohighlight">\(\epsilon = \frac{2^{\eta}}{|L^{\left \lceil r/2 \right \rceil }|}\)</span> 会得到同样的界，但是其分析会有一点复杂）。</p>
+<p><strong>Part I - 一系列的坏事件</strong> 第 <span class="math notranslate nohighlight">\(i\)</span> 个坏事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 定义如下：</p>
+<ul class="simple">
+<li><p><strong>large distance:</strong> 如果 <span class="math notranslate nohighlight">\(\delta^{(i)} \ge \frac{1 - \rho}{2}\)</span> ，那么 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 就是事件</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+x^{(i)} \in B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ] 
+\]</div>
+<ul class="simple">
+<li><p><strong>small distance:</strong> 如果 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1 - \rho}{2}\)</span> ，那么 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 就是事件</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+x^{(i)} \in B \left[ f^{(i)}; \delta^{(i)} \right] 
+\]</div>
+<p>假设事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 没有发生，</p>
+<ol class="arabic">
+<li><p>如果 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1 - \rho}{2}\)</span> ，那么根据事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 以及失真集的定义，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+	x^{(i)} \notin B \left[ f^{(i)}; \delta^{(i)} \right],
+	\]</div>
+<p>即</p>
+<div class="math notranslate nohighlight">
+\[
+	x^{(i)} \notin \left\{ x^{(i)} \in \mathbb{F} | \Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) &lt; \delta^{(i)} \right\},
+	\]</div>
+<p>因此可得</p>
+<div class="math notranslate nohighlight">
+\[
+	\Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \delta^{(i)}
+	\]</div>
+<p>又根据 Block-wise 距离不等式得</p>
+<div class="math notranslate nohighlight">
+\[
+	\begin{equation}
+		\Delta^{(i+1)} \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \delta^{(i)}
+	\end{equation}
+	\]</div>
+</li>
+<li><p>如果 <span class="math notranslate nohighlight">\(\delta^{(i)} \ge \frac{1 - \rho}{2}\)</span> ，那么根据事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 以及失真集的定义，可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+	\begin{aligned}
+		\Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) &amp; \ge \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \\
+		&amp; \ge \frac{1}{2} \cdot \left( \frac{(1 - \rho)}{2} (1 - \epsilon) - \rho \right) \\
+		&amp; =  \frac{(1 - \rho)(1 - \epsilon)}{4}  - \frac{\rho}{2} \\
+		&amp; = \frac{1 - 3\rho - \epsilon + \rho \epsilon}{4} \\
+		&amp; \ge \frac{1 - 3\rho - \epsilon }{4}
+	\end{aligned}
+	\end{split}\]</div>
+<p>根据 Block-wise 距离不等式得
+$<span class="math notranslate nohighlight">\(
+ \begin{equation}
+ 	\Delta^{(i+1)} \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \frac{1 - 3\rho - \epsilon }{4}
+ \end{equation}
+ \)</span>$</p>
+</li>
+</ol>
+<p>记 <span class="math notranslate nohighlight">\(\delta_0 = \frac{1 - 3\rho - \epsilon }{4}\)</span> ， 则总结上述两种情况，如果没有事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 没有发生，则有</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\Delta^{(i+1)} \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \min \left \{ \delta^{(i)}, \delta_0 \right \}
+\end{equation}
+\]</div>
+<p><strong>Part II - 界定一个坏的事件发生的概率</strong> 通过 Lemma 3 和 Lemma 4，以及我们对参数 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的选择，有</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr \left[E^{(i)}\right] \le \max \left\{ \frac{2^{\eta}}{\epsilon |\mathbb{F}|}, \frac{|L^{(i)}|}{|\mathbb{F}|} \right\} = \max \left\{ \frac{|L^{(r/2)}|}{|\mathbb{F}|}, \frac{|L^{(i)}|}{|\mathbb{F}|} \right\}
+\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(|L^{i}|\)</span> 是递减的，因此，当 <span class="math notranslate nohighlight">\(i \le r/2\)</span> 时，</p>
+<div class="math notranslate nohighlight">
+\[
+\max \left\{ \frac{|L^{(r/2)}|}{|\mathbb{F}|}, \frac{|L^{(i)}|}{|\mathbb{F}|} \right\} \le \frac{|L^{(i)}|}{|\mathbb{F}|}
+\]</div>
+<p>当 <span class="math notranslate nohighlight">\(i &gt; r/2\)</span> 时，</p>
+<div class="math notranslate nohighlight">
+\[
+\max \left\{ \frac{|L^{(r/2)}|}{|\mathbb{F}|}, \frac{|L^{(i)}|}{|\mathbb{F}|} \right\} \le \frac{|L^{(r/2)}|}{|\mathbb{F}|}
+\]</div>
+<p>综上得</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\max \left\{ \frac{|L^{(r/2)}|}{|\mathbb{F}|}, \frac{|L^{(i)}|}{|\mathbb{F}|} \right\} \le 
+\begin{cases}
+	\frac{|L^{(i)}|}{|\mathbb{F}|} &amp; i \le r/2\\
+	\frac{|L^{(r/2)}|}{|\mathbb{F}|} &amp;  i &gt; r/2
+\end{cases}
+\end{split}\]</div>
+<p>因此对于事件 <span class="math notranslate nohighlight">\(E^{(0)}, \cdots, E^{(r-1)}\)</span> ，都不发生的概率至少是</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\Pr \left[\bigwedge_{i=1}^{r-1} \neg E^{(i)} \right] &amp; \ge 1 - \left(\sum_{i \le r/2} \frac{|L^{(i)}|}{|\mathbb{F}|} + \frac{r}{2}\frac{|L^{(r/2)}|}{|\mathbb{F}|} \right) \\
+\end{aligned}
+\end{split}\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(\dim(L^{(i)}) = \dim(L^{(0)}) - i\eta\)</span> ，因此</p>
+<div class="math notranslate nohighlight">
+\[
+|L^{(i)}| = 2^{\dim(L^{(i)})} = 2^{\dim(L^{(0)}) - i\eta} = 2^{\dim(L^{(0)})} \cdot \left(\frac{1}{2^{\eta}}\right)^{i} = |L^{(0)}| \left(\frac{1}{2^{\eta}}\right)^{i}
+\]</div>
+<p>根据 <span class="math notranslate nohighlight">\(r\)</span> 的定义</p>
+<div class="math notranslate nohighlight">
+\[ 
+r \triangleq \lfloor \frac{k^{(0)} - \mathcal{R}}{\eta}\rfloor
+\]</div>
+<p>而 <span class="math notranslate nohighlight">\(k^{(0)} = \log |L^{(0)}|\)</span> ，可得</p>
+<div class="math notranslate nohighlight">
+\[ 
+r = \lfloor \frac{k^{(0)} - \mathcal{R}}{\eta}\rfloor \le \frac{k^{(0)} - \mathcal{R}}{\eta} = \frac{\log |L^{(0)}| - \mathcal{R}}{\eta}
+\]</div>
+<p>则概率不等式为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\Pr \left[\bigwedge_{i=1}^{r-1} \neg E^{(i)} \right] &amp; \ge 1 - \left(\sum_{i \le r/2} \frac{|L^{(i)}|}{|\mathbb{F}|} + \frac{r}{2}\frac{|L^{(r/2)}|}{|\mathbb{F}|} \right) \\
+	&amp; \ge 1 - \left(\sum_{i \le r/2} |L^{(0)}| \left(\frac{1}{2^{\eta}}\right)^{i} \frac{1}{|\mathbb{F}|} + \frac{\log |L^{(0)}| - \mathcal{R}}{2\eta}\frac{|L^{(r/2)}|}{|\mathbb{F}|} \right) \\
+	&amp; \color{blue}{(\text{代入}|L^{(i)}| = |L^{(0)}| \left(\frac{1}{2^{\eta}}\right)^{i}, r \le \frac{\log |L^{(0)}| - \mathcal{R}}{\eta})}\\
+	&amp; \ge 1 - \left(\frac{|L^{(0)}|}{|\mathbb{F}|} \sum_{i \le r/2}  \left(\frac{1}{2^{\eta}}\right)^{i} + \frac{\log |L^{(0)}| - \mathcal{R}}{2\eta} \cdot \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} }}\frac{1}{|\mathbb{F}|} \right) \\
+	&amp; \color{blue}{( \text{代入}|L^{(r/2)}| = |L^{(0)}|\left(\frac{1}{2^{\eta}}\right)^{r/2} \le |L^{(0)}|\left(\frac{1}{2^{\eta}}\right)^{\frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta}} = \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} }} )} \\
+	&amp; \ge 1 - \left(\frac{|L^{(0)}|}{|\mathbb{F}|} \sum_{i \le r/2}  \left(\frac{1}{2^{\eta}}\right)^{i} + \frac{\log |L^{(0)}| - \mathcal{R}}{\eta} \cdot \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} }}\frac{1}{|\mathbb{F}|} \right) \\
+	&amp; \color{blue}{(\text{因为}  \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} \le \frac{\log |L^{(0)}| - \mathcal{R}}{\eta},\text{而前面还有一个负号，因此整体缩小了})} \\
+	&amp;  \ge 1 - \left(\frac{|L^{(0)}|}{|\mathbb{F}|} \sum_{i \le r/2}  \left(\frac{1}{2}\right)^{i} + \frac{\log |L^{(0)}| - \mathcal{R}}{\eta} \cdot \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} }}\frac{1}{|\mathbb{F}|} \right) \\
+	&amp; \color{blue}{(\text{因为} \eta \ge 1 \Rightarrow 2^{\eta} \ge 2 \Rightarrow \frac{1}{2^{\eta}} \le \frac{1}{2} \Rightarrow \sum_{i \le r/2}  \left(\frac{1}{2^{\eta}}\right)^{i} \le \sum_{i \le r/2}  \left(\frac{1}{2}\right)^{i} )} \\
+	&amp; \ge 1 - \frac{1}{|\mathbb{F}|}\left(2|L^{(0)}| + \frac{\log |L^{(0)}| - \mathcal{R}}{\eta} \cdot \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} }}\right) \\
+	&amp; \color{blue}{(\text{因为利用等差数列求和公式可得} \sum_{i \le r/2}  \left(\frac{1}{2}\right)^{i} = \frac{1 \left(1 - (\frac{1}{2})^{r/2 + 1}\right)}{1 - \frac{1}{2}} \le \frac{1}{2} )} \\
+	&amp; \ge 1 - \frac{1}{|\mathbb{F}|}\left(2|L^{(0)}| + \log(\rho|L^{(0)}| )  \cdot \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta} }}\right) \\
+	&amp; \color{blue}{(\text{因为} \frac{\log |L^{(0)}| - \mathcal{R}}{\eta} \le \log |L^{(0)}| - \mathcal{R} = \log |L^{(0)}| - \log (1/\rho) = \log(\rho|L^{(0)}| ))}\\
+	&amp; = 1 - \frac{1}{|\mathbb{F}|}\left(2|L^{(0)}| + \log(\rho|L^{(0)}| )  \cdot \sqrt{|L^{(0)}|/\rho} \right) \\
+	&amp; \color{blue}{(\text{因为} \frac{|L^{(0)}|}{2^{\eta \frac{\log |L^{(0)}| - \mathcal{R}}{2 \eta}}} = \frac{|L^{(0)}|}{2^{\frac{\log |L^{(0)}| - \mathcal{R}}{2}}} = \frac{|L^{(0)}|}{2^{\frac{\log (\rho |L^{(0)}|)}{2}}} = \frac{|L^{(0)}|}{2^{\log(\sqrt{\rho |L^{(0)}|})}} =  \frac{|L^{(0)}|}{\sqrt{\rho |L^{(0)}|}} = \sqrt{|L^{(0)}|/\rho})}\\
+\end{aligned}
+\end{split}\]</div>
+<!-- 错误的思路： -->
+<!-- 根据定理条件知 $\rho |L^{(0)}| > 16$ ，则 -->
+<!-- $$
+\rho |L^{(0)}| > 16 \Rightarrow \frac{1}{\rho |L^{(0)}|} < \frac{1}{16} \Rightarrow \frac{1}{\rho} < \frac{|L^{(0)}|}{16}
+$$ -->
+<!-- 因此 -->
+<!-- $$
+\begin{aligned}
+	\log(\rho|L^{(0)}| )  \cdot \sqrt{|L^{(0)}|/\rho} & < \log(\rho|L^{(0)}| ) \cdot \sqrt{|L^{(0)}| \cdot \frac{|L^{(0)}|}{16}}\\
+	& < \log(\rho|L^{(0)}| ) \cdot \frac{|L^{(0)}|}{4} \\
+	& {\color{red}< \log(16)} \cdot \frac{|L^{(0)}|}{4} \\
+	& \color{red}{(\text{这里}\log(\rho|L^{(0)}|) < \log(16) \text{不对，应该是严格大于，那这个结论该如何推导呢？})}\\
+	& = |L^{(0)}|
+\end{aligned}
+$$ -->
+<p>设 <span class="math notranslate nohighlight">\(f(x) = \log_2x\)</span> ，<span class="math notranslate nohighlight">\(g(x) = \sqrt{x}\)</span> ，则当 <span class="math notranslate nohighlight">\(x &gt; 16\)</span> 时，<span class="math notranslate nohighlight">\(f(x) &lt; g(x)\)</span> 。使用 sagemath 可以画出这两个函数的图像进行比较。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 导入 SageMath 的绘图功能</span>
+<span class="kn">from</span> <span class="nn">sage.plot.plot</span> <span class="kn">import</span> <span class="n">plot</span>
+
+<span class="c1"># 定义函数</span>
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">x</span><span class="o">^</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># 绘制函数图像</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s1">&#39;log(x,2)&#39;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">plot</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s1">&#39;x^(1/2)&#39;</span><span class="p">)</span>
+
+<span class="c1"># 将两个图像对象组合在一起并显示</span>
+<span class="p">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="" src="../_images/BBHR18-FRI-function_log_sqrt.png" /></p>
+<blockquote>
+<div><p>📝 <strong>证明当 <span class="math notranslate nohighlight">\(x &gt; 16\)</span> 时，<span class="math notranslate nohighlight">\(\log_2x &lt; \sqrt{x}\)</span></strong>
+令 <span class="math notranslate nohighlight">\(h(x) = f(x) - g(x) = \log_2x - \sqrt{x}\)</span> ，对 <span class="math notranslate nohighlight">\(h(x)\)</span> 求导可得</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; h'(x) = \frac{1}{x\ln2} - \frac{1}{2\sqrt{x}} = \frac{2 \sqrt{x}- x\ln2}{2(\ln2) \cdot x\sqrt{x}}
+&gt; \]</div>
+<p>可以发现，当 <span class="math notranslate nohighlight">\(x &gt; 16\)</span> 时， <span class="math notranslate nohighlight">\(h'(x) &lt; 0\)</span> ，因此 <span class="math notranslate nohighlight">\(h(x) &lt; h(16) = 0\)</span> ，从而 <span class="math notranslate nohighlight">\(\log_2x &lt; \sqrt{x}\)</span> 。</p>
+</div></blockquote>
+<p>根据定理条件 <span class="math notranslate nohighlight">\(\rho |L^{(0)}| &gt; 16\)</span> ，则</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\rho |L^{(0)}| &gt; 16 &amp; \Rightarrow \log(\rho |L^{(0)}|) &lt; \sqrt{\rho |L^{(0)}|} \\
+	&amp; \Rightarrow \log(\rho |L^{(0)}|)  \cdot \sqrt{|L^{(0)}| / \rho}  &lt; \sqrt{\rho |L^{(0)}|}  \cdot \sqrt{|L^{(0)}|/\rho} \\
+	&amp; {\color{blue} (\text{由于} \rho &lt; 1, \text{因此} \sqrt{|L^{(0)}| / \rho} &gt; \sqrt{|L^{(0)}|} &gt; 1, \text{两边同乘以一个大于$1$的数不会改变不等式的符号} )} \\
+	&amp; \Rightarrow \log(\rho |L^{(0)}|)  \cdot \sqrt{|L^{(0)}| \rho}  &lt; |L^{(0)}| \\
+\end{aligned}
+\end{split}\]</div>
+<p>将上述不等式代入概率不等式中得</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\Pr \left[\bigwedge_{i=1}^{r-1} \neg E^{(i)} \right] &amp; \ge 1 - \frac{1}{|\mathbb{F}|}\left(2|L^{(0)}| + \log(\rho|L^{(0)}| )  \cdot \sqrt{|L^{(0)}|/\rho} \right) \\
+	&amp; &gt; 1 - \frac{1}{|\mathbb{F}|}\left(2|L^{(0)}| + |L^{(0)}| \right) \\
+	&amp; = 1 - 3\frac{|L^{(0)}|}{|\mathbb{F}|}.
+\end{aligned}
+\end{split}\]</div>
+<p>下面我们假设没有事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 会发生，继续 soundness 的证明。</p>
+<p><strong>Part III - 当没有坏的事件发生时界定 soundness</strong> 先回顾下 Lemma 4 中对于序列 <span class="math notranslate nohighlight">\(\vec{f} = (f^{(i)}, \cdots, f^{(r)})\)</span> 和 <span class="math notranslate nohighlight">\(\vec{x} = (x^{(i)}, \cdots, x^{(r - 1)})\)</span> 的三个假设</p>
+<ol class="arabic simple">
+<li><p>for all <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> we have <span class="math notranslate nohighlight">\(\delta^{(j)} &lt; \frac{1-\rho}{2}\)</span></p></li>
+<li><p>for all <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r - 1\}\)</span> we have <span class="math notranslate nohighlight">\(\bar{f}^{(j+1)} = f_{\bar{f}^{(j)},x^{(j)}}^{(j+1)}\)</span></p></li>
+<li><p>for all <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> we have <span class="math notranslate nohighlight">\(x^{(j)} \notin B[f^{(i)};\delta^{(j)}]\)</span></p></li>
+</ol>
+<p>由于我们假设了没有坏的事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 会发生，因此假设 3 始终成立，那么三个假设是否成立就有了下面四种情况。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>序号</p></th>
+<th class="head"><p>假设 1</p></th>
+<th class="head"><p>假设 2</p></th>
+<th class="head"><p>假设 3</p></th>
+<th class="head"><p>备注</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>✖️</p></td>
+<td><p>✔️</p></td>
+<td><p>✔️</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>✖️</p></td>
+<td><p>✖️</p></td>
+<td><p>✔️</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>✔️</p></td>
+<td><p>✖️</p></td>
+<td><p>✔️</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>✔️</p></td>
+<td><p>✔️</p></td>
+<td><p>✔️</p></td>
+<td><p>拒绝概率至少为 <span class="math notranslate nohighlight">\(\delta^{(0)}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们将序号 4 的这种情况先进行分析，这种情况最简单，因为 Lemma 4 已经给出了三个假设都满足的情况下 Verifier 拒绝的概率至少为 <span class="math notranslate nohighlight">\(\delta^{(0)}\)</span> 。</p>
+<p>接着我们同时考虑序号 1 和序号 2 的情况，此时假设 1 都不满足，假设 2 满足或者不满足，那么综合来看就是假设 1 不满足，即</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(j)} \ge \frac{1-\rho}{2}
+\]</div>
+<p>最后是考虑序号 3 的情况，此时条件为</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(j)} &lt; \frac{1-\rho}{2} \text{ 且 }\bar{f}^{(j+1)} \neq f_{\bar{f}^{(j)},x^{(j)}}^{(j+1)}
+\]</div>
+<p>综上，存在一些 <span class="math notranslate nohighlight">\(i\in \{0, \cdots, r- 1\}\)</span> 有下列两种情况之一成立</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\delta^{(i)} \ge \frac{1-\rho}{2}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1-\rho}{2} \text{ 且 }\bar{f}^{(i+1)} \neq f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}\)</span></p></li>
+</ol>
+<p>忽略记号，令 <span class="math notranslate nohighlight">\(i &lt; r\)</span> 表示满足上述两种条件之一的最大整数。注意此时 <span class="math notranslate nohighlight">\(D^{(i+1)}\)</span> 是唯一确定的，因为 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1-\rho}{2}\)</span> ，因此 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}\)</span> 也是唯一的。下面的命题说的是诚实的 Prover 的第 <span class="math notranslate nohighlight">\((i+1)\)</span> 个消息在相对 Hamming 距离下离 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}\)</span> 至少有 <span class="math notranslate nohighlight">\(\delta_0\)</span> 那么远。</p>
+<p><strong>Claim 5</strong> [BBHR18b, Claim 4.5].</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta_H(\bar{f}^{(i+1)}, f_{f^{(i)},x^{(i)}}^{(i+1)}) \ge \delta_0
+\]</div>
+<p>Prover 如果得知 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 和 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> ，按照 COMMIT 阶段的方法去诚实的执行，就能构造得到 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> ，而 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}\)</span> 表示在 <span class="math notranslate nohighlight">\(\text{RS}^{i+1}\)</span> 中距离 <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> 在 <span class="math notranslate nohighlight">\(\Delta^{(i+1)}(\cdot)\)</span> -测度下最近的那个码字，此时 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}\)</span> 的相对 Hamming 距离至少为 <span class="math notranslate nohighlight">\(\delta_0\)</span> 。</p>
+<p><em><strong>证明</strong></em>：根据前面的分析，分两种情况进行讨论。</p>
+<ol class="arabic">
+<li><p><span class="math notranslate nohighlight">\(\delta^{(i)} \ge \frac{1 - \rho}{2}\)</span> 成立。由于我们的假设是没有 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 事件发生，因此由 Part I 的分析过程可得</p>
+<div class="math notranslate nohighlight">
+\[
+	\Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \frac{1 - 3\rho - \epsilon }{4} = \delta_0
+	\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}\)</span> 表示的是在 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 中距离 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 最近的码字，因此</p>
+<div class="math notranslate nohighlight">
+\[
+	\Delta_H(\bar{f}^{(i+1)}, f_{f^{(i)},x^{(i)}}^{(i+1)}) = \Delta_H \left( f_{f^{(i)},x^{(i)}}^{(i+1)},\text{RS}^{(i+1)}\right) \ge \delta_0
+	\]</div>
+<p>因此命题成立。</p>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1-\rho}{2} \text{ 且 }\bar{f}^{(i+1)} \neq f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}\)</span> 成立。为了简化描述，记 <span class="math notranslate nohighlight">\(g = f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}\)</span> 。因为 <span class="math notranslate nohighlight">\(\bar{f}^{(i)} \in \text{RS}^{(i)}\)</span> ，那么由 Lemma 1 可得 <span class="math notranslate nohighlight">\(g = f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)} \in \text{RS}^{(i+1)}\)</span> 。同时显然 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)} \in \text{RS}^{(i+1)}\)</span> 。由 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)} = \text{RS}^{(i+1)}[\mathbb{F},L^{(i+1)},\rho]\)</span> ，那么由 RS code 的 MDS 性质(相对 Hamming 距离等于 <span class="math notranslate nohighlight">\(1 - \rho\)</span>)可得其相对 Hamming 距离 <span class="math notranslate nohighlight">\(\Delta_H(\text{RS}^{(i+1)}[\mathbb{F},L^{(i+1)},\rho]) = 1 - \rho\)</span> ，那么对于 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 中的两个 code <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(g\)</span> 有，它们之间的相对 Hamming 距离至少为 <span class="math notranslate nohighlight">\(1 - \rho\)</span> 。由三角不等式得</p>
+<div class="math notranslate nohighlight">
+\[
+	1 - \rho \le \Delta_H(\bar{f}^{(i+1)}, g) \le \Delta_H(\bar{f}^{(i+1)}, f_{f^{(i)},x^{(i)}}^{(i+1)}) + \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)},g)
+	\]</div>
+<p>由假设 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1-\rho}{2}\)</span> 以及前面证明过的 block-wise 测度与相对 Hamming 距离之间的不等式得</p>
+<div class="math notranslate nohighlight">
+\[
+	\Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)},g) \le \Delta^{(i)}(f_{f^{(i)},x^{(i)}}^{(i+1)},g) = \delta^{(i)} &lt; \frac{1-\rho}{2}
+	\]</div>
+<p>将上面的三角不等式进行移项可得</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+	\begin{aligned}
+		\Delta_H(\bar{f}^{(i+1)}, f_{f^{(i)},x^{(i)}}^{(i+1)}) &amp; \ge \Delta_H(\bar{f}^{(i+1)}, g) - \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)},g) \\
+		&amp; &gt; (1 - \rho) - \frac{1-\rho}{2} \\
+		&amp; = \frac{1-\rho}{2} \\
+		&amp; = \frac{2-2\rho}{4} \\
+		&amp; &gt; \frac{2-2\rho - (1 + \rho + \epsilon)}{4} \\
+		&amp; = \frac{1-3\rho - \epsilon}{4}  \\
+		&amp; = \delta_0
+	\end{aligned}
+	\end{split}\]</div>
+<p>因此命题成立。</p>
+</li>
+</ol>
+<p>综上所述，命题得证。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<p>下一个命题是</p>
+<p><strong>Claim 6</strong> [BBHR18b, Claim 4.6].</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|A_{\text{err}}^{(i+1)} \cup D^{(i+1)}|}{|L^{(i+1)}|} \ge \Delta_H(\bar{f}^{(i+1)}, f_{f^{(i)},x^{(i)}}^{(i+1)}).
+\]</div>
+<p><em><strong>证明</strong></em>：由 <span class="math notranslate nohighlight">\(D^{(i+1)}\)</span> 的定义可得，对于所有 <span class="math notranslate nohighlight">\(x \notin D^{(i+1)}\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{f}^{(i+1)}(x) = f^{(i+1)}(x)
+\]</div>
+<p>又由 <span class="math notranslate nohighlight">\(A_{\text{err}}^{(i+1)}\)</span> 的定义可得，对于所有 <span class="math notranslate nohighlight">\(x \notin A_{\text{err}}^{(i+1)}\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i+1)}(x) = f_{f^{(i)},x^{(i)}}^{(i+1)}(x)
+\]</div>
+<p>因此对所有 <span class="math notranslate nohighlight">\(x \notin A_{\text{err}}^{(i+1)} \cup D^{(i+1)}\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{f}^{(i+1)}(x) = f^{(i+1)}(x) = f_{f^{(i)},x^{(i)}}^{(i+1)}(x)
+\]</div>
+<p>根据相对 Hamming 距离的定义可得</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x \in L^{(i+1)}}[\bar{f}^{(i+1)}(x) \neq f_{f^{(i)},x^{(i)}}^{(i+1)}(x)] = \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}^{(i+1)})
+\]</div>
+<p>那么</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x \in L^{(i+1)}}[\bar{f}^{(i+1)}(x) = f_{f^{(i)},x^{(i)}}^{(i+1)}(x)] = 1- \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}^{(i+1)})
+\]</div>
+<p>因此对于所有 <span class="math notranslate nohighlight">\(x \notin A_{\text{err}}^{(i+1)} \cup D^{(i+1)}\)</span> ，要求以下两个等式同时成立：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}(x) = f_{f^{(i)},x^{(i)}}^{(i+1)}(x)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\bar{f}^{(i+1)}(x) = f^{(i+1)}(x)\)</span></p></li>
+</ol>
+<p>现在已经得到第一个等式成立的概率为 <span class="math notranslate nohighlight">\(1- \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}^{(i+1)})\)</span> ，那么上述两个等式同时成立的概率肯定不会超过只要求第一个等式成立的概率，即</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\Pr_{x \in L^{(i+1)}}[x \notin A_{\text{err}}^{(i+1)} \cup D^{(i+1)}] &amp; = \Pr_{x \in L^{(i+1)}}[\bar{f}^{(i+1)}(x) = f_{f^{(i)},x^{(i)}}^{(i+1)}(x) = f^{(i+1)}(x)]\\
+	&amp; \le \Pr_{x \in L^{(i+1)}}[\bar{f}^{(i+1)}(x) = f_{f^{(i)},x^{(i)}}^{(i+1)}(x)] \\
+	&amp; = 1- \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}^{(i+1)})
+\end{aligned}
+\end{split}\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\frac{|A_{\text{err}}^{(i+1)} \cup D^{(i+1)}|}{|L^{(i+1)}|} &amp; = \Pr_{x \in L^{(i+1)}}[x \in A_{\text{err}}^{(i+1)} \cup D^{(i+1)}]\\
+	&amp; = 1- \Pr_{x \in L^{(i+1)}}[x \notin A_{\text{err}}^{(i+1)} \cup D^{(i+1)}] \\
+	&amp; \ge 1 - (1 - \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}^{(i+1)}))\\
+	&amp; = \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}^{(i+1)})
+\end{aligned}
+\end{split}\]</div>
+<p>由此命题得证。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<p>结合 Claim 5 和 Claim 6 的结论得</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|A_{\text{err}}^{(i+1)} \cup D^{(i+1)}|}{|L^{(i+1)}|} \ge \Delta_H(\bar{f}^{(i+1)}, f_{f^{(i)},x^{(i)}}^{(i+1)}) \ge \delta_0
+\]</div>
+<p>即</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|A_{\text{err}}^{(i+1)} \cup D^{(i+1)}|}{|L^{(i+1)}|} \ge \delta_0.
+\]</div>
+<p>现在考虑在 QUERY 阶段使用的随机数 <span class="math notranslate nohighlight">\(s^{(i+1)}\)</span> 。首先根据 <span class="math notranslate nohighlight">\(A_{\text{err}}^{(i+1)}\)</span> 的定义，我们知道如果 <span class="math notranslate nohighlight">\(s^{(i+1)} \in A_{\text{err}}^{(i+1)}\)</span> ，那么在 QUERY 阶段 Verifer 一定会拒绝。接着我们根据 <span class="math notranslate nohighlight">\(i\)</span> 的不同，分两种情况来考虑 Verifier 拒绝的概率。</p>
+<p>如果 <span class="math notranslate nohighlight">\(i + 1 = r\)</span> ，那么由于 <span class="math notranslate nohighlight">\(f^{(r)} \in RS^{(r)}\)</span> ，根据 <span class="math notranslate nohighlight">\(D^{(i+1)}\)</span> 的定义，此时 <span class="math notranslate nohighlight">\(D^{(i+1)} = \emptyset\)</span> ，在这种情况下如果 <span class="math notranslate nohighlight">\(s^{(i+1)} \in A_{\text{err}}^{(i+1)}\)</span> ，Verifier 一定会拒绝，又</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|A_{\text{err}}^{(i+1)} \cup D^{(i+1)}|}{|L^{(i+1)}|}  = \frac{|A_{\text{err}}^{(i+1)}|}{|L^{(i+1)}|}  \ge \delta_0.
+\]</div>
+<p>此种情况下 Verifier 拒绝的概率至少为 <span class="math notranslate nohighlight">\(\delta_0\)</span> 。</p>
+<p>如果 <span class="math notranslate nohighlight">\(i + 1 &lt; r\)</span> ，通过前面我们对 <span class="math notranslate nohighlight">\(i\)</span> 的选择，选取的 <span class="math notranslate nohighlight">\(i\)</span> 表示满足以下两个条件</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\delta^{(i)} \ge \frac{1-\rho}{2}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1-\rho}{2} \text{ 且 }\bar{f}^{(i+1)} \neq f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}\)</span></p></li>
+</ol>
+<p>之一的最大整数，也就说明在 <span class="math notranslate nohighlight">\(i\)</span> 后面的序列  <span class="math notranslate nohighlight">\(\vec{f} = (f^{(i + 1)}, \cdots, f^{(r)})\)</span> 和 <span class="math notranslate nohighlight">\(\vec{x} = (x^{(i + 1)}, \cdots, x^{(r - 1)})\)</span> 都不为空，且均满足 Lemma 4 的三个条件。根据 Lemma 4 的结论，如果 <span class="math notranslate nohighlight">\(s^{(i+1)} \in D^{(i+1)}\)</span> 那么在 QUERY 阶段就一定会拒绝。如果 <span class="math notranslate nohighlight">\(s^{(i+1)} \in A_{\text{err}}^{(i+1)}\)</span> ，Verifier 也一定会拒绝，那么这个拒绝概率就是看这两个集合的并集的大小相比 <span class="math notranslate nohighlight">\(L^{(i+1)}\)</span> 的大小有多大，已经证明</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{|A_{\text{err}}^{(i+1)} \cup D^{(i+1)}|}{|L^{(i+1)}|}  \ge \delta_0.
+\]</div>
+<p>因此在这种情况下拒绝的概率也至少为 <span class="math notranslate nohighlight">\(\delta_0\)</span> 。</p>
+<p>综合上述两种情况，拒绝的概率至少为 <span class="math notranslate nohighlight">\(\delta_0\)</span> 。</p>
+<p>再结合之前分析满足 Lemma 4 三种情况的拒绝概率，可以得到在没有坏的事件发生的情况下，也就是 Lemma 4 的第三个条件一定成立的前提下，有</p>
+<ol class="arabic simple">
+<li><p>Lemma 4 的前两个条件均成立，Verifier 的拒绝概率至少为 <span class="math notranslate nohighlight">\(\delta^{(0)}\)</span> 。</p></li>
+<li><p>Lemma 4 的前两个条件不完全成立，Verifier 的拒绝概率至少为 <span class="math notranslate nohighlight">\(\delta_0\)</span> 。</p></li>
+</ol>
+<p>由于</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \frac{|L^{(r/2)}|}{\sqrt{|L^{(0)}|}} &amp; = \frac{2^{k^{(0)} - \eta \cdot (r/2)}}{\left(2^{k^{(0)} - \eta \cdot 0} \right)^{\frac{1}{2}}} \\
+    &amp; = 2^{k^{(0)} - \eta \cdot (r/2) - \frac{k^{(0)}}{2}} \\
+    &amp; = 2^{\frac{k^{(0)} - \eta \cdot r}{2}} \\
+    &amp; {\color{blue}(\text{由于} k^{(0)} \ge \eta \cdot r \text{，则} k^{(0)} - \eta \cdot r \ge 0)} \\
+    &amp; \ge 1
+\end{aligned}
+\end{split}\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+|L^{(r/2)}| \ge \sqrt{|L^{(0)}|}
+\]</div>
+<p>从而有</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon = \frac{2^{\eta}}{|L^{(r/2)}|} \le 2^{\eta} / \sqrt{|L^{(0)}|}
+\]</div>
+<p>现在估计 <span class="math notranslate nohighlight">\(\delta_0\)</span> ，得</p>
+<div class="math notranslate nohighlight">
+\[
+\delta_0 = \frac{1 - 3 \rho - \epsilon}{4} \ge \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4}
+\]</div>
+<p>因此，如果没有坏的事件发生，Verifier 的拒绝概率至少为</p>
+<div class="math notranslate nohighlight">
+\[
+\min \{\delta^{(0)}, \delta_0\} \ge \min \left \{\delta^{(0)}, \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4} \right \}
+\]</div>
+<p>结合 Part II 的分析，在 COMMIT 阶段 Verifier 选取随机数的概率至少为</p>
+<div class="math notranslate nohighlight">
+\[
+1 - \frac{3|L^{(0)}|}{\mathbb{F}},
+\]</div>
+<p>那么对于任意的 Prover 的 oracle <span class="math notranslate nohighlight">\(f^{(1)}, \cdots , f^{(r)}\)</span> ，在 QUERY 协议中的重复参数为 <span class="math notranslate nohighlight">\(l\)</span> ，Verifier 输出 accept 的概率最多为</p>
+<div class="math notranslate nohighlight">
+\[
+\left(1 -  \min \left \{\delta^{(0)}, \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4} \right \}\right)^l
+\]</div>
+<p>下面分析下如何得到 FRI 的 soundness 。根据 soundness 的定义：</p>
+<p>对于任意的 <span class="math notranslate nohighlight">\(\text{P}^*\)</span> ， <span class="math notranslate nohighlight">\(\Pr[\left \langle \text{P}^* \leftrightarrow \text{V} \right \rangle = \text{reject}|\Delta^{(0)}(f^{(0)}, RS^{(0)}) = \delta^{(0)}] \ge \textbf{s}^{-}(\delta^{(0)})\)</span> .</p>
+<p>soundness 分析主要是要得到拒绝概率的下界 <span class="math notranslate nohighlight">\(\textbf{s}^{-}(\delta^{(0)})\)</span> 。先考虑对于任意的 <span class="math notranslate nohighlight">\(\text{P}^*\)</span> ，计算最后 Verifier 输出 accept 的概率最多为多少。通过上述分析，我们可以分两种情况考虑：</p>
+<ol class="arabic">
+<li><p>如果有坏的事件 <span class="math notranslate nohighlight">\(E^{(i)} (i = 1, \cdots, r - 1)\)</span> 发生，那么 Verifier 输出 accept 的概率最多为</p>
+<div class="math notranslate nohighlight">
+\[
+		\frac{3|L^{(0)}|}{\mathbb{F}}
+	\]</div>
+</li>
+<li><p>如果没有坏的事件 <span class="math notranslate nohighlight">\(E^{(i)} (i = 1, \cdots, r - 1)\)</span> 发生，Verifier 输出 accept 的概率最多为</p>
+<div class="math notranslate nohighlight">
+\[
+		\left(1 -  \min \left \{\delta^{(0)}, \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4} \right \}\right)^l
+	\]</div>
+</li>
+</ol>
+<p>因此，对于任意的 <span class="math notranslate nohighlight">\(\text{P}^*\)</span> ，可以得到 Verifier 输出 accept 的概率的上界，即</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr[\left \langle \text{P}^* \leftrightarrow \text{V} \right \rangle = \text{accept}|\Delta^{(0)}(f^{(0)}, RS^{(0)}) = \delta^{(0)}] \le \frac{3|L^{(0)}|}{\mathbb{F}} + \left(1 -  \min \left \{\delta^{(0)}, \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4} \right \}\right)^l
+\]</div>
+<p>从而对于任意的 <span class="math notranslate nohighlight">\(\text{P}^*\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+	\Pr[\left \langle \text{P}^* \leftrightarrow \text{V} \right \rangle = \text{reject}|\Delta^{(0)}(f^{(0)}, RS^{(0)}) = \delta^{(0)}] &amp; = 1 - \Pr[\left \langle \text{P}^* \leftrightarrow \text{V} \right \rangle = \text{accept}|\Delta^{(0)}(f^{(0)}, RS^{(0)})= \delta^{(0)}] \\
+	&amp; \ge 1 - \left(\frac{3|L^{(0)}|}{\mathbb{F}} + \left(1 -  \min \left \{\delta^{(0)}, \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4} \right \}\right)^l  \right)
+\end{aligned}
+\end{split}\]</div>
+<p>从而，得到 FRI 的 soundness 至少为</p>
+<div class="math notranslate nohighlight">
+\[
+\textbf{s}^{-}(\delta^{(0)}) \triangleq 1 - \left(\frac{3|L^{(0)}|}{\mathbb{F}} + \left(1 -  \min \left \{\delta^{(0)}, \frac{1 - 3 \rho - 2^{\eta} / \sqrt{|L^{(0)}|}}{4} \right \}\right)^l  \right)
+\]</div>
+<p>至此完成 soundness 证明。 <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="lemma-4">
+<h3>唯一解码半径 —— Lemma 4 的证明<a class="headerlink" href="#lemma-4" title="Link to this heading">#</a></h3>
+<p><em><strong>证明</strong></em>：由于 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; \frac{1 - \rho}{2}\)</span> ，前面介绍 closet codeword 定义中的分析已经提到 <span class="math notranslate nohighlight">\(\bar{f}\)</span> 与 <span class="math notranslate nohighlight">\(\mathcal{S}_B(f^{(i)})\)</span> 是唯一的。对于集合 <span class="math notranslate nohighlight">\(\mathcal{S}_B(f^{(i)})\)</span> 中的一个“坏”的陪集 <span class="math notranslate nohighlight">\(S\)</span> ，即 <span class="math notranslate nohighlight">\(S \in \mathcal{S}_B(f^{(i)})\)</span> ，令</p>
+<div class="math notranslate nohighlight">
+\[
+X_S^{(i)} = \left\{ x^{(i)} \in \mathbb{F} | \text{interpolant}^{f^{(i)}|_S}(x^{(i)}) = \text{interpolant}^{\bar{f}^{(i)}|_S}(x^{(i)}) \right\}
+\]</div>
+<p>集合 <span class="math notranslate nohighlight">\(X_S^{(i)}\)</span> 表示的是那些在 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中“误导(misleading)”的 <span class="math notranslate nohighlight">\(x^{(i)}\)</span>，意思是插值多项式 <span class="math notranslate nohighlight">\(\text{interpolant}^{f^{(i)}|_S}(x^{(i)}) = \text{interpolant}^{\bar{f}^{(i)}|_S}(x^{(i)})\)</span> 是一致的，但是由于 <span class="math notranslate nohighlight">\(S\)</span> 来自于“坏”的陪集，实际上它们是不同的 low-degree 多项式，即 <span class="math notranslate nohighlight">\(f^{(i)}|_S \neq \bar{f}^{(i)}|_S\)</span> 。换句话说，这些 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> “误导”了我们 ，明明不是相同的多项式，用 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 在 <span class="math notranslate nohighlight">\(S\)</span> 上插值出来的多项式却是一致的。在下面我们要证明</p>
+<div class="math notranslate nohighlight">
+\[
+B\left[ f^{(i)}, \delta^{(i)} \right] = \bigcup_{S \in \mathcal{S}_B(f^{(i)})} X_S^{(i)}
+\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(\bar{f}^{(i)} \in \text{RS}^{(i)}\)</span> ，那么由 Lemma 1 得 <span class="math notranslate nohighlight">\(f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)} \in \text{RS}^{(i+1)}\)</span> 。对于所有的 <span class="math notranslate nohighlight">\(S \notin \mathcal{S}_B(f^{(i)})\)</span> ，并且 <span class="math notranslate nohighlight">\(y_S = q^{(i)}(S)\)</span> ，那么由于 <span class="math notranslate nohighlight">\(\mathcal{S}_B(f^{(i)}) = \left\{S \in \mathcal{S}^{(i)}|f^{(i)}|_S \neq \bar{f}^{(i)}|_S\right \}\)</span> ，因此对于 <span class="math notranslate nohighlight">\(\forall S \notin \mathcal{S}_B(f^{(i)})\)</span> ，有 <span class="math notranslate nohighlight">\(f^{(i)}|_S = \bar{f}^{(i)}|_S\)</span> ，自然 <span class="math notranslate nohighlight">\(\text{interpolant}^{f^{(i)}|_{S}} = \text{interpolant}^{\bar{f}^{(i)}|_S}\)</span> ，向插值多项式中代入 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 可得 <span class="math notranslate nohighlight">\(\text{interpolant}^{f^{(i)}|_{S}}(x^{(i)}) = \text{interpolant}^{\bar{f}^{(i)}|_S}(x^{(i)})\)</span> ，则 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}(y_S) = f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}(y_S)\)</span> 。由于 <span class="math notranslate nohighlight">\(\delta^{(i)}\)</span> 小于唯一解码半径 <span class="math notranslate nohighlight">\(\frac{1 - \rho}{2}\)</span> ，结合 <span class="math notranslate nohighlight">\(f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)} \in \text{RS}^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(\forall S \notin \mathcal{S}_B(f^{(i)})\)</span> ，有 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}(y_S) = f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}(y_S)\)</span> 可得 <span class="math notranslate nohighlight">\(f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}\)</span> 是在 Hammming 距离下距离 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 最近的 <span class="math notranslate nohighlight">\({RS}^{(i+1)}\)</span> 中的码字(codeword)。因此 <span class="math notranslate nohighlight">\(\Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, \text{RS}^{(i+1)}) = \Delta_H(f_{f^{(i)},x^{(i)}}^{(i+1)}, f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)})\)</span> 。</p>
+<blockquote>
+<div><ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 这里描述 <span class="math notranslate nohighlight">\(f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)}\)</span> 是在 Hammming 距离下距离 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 最近的 <span class="math notranslate nohighlight">\({RS}^{(i+1)}\)</span> 中的码字(codeword) 的理由是否正确呢？感觉解释得还不是足够清晰。</p></li>
+</ul>
+</div></blockquote>
+<p>同时，这两个函数在 <span class="math notranslate nohighlight">\(y_S\)</span> 上的值相同当且仅当以下两个条件之一成立：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(S \notin \mathcal{S}_B(f^{(i)})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S \in \mathcal{S}_B(f^{(i)})\)</span> 且 <span class="math notranslate nohighlight">\(x^{(i)} \in X_S^{(i)}\)</span></p></li>
+</ol>
+<p>由此可得，这两个函数在  <span class="math notranslate nohighlight">\(y_S\)</span> 上的值不同当且仅当以下两个条件同时成立：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(S \in \mathcal{S}_B(f^{(i)})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S \notin \mathcal{S}_B(f^{(i)})\)</span> 或 <span class="math notranslate nohighlight">\(x^{(i)} \notin X_S^{(i)}\)</span></p></li>
+</ol>
+<p>当条件 1 成立时，条件 2 中的第一种情况 <span class="math notranslate nohighlight">\(S \notin \mathcal{S}_B(f^{(i)})\)</span> 显然就不满足了，自然 <span class="math notranslate nohighlight">\(x^{(i)} \notin X_S^{(i)}\)</span> 成立，那么可以得到这两个函数在  <span class="math notranslate nohighlight">\(y_S\)</span> 上的值不同当且仅当</p>
+<div class="math notranslate nohighlight">
+\[
+S \in \mathcal{S}_B(f^{(i)}) \text{ 且 } x^{(i)} \notin X_S^{(i)}
+\]</div>
+<p>即</p>
+<div class="math notranslate nohighlight">
+\[
+x^{(i)} \notin \cup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)}.
+\]</div>
+<p>这表明 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 与（唯一）最近的 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> -码字 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 在所有的 <span class="math notranslate nohighlight">\(\{y_S|S \in \mathcal{S}_B(f^{(i)})\}\)</span> 上不一致当且仅当 <span class="math notranslate nohighlight">\(x^{(i)} \notin \cup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)}\)</span> 。那么</p>
+<div class="math notranslate nohighlight">
+\[
+B\left[ f^{(i)}, \delta^{(i)} \right] = \left \{ x^{(i)} \in \mathbb{F} | \Delta_H\left(f_{f^{(i)},x^{(i)}}^{(i+1)}, \text{RS}^{(i+1)}\right) &lt; \delta^{(i)}  \right \} = \left \{ x^{(i)} \in \mathbb{F} | \Delta_H\left(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}_{f^{(i)},x^{(i)}}^{(i+1)}\right) &lt; \delta^{(i)} \right \}
+\]</div>
+<p>而 <span class="math notranslate nohighlight">\(\delta^{(i)}\)</span> 表示的正是 <span class="math notranslate nohighlight">\(|\mathcal{S}_B(f^{(i)})|\)</span> 比上 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 的陪集个数，<span class="math notranslate nohighlight">\(\Delta_H\left(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}_{f^{(i)},x^{(i)}}^{(i+1)}\right) &lt; \delta^{(i)}\)</span> 表示的含义就是 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 能在某些 <span class="math notranslate nohighlight">\(\{y_S|S \in \mathcal{S}_B(f^{(i)})\}\)</span> 上一致，这样自然小于 <span class="math notranslate nohighlight">\(\delta^{(i)}\)</span> 。而 <span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 与（唯一）最近的 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> -码字 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x^{(i)}}^{(i+1)}\)</span> 在某些的 <span class="math notranslate nohighlight">\(\{y_S|S \in \mathcal{S}_B(f^{(i)})\}\)</span> 上一致当且仅当 <span class="math notranslate nohighlight">\(x^{(i)} \in \cup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)}\)</span> 。因此可得</p>
+<div class="math notranslate nohighlight">
+\[
+B\left[ f^{(i)}, \delta^{(i)} \right]  = \left \{ x^{(i)} \in \mathbb{F} | \Delta_H\left(f_{f^{(i)},x^{(i)}}^{(i+1)}, \bar{f}_{f^{(i)},x^{(i)}}^{(i+1)}\right) &lt; \delta^{(i)} \right \} = \bigcup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)}
+\]</div>
+<p>至此得证上面要证的等式，即</p>
+<div class="math notranslate nohighlight">
+\[
+B\left[ f^{(i)}, \delta^{(i)} \right]  =  \bigcup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)}
+\]</div>
+<p>有了这个等式之后，现在来估计等式右边的界。事实上，<span class="math notranslate nohighlight">\(\text{interpolant}^{f^{(i)}|_{S}}\)</span> 与 <span class="math notranslate nohighlight">\(\text{interpolant}^{\bar{f}^{(i)}|_S}\)</span> 是次数小于 <span class="math notranslate nohighlight">\(|S|\)</span> 的两个不同的多项式，因此  <span class="math notranslate nohighlight">\(|X_S| &lt; |S|\)</span> ，否则如果 <span class="math notranslate nohighlight">\(|X_S| \ge |S|\)</span> ，那么根据 <span class="math notranslate nohighlight">\(X_S\)</span> 的定义， <span class="math notranslate nohighlight">\(\text{interpolant}^{f^{(i)}|_{S}}\)</span> 与 <span class="math notranslate nohighlight">\(\text{interpolant}^{\bar{f}^{(i)}|_S}\)</span> 会在超过 <span class="math notranslate nohighlight">\(|S|\)</span> 个点上一致，这时两个插值多项式就会相同了，这与 <span class="math notranslate nohighlight">\(\text{interpolant}^{f^{(i)}|_{S}}\)</span> 和 <span class="math notranslate nohighlight">\(\text{interpolant}^{\bar{f}^{(i)}|_S}\)</span> 是两个不同的多项式是矛盾的。因此</p>
+<div class="math notranslate nohighlight">
+\[
+\left\lvert B\left[ f^{(i)}, \delta^{(i)} \right] \right\rvert = \left\lvert \bigcup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)} \right\rvert &lt; |S| \cdot \left\lvert \mathcal{S}_B\left(f^{(i)}\right) \right\rvert \le |L^{(i)}|,
+\]</div>
+<p>至此证得了 Lemma 4 的第一个不等式</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x^{(i)} \in \mathbb{F}} \left[ x^{(i)} \in B \left[ f^{(i)}; \delta^{(i)} \right ] \right] = \frac{\left\lvert B\left[ f^{(i)}, \delta^{(i)} \right] \right\rvert}{|\mathbb{F}|}\le \frac{|L^{(i)}|}{|\mathbb{F}|}.
+\]</div>
+<p>下面考虑在 Lemma 中假设的序列 <span class="math notranslate nohighlight">\(\vec{f}\)</span> 与 <span class="math notranslate nohighlight">\(\vec{x}\)</span> 。为简单起见，我们假设 <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> 在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 上的求值得到是零函数，记这个函数为 <span class="math notranslate nohighlight">\(\mathbf{0}|_{L^{(i)}}\)</span> 。如果不是这种情况，我们可以通过 <span class="math notranslate nohighlight">\(f^{(i)} - \bar{f}^{(i)}\)</span> 来得到零函数。那么</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)} = f_{\mathbf{0}|_{L^{(i)}},x^{(i)}}^{(i+1)} = \mathbf{0}|_{L^{(i+1)}}
+\]</div>
+<p>由引理的第 2 个假设得 <span class="math notranslate nohighlight">\(\bar{f}^{(i+1)} = f_{\bar{f}^{(i)},x^{(i)}}^{(i+1)} = \mathbf{0}|_{L^{(i+1)}}\)</span> ，那么</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\bar{f}^{(i+1)},x^{(i)}}^{(i+2)} = f_{\mathbf{0}|_{L^{(i+1)}},x^{(i)}}^{(i+2)} = \mathbf{0}|_{L^{(i+2)}}
+\]</div>
+<p>同样由引理的第 2 个假设得 <span class="math notranslate nohighlight">\(\bar{f}^{(i+2)} = f_{\bar{f}^{(i+1)},x^{(i)}}^{(i+2)} = \mathbf{0}|_{L^{(i+2)}}\)</span> ，以此类推，通过归纳法，可得对于所有的 <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> 有 <span class="math notranslate nohighlight">\(\bar{f}^{(j)} = \mathbf{0}|_{L^{(j)}}\)</span> 。特别地，<span class="math notranslate nohighlight">\(f^{(r)} = \mathbf{0}|_{L^{(r)}}\)</span> 。</p>
+<p>考虑在 QUERY 阶段的序列 <span class="math notranslate nohighlight">\((s^{(i)}, \cdots, s^{(r)})\)</span> ，其中 <span class="math notranslate nohighlight">\(s^{(i)} \in D^{(i)}\)</span> 。令 <span class="math notranslate nohighlight">\(j\)</span> 表示使得 <span class="math notranslate nohighlight">\(s^{(j)} \in D^{(j)}\)</span> 成立的最大的整数。由于 <span class="math notranslate nohighlight">\(s^{(i)} \in D^{(i)}\)</span> ，因此定义的这个 <span class="math notranslate nohighlight">\(j\)</span> 是能得到的。由定义 <span class="math notranslate nohighlight">\(f^{(r)} = \mathbf{0}|_{L^{(r)}}\)</span> 可得 <span class="math notranslate nohighlight">\(D^{(r)} = \emptyset\)</span> ，因此 <span class="math notranslate nohighlight">\(j &lt; r\)</span> 。结合引理的第 3 个假设对所有的 <span class="math notranslate nohighlight">\(j \in \{i, \cdots, r\}\)</span> 有 <span class="math notranslate nohighlight">\(x^{(j)} \notin B[f^{(i)};\delta^{(j)}]\)</span> 以及前面证得的等式</p>
+<div class="math notranslate nohighlight">
+\[
+B\left[ f^{(i)}, \delta^{(i)} \right]  =  \bigcup_{S \in \mathcal{S}_B(f^{(i)})}X_S^{(i)}
+\]</div>
+<p>可得 <span class="math notranslate nohighlight">\(x^{(j)} \notin \bigcup_{S \in \mathcal{S}^{(j)}}X_S^{(j)}\)</span> ，因此 <span class="math notranslate nohighlight">\(f_{f^{(j)},x^{(i)}}^{(j+1)}(s^{(j+1)}) \neq 0\)</span> 。但是通过 <span class="math notranslate nohighlight">\(j\)</span> 的定义知 <span class="math notranslate nohighlight">\(j\)</span> 是使得 <span class="math notranslate nohighlight">\(s^{(j)} \in D^{(j)}\)</span> 成立的最大的整数，那么对于比 <span class="math notranslate nohighlight">\(j\)</span> 大的 <span class="math notranslate nohighlight">\(j + 1\)</span>有 <span class="math notranslate nohighlight">\(s^{(j+ 1)} \notin D^{(j+1)}\)</span> ，根据 <span class="math notranslate nohighlight">\(D^{(j+1)}\)</span> 的定义，<span class="math notranslate nohighlight">\(D^{(j+1)} = \cup_{S \in \mathcal{S}_B^{(j+1)}}S\)</span> ，其中 <span class="math notranslate nohighlight">\(S\)</span> 表示那些 “坏” 的陪集，即</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{S}_B^{(j+1)} = \left\{ S \in \mathcal{S}^{(j+1)} | f^{(j+1)}|_S \neq \bar{f}^{(j+1)}|_S \right\}
+\]</div>
+<p>而 <span class="math notranslate nohighlight">\(s^{(j+ 1)} \notin D^{(j+1)}\)</span> ，因此有 <span class="math notranslate nohighlight">\(f^{(j+1)}(s^{(j+1)}) = \bar{f}^{(j+1)}(s^{(j+1)}) = 0\)</span> 。至此我们得到</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f_{f^{(j)},x^{(i)}}^{(j+1)}(s^{(j+1)}) \neq 0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f^{(j+1)}(s^{(j+1)}) = 0\)</span></p></li>
+</ol>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+f_{f^{(j)},x^{(i)}}^{(j+1)}(s^{(j+1)}) \neq f^{(j+1)}(s^{(j+1)})
+\]</div>
+<p>这表示在 QUERY 阶段不会通过 round consistency 检查，也就是 Verifier 在 QUERY 阶段一定会拒绝序列 <span class="math notranslate nohighlight">\((s^{(i)}, \cdots, s^{(r)})\)</span> 。这证明了</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{s^{(i)} \in D^{(i)}} \left[ \text{QUERY}\left(\vec{f}, \vec{x}\right)  = \text{reject} \right] = 1
+\]</div>
+<p>由 <span class="math notranslate nohighlight">\(\delta^{(i)}\)</span> 以及集合 <span class="math notranslate nohighlight">\(D^{(i)}\)</span> 的定义可知</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} = \frac{|D^{(i)}|}{|L^{(i)}|}
+\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{s^{(i)} \in L^{(i)}} \left[ \text{QUERY}(\vec{f}, \vec{x}) = \text{reject} \right] \ge \frac{|D^{(i)}|}{| L^{(i)} |} = \delta^{(i)}
+\]</div>
+<p>至此证得了 Lemma 4。 <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="lemma-3">
+<h3>超过唯一解码半径 —— Lemma 3 的证明<a class="headerlink" href="#lemma-3" title="Link to this heading">#</a></h3>
+<p>为了证明 Lemma 3 ，我们需要 [Spi95] 中引理 4.2.18 的以下改进版本。</p>
+<p><strong>Lemma 7</strong> [BBHR18b, Lemma 4.7] Let <span class="math notranslate nohighlight">\(E(X, Y)\)</span> be a polynomial of degree <span class="math notranslate nohighlight">\((\alpha m, \delta n)\)</span> and <span class="math notranslate nohighlight">\(P(X, Y)\)</span> a polynomial of degree <span class="math notranslate nohighlight">\(((\alpha + \epsilon)m, (\delta + \rho)n)\)</span>. If there exist distinct <span class="math notranslate nohighlight">\(x_1, \cdots, x_m\)</span> such that <span class="math notranslate nohighlight">\(E(x_i, Y) | P(x_i, Y)\)</span> and <span class="math notranslate nohighlight">\(y_1, \cdots, y_n\)</span> such that <span class="math notranslate nohighlight">\(E(X, y_i) | P(X, y_i)\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	1 &gt; \max \left\{ \delta + \rho, 2\alpha + \epsilon + \frac{\rho}{\delta} \right\}
+\end{equation}
+\]</div>
+<p>then <span class="math notranslate nohighlight">\(E(X, Y) | P(X, Y)\)</span>.</p>
+<p><em><strong>Lemma 3 的证明</strong></em>：下面证明 Lemma 3 的逆否命题。先回顾下 Lemma 3 ，其说的是，对于任意的 <span class="math notranslate nohighlight">\(\epsilon \le \frac{2^{\eta}}{|\mathbb{F}|}\)</span> 以及 <span class="math notranslate nohighlight">\(f^{(i)}\)</span>，有 <span class="math notranslate nohighlight">\(\delta^{(i)} =  \Delta^{(i)}(f^{(i)}, \text{RS}^{(i)})&gt;0\)</span> , 那么</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} \le \frac{2^{\eta}}{\epsilon |\mathbb{F}|}.
+\]</div>
+<p>现在对其取逆否命题，得到</p>
+<p><strong>命题8</strong> 如果对于某些 <span class="math notranslate nohighlight">\(\epsilon \ge \frac{2^{\eta}}{|\mathbb{F}|}\)</span> ，如果有</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>那么</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} = \Delta^{(i)}(f^{(i)}, \text{RS}^{(i)}) \le 0
+\]</div>
+<p>其等价于下面的命题</p>
+<p><strong>命题9</strong> 对于某些 <span class="math notranslate nohighlight">\(\epsilon \ge \frac{2^{\eta}}{|\mathbb{F}|}\)</span> ，如果有</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>那么</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} &lt; \delta 
+\]</div>
+<p>下面证明下命题 8 与命题 9 等价
+<em><strong>证明</strong></em>： <span class="math notranslate nohighlight">\(\Rightarrow)\)</span> 反证法，假设命题 9 结论不成立，那么</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} \ge \delta
+\]</div>
+<p>此时由命题 9 条件可得</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} \ge \frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>那么满足命题 8 的条件，因此</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} \le 0
+\]</div>
+<p>这与假设 <span class="math notranslate nohighlight">\(\delta^{(i)} \ge \delta\)</span> 是矛盾的。因此命题 9 的结论成立。</p>
+<p><span class="math notranslate nohighlight">\(\Leftarrow)\)</span> 反证法，假设命题 8 结论不成立，那么</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} &gt; 0
+\]</div>
+<p>也就是存在这样一个 <span class="math notranslate nohighlight">\(\delta &gt; 0\)</span> ，使得下面的式子成立</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} \ge \delta &gt; 0
+\]</div>
+<p>则</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} \ge \frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} 
+\]</div>
+<p>又由命题 8 的条件可得</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>通过上述两个不等式，得到 <span class="math notranslate nohighlight">\(\frac{2^{\eta}}{\epsilon |\mathbb{F}|}\)</span> 已经是</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|}
+\]</div>
+<p>的一个下界，那么可以得出</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>满足命题 9 的条件，因此可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+\delta^{(i)} &lt; \delta
+\]</div>
+<p>这与假设是矛盾的，因此命题 8 的结论成立。<span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 上述证明两个命题等价是否有更简洁的证明方法？</p></li>
+</ul>
+</div></blockquote>
+<p>现在已经证明了命题 9 与 Lemma 3 等价，下面证明命题 9。先固定一些常数：令 <span class="math notranslate nohighlight">\(n = |L^{(i+1)}|\)</span> ，<span class="math notranslate nohighlight">\(\alpha = \frac{1}{2}(1 - \epsilon - \frac{\rho}{\delta}	)\)</span> ，<span class="math notranslate nohighlight">\(\delta' = \delta \alpha\)</span> ， <span class="math notranslate nohighlight">\(B = B[f^{(i)};\delta']\)</span> 以及 <span class="math notranslate nohighlight">\(m = |B|\)</span> 。由 <span class="math notranslate nohighlight">\(B\)</span> 的定义可得，对任意的 <span class="math notranslate nohighlight">\(x \in B\)</span> ，都有 <span class="math notranslate nohighlight">\(\Delta_H\left(f_{f^{(i)},x}^{(i+1)}, \text{RS}^{(i+1)}\right) &lt; \delta'\)</span> 。回顾下 cloest codeword 的定义，我们知道 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x}^{(i+1)} \in \text{RS}^{(i+1)}\)</span> 是距离 <span class="math notranslate nohighlight">\(f_{f^{(i)},x}^{(i+1)}\)</span> 最近的码字，由于我们考虑的解码半径超过唯一解码半径，可能有多个码字都距离 <span class="math notranslate nohighlight">\(f_{f^{(i)},x}^{(i+1)}\)</span> 是最近的，这里我们任取其一。</p>
+<p>令 <span class="math notranslate nohighlight">\(C(X,Y)\)</span> 表示一个多项式，满足 <span class="math notranslate nohighlight">\(\deg_X(C) &lt; m\)</span> ，<span class="math notranslate nohighlight">\(\deg_Y(C) &lt; \rho n\)</span> ，并且对每一个 <span class="math notranslate nohighlight">\(x \in B\)</span> ，多项式 <span class="math notranslate nohighlight">\(C(x,Y)\)</span> 与 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x}^{(i+1)}(Y)\)</span> 都是一致的。多项式 <span class="math notranslate nohighlight">\(C(X,Y)\)</span> 是存在的，因为根据定义，<span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x}^{(i+1)}\)</span> 是一个次数小于 <span class="math notranslate nohighlight">\(\rho n\)</span> 的多项式的 evaluation 。通过命题 1 ，令 <span class="math notranslate nohighlight">\(Q^{(i)}\)</span> 表示与 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 相关的多项式，即</p>
+<div class="math notranslate nohighlight">
+\[
+Q^{(i)}(X,Y) = P^{(i)}(X) \qquad \text{mod} \; Y - q^{(i)}(X)
+\]</div>
+<p>通过命题 1 的第 2 项可得，<span class="math notranslate nohighlight">\(\deg_X(Q^{(i)}) &lt; |L_0^{(i)}|\)</span> ，通过定义可知 <span class="math notranslate nohighlight">\(|L_0^{(i)}| = 2^{\eta}\)</span> 。由于 <span class="math notranslate nohighlight">\(\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert = \left\lvert B \left[ f^{(i)}; \delta' \right ]\right\rvert = m\)</span> ，则由命题 9 的条件</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \frac{1}{2} \cdot \left( \delta^{(i)} (1 - \epsilon) - \rho \right) \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>可得</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{m}{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(2^{\eta} &lt; \epsilon m\)</span> ，因此 <span class="math notranslate nohighlight">\(\deg_X(Q^{(i)}) &lt; |L_0^{(i)}| = 2^{\eta} &lt; \epsilon m\)</span> 。通过命题 1 的第 1 项可以得到对任意的 <span class="math notranslate nohighlight">\(x \in L^{(i)}\)</span> 有</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(x) = Q^{(i)}(x, q^{(i)}(x))
+\]</div>
+<p>根据 COMMIT 阶段的定义，有对于每一个 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> ，</p>
+<ul class="simple">
+<li><p>令 <span class="math notranslate nohighlight">\(S_y = \{x \in L^{(i)} | q^{(i)}(x) = y\}\)</span> 是 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 的陪集，并且通过映射 <span class="math notranslate nohighlight">\(q^{(i)}\)</span> 将 <span class="math notranslate nohighlight">\(x\)</span> 映射到 <span class="math notranslate nohighlight">\(y\)</span> ；</p></li>
+<li><p><span class="math notranslate nohighlight">\(P_y^{(i)}(X) \triangleq \text{interpolant}^{f^{(i)}|_{S_y}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{f^{(i)},x^{(i)}}^{(i+1)}(y) \triangleq P_y^{(i)}(x^{(i)})\)</span> .</p></li>
+</ul>
+<p>那么可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+P_y^{(i)}(X) \triangleq \text{interpolant}^{f^{(i)}|_{S_y}} = Q^{(i)}(X, y)
+\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+f_{f^{(i)},x^{(i)}}^{(i+1)}(y) \triangleq P_y^{(i)}(x^{(i)}) = Q^{(i)}(x^{(i)}, y)
+\]</div>
+<p>注意上面的 <span class="math notranslate nohighlight">\(x^{(i)} \in \mathbb{F}\)</span> ，将随机数 <span class="math notranslate nohighlight">\(x^{(i)}\)</span> 改记为 <span class="math notranslate nohighlight">\(x\)</span> ，那么可以得到对于任意的 <span class="math notranslate nohighlight">\(x \in \mathbb{F}\)</span> 以及任意的 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> 有</p>
+<div class="math notranslate nohighlight">
+\[
+f_{f^{(i)},x}^{(i+1)}(y) = Q^{(i)}(x, y).
+\]</div>
+<p>通过 distortion set 的定义，得到</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	B \left[ f^{(i)}; \delta' \right ] =  \left\{ x \in \mathbb{F} | \Delta_H \left( f_{f^{(i)},x}^{(i+1)},\text{RS}^{(i+1)}\right) &lt; \delta' \right\}
+\end{equation}
+\]</div>
+<p>以及命题 9 的条件</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\left\lvert B \left[ f^{(i)}; \delta' \right ]\right\rvert }{|\mathbb{F}|} &gt; \frac{2^{\eta}}{\epsilon |\mathbb{F}|}
+\]</div>
+<p>我们通过上述分析已经得到</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\forall x \in B\)</span> ，有 <span class="math notranslate nohighlight">\(C(x,Y)\)</span> 与 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x}^{(i+1)}(Y)\)</span> 都是一致的。</p></li>
+<li><p>对于任意的 <span class="math notranslate nohighlight">\(x \in \mathbb{F}\)</span> 以及任意的 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> 有 <span class="math notranslate nohighlight">\(f_{f^{(i)},x}^{(i+1)}(y) = Q^{(i)}(x, y)\)</span> 。</p></li>
+</ol>
+<p>那么对于任意的 <span class="math notranslate nohighlight">\(x \in B\)</span> 以及任意的 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> 有</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C(x,y) = \bar{f}_{f^{(i)},x}^{(i+1)}(y)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f_{f^{(i)},x}^{(i+1)}(y) = Q^{(i)}(x, y)\)</span></p></li>
+</ol>
+<p>由于 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x}^{(i+1)}(y)\)</span> 是在 <span class="math notranslate nohighlight">\(\text{RS}^{(i+1)}\)</span> 中距离 <span class="math notranslate nohighlight">\(f_{f^{(i)},x}^{(i+1)}(y)\)</span> 最近的码字，根据 <span class="math notranslate nohighlight">\(B\)</span> 的定义可得</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta_H \left( f_{f^{(i)},x}^{(i+1)}(y),\bar{f}_{f^{(i)},x}^{(i+1)}(y)\right) &lt; \delta' 
+\]</div>
+<p>而相对 Hamming 距离考虑的就是 <span class="math notranslate nohighlight">\(f_{f^{(i)},x}^{(i+1)}(y)\)</span> 与 <span class="math notranslate nohighlight">\(\bar{f}_{f^{(i)},x}^{(i+1)}(y)\)</span> 不一致的比例，因此</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{x \in B, y \in L^{(i+1)}} \left[C(x,y) \neq Q^{(i)}(x,y)\right] = \Pr_{x \in B, y \in L^{(i+1)}} \left[\bar{f}_{f^{(i)},x}^{(i+1)}(y) \neq f_{f^{(i)},x}^{(i+1)}(y)\right] &lt; \delta'.
+\]</div>
+<blockquote>
+<div><p>🤔 <strong>Why?</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 下面这个非零多项式，如何证明其存在性？如何得出的？</p></li>
+</ul>
+</div></blockquote>
+<p>通过构造 <span class="math notranslate nohighlight">\(\alpha \delta \ge \delta'\)</span> ，因此存在一个非零多项式</p>
+<div class="math notranslate nohighlight">
+\[
+E(X,Y), \qquad \deg_X(E) \le \alpha m, \deg_Y(E) \le \delta n
+\]</div>
+<p>使得在所有的点 <span class="math notranslate nohighlight">\((x,y)\)</span> 处有 <span class="math notranslate nohighlight">\(E(x,y) = 0\)</span> ，其中 <span class="math notranslate nohighlight">\(x \in B, y \in L^{(i+1)}\)</span> 且 <span class="math notranslate nohighlight">\(C(x,y) \neq Q^{(i)}(x,y)\)</span>。</p>
+<blockquote>
+<div><p>📖 <strong>Notes</strong>
+关于非零多项式 <span class="math notranslate nohighlight">\(E(X,Y)\)</span> 的存在性，我是这样理解的。我们已经得到</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \Pr_{x \in B, y \in L^{(i+1)}} \left[C(x,y) \neq Q^{(i)}(x,y)\right]&lt; \delta'
+&gt; \]</div>
+<p>如下图所示，由于 <span class="math notranslate nohighlight">\(\alpha \delta \ge \delta'\)</span> ，存在这样的一个非零多项式 <span class="math notranslate nohighlight">\(E(X,Y)\)</span> 是合理的，其在图中蓝色的这些点的值为 0 。</p>
+<p><img alt="" src="../_images/BBHR18-FRI-EXY.svg" /></p>
+</div></blockquote>
+<p>多项式 <span class="math notranslate nohighlight">\(E\)</span> 也被称为 <em>error locator polynomial</em> [Sud92] ，因为它的根涵盖了错误位置的集合，其中 <span class="math notranslate nohighlight">\(Q\)</span> 是通过一个 low-degree 多项式得到的。</p>
+<p>由于 <span class="math notranslate nohighlight">\(\deg_Y(C) &lt; \rho |L^{(i+1)}|\)</span> 以及 <span class="math notranslate nohighlight">\(\deg_X(Q^{(i)}) &lt; 2^{\eta} &lt; \epsilon m\)</span> ，由 [Spi95, Chapter 4] 得存在一个多项式 <span class="math notranslate nohighlight">\(P(X,Y)\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\deg_X(P) &lt; (\epsilon + \alpha)m \quad \text{且} \quad \deg_Y(P) &lt; (\delta + \rho)n \tag{19}
+\end{equation}
+\]</div>
+<p>使得</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+	\forall x \in B, y \in L^{(i+1)}, \quad P(x,y)  = C(x,y) \cdot E(x,y) = Q^{(i)}(x,y) \cdot E(x,y) \tag{20}
+\end{equation}
+\]</div>
+<p>成立。</p>
+<blockquote>
+<div><p>📖 <strong>Notes</strong>
+关于 <span class="math notranslate nohighlight">\(P(X,Y)\)</span> 多项式的存在性，我的理解目前是这样的。通过多项式的次数，来看看其存在性的合理性：
+先考虑自变量 <span class="math notranslate nohighlight">\(X\)</span> ，由于 <span class="math notranslate nohighlight">\(\deg_X(E) \le \alpha m\)</span> 以及 <span class="math notranslate nohighlight">\(\deg_X(Q^{(i)}) &lt; \epsilon m\)</span> ，那么存在的 <span class="math notranslate nohighlight">\(P(X,Y)\)</span> 其次数满足 <span class="math notranslate nohighlight">\(\deg_X(P) &lt; (\epsilon + \alpha)m\)</span> ，且有</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \forall x \in B, y \in L^{(i+1)}, \quad P(x,y) = Q^{(i)}(x,y) \cdot E(x,y)
+&gt; \]</div>
+<p>是比较合理的。</p>
+<p>同理，对于自变量 <span class="math notranslate nohighlight">\(Y\)</span> ，由于 <span class="math notranslate nohighlight">\(\deg_Y(E) \le \delta n\)</span> 以及 <span class="math notranslate nohighlight">\(\deg_Y(C) &lt; \rho n\)</span> ，那么存在的 <span class="math notranslate nohighlight">\(P(X,Y)\)</span> 其次数满足 <span class="math notranslate nohighlight">\(\deg_Y(P) &lt; (\delta + \rho)n\)</span> ，且有</p>
+<div class="math notranslate nohighlight">
+\[
+&gt; \forall x \in B, y \in L^{(i+1)}, \quad P(x,y) = C(x,y) \cdot E(x,y)
+&gt; \]</div>
+<p>是比较合理的。</p>
+</div></blockquote>
+<blockquote>
+<div><p>👩‍💻 <strong>TODO</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 参考 [Spi95, Chapter 4] ，为什么会存在这样一个多项式。</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 为什么 <span class="math notranslate nohighlight">\(P(x,y)  = C(x,y) \cdot E(x,y) = Q^{(i)}(x,y) \cdot E(x,y)\)</span> 成立，不是 <span class="math notranslate nohighlight">\(x \in B, y \in L^{(i+1)}\)</span> 且 <span class="math notranslate nohighlight">\(C(x,y) \neq Q^{(i)}(x,y)\)</span> 吗？</p></li>
+</ul>
+</div></blockquote>
+<p>令 <span class="math notranslate nohighlight">\(\alpha' \triangleq \frac{\deg_X(P)}{m} - \epsilon\)</span> 以及 <span class="math notranslate nohighlight">\(\rho' \triangleq \frac{\deg_Y(P)}{n} - \delta\)</span> ，那么由公式 <span class="math notranslate nohighlight">\((19)\)</span> 得</p>
+<blockquote>
+<div><p>🐞 <strong>Fix</strong>
+我认为论文中此处 <span class="math notranslate nohighlight">\(\alpha \triangleq \frac{\deg_X(P)}{m} - \epsilon\)</span> 中的 <span class="math notranslate nohighlight">\(\alpha\)</span> 应该改为 <span class="math notranslate nohighlight">\(\alpha'\)</span> 。</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[
+\deg_X(P) = (\epsilon + \alpha')m &lt; (\epsilon + \alpha)m
+\]</div>
+<p>以及</p>
+<div class="math notranslate nohighlight">
+\[
+\deg_Y(P) = (\delta + \rho')n &lt; (\delta + \rho)n
+\]</div>
+<p>由此可得 <span class="math notranslate nohighlight">\(\alpha' &lt; \alpha\)</span> 以及 <span class="math notranslate nohighlight">\(\rho' &lt; \rho\)</span> 。</p>
+<p>从 <span class="math notranslate nohighlight">\((19)\)</span> 以及 <span class="math notranslate nohighlight">\((20)\)</span> 可以得到对于任意一行 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> 都有 <span class="math notranslate nohighlight">\(E(X,y)|P(X,y)\)</span> ，类似地，对于任意一列 <span class="math notranslate nohighlight">\(x \in B\)</span> 都有 <span class="math notranslate nohighlight">\(E(x,Y)|P(x,Y)\)</span> 。换句话说，即存在不同的 <span class="math notranslate nohighlight">\(y_1, \cdots, y_n \in L^{(i+1)}\)</span> 使得 <span class="math notranslate nohighlight">\(E(X,y_i)|P(x_i,y_i)\)</span> 以及存在不同的 <span class="math notranslate nohighlight">\(x_1, \cdots, x_m \in B\)</span> 使得 <span class="math notranslate nohighlight">\(E(x_i,Y)|P(x_i,Y)\)</span>。</p>
+<p>由 <span class="math notranslate nohighlight">\((5)\)</span> 式</p>
+<div class="math notranslate nohighlight">
+\[
+1 - \rho \ge  \Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})  \ge \Delta_H(f^{(i)},\text{RS}^{(i)})
+\]</div>
+<p>可得 <span class="math notranslate nohighlight">\(\delta + \rho &lt; 1\)</span> 。</p>
+<blockquote>
+<div><p>🤔 <strong>Why?</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 这里的 <span class="math notranslate nohighlight">\(\delta + \rho &lt; 1\)</span> 是怎么得到的？难道由于 <span class="math notranslate nohighlight">\(1 - \rho \ge  \Delta^{\mathcal{(i)}}(f^{(i)},\text{RS}^{(i)})  \ge \Delta_H(f^{(i)},\text{RS}^{(i)}) &gt; \delta\)</span> ？</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 现在已知 <span class="math notranslate nohighlight">\(\Delta_H\left(f_{f^{(i)},x}^{(i+1)}, \text{RS}^{(i+1)}\right) &lt; \delta'\)</span> 以及 <span class="math notranslate nohighlight">\(\alpha \delta = \delta'\)</span> ，能否从这里推导得出呢？</p></li>
+</ul>
+</div></blockquote>
+<p>通过前面推导得出的 <span class="math notranslate nohighlight">\(\alpha' &lt; \alpha\)</span> 以及 <span class="math notranslate nohighlight">\(\rho' &lt; \rho\)</span> 和 <span class="math notranslate nohighlight">\(\alpha\)</span> 的定义可得</p>
+<div class="math notranslate nohighlight">
+\[
+2 \alpha' + \epsilon + \frac{\rho'}{\delta} &lt; 2 \alpha + \epsilon + \frac{\rho}{\delta} = 2 \cdot \frac{1}{2}(1 - \epsilon - \frac{\rho}{\delta}) + \epsilon + \frac{\rho}{\delta} = 1.
+\]</div>
+<p>综合上面的推导可得</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\delta + \rho' &lt; \delta + \rho &lt; 1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(2 \alpha' + \epsilon + \frac{\rho'}{\delta} &lt; 1\)</span></p></li>
+</ol>
+<p>则有</p>
+<div class="math notranslate nohighlight">
+\[
+1 &gt; \max \left\{ \delta + \rho', 2\alpha' + \epsilon + \frac{\rho'}{\delta} \right\}
+\]</div>
+<p>至此，综合上述分析，<em>多项式 <span class="math notranslate nohighlight">\(E(X,Y)\)</span> 的次数为 <span class="math notranslate nohighlight">\((\alpha' m, \delta n)\)</span></em> ，多项式 <span class="math notranslate nohighlight">\(P(X,Y)\)</span> 的次数为 <span class="math notranslate nohighlight">\(((\alpha' + \epsilon)m, (\delta + \rho')m)\)</span> ，并且存在不同的 <span class="math notranslate nohighlight">\(x_1, \cdots, x_m \in B\)</span> 使得 <span class="math notranslate nohighlight">\(E(x_i,Y)|P(x_i,Y)\)</span> 以及存在不同的 <span class="math notranslate nohighlight">\(y_1, \cdots, y_n \in L^{(i+1)}\)</span> 使得 <span class="math notranslate nohighlight">\(E(X,y_i)|P(x_i,y_i)\)</span> ，同时</p>
+<div class="math notranslate nohighlight">
+\[
+1 &gt; \max \left\{ \delta + \rho', 2\alpha' + \epsilon + \frac{\rho'}{\delta} \right\}
+\]</div>
+<blockquote>
+<div><p>🤔 <strong>Question</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> <span class="math notranslate nohighlight">\(E(X,Y)\)</span> 的次数为 <span class="math notranslate nohighlight">\((\alpha' m, \delta n)\)</span> 如何得到？前面得到的是 <span class="math notranslate nohighlight">\(\deg_X(E) \le \alpha m, \deg_Y(E) \le \delta n\)</span> 。</p></li>
+</ul>
+</div></blockquote>
+<p>因此引理 7 的条件与假设都满足。通过引理的结论可得 <span class="math notranslate nohighlight">\(E(X,Y)|P(X,Y)\)</span> ，其是环 <span class="math notranslate nohighlight">\(\mathbb{F}[X,Y]\)</span> 中的多项式。令 <span class="math notranslate nohighlight">\(Q\equiv P/E\)</span> 。我们可以得到对于每一行 <span class="math notranslate nohighlight">\(y \in L^{(i+1)}\)</span> 且 <span class="math notranslate nohighlight">\(E(X,y)\)</span> 非零的情况，都有 <span class="math notranslate nohighlight">\(Q(X,y) = Q^{(i)}(X,y)\)</span> 。由于 <span class="math notranslate nohighlight">\(\deg_Y(E) &lt; \delta n\)</span> ，那么 <span class="math notranslate nohighlight">\(E(X,y)\)</span> 在少于 <span class="math notranslate nohighlight">\(\delta n\)</span> 行为零，因此非零的行数的比例至少为 <span class="math notranslate nohighlight">\(1 - \delta\)</span> ，那么满足 <span class="math notranslate nohighlight">\(Q(X,y) = Q^{(i)}(X,y)\)</span> 的行数比例至少为 <span class="math notranslate nohighlight">\(1 - \delta\)</span> 。</p>
+<p>由于通过命题 1 ，我们知道 <span class="math notranslate nohighlight">\(Q^{(i)}(X,y)\)</span> 为</p>
+<div class="math notranslate nohighlight">
+\[
+Q^{(i)}(X,y) = P^{(i)}(X) \qquad \text{mod} \; y - q^{(i)}(X)
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[
+P^{(i)} = \text{interpolant}^{f^{(i)}}
+\]</div>
+<p>那么，<span class="math notranslate nohighlight">\(f^{(i)}\)</span> 与次数为 <span class="math notranslate nohighlight">\(\rho |L^{(i)}|\)</span> 的多项式 <span class="math notranslate nohighlight">\(P^{(i)}\)</span> 是一致的。令 <span class="math notranslate nohighlight">\(S_y = \{x \in L^{(i)}|q^{(i)}(x) = y\}\)</span> ，表示 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 的陪集。若在陪集 <span class="math notranslate nohighlight">\(S_y\)</span> 上满足 <span class="math notranslate nohighlight">\(Q^{(i)}(X,y) = Q(X,y) = P^{(i)}(X)|_{S_y}\)</span> ，那么根据满足 <span class="math notranslate nohighlight">\(Q(X,y) = Q^{(i)}(X,y)\)</span> 的行数比例至少为 <span class="math notranslate nohighlight">\(1 - \delta\)</span> ，则 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 与多项式 <span class="math notranslate nohighlight">\(P^{(i)}\)</span> 在超过 <span class="math notranslate nohighlight">\(1 - \delta\)</span> 的比例的陪集 <span class="math notranslate nohighlight">\(S_y\)</span> 上是一致的。</p>
+<blockquote>
+<div><p>👀 <strong>TODO</strong></p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 这里理解得不是很透彻，上述解释方式不够清晰，待完善。原文</p></li>
+</ul>
+<blockquote>
+<div><p>In other words <span class="math notranslate nohighlight">\(f^{(i)}\)</span> agrees with some polynomial of degree <span class="math notranslate nohighlight">\(\rho |L^{(i)}|\)</span> on more than a <span class="math notranslate nohighlight">\((1 - \delta)\)</span>-fraction of cosets of <span class="math notranslate nohighlight">\(L^{(i)}\)</span> in <span class="math notranslate nohighlight">\(L^{(i)}\)</span>.</p>
+</div></blockquote>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(f^{(i)}\)</span> 在 <span class="math notranslate nohighlight">\(L^{(i)}\)</span> 中超过 <span class="math notranslate nohighlight">\(1 - \delta\)</span> 比例的 <span class="math notranslate nohighlight">\(L_0^{(i)}\)</span> 的陪集上和某个次数为 <span class="math notranslate nohighlight">\(\rho |L^{(i)}|\)</span> 的多项式一致。根据定义， <span class="math notranslate nohighlight">\(\delta^{(i)}\)</span> 说的是不一致的陪集的比例，那么自然可以得出 <span class="math notranslate nohighlight">\(\delta^{(i)} &lt; 1 - (1 - \delta) = \delta\)</span> ，至此完成了引理的证明。 <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+</section>
+<section id="id9">
+<h2>参考文献<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BBHR18a] Eli Ben-Sasson, Iddo Bentov, Yinon Horesh, and Michael Riabzev. Scalable, transparent, and post-quantum secure computational integrity. Cryptology ePrint Archive, Report 2018/046, 2018. Available at <a class="reference external" href="https://eprint.iacr.org/2018/046">https://eprint.iacr.org/2018/046</a>.</p></li>
+<li><p>[BBHR18b] Eli Ben-Sasson, Iddo Bentov, Yinon Horesh, and Michael Riabzev. “Fast Reed–Solomon Interactive Oracle Proofs of Proximity”. In: <em>Proceedings of the 45th International Colloquium on Automata, Languages and Programming (ICALP)</em>, 2018.</p></li>
+<li><p>[RS92] Ronitt Rubinfeld and Madhu Sudan. Self-testing polynomial functions efficiently and over rational domains. In <em>Proceedings of the Third Annual ACM/SIGACT-SIAM Symposium on Discrete Algorithms, 27-29 January 1992, Orlando, Florida.</em>, pages 23–32, 1992.</p></li>
+<li><p>[Spi95] Daniel A. Spielman. <em>Computationally Efficient Error-Correcting Codes and Holographic Proofs</em>. PhD thesis, MIT, 1995.</p></li>
+<li><p>[Sud92] Madhu Sudan. <em>Efficient Checking of Polynomials and Proofs and the Hardness of Approximation Problems</em>. PhD thesis, UC Berkeley, Berkeley, CA, USA, 1992. UMI Order No. GAX93-30747.</p></li>
+<li><p>Venkatesan Guruswami, Atri Rudra, and Madhu Sudan. Essential Coding Theory. <a class="reference external" href="https://cse.buffalo.edu/faculty/atri/courses/coding-theory/book/">https://cse.buffalo.edu/faculty/atri/courses/coding-theory/book/</a>, 2023.</p></li>
+<li><p>Vitalik Buterin. STARKs, Part II: Thank Goodness It’s FRI-day. <a class="reference external" href="https://vitalik.eth.limo/general/2017/11/22/starks_part_2.html">https://vitalik.eth.limo/general/2017/11/22/starks_part_2.html</a>, 2017.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../basefold/basefold-05.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Basefold 笔记：IOPP 可靠性分析</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="BCIKS20-proximity-gaps.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">[BCIKS20] Proximity Gaps 论文 soundness 解析</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">首要问题</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fri">FRI 性质</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">FRI 协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">定义和记号</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">COMMIT 阶段</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query">QUERY 阶段</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">FRI 协议的主要性质</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-wise">Block-wise 距离测度</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">定理 1 完备性证明</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">命题 1 的引入</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">引理 1 的证明</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#soundness">定理 1 Soundness 证明分析</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-consistency">round consistency  与 失真集</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">soundness 证明思路</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lemma-4">唯一解码半径 —— Lemma 4 的证明</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lemma-3">超过唯一解码半径 —— Lemma 3 的证明</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">参考文献</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

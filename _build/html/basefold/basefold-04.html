@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on BaseFold (Part IV): Random Foldable Codes &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-04';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-04.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-04.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on BaseFold (Part IV): Random Foldable Codes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#efficient-encoding-algorithms">Efficient Encoding Algorithms</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomials-save-the-world-polynomial-based-encoding">Polynomials Save the World: Polynomial-Based Encoding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#good-relative-minimum-distance">Good Relative Minimum Distance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizing-induction">Utilizing Induction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-basefold-part-iv-random-foldable-codes">
+<h1>Notes on BaseFold (Part IV): Random Foldable Codes<a class="headerlink" href="#notes-on-basefold-part-iv-random-foldable-codes" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>Previous articles have mentioned that BaseFold extends the FRI IOPP by introducing the concept of <em>foldable codes</em>. Additionally, by combining the Sumcheck protocol, it can support PCS for multi-linear polynomials. The next crucial question is how to explicitly construct such <em>foldable codes</em>. We aim for these foldable codes to possess the following properties:</p>
+<ol class="arabic simple">
+<li><p><strong>Efficient Encoding</strong></p></li>
+<li><p><strong>Field Agnostic</strong>, i.e., applicable even for small fields</p></li>
+<li><p><strong>Compatible with PCS for Multi-linear Polynomials</strong></p></li>
+</ol>
+<p>Another important aspect of encoding is the consideration of the Minimum Relative Hamming Distance. If readers are familiar with the FRI protocol, the Reed-Solomon codes used are likely not unfamiliar. They have a desirable property: their distance meets the Singleton bound, i.e., <span class="math notranslate nohighlight">\(d = n - k + 1\)</span>, and are thus known as Maximum Distance Separable (MDS) codes. These codes balance code length and error-correcting capability effectively, providing strong error detection and correction with minimal redundancy, thereby saving encoding space. In PCS protocols, this allows verifiers to perform checks more efficiently. Therefore, from a practical perspective, we also desire that such foldable codes satisfy the fourth property:</p>
+<ol class="arabic simple" start="4">
+<li><p><strong>Good Relative Minimum Distance</strong></p></li>
+</ol>
+<p>The BaseFold paper [ZCF23] constructs a type of code called <em>Random Foldable Code</em> (RFCs), which satisfies the aforementioned properties. Next, we will explore how it achieves these points.</p>
+<section id="efficient-encoding-algorithms">
+<h2>Efficient Encoding Algorithms<a class="headerlink" href="#efficient-encoding-algorithms" title="Link to this heading">#</a></h2>
+<p>The first article in this series has already introduced the concept of <em>foldable linear codes</em> and the BaseFold encoding algorithm. Here is a brief review.</p>
+<p><strong>Definition 1</strong> [ZCF23, Definition 5] (<span class="math notranslate nohighlight">\((c, k_{0}, d)\)</span> - Foldable Linear Codes). Let <span class="math notranslate nohighlight">\(c, k_{0}, d \in \mathbb{N}\)</span> and <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> denote a finite field. A linear code <span class="math notranslate nohighlight">\(C_d : \mathbb{F}^{k_0 \cdot 2^d} \rightarrow \mathbb{F}^{c k_0 \cdot 2^d}\)</span> with generator matrix <span class="math notranslate nohighlight">\(\mathbf{G}_{d}\)</span> is called <em><strong>foldable</strong></em> if there exists a sequence of generator matrices <span class="math notranslate nohighlight">\((\mathbf{G}_0, \ldots, \mathbf{G}_{d-1})\)</span> and diagonal matrices <span class="math notranslate nohighlight">\((T_0, \ldots, T_{d-1})\)</span> and <span class="math notranslate nohighlight">\((T_0',\ldots,T_{d-1}')\)</span> such that for any <span class="math notranslate nohighlight">\(i \in [1,d]\)</span>, the following holds:</p>
+<ol class="arabic simple">
+<li><p>The diagonal matrices <span class="math notranslate nohighlight">\(T_{i-1},T_{i-1}' \in F^{c k_0 \cdot 2^{i-1} \times c k_0 \cdot 2^{i-1}}\)</span> satisfy <span class="math notranslate nohighlight">\(\mathrm{diag}(T_{i-1})[j] \neq \mathrm{diag}(T_{i-1}')[j]\)</span> for all <span class="math notranslate nohighlight">\(j \in [c k_0 \cdot 2^{i-1}]\)</span>;</p></li>
+<li><p>The matrix <span class="math notranslate nohighlight">\(\mathbf{G}_i \in F^{k_0 \cdot 2^i \times c k_0 \cdot 2^i}\)</span> (arranged row-wise) is equal to</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{G}_i = \begin{bmatrix}
+    \mathbf{G}_{i-1} &amp; \mathbf{G}_{i-1} \\
+    \mathbf{G}_{i-1}  \cdot T_{i-1} &amp; \mathbf{G}_{i-1} \cdot T'_{i-1} \\
+\end{bmatrix}.
+\end{split}\]</div>
+<p>To efficiently construct a foldable linear code, a uniform sampling method is employed by first defining a set of random foldable distributions.</p>
+<p><strong>Definition 2</strong> [ZCF23, Definition 9] (<span class="math notranslate nohighlight">\((c, k_{0})\)</span> - Foldable Distributions). Fix a finite field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> and <span class="math notranslate nohighlight">\(c, k_{0} \in \mathbb{N}\)</span>. Let <span class="math notranslate nohighlight">\(\mathbf{G}_0 \in \mathbb{F}^{k_0 \times c k_0}\)</span> be the generator matrix of an <span class="math notranslate nohighlight">\([c k_0, k_0]\)</span> linear code that satisfies maximum distance separability, and let <span class="math notranslate nohighlight">\(D_0\)</span> be the distribution that outputs <span class="math notranslate nohighlight">\(\mathbf{G}_0\)</span> with probability <span class="math notranslate nohighlight">\(1\)</span>. For each <span class="math notranslate nohighlight">\(i &gt; 0\)</span>, we recursively define the distribution <span class="math notranslate nohighlight">\(D_i\)</span>, which samples the generator matrices <span class="math notranslate nohighlight">\((\mathbf{G}_0, \mathbf{G}_1, \ldots, \mathbf{G}_i)\)</span> where <span class="math notranslate nohighlight">\(\mathbf{G}_i \in F^{k_i \times n_i}\)</span> with <span class="math notranslate nohighlight">\(k_i := k_0 \cdot 2^i\)</span>, <span class="math notranslate nohighlight">\(n_i := c k_i\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Sample <span class="math notranslate nohighlight">\((\mathbf{G}_0, \ldots, \mathbf{G}_{i-1}) \leftarrow D_{i-1}\)</span>;</p></li>
+<li><p>Sample <span class="math notranslate nohighlight">\(\mathrm{diag}(T_{i-1}) \leftarrow \$ (\mathbb{F}^{\times})^{n_{i-1}}\)</span> and define <span class="math notranslate nohighlight">\(\mathbf{G}_i\)</span> as</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{G}_i = \begin{bmatrix}
+    \mathbf{G}_{i-1} &amp; \mathbf{G}_{i-1} \\
+    \mathbf{G}_{i-1} \cdot T_{i-1} &amp; \mathbf{G}_{i-1} \cdot -T_{i-1} \\
+\end{bmatrix}.
+\end{split}\]</div>
+<p>Once the initial generator matrix <span class="math notranslate nohighlight">\(\mathbf{G}_0\)</span> is determined, uniformly sample <span class="math notranslate nohighlight">\(n_{0}\)</span> random elements from <span class="math notranslate nohighlight">\(\mathbb{F}^{\times}\)</span> (i.e., excluding the zero element) to generate the diagonal elements of <span class="math notranslate nohighlight">\(T_{0}\)</span>, thereby obtaining the next generator matrix <span class="math notranslate nohighlight">\(\mathbf{G}_1\)</span>. This process is then recursively applied to generate <span class="math notranslate nohighlight">\((\mathbf{G}_2, \ldots, \mathbf{G}_i)\)</span>. In PCS, generating foldable codes via uniform sampling aids in achieving an efficient prover.</p>
+<p>Note that the above definition requires the initial <span class="math notranslate nohighlight">\(\mathbf{G}_0\)</span> to be the generator matrix of a linear code satisfying the MDS property. However, as mentioned in a footnote in [ZCF23], this requirement is not strictly necessary. Including this property is merely for simplifying the analysis of the code distance later on. In fact, the distance analysis holds for any linear code.</p>
+<p><strong>Protocol 1 <span class="math notranslate nohighlight">\(\mathrm{Enc}_{d}\)</span> [ZCF23, Protocol 1]: BaseFold Encoding Algorithm</strong></p>
+<p><strong>Input:</strong> Original message <span class="math notranslate nohighlight">\(\mathbf{m} \in \mathbb{F}^{k_d}\)</span></p>
+<p><strong>Output:</strong> <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{F}^{n_d}\)</span> such that <span class="math notranslate nohighlight">\(\mathbf{w} = \mathbf{m} \cdot \mathbf{G}_d\)</span></p>
+<p><strong>Parameters:</strong> <span class="math notranslate nohighlight">\(\mathbf{G}_0\)</span> and diagonal matrices <span class="math notranslate nohighlight">\((T_0, T_1, \ldots, T_{d-1})\)</span></p>
+<ol class="arabic simple">
+<li><p>If <span class="math notranslate nohighlight">\(d = 0\)</span> (i.e., <span class="math notranslate nohighlight">\(\mathbf{m} \in \mathbb{F}^{k_0}\)</span>):</p>
+<ul class="simple">
+<li><p>(a) Return <span class="math notranslate nohighlight">\(\mathrm{Enc}_0(\mathbf{m})\)</span></p></li>
+</ul>
+</li>
+<li><p>Else:</p>
+<ul class="simple">
+<li><p>(a) Split <span class="math notranslate nohighlight">\(\mathbf{m} := (\mathbf{m}_l, \mathbf{m}_r)\)</span></p></li>
+<li><p>(b) Let <span class="math notranslate nohighlight">\(\mathbf{l} := \mathrm{Enc}_{d-1}(\mathbf{m}_l)\)</span>, <span class="math notranslate nohighlight">\(\mathbf{r} := \mathrm{Enc}_{d-1}(\mathbf{m}_r)\)</span>, and <span class="math notranslate nohighlight">\(\mathbf{t} = \mathrm{diag}(T_{d-1})\)</span></p></li>
+<li><p>(c) Return <span class="math notranslate nohighlight">\((\mathbf{l} + \mathbf{t} \circ \mathbf{r}, \mathbf{l} - \mathbf{t} \circ \mathbf{r})\)</span></p></li>
+</ul>
+</li>
+</ol>
+<p>By analyzing Protocol 1, we can see that encoding to obtain <span class="math notranslate nohighlight">\(C_{d}\)</span> requires only <span class="math notranslate nohighlight">\(\frac{dn_{d}}{2}\)</span> field multiplications and <span class="math notranslate nohighlight">\(d n_{d}\)</span> field additions, i.e., <span class="math notranslate nohighlight">\(0.5 n \log n\)</span> field multiplications and <span class="math notranslate nohighlight">\(n \log n\)</span> field additions. Overall, the encoding complexity is <span class="math notranslate nohighlight">\(O(n \log n)\)</span>. Thus, we have introduced the explicit construction of Random Linear Foldable Codes provided by BaseFold and verified that they indeed support efficient encoding.</p>
+</section>
+<section id="polynomials-save-the-world-polynomial-based-encoding">
+<h2>Polynomials Save the World: Polynomial-Based Encoding<a class="headerlink" href="#polynomials-save-the-world-polynomial-based-encoding" title="Link to this heading">#</a></h2>
+<p>Next, we examine the second and third properties of <em>Random Foldable Codes</em>:</p>
+<ol class="arabic simple" start="2">
+<li><p><strong>Field Agnostic</strong>, i.e., applicable even for small fields</p></li>
+<li><p><strong>Compatible with PCS for Multi-linear Polynomials</strong></p></li>
+</ol>
+<p>As mentioned earlier, Reed-Solomon codes can achieve the Singleton bound, but only when the alphabet size is relatively large (i.e., <span class="math notranslate nohighlight">\(q \gg n\)</span>). Fortunately, we can extend Reed-Solomon codes to Reed-Muller codes, transitioning from univariate polynomial codes to multivariate polynomial codes. This allows applicability over small fields (<span class="math notranslate nohighlight">\(q \ll n\)</span>), although there is a slight trade-off in the balance between distance and error-correcting capability. However, this is worthwhile.</p>
+<p>Appendix D of [ZCF23] informs us that <em>Random Foldable Codes</em> are a special case of truncated Reed-Muller codes (Punctured Reed-Muller Codes). Thus, <em>Random Foldable Codes</em> are field agnostic and, by venturing into the realm of multivariate polynomials, are suitable for PCS of multi-linear polynomials.</p>
+<p>We know that the encoding space of Reed-Solomon codes consists of univariate polynomials of degree at most <span class="math notranslate nohighlight">\(d\)</span>. Reed-Muller codes extend this to multivariate polynomials, with the encoding space comprising multivariate polynomials of total degree at most <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<p>For <span class="math notranslate nohighlight">\(n, d, q\)</span> with <span class="math notranslate nohighlight">\(d &lt; q\)</span>, define Reed-Muller encoding as ([GJX15])</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{RM}_q(n,d) := \{(F(\mathbf{u}))_{\mathbf{u} \in \mathbb{F}_q^n} : F \in \mathbb{F}_q[X_1, \cdots, X_n], \deg(F) \le d \}.
+\]</div>
+<p>Reed-Muller codes represent the set of evaluations of <span class="math notranslate nohighlight">\(n\)</span>-variate polynomials of total degree at most <span class="math notranslate nohighlight">\(d\)</span> over <span class="math notranslate nohighlight">\(\mathbb{F}_q^n\)</span>. The length of the encoding <span class="math notranslate nohighlight">\(\mathrm{RM}_q(n,d)\)</span> is <span class="math notranslate nohighlight">\(q^n\)</span>, and the dimension is <span class="math notranslate nohighlight">\(\binom{n+d}{n}\)</span>.</p>
+<p>Intuitively, Punctured Reed-Muller Codes are simply Reed-Muller codes with truncation. Specifically, the evaluation points <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> are not taken from all of <span class="math notranslate nohighlight">\(\mathbb{F}_q^n\)</span> but only a subset, denoted as <span class="math notranslate nohighlight">\(\mathcal{T} = \{ \mathbf{u}_1, \mathbf{u}_2, \ldots, \mathbf{u}_N \}\)</span>. Typically, Punctured Reed-Muller Codes allow this set <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> to be a multiset (i.e., permitting duplicate elements), but we do not impose this requirement here. Let <span class="math notranslate nohighlight">\(\mathrm{RM}_q(n,d)|_{\mathcal{T}}\)</span> denote the <span class="math notranslate nohighlight">\(\mathbb{F}_q\)</span>-linear code:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{RM}_q(n,d)|_{\mathcal{T}} := \{(F(\mathbf{u}_1),F(\mathbf{u}_2), \cdots, F(\mathbf{u}_N)): F \in \mathbb{F}_q[X_1, \cdots, X_n], \deg(F) \le d \}.
+\]</div>
+<p>This is called a punctured Reed-Muller code ([GJX15]). From the definition, it is evident that this is merely a subset of Reed-Muller codes, selecting only <span class="math notranslate nohighlight">\(N\)</span> points, which aligns with the literal meaning of “truncated” or “punctured.”</p>
+<p>With the concept of Punctured Reed-Muller Codes established, let’s examine the following lemma provided in Appendix D of [ZCF23], which states that foldable linear codes are a special case of punctured Reed-Muller codes.</p>
+<p><strong>Lemma 1</strong> [ZCF23, Lemma 11] (Foldable Punctured Reed-Muller Codes). Let <span class="math notranslate nohighlight">\(C_d\)</span> be a foldable linear code with generator matrices <span class="math notranslate nohighlight">\((\mathbf{G}_0, \ldots, \mathbf{G}_{d-1})\)</span> and diagonal matrices <span class="math notranslate nohighlight">\((T_0, \ldots, T_{d-1})\)</span>, <span class="math notranslate nohighlight">\((T_0', \ldots, T_{d-1}')\)</span>. Then there exists a subset <span class="math notranslate nohighlight">\(D \subset \mathbb{F}^d\)</span> such that <span class="math notranslate nohighlight">\(C_d = \{(P(\mathbf{x}) : \mathbf{x} \in D) : P \in \mathbb{F}[X_1, \ldots, X_d]\}\)</span>, i.e., each codeword in <span class="math notranslate nohighlight">\(C_d\)</span> is a vector obtained by evaluating a multilinear polynomial <span class="math notranslate nohighlight">\(P\)</span> at each point in <span class="math notranslate nohighlight">\(D\)</span>.</p>
+<p><strong>Proof:</strong> By induction. For simplicity, consider <span class="math notranslate nohighlight">\(C_0\)</span> as a repetition code. In the base case, <span class="math notranslate nohighlight">\(\mathrm{Enc}_0(m) = m \| \ldots \| m\)</span> is a constant polynomial <span class="math notranslate nohighlight">\(P \equiv m\)</span> evaluated at <span class="math notranslate nohighlight">\(c\)</span> distinct points. Assume that for <span class="math notranslate nohighlight">\(i &lt; d\)</span>, there exists a set <span class="math notranslate nohighlight">\(D_i\)</span> such that <span class="math notranslate nohighlight">\(C_i = \{(P(\mathbf{x}): \mathbf{x} \in D_i): P \in \mathbb{F}[X_1, \ldots, X_i]\}\)</span>. Without loss of generality, assign an integer <span class="math notranslate nohighlight">\(j \in [1, c \cdot 2^i]\)</span> to index each element in <span class="math notranslate nohighlight">\(D_i\)</span> sequentially, representing <span class="math notranslate nohighlight">\(x_j\)</span> as the <span class="math notranslate nohighlight">\(j\)</span>-th element in <span class="math notranslate nohighlight">\(D_i\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(t = \mathrm{diag}(T_i)\)</span>, <span class="math notranslate nohighlight">\(t' = \mathrm{diag}(T'_i)\)</span>, <span class="math notranslate nohighlight">\(n_i = c \cdot 2^i\)</span>, <span class="math notranslate nohighlight">\(\mathbf{v} \in \mathbb{F}^{2^{i+1}}\)</span>, and let <span class="math notranslate nohighlight">\(P \in \mathbb{F}[X_1, \ldots, X_{i+1}]\)</span> be a polynomial with coefficients from <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>. Finally, let <span class="math notranslate nohighlight">\(P_l, P_r \in \mathbb{F}[X_1, \ldots, X_{i}]\)</span> such that <span class="math notranslate nohighlight">\(P(X_1, \ldots, X_{i+1}) = P_l(X_1, \ldots, X_{i}) + X_{i+1} P_r(X_1, \ldots, X_{i})\)</span>. Then,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{Enc}_{i+1}(\mathbf{v}) 
+    &amp; = \mathrm{Enc}_{i}(\mathbf{v}_l) + \mathrm{diag}(T_i) \circ \mathrm{Enc}_{i}(\mathbf{v}_r) \quad \| \quad \mathrm{Enc}_{i}(\mathbf{v}_l) + \mathrm{diag}(T_i) \circ \mathrm{Enc}_{i}(\mathbf{v}_r) \\
+    &amp; \quad \text{\color{blue}(by the encoding algorithm in Protocol 1)} \\
+    &amp; = (P_l(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n)) + \mathrm{diag}(T_i) \circ (P_r(\mathbf{x}_1), \ldots, P_r(\mathbf{x}_n)) \\
+    &amp; \| \quad (P_l(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n)) + \mathrm{diag}(T'_i) \circ (P_r(\mathbf{x}_1), \ldots, P_r(\mathbf{x}_n)) \\
+    &amp; \quad\text{\color{blue}(by the induction hypothesis)} \\
+    &amp; = (P_l(\mathbf{x}_1) + t_1 P_r(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n) + t_n P_r(\mathbf{x}_n), P_l(\mathbf{x}_1) + t'_1 P_r(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n) + t'_n P_r(\mathbf{x}_n)) \\
+    &amp; \quad\text{\color{blue}(by the definition of the Hadmard product)} \\
+    &amp; = (P(\mathbf{x}_1,t_1), \ldots, P(\mathbf{x}_n, t_n), P(\mathbf{x}_1,t'_1), \ldots, P(\mathbf{x}_n, t'_n))\\
+    &amp; \quad\text{\color{blue}(by the definition of $P$)}
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore, let <span class="math notranslate nohighlight">\(D_{i+1} = \{(\mathbf{x}_1,t_1), \ldots, (\mathbf{x}_n, t_n), (\mathbf{x}_1,t'_1), \ldots, (\mathbf{x}_n, t'_n)\}\)</span>, and the lemma holds for <span class="math notranslate nohighlight">\(i + 1\)</span>. Thus, by induction, the proof is complete. <span style="float: right;"> <span class="math notranslate nohighlight">\(\Box\)</span> </span></p>
+</section>
+<section id="good-relative-minimum-distance">
+<h2>Good Relative Minimum Distance<a class="headerlink" href="#good-relative-minimum-distance" title="Link to this heading">#</a></h2>
+<p>Finally, we focus on the fourth property satisfied by <em>Random Foldable Codes</em> (RFCs):</p>
+<ol class="arabic simple" start="4">
+<li><p><strong>Good Relative Minimum Distance</strong></p></li>
+</ol>
+<p>In [ZCF23], it is proven that RFCs have tight bounds on their minimum Hamming distance (a “tight” bound means that the actual bounds are achievable). For example, an RFC over a 256-element finite field with a message length of <span class="math notranslate nohighlight">\(2^{25}\)</span> and a code rate of <span class="math notranslate nohighlight">\(\frac{1}{8}\)</span> has a relative minimum distance of <span class="math notranslate nohighlight">\(0.728\)</span> with overwhelming probability. For a code with a rate of <span class="math notranslate nohighlight">\(\frac{1}{8}\)</span>, the maximum achievable relative minimum Hamming distance is approximately <span class="math notranslate nohighlight">\(1 - \frac{1}{8} = 0.875\)</span>. Clearly, <span class="math notranslate nohighlight">\(0.728\)</span> is fairly close to <span class="math notranslate nohighlight">\(0.875\)</span>. This is practically useful and implies that foldable codes generated via overwhelming probability (which enable efficient PCS provers) also have good relative minimum distances (enabling efficient PCS verifiers).</p>
+<p>The term “overwhelming probability” arises from the distribution <span class="math notranslate nohighlight">\((\mathbf{G}_0, \ldots, \mathbf{G}_{d}) \leftarrow D_{d}\)</span> introduced during encoding. When uniformly sampling diagonal matrices <span class="math notranslate nohighlight">\(T_{i}\)</span> from <span class="math notranslate nohighlight">\(\mathbb{F}^{\times}\)</span> and setting <span class="math notranslate nohighlight">\(T'_{i} = -T_{i}\)</span>, the relative minimum distance of <span class="math notranslate nohighlight">\(C_{d}\)</span> achieved with overwhelming probability is equal to</p>
+<div class="math notranslate nohighlight">
+\[
+1 - \left( \frac{\epsilon_{\mathbb{F}}^d}{c} + \frac{\epsilon_{\mathbb{F}}}{\log |\mathbb{F}|} \sum_{i = 0}^{d} (\epsilon_{\mathbb{F}})^{d-i} \left( 0.6 + \frac{2 \log(n_i / 2) + \lambda}{n_i} \right)  \right) \tag{1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(c\)</span> is the reciprocal of the code rate, <span class="math notranslate nohighlight">\(\epsilon_{\mathbb{F}} = \frac{\log|\mathbb{F}|}{\log|\mathbb{F}| - 1.001}\)</span>, <span class="math notranslate nohighlight">\(n_{i}\)</span> is the encoding length, <span class="math notranslate nohighlight">\(d\)</span> is the logarithm of the message length, and <span class="math notranslate nohighlight">\(\lambda\)</span> is the security parameter. By setting <span class="math notranslate nohighlight">\(\lambda = 128\)</span>, it ensures that <span class="math notranslate nohighlight">\((c,k_{0},d)\)</span>-random foldable linear codes achieve the above relative minimum distance with a probability of at least <span class="math notranslate nohighlight">\(1 - 2^{-128}\)</span>.</p>
+<p>Next, we examine how the result in equation <span class="math notranslate nohighlight">\((1)\)</span> is derived. Our goal is to analyze the relative minimum distance of foldable random codes <span class="math notranslate nohighlight">\(C_{d}\)</span>. For a linear code, the minimum distance equals the minimum Hamming weight among all non-zero codewords because</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+d = \min_{\substack{\vec{c_1} \neq \vec{c_2} \\ \vec{c_1}, \vec{c_2} \in C_d}} \Delta(\vec{c_1}, \vec{c_2}) = \min_{\substack{\vec{c_1} \neq \vec{c_2} \\ \vec{c_1}, \vec{c_2} \in C_d}} wt(\vec{c_1} - \vec{c_2}) = \min_{\substack{\vec{c} \neq \vec{0}, \vec{c} \in C_d}} wt(\vec{c} )
+\end{split}\]</div>
+<p>Since it is a linear code, <span class="math notranslate nohighlight">\(\vec{c_1} - \vec{c_2}\)</span> is also a codeword in <span class="math notranslate nohighlight">\(C_d\)</span>, hence the last equality holds. Therefore, we want to show that for any non-zero message, i.e., <span class="math notranslate nohighlight">\(\forall \vec{m} \neq \vec{0}\)</span>, the encoded codeword <span class="math notranslate nohighlight">\(\mathrm{Enc}_d(\vec{m})\)</span> does not have too many zero components. Suppose it has at most <span class="math notranslate nohighlight">\(t_d\)</span> zero components, letting <span class="math notranslate nohighlight">\(\mathrm{nzero}(\cdot)\)</span> denote the number of zero components in a vector, we aim to show</p>
+<div class="math notranslate nohighlight">
+\[
+\forall \vec{m} \neq \vec{0}, \quad \mathrm{nzero}(\mathrm{Enc}_d(\vec{m})) \le t_d \tag{2}
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(n_d\)</span> denote the length of the codeword <span class="math notranslate nohighlight">\(\mathrm{Enc}_d(\vec{m})\)</span>. Then from <span class="math notranslate nohighlight">\((2)\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[
+\forall \vec{m} \neq \vec{0}, \quad wt(\mathrm{Enc}_d(\vec{m})) \ge n_d - t_d
+\]</div>
+<p>Thus, the relative minimum distance that <span class="math notranslate nohighlight">\(C_d\)</span> can achieve is</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta(C_d) = \frac{\min_{\substack{\vec{c} \neq \vec{0}, \vec{c} \in C_d}} wt(\vec{c} )}{n_d} = \frac{n_d - t_d}{n_d} = 1 - \frac{t_d}{n_d} \tag{3}
+\]</div>
+<p>The result in equation <span class="math notranslate nohighlight">\((1)\)</span> is derived from equation <span class="math notranslate nohighlight">\((3)\)</span>. The remaining task is to analyze what <span class="math notranslate nohighlight">\(t_d\)</span> equals, that is, how many zero components a codeword can have after encoding any non-zero message.</p>
+<section id="utilizing-induction">
+<h3>Utilizing Induction<a class="headerlink" href="#utilizing-induction" title="Link to this heading">#</a></h3>
+<p>Using the powerful tool of induction, we analyze <span class="math notranslate nohighlight">\(t_d\)</span>. Assume that with overwhelming probability (based on the choice of diagonal matrices <span class="math notranslate nohighlight">\(T_0, \ldots, T_{i-1}\)</span>), for any non-zero message <span class="math notranslate nohighlight">\(\vec{m} \in \mathbb{F}^{k_i} \ \{0^{k_i}\}\)</span>, the encoded <span class="math notranslate nohighlight">\(\mathrm{Enc}_i(\vec{m})\)</span> has at most <span class="math notranslate nohighlight">\(t_i\)</span> zero components. We analyze the case for <span class="math notranslate nohighlight">\(i + 1\)</span>. For any non-zero message <span class="math notranslate nohighlight">\(\vec{m} = (\vec{m_l}, \vec{m_r}) \in \mathbb{F}^{2k_i}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{Enc}_{i+1}(\vec{m}) &amp; = (\vec{m_l}, \vec{m_r}) \begin{bmatrix}
+    \mathbf{G}_i &amp; \mathbf{G}_i \\
+    \mathbf{G}_i \cdot T_i &amp; \mathbf{G}_i \cdot -T_i
+    \end{bmatrix} \\
+    &amp; = (\vec{m_l}\mathbf{G}_i + \vec{m_l}\mathbf{G}_i\cdot T_i, \vec{m_l}\mathbf{G}_i - \vec{m_l}\mathbf{G}_i\cdot T_i) \\
+    &amp; = (\mathrm{Enc}_i(\vec{m}) + \mathrm{Enc}_i(\vec{m}) \circ \mathrm{diag}(T_i), \mathrm{Enc}_i(\vec{m}) - \mathrm{Enc}_i(\vec{m}) \circ \mathrm{diag}(T_i)) \\
+    &amp; := (\mathbf{M}_l \|  \mathbf{M}_r)
+\end{aligned}
+\end{split}\]</div>
+<p>This means examining the number of zero components in the vector <span class="math notranslate nohighlight">\((\mathbf{M}_l \|  \mathbf{M}_r)\)</span>. Separating <span class="math notranslate nohighlight">\(\mathbf{M}_l\)</span> and <span class="math notranslate nohighlight">\(\mathbf{M}_r\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathbf{M}_l = \mathrm{Enc}_i(\vec{m_l}) + \mathrm{Enc}_i(\vec{m_r}) \circ \mathrm{diag}(T_i) \\
+    \mathbf{M}_r = \mathrm{Enc}_i(\vec{m_l}) - \mathrm{Enc}_i(\vec{m_r}) \circ \mathrm{diag}(T_i)
+\end{aligned}
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf{t} = \mathrm{diag}(T_i)\)</span>. For each <span class="math notranslate nohighlight">\(j \in [1, n_i]\)</span>, define <span class="math notranslate nohighlight">\(A_j =  \mathrm{Enc}_i(\vec{m_l})[j]\)</span> ，<span class="math notranslate nohighlight">\(B_j = \mathrm{Enc}_i(\vec{m_r})[j]\)</span>, and define a function:</p>
+<div class="math notranslate nohighlight">
+\[
+f_j(x) = A_j + x B_j \tag{4}
+\]</div>
+<p>If <span class="math notranslate nohighlight">\(f_j(\mathbf{t}[j]) = 0\)</span> or <span class="math notranslate nohighlight">\(f_j(-\mathbf{t}[j]) = 0\)</span>, then <span class="math notranslate nohighlight">\(\mathbf{M}_l[j] = 0\)</span> or <span class="math notranslate nohighlight">\(\mathbf{M}_r[j] = 0\)</span>, indicating a zero component in the encoded vector. Let’s analyze whether <span class="math notranslate nohighlight">\(f_j(x)\)</span> can be zero based on the values of <span class="math notranslate nohighlight">\(A_j\)</span> and <span class="math notranslate nohighlight">\(B_j\)</span>, considering the following cases:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(A_{j} = 0\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(A_{j} \neq 0\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(B_{j} = 0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_j(x) \equiv 0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{j}(x) = A_{j} \neq 0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(B_{j} \neq 0\)</span><br></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{j}(x) = x B_{j}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{j}(x) = A_{j} + x B_{j}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>First, consider the case where <span class="math notranslate nohighlight">\(A_j = B_j = 0\)</span>. Here, <span class="math notranslate nohighlight">\(f_j(x) \equiv 0\)</span> for any <span class="math notranslate nohighlight">\(x\)</span>, meaning <span class="math notranslate nohighlight">\(\mathbf{M}_l[j] = 0\)</span> and <span class="math notranslate nohighlight">\(\mathbf{M}_r[j] = 0\)</span>. Let <span class="math notranslate nohighlight">\(S \subseteq [n_i]\)</span> denote such indices, and by the induction hypothesis, <span class="math notranslate nohighlight">\(|S| \le t_i\)</span>. Define <span class="math notranslate nohighlight">\(m_{i+1}(S)\)</span> as those non-zero messages that satisfy <span class="math notranslate nohighlight">\(A_j = B_j = 0\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+S = \{ j \in [1, n_i]: A_j = B_j = 0 \}.
+\]</div>
+<p>In this case, <span class="math notranslate nohighlight">\(\mathbf{M}_l[j] = \mathbf{M}_r[j] = 0\)</span>, resulting in <span class="math notranslate nohighlight">\(2 |S|\)</span> zero components in <span class="math notranslate nohighlight">\((\mathbf{M}_l \|  \mathbf{M}_r)\)</span>.</p>
+<p>Consider the second case, where <span class="math notranslate nohighlight">\(A_j \neq 0\)</span> and <span class="math notranslate nohighlight">\(B_j = 0\)</span>. Here, <span class="math notranslate nohighlight">\(f_{j}(x) = A_{j} \neq 0\)</span>, so no zero components are found.</p>
+<p>Next, consider the last row of the table where <span class="math notranslate nohighlight">\(B_j \neq 0\)</span>. In this case, the index <span class="math notranslate nohighlight">\(j\)</span> is certainly not in <span class="math notranslate nohighlight">\(S\)</span>. Define a subset <span class="math notranslate nohighlight">\(\urcorner S^* \subseteq  \urcorner S\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\urcorner S^* = \{j \in [1, n_i] \backslash  S, B_j \neq 0\}
+\]</div>
+<p>For each <span class="math notranslate nohighlight">\(j \in \urcorner S^*\)</span>, define a random variable</p>
+<div class="math notranslate nohighlight">
+\[
+X_j = 1 \{f_j(\mathbf{t}[j]) = 0\} + 1 \{f_j(-\mathbf{t}[j]) = 0\}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(1(\cdot)\)</span> is an indicator function that equals <span class="math notranslate nohighlight">\(1\)</span> if the condition inside holds, and <span class="math notranslate nohighlight">\(0\)</span> otherwise. Thus, <span class="math notranslate nohighlight">\(X_j\)</span> indicates how many zero components exist at position <span class="math notranslate nohighlight">\(j\)</span> in <span class="math notranslate nohighlight">\(\mathbf{M}_l\)</span> and <span class="math notranslate nohighlight">\(\mathbf{M}_r\)</span>, with possible values <span class="math notranslate nohighlight">\(\{0,1,2\}\)</span>. Notice that <span class="math notranslate nohighlight">\(X_j\)</span> is an independent Bernoulli trial because <span class="math notranslate nohighlight">\(\mathbf{t}[j]\)</span> is uniformly sampled from <span class="math notranslate nohighlight">\(\mathbb{F}^{\times}\)</span>. Let <span class="math notranslate nohighlight">\(z_j \in \mathbb{F}^{\times}\)</span> satisfy <span class="math notranslate nohighlight">\(f_j(z_j) = 0\)</span>. Then, when <span class="math notranslate nohighlight">\(\mathbf{t}[j] = z_j\)</span>, <span class="math notranslate nohighlight">\(1 \{f_j(\mathbf{t}[j]) = 0\} = 1\)</span> and when <span class="math notranslate nohighlight">\(\mathbf{t}[j] = -z_j\)</span>, <span class="math notranslate nohighlight">\(1 \{f_j(-\mathbf{t}[j]) = 0\} = 1\)</span>. Analyzing the possible values of <span class="math notranslate nohighlight">\(X_j\)</span>:</p>
+<ol class="arabic simple">
+<li><p><strong><span class="math notranslate nohighlight">\(X_j = 2\)</span></strong>: This implies <span class="math notranslate nohighlight">\(f_j(\mathbf{t}[j]) = 0\)</span> and <span class="math notranslate nohighlight">\(f_j(-\mathbf{t}[j]) = 0\)</span>, which leads to <span class="math notranslate nohighlight">\(\mathbf{t}[j] = z_j = -z_j\)</span>. This would mean <span class="math notranslate nohighlight">\(z_j = 0\)</span>, which is impossible since <span class="math notranslate nohighlight">\(z_j \in \mathbb{F}^{\times}\)</span>.</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(X_j = 1\)</span></strong>: This implies either <span class="math notranslate nohighlight">\(f_j(\mathbf{t}[j]) = 0\)</span> or <span class="math notranslate nohighlight">\(f_j(-\mathbf{t}[j]) = 0\)</span>, meaning <span class="math notranslate nohighlight">\(\mathbf{t}[j] = z_j\)</span> or <span class="math notranslate nohighlight">\(\mathbf{t}[j] = -z_j\)</span>. The probability of this occurring is <span class="math notranslate nohighlight">\(\frac{2}{|\mathbb{F}| - 1}\)</span>.</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(X_j = 0\)</span></strong>: This occurs when <span class="math notranslate nohighlight">\(\mathbf{t}[j] \neq z_j\)</span> and <span class="math notranslate nohighlight">\(\mathbf{t}[j] \neq -z_j\)</span>, with probability <span class="math notranslate nohighlight">\(1 - \frac{2}{|\mathbb{F}| - 1}\)</span>.</p></li>
+</ol>
+<p>For all <span class="math notranslate nohighlight">\(j \in \urcorner S^*\)</span>, summing up all <span class="math notranslate nohighlight">\(X_j\)</span> gives the total number of zero components in <span class="math notranslate nohighlight">\((\mathbf{M}_l \|  \mathbf{M}_r)\)</span>, denoted as <span class="math notranslate nohighlight">\(X = \sum_{j \in \urcorner S^*}X_j\)</span>.</p>
+<p>Having analyzed all cases in the table, we obtain</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{nzero}(\mathrm{Enc}_{i+1}(\vec{m})) = 2|S| + X
+\]</div>
+<p>Next, we analyze <span class="math notranslate nohighlight">\(|S|\)</span> and <span class="math notranslate nohighlight">\(X\)</span> to show that for any non-zero message <span class="math notranslate nohighlight">\(\vec{m} \in \mathbb{F}^{2k_i} \backslash \{0^{2k_i}\}\)</span>, <span class="math notranslate nohighlight">\(\mathrm{Enc}_{i+1}(\vec{m})\)</span> has at most <span class="math notranslate nohighlight">\(t_{i+1}\)</span> zero components with overwhelming probability. We analyze the probability that <span class="math notranslate nohighlight">\(\mathrm{Enc}_{i+1}(\vec{m})\)</span> has at least <span class="math notranslate nohighlight">\(2 t_i + l_{i}\)</span> zero components:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \Pr [ {\mathrm{nzero}(\mathrm{Enc}_{i+1}(\vec{m})) \ge 2 t_i + l_{i}} ] &amp; = \Pr [ 2|S|  + X \ge 2 t_i + l_{i} ] \\
+    &amp; = \Pr [ X \ge 2 t_i + l_{i} - 2|S|] \\
+    &amp; = \Pr [\sum_{j \in \urcorner S^*}X_j \ge 2 t_i + l_{i} - 2|S|] \\
+    &amp; \le \sum_{j = 2 t_i + l_{i} - 2|S|}^{|\urcorner S^*|} \binom{|\urcorner S^*|}{i} \cdot (\frac{2}{|\mathbb{F}| - 1})^{i} \cdot (1 - \frac{2}{|\mathbb{F}| - 1})^{|\urcorner S^*| - i}\\
+    &amp; \quad \text{\color{blue}{(By the binomial theorem,  $\binom{|\urcorner S^*|}{i} \le 2^{|\urcorner S^*|})$}} \\
+    &amp; \le |\urcorner S^*| \cdot 2^{|\urcorner S^*|}  (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|} \\
+    &amp; \le |\urcorner S| \cdot 2^{|\urcorner S|} \cdot (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|} \quad (\urcorner S^* \subseteq \urcorner S)\\
+    &amp; = |[1, n_i] \backslash S| \cdot 2^{|[1, n_i] \backslash S|} \cdot (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|}\\
+    &amp; = (n_i - |S|) \cdot 2^{n_i - |S|} \cdot (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|}\\
+    &amp; \quad \color{blue}{\text{(Assume } |\mathbb{F}| \ge 2^{10} , \text{ then } \frac{2}{|\mathbb{F}| - 1} \le \frac{2.002}{|\mathbb{F}|})}\\
+    &amp; \le n_i \cdot 2^{n_i - |S|} \left(\frac{2.002}{|\mathbb{F}|}\right)^{2 t_i + l_{i} - 2|S|}
+\end{aligned}
+\end{split}\]</div>
+<p>We observe that for an index set <span class="math notranslate nohighlight">\(S \subseteq [1, n_i]\)</span>, if any set <span class="math notranslate nohighlight">\(S\)</span> is selected, each index <span class="math notranslate nohighlight">\(i \in [1, n_{i}]\)</span> has two possibilities: to include it in <span class="math notranslate nohighlight">\(S\)</span> or not. Therefore, there are a total of <span class="math notranslate nohighlight">\(2^{n_{i}}\)</span> possible selections for the set <span class="math notranslate nohighlight">\(S\)</span>. When we enumerate all possible sets <span class="math notranslate nohighlight">\(S\)</span>, the union of the resulting <span class="math notranslate nohighlight">\(m_{i+1}(S)\)</span>, denoted by <span class="math notranslate nohighlight">\(\cup_{S \subseteq [1, n_{i}]}m_{i+1}(S)\)</span>, can cover all messages in <span class="math notranslate nohighlight">\(\mathbb{F}^{k_{i+1}} = \mathbb{F}^{2k_{i}}\)</span>. Lemma 2 in paper [ZCF23] tells us that the size of the set <span class="math notranslate nohighlight">\(m_{i+1}(S)\)</span> is at most <span class="math notranslate nohighlight">\(\mathbb{F}^{t_i - |S|}\)</span>. Thus, by iterating through all <span class="math notranslate nohighlight">\(2^{n_{i}}\)</span> possible sets <span class="math notranslate nohighlight">\(S\)</span>, each set <span class="math notranslate nohighlight">\(S\)</span> contains at most <span class="math notranslate nohighlight">\(\mathbb{F}^{t_i - |S|}\)</span> messages <span class="math notranslate nohighlight">\(\vec{m} \in \mathbb{F}^{2k_i}\)</span>. By combining all <span class="math notranslate nohighlight">\(S\)</span> and considering the bounds on the size of each <span class="math notranslate nohighlight">\(S\)</span>, we can conclude that when <span class="math notranslate nohighlight">\(l_i\)</span> is sufficiently large, that is, when <span class="math notranslate nohighlight">\(|\mathbb{F}|^{l_i} \gg  2^{n_i}\)</span>, the expression <span class="math notranslate nohighlight">\(n_i \cdot 2^{n_i - |S|} \left(\frac{2.002}{|\mathbb{F}|}\right)^{2 t_i + l_{i} - 2|S|}\)</span> becomes sufficiently small. In this case, for any non-zero vector <span class="math notranslate nohighlight">\(\vec{m} \in \mathbb{F}^{2k_{i}}\)</span>, we have <span class="math notranslate nohighlight">\(\mathrm{nzero}(\mathrm{Enc}_{i+1}(\vec{m})) \le 2 t_i + l_{i}\)</span>, that is, <span class="math notranslate nohighlight">\(\mathrm{Enc}_{i+1}(\vec{m})\)</span> contains at most <span class="math notranslate nohighlight">\(2t_i + l_i\)</span> zero components.</p>
+<p>The BaseFold paper [ZCF23] presents a more specific statement in the form of a theorem.</p>
+<p><strong>Theorem 1</strong> [ZCF23, Theorem 2] Fix any finite field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> with <span class="math notranslate nohighlight">\(|\mathbb{F}| \ge 2^{10}\)</span>, and let <span class="math notranslate nohighlight">\(\lambda \in \mathbb{N}\)</span> be the security parameter. For a vector <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> with components in <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, let <span class="math notranslate nohighlight">\({\mathrm{nzero}}(\mathbf{v})\)</span> denote the number of zero components in <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>. For any <span class="math notranslate nohighlight">\(d \in \mathbb{N}\)</span>, let <span class="math notranslate nohighlight">\(D_d\)</span> be a <span class="math notranslate nohighlight">\((c, k_0)\)</span>-foldable distribution, and for each <span class="math notranslate nohighlight">\(i \le d\)</span>, set <span class="math notranslate nohighlight">\(k_i = k_0 2^i\)</span>, <span class="math notranslate nohighlight">\(n_i = c k_i\)</span>. Then,</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{(\mathbf{G}_0, \ldots, \mathbf{G}_d) \leftarrow D_d}\left[ \exists \mathbf{m} \in \mathbb{F}^{k_d} \backslash \{ \mathbf{0} \}, \mathrm{nzero}(\mathrm{Enc}_d(\mathbf{m})) \ge t_d \right] \le d \cdot 2^{- \lambda}  \tag{5}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(t_0 = k_0\)</span> and for each <span class="math notranslate nohighlight">\(i \in [d]\)</span>, <span class="math notranslate nohighlight">\(t_i = 2 t_{i-1} + l_i\)</span>, with</p>
+<div class="math notranslate nohighlight">
+\[
+l_i := \frac{2(d - 1) \log n_0 + \lambda + 2.002 t_{d-1} + 0.6 n_d}{\log |\mathbb{F}| - 1.001}.
+\]</div>
+<p>Equation <span class="math notranslate nohighlight">\((5)\)</span> indicates that the number of zero components in <span class="math notranslate nohighlight">\(\mathrm{Enc}_d(\mathbf{m})\)</span> is bounded by <span class="math notranslate nohighlight">\(t_d\)</span> with negligible probability if exceeded. Given the iterative formula <span class="math notranslate nohighlight">\(t_i = 2 t_{i-1} + l_i\)</span>, we can compute <span class="math notranslate nohighlight">\(t_d\)</span> through iterative summation. Consequently, the maximum relative number of zero components in <span class="math notranslate nohighlight">\(C_d\)</span> is <span class="math notranslate nohighlight">\(Z_{C_d} = \frac{t_d}{n_d}\)</span>, and calculating <span class="math notranslate nohighlight">\(1 - Z_{C_d}\)</span> yields the minimum relative Hamming distance <span class="math notranslate nohighlight">\(\Delta_{C_d}\)</span> of <span class="math notranslate nohighlight">\(C_d\)</span>, resulting in equation <span class="math notranslate nohighlight">\((1)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+1 - \left( \frac{\epsilon_{\mathbb{F}}^d}{c} + \frac{\epsilon_{\mathbb{F}}}{\log |\mathbb{F}|} \sum_{i = 0}^{d} (\epsilon_{\mathbb{F}})^{d-i} \left( 0.6 + \frac{2 \log(n_i / 2) + \lambda}{n_i} \right)  \right) .
+\]</div>
+<p>From the iterative formula <span class="math notranslate nohighlight">\(t_i = 2 t_{i-1} + l_i\)</span>, we observe that as <span class="math notranslate nohighlight">\(i\)</span> increases, <span class="math notranslate nohighlight">\(t_i\)</span> grows by more than <span class="math notranslate nohighlight">\(2 t_{i-1}\)</span>. Since the encoding length doubles each iteration, the relative maximum number of zero components increases, and therefore the minimum relative Hamming distance decreases. If <span class="math notranslate nohighlight">\(\Delta_{C_d}\)</span> is sufficiently large, then through this iterative method, we obtain with overwhelming probability that <span class="math notranslate nohighlight">\(\Delta_{C_0} \ge \Delta_{C_1} \ge \ldots \ge \Delta_{C_d}\)</span>. From <span class="math notranslate nohighlight">\(i = d\)</span> to <span class="math notranslate nohighlight">\(i = 0\)</span>, this encoding method does not decrease <span class="math notranslate nohighlight">\(\Delta_{C_d}\)</span>. In the IOPP protocol, if the initial minimum relative Hamming distance is large, then <span class="math notranslate nohighlight">\(\Delta_{C_{0}}\)</span> remains large with overwhelming probability, which plays a significant role in analyzing the soundness of the IOPP.</p>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[GJX15] Venkatesan Guruswami, Lingfei Jin, and Chaoping Xing. “Efficiently List-Decodable Punctured Reed-Muller Codes”. In: IEEE Transactions on Information Theory 63 (2015), pp. 4317–4324. url: <a class="reference external" href="https://api.semanticscholar.org/CorpusID:">https://api.semanticscholar.org/CorpusID:</a> 14176561.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#efficient-encoding-algorithms">Efficient Encoding Algorithms</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomials-save-the-world-polynomial-based-encoding">Polynomials Save the World: Polynomial-Based Encoding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#good-relative-minimum-distance">Good Relative Minimum Distance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#utilizing-induction">Utilizing Induction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

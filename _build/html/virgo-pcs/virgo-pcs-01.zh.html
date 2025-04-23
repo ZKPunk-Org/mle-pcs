@@ -1,0 +1,949 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Virgo-PCS &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'virgo-pcs/virgo-pcs-01.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="缺失的协议 PH23-PCS（一）" href="../ph23/ph23-pcs-01.zh.html" />
+    <link rel="prev" title="Libra-PCS" href="../libra-pcs/libra-pcs.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../libra-pcs/libra-pcs.zh.html">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-02.zh.html">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fvirgo-pcs/virgo-pcs-01.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/virgo-pcs/virgo-pcs-01.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Virgo-PCS</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 协议原理</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 简化协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">协议参数</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">承诺计算</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation">Evaluation 证明</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">公开输入</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round 5.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-knowledge">3. 支持 Zero-Knowledge</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">承诺计算</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Evaluation 证明</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">公开输入</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Round 5.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">4. 总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-virgo-pcs">
+<h1>Notes on Virgo-PCS<a class="headerlink" href="#notes-on-virgo-pcs" title="Link to this heading">#</a></h1>
+<p>Virgo 是一个基于 GKR 协议的 zkSNARK 证明系统，与 Libra 不同的是，Virgo 采用了不同的多项式承诺方案，或者论文中称之为 zkVPD – Verifiable Polynomial Delegation。Virgo-zkVPD 基于源自 STARK 系统的 FRI （Fast Reed-Solomon IOP） 协议，因此是一个不需要可信预设置（Trusted Setup）的证明系统。其安全假设基于信息论与 Hash 函数的抗碰撞的安全假设。</p>
+<p>本文介绍 Virgo-PCS 的协议原理和原论文有一些不同的地方。原论文中的 PCS 系统支持任意的多元多项式，而本文仅考虑 MLE 多项式。</p>
+<section id="id1">
+<h2>1. 协议原理<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>对于任意的 MLE 多项式，<span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \cdots, X_{n-1})\)</span>，其可以表示为下面的系数形式（或 Monomial 形式）：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \cdots, X_{n-1}) = \sum_{i=0}^{2^{n}-1} c_i\cdot X_0^{i_0}X_1^{i_1}\cdots{}X_{n-1}^{i_{n-1}}
+\]</div>
+<p>其中，<span class="math notranslate nohighlight">\(\vec{c}=(c_0, c_1, \cdots, c_{2^n-1})\)</span> 是系数向量，<span class="math notranslate nohighlight">\(\mathsf{bits}(i)=(i_0, i_1, \cdots, i_{n-1})\)</span> 是 <span class="math notranslate nohighlight">\(i\)</span> 的二进制表示（Little Endian）。</p>
+<p>那么如果我们考虑如何证明该多项式在一个给定点 <span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, \cdots, u_{n-1})\)</span> 的运算取值，即 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{u})=v\)</span>，那么我们只需要证明下面的「求和式」即可：</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=0}^{2^n - 1} c_i\cdot u_0^{i_0}u_1^{i_1}\cdots{}u_{n-1}^{i_{n-1}} = v
+\]</div>
+<p>Virgo-PCS 的思路与 PH23-PCS 类似，采用一个 Univariate Sumcheck 协议来证明上面的求和式。即 Prover 先承诺 <span class="math notranslate nohighlight">\(\vec{c}\)</span>，然后通过下面的 Univariate Sumcheck 公式来证明：</p>
+<div class="math notranslate nohighlight">
+\[
+c(X)\cdot{}m(X) = h(X)\cdot v_{\mathbb{H}}(X) + X\cdot g(X) + \frac{v}{N}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> 是有限域 <span class="math notranslate nohighlight">\(\mathbb{F}_{p}\)</span> 中的一个乘法子群，其大小为 <span class="math notranslate nohighlight">\(N = |\mathbb{H}| = 2^n\)</span> ，而 <span class="math notranslate nohighlight">\(v_{\mathbb{H}}= \prod_{x \in \mathbb{H}}(X - x)\)</span> 是 <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> 中的 vaishing polynomial。这里的 <span class="math notranslate nohighlight">\(m(X)\)</span> 编码了 <span class="math notranslate nohighlight">\(\vec{m}=(m_0, m_1, \cdots, m_{2^n-1})\)</span> 向量：</p>
+<div class="math notranslate nohighlight">
+\[
+m_i = u_0^{i_0}u_1^{i_1}\cdots{}u_{n-1}^{i_{n-1}}
+\]</div>
+<p>然后 Prover 计算 <span class="math notranslate nohighlight">\(h(X)\)</span> 的 FRI 承诺，并发送给 Verifier。然后 Prover 和 Verifier 通过 FRI 协议来证明下面的 Low Degree 商多项式 <span class="math notranslate nohighlight">\(g(X)\)</span> 的存在性：</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = \frac{N\cdot c(X)\cdot m(X) - N\cdot h(X)\cdot v_{\mathbb{H}}(X) - v}{N\cdot X}
+\]</div>
+<p>显然，只要我们能证明 <span class="math notranslate nohighlight">\(\deg(g)&lt;N-1\)</span>，那么我们就证明了 <span class="math notranslate nohighlight">\(\sum_{i=0}^{2^n - 1} c_i\cdot m_i = v\)</span>。</p>
+<p>这里解释下是如何将证明上面的「求和式」转换为证明 <span class="math notranslate nohighlight">\(\deg(g)&lt;N-1\)</span> 。为了证明 <span class="math notranslate nohighlight">\(\sum_{i=0}^{2^n - 1} c_i\cdot m_i = v\)</span> ，首先可以将 <span class="math notranslate nohighlight">\(c_i\)</span> 与 <span class="math notranslate nohighlight">\(m_i\)</span> 用多项式 <span class="math notranslate nohighlight">\(c(X)\)</span> 与 <span class="math notranslate nohighlight">\(m(X)\)</span> 在 <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> 上进行编码，进而转换为证明</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{x \in \mathbb{H}} c(x) \cdot m(x) = v
+\]</div>
+<p>并且 <span class="math notranslate nohighlight">\(c(X) \cdot m(X)\)</span> 的次数为 <span class="math notranslate nohighlight">\(N - 1 + N - 1 = 2N - 2\)</span> 。对 <span class="math notranslate nohighlight">\(c(X) \cdot m(X)\)</span> 进行分解可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+c(X) \cdot m(X) = g'(X) + h(X) \cdot v_{\mathbb{H}}(X)
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\deg(h(X)) &lt; 2N - 1 - N = N - 1\)</span> ，<span class="math notranslate nohighlight">\(\deg(g'(X)) &lt; N\)</span> 。因此「求和式」证明可以转换为证明</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{x \in \mathbb{H}} c(x) \cdot m(x)  = \sum_{x \in \mathbb{H}} (g'(x) + h(x) \cdot v_{\mathbb{H}}(x)) = \sum_{x \in \mathbb{H}} g'(x) =  g'(0) \cdot N = v
+\]</div>
+<p>上面倒数第二个等式是由下面这个引理得到的。</p>
+<blockquote>
+<div><p><strong>引理</strong> ([BC99]) 令 <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> 为 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 的乘法陪集，<span class="math notranslate nohighlight">\(g(X)\)</span> 是 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 上一个次数严格小于 <span class="math notranslate nohighlight">\(|\mathbb{H}|\)</span> 的单变量多项式，那么 <span class="math notranslate nohighlight">\(\sum_{x \in \mathbb{H}}g(x) = g(0) \cdot |\mathbb{H}|\)</span> 。</p>
+</div></blockquote>
+<p>现在只需要证明 <span class="math notranslate nohighlight">\(\deg(g') &lt; N\)</span> 以及 <span class="math notranslate nohighlight">\(g'(0) = v/N\)</span> 即可。这可以转换为证明多项式</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{g'(X) - g'(0)}{X - 0} = \frac{g'(X) - v/N}{X - 0} = \frac{N \cdot g'(X) - v}{N \cdot X}
+\]</div>
+<p>的次数小于 <span class="math notranslate nohighlight">\(N - 1\)</span> ，上面的多项式即为</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = \frac{N\cdot c(X)\cdot m(X) - N\cdot h(X)\cdot v_{\mathbb{H}}(X) - v}{N\cdot X}
+\]</div>
+<p>至此证明「求和式」就转换为了证明 <span class="math notranslate nohighlight">\(\deg(g) &lt; N - 1\)</span> 。</p>
+<p>这个思路整体上没有问题，但是 Verifier 需要 <span class="math notranslate nohighlight">\(O(N)\)</span> 的工作量，因为他要计算 <span class="math notranslate nohighlight">\(m(X)\)</span> 在 <span class="math notranslate nohighlight">\(\kappa\)</span> 个抽样点的取值。而 <span class="math notranslate nohighlight">\(m(X)\)</span> 必须是一个公开的由 <span class="math notranslate nohighlight">\(\vec{u}\)</span> 计算得到的向量。</p>
+<p>Virgo 论文认为计算 <span class="math notranslate nohighlight">\(m(X)\)</span> 在一个点的取值可以利用一个 GKR 协议，将 Verifier 的计算代理给 Prover，同时通过 GKR 协议能够确保计算的正确性，这样 Verifier 只需要 <span class="math notranslate nohighlight">\(O(\log^2(N))\)</span> 的工作量即可。</p>
+<p>这个 GKR 电路分为下面四个部分：</p>
+<ol class="arabic simple">
+<li><p>根据 <span class="math notranslate nohighlight">\(\vec{u}\)</span> 计算 <span class="math notranslate nohighlight">\(\vec{m}\)</span> 的值</p></li>
+<li><p>根据 <span class="math notranslate nohighlight">\(\vec{m}\)</span> 通过 IFFT 算法计算得到 <span class="math notranslate nohighlight">\(m(X)\)</span> 的系数向量</p></li>
+<li><p>根据 <span class="math notranslate nohighlight">\(m(X)\)</span> 的系数向量计算 <span class="math notranslate nohighlight">\(m(X)\)</span> 在 Extended Domain <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> 上的取值。</p></li>
+<li><p>根据 Verifier 提供的 FRI-Query 索引集合 <span class="math notranslate nohighlight">\(Q\)</span>，过滤出 <span class="math notranslate nohighlight">\(m(X)\)</span> 在 <span class="math notranslate nohighlight">\(\{\mathbb{L}_i\}_{i\in Q}\)</span> 上的取值。</p></li>
+</ol>
+<p>由于这个 GKR 协议的所有计算都是基于公开值，并且电路的输入长度为 <span class="math notranslate nohighlight">\(n=\log(N)\)</span>，并且电路的深度为 <span class="math notranslate nohighlight">\(\log(N)\)</span>，电路的宽度为 <span class="math notranslate nohighlight">\(|\mathbb{L}|=N / \rho\)</span>，因此 Verifier 的计算量仅为 <span class="math notranslate nohighlight">\(O(\log^2(N))\)</span> 即可完成验证。</p>
+</section>
+<section id="id2">
+<h2>2. 简化协议<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>协议参数<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Domain <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> 为素数域 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> 的乘法子群，大小为 <span class="math notranslate nohighlight">\(N=2^n\)</span>。</p></li>
+<li><p>Extended Domain <span class="math notranslate nohighlight">\(\mathbb{L}\subset\mathbb{F}_p\)</span> 为大小为 <span class="math notranslate nohighlight">\(|\mathbb{L}|=N / \rho\)</span> 的乘法子群 Coset，其中 <span class="math notranslate nohighlight">\(\rho\)</span> 表示码率。</p></li>
+</ol>
+</section>
+<section id="id4">
+<h3>承诺计算<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>Prover 计算 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \cdots, X_{n-1})\)</span> 的承诺值 <span class="math notranslate nohighlight">\(C_{\tilde{f}}\)</span> 与一般的 FRI 协议类似，计算该 MLE 多项式所对应的 Unviariate 多项式 <span class="math notranslate nohighlight">\(c(X)\)</span> 在 <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> 上的取值。</p>
+<div class="math notranslate nohighlight">
+\[
+C_{\tilde{f}} = \mathsf{MerkleTree.Commit}(\vec{c})
+\]</div>
+</section>
+<section id="evaluation">
+<h3>Evaluation 证明<a class="headerlink" href="#evaluation" title="Link to this heading">#</a></h3>
+<section id="id5">
+<h4>公开输入<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_{\tilde{f}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(\vec{u})\)</span></p></li>
+</ol>
+</section>
+<section id="round-1">
+<h4>Round 1.<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>计算 <span class="math notranslate nohighlight">\(\vec{m}\)</span>，并构造 <span class="math notranslate nohighlight">\(m(X)\)</span>，其 Evaluation 为 <span class="math notranslate nohighlight">\(\vec{m}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+m(X) = m_0\cdot L_{0}(X) + m_1\cdot L_{1}(X) + \cdots + m_{N-1}\cdot L_{N-1}(X)
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>构造 <span class="math notranslate nohighlight">\(h(X)\)</span>，并计算其承诺 <span class="math notranslate nohighlight">\(C_h\)</span> ，其中 <span class="math notranslate nohighlight">\(h(X)\)</span> 满足下面这样的等式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) = \frac{c(X)\cdot m(X) - X\cdot g(X) - v/N}{v_{\mathbb{H}}(X)}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_h = \mathsf{MerkleTree.Commit}(h|_{\mathbb{L}})
+\]</div>
+</section>
+<section id="round-2">
+<h4>Round 2.<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h4>
+<p>Prover 和 Verifier 通过 FRI 协议证明 <span class="math notranslate nohighlight">\(g(X)\)</span> 的存在性。在协议的 Query 阶段，Verifier 提供一个索引集合 <span class="math notranslate nohighlight">\(Q\)</span>，Prover 计算 <span class="math notranslate nohighlight">\(c(X)\)</span>，<span class="math notranslate nohighlight">\(h(X)\)</span> 在 <span class="math notranslate nohighlight">\(\{x_i\}_{i\in Q}\)</span> 上的取值：</p>
+<div class="math notranslate nohighlight">
+\[
+\{(c(x_i), \pi_{c}(x_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, c(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\{(h(x_i), \pi_{h}(x_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, h(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<p>这里所有的 <span class="math notranslate nohighlight">\(x_i\)</span> 都是 <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> 中的元素。</p>
+</section>
+<section id="round-3">
+<h4>Round 3.<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h4>
+<p>Verifier 验证 <span class="math notranslate nohighlight">\(\{c(x_i), h(x_i)\}_{i\in Q}\)</span> 的正确性。</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_f, i, c(x_i), \pi_{c}(x_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_h, i, h(x_i), \pi_{h}(x_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+</section>
+<section id="round-4">
+<h4>Round 4.<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h4>
+<p>Prover 和 Verifier 运行 GKR 协议，计算 <span class="math notranslate nohighlight">\(m|_{\mathbb{L}}\)</span> 的取值，并输出 <span class="math notranslate nohighlight">\(\{m|_{x_i}\}_{i\in Q}\)</span> 的取值，这里 <span class="math notranslate nohighlight">\(x_i\)</span> 是乘法子群 <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> 中第 <span class="math notranslate nohighlight">\(i\)</span> 个元素。</p>
+</section>
+<section id="round-5">
+<h4>Round 5.<a class="headerlink" href="#round-5" title="Link to this heading">#</a></h4>
+<p>Verifier 通过 <span class="math notranslate nohighlight">\(\{c(x_i), h(x_i), m(x_i)\}_{i\in Q}\)</span> 来验证 FRI 协议中的每一步折叠的正确性。</p>
+</section>
+</section>
+</section>
+<section id="zero-knowledge">
+<h2>3. 支持 Zero-Knowledge<a class="headerlink" href="#zero-knowledge" title="Link to this heading">#</a></h2>
+<p>为了支持 Zero-Knowledge 性质，Virgo 在两个地方引入了随机数：</p>
+<ol class="arabic simple">
+<li><p>在 <span class="math notranslate nohighlight">\(c(X)\)</span> 的承诺中加入了一个 Mask 多项式 <span class="math notranslate nohighlight">\(r(X)\)</span></p></li>
+<li><p>在 Univariate Sumcheck 协议中，引入了一个随机的多项式 <span class="math notranslate nohighlight">\(s(X)\)</span>，在验证 <span class="math notranslate nohighlight">\(\sum_{x_i\in\mathbb{H}}c(x_i)m(x_i)=v\)</span> 时，同时证明 <span class="math notranslate nohighlight">\(\sum_{x_i\in\mathbb{H}}s(x_i)=v'\)</span>。</p></li>
+</ol>
+<section id="id6">
+<h3>承诺计算<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>Prover 抽样一个随机的多项式 <span class="math notranslate nohighlight">\(r(X)\)</span>，其 Degree 为 <span class="math notranslate nohighlight">\(\kappa-1\)</span>，即包含有 <span class="math notranslate nohighlight">\(\kappa\)</span> 个随机数。</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = c(X) + v_{\mathbb{H}}(X)\cdot r(X)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_{\tilde{f}} = \mathsf{MerkleTree.Commit}(c^*(X)|_{\mathbb{L}})
+\]</div>
+<p>显然，<span class="math notranslate nohighlight">\(\deg(c^*(X)) = N + \kappa - 1\)</span>。</p>
+</section>
+<section id="id7">
+<h3>Evaluation 证明<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<section id="id8">
+<h4>公开输入<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_{\tilde{f}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(\vec{u})\)</span></p></li>
+</ol>
+</section>
+<section id="witness">
+<h4>Witness<a class="headerlink" href="#witness" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \cdots, X_{n-1})\)</span> 的系数向量 <span class="math notranslate nohighlight">\(\vec{c}\)</span></p></li>
+<li><p>随机多项式 <span class="math notranslate nohighlight">\(r(X)\)</span></p></li>
+</ol>
+</section>
+<section id="id9">
+<h4>Round 1.<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(\vec{m}\)</span>，并构造 <span class="math notranslate nohighlight">\(m(X)\)</span>，其 Evaluation 为 <span class="math notranslate nohighlight">\(\vec{m}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+m(X) = m_0\cdot L_{0}(X) + m_1\cdot L_{1}(X) + \cdots + m_{N-1}\cdot L_{N-1}(X)
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover 抽样一个多项式 <span class="math notranslate nohighlight">\(s(X)\)</span>，其 Degree 为 <span class="math notranslate nohighlight">\(2N + \kappa - 1\)</span>，其在 <span class="math notranslate nohighlight">\(\mathbb{H}\)</span> 上的求和为 <span class="math notranslate nohighlight">\(v'\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\sum_{a\in\mathbb{H}}s(a) = v'
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(s(X)\)</span> 的承诺</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_s = \mathsf{MerkleTree.Commit}(s|_{\mathbb{L}})
+\]</div>
+</section>
+<section id="id10">
+<h4>Round 2.<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 提供一个随机数 <span class="math notranslate nohighlight">\(\alpha\)</span>，用来聚合两个不同的 Sumcheck 协议的和。</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+v^* = v + \alpha\cdot v'
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover 构造 <span class="math notranslate nohighlight">\(h(X)\)</span>，并计算其承诺 <span class="math notranslate nohighlight">\(C_h\)</span> ，<span class="math notranslate nohighlight">\(h(X)\)</span> 满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) = \frac{c^*(X)\cdot m(X) + \alpha\cdot s(X) - X\cdot g(X) - v^*/N}{v_{\mathbb{H}}(X)}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_h = \mathsf{MerkleTree.Commit}(h|_{\mathbb{L}})
+\]</div>
+</section>
+<section id="id11">
+<h4>Round 3.<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<p>Prover 和 Verifier 通过 FRI 协议来证明 <span class="math notranslate nohighlight">\(g(X)\)</span> 的 Degree 小于 <span class="math notranslate nohighlight">\(N-1\)</span>。这包括 <span class="math notranslate nohighlight">\(O(\log(N))\)</span> 轮次的 Split-and-fold 折叠。</p>
+</section>
+<section id="id12">
+<h4>Round 4.<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 抽样 <span class="math notranslate nohighlight">\(\kappa\)</span> 个随机索引，<span class="math notranslate nohighlight">\(Q\)</span>，并要求 Prover 提供 <span class="math notranslate nohighlight">\(c^*(X)\)</span>，<span class="math notranslate nohighlight">\(s(X)\)</span> 与 <span class="math notranslate nohighlight">\(h(X)\)</span> 在 <span class="math notranslate nohighlight">\(\{a_i\}_{i\in Q}\)</span> 上的取值。这里 <span class="math notranslate nohighlight">\(a_i\in\mathbb{L}\)</span>，是 <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> 中的第 <span class="math notranslate nohighlight">\(i\)</span> 个元素。</p></li>
+<li><p>Prover 发送 <span class="math notranslate nohighlight">\(c^*(X)\)</span>，<span class="math notranslate nohighlight">\(s(X)\)</span> 与 <span class="math notranslate nohighlight">\(h(X)\)</span> 在 <span class="math notranslate nohighlight">\(\{a_i\}_{i\in Q}\)</span> 上的取值，并附加上 Merkle path。</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\{(c^*(a_i), \pi_{c^*}(a_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, c^*(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\{(s(a_i), \pi_{s}(a_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, s(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\{(h(a_i), \pi_{h}(a_i))\} \leftarrow \mathsf{MerkleTree.Open}(i, h(X)|_{\mathbb{L}}), \quad \forall i\in Q
+\]</div>
+</section>
+<section id="id13">
+<h4>Round 5.<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<p>Prover 和 Verifier 运行 GKR 协议，计算 <span class="math notranslate nohighlight">\(m|_{\mathbb{L}}\)</span> 的取值，并输出 <span class="math notranslate nohighlight">\(\{m|_{a_i}\}_{i\in Q}\)</span> 的取值，这里 <span class="math notranslate nohighlight">\(a_i\)</span> 是乘法子群 <span class="math notranslate nohighlight">\(\mathbb{L}\)</span> 中第 <span class="math notranslate nohighlight">\(i\)</span> 个元素。</p>
+</section>
+<section id="verification">
+<h4>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 验证 <span class="math notranslate nohighlight">\(\{c^*(a_i), s(a_i), h(a_i)\}_{i\in Q}\)</span> 的正确性。</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_f, i, c^*(a_i), \pi_{c^*}(a_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_s, i, s(a_i), \pi_{s}(a_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{MerkleTree.Verify}(C_h, i, h(a_i), \pi_{h}(a_i)) \overset{?}{=} 1, \quad \forall i\in Q
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Verifier 通过 <span class="math notranslate nohighlight">\(\{c^*(a_i), s(a_i), h(a_i), m(a_i)\}_{i\in Q}\)</span> 来验证 FRI 协议中的每一步折叠的正确性。</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="id14">
+<h2>4. 总结<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<p>Virgo-PCS 是最早利用 MLE-to-Univariate 的思路来构造多项式承诺的协议。也是最早采用 Small Field， Mersenne-61 素数域来提高性能的协议。虽然 Virgo-PCS 协议要求 MLE 多项式以 Coefficient 形式给出，但是如果我们只考虑 MLE 多项式的承诺的话，我们可以无需将 MLE 多项式转换到 Coefficient （Monomial Basis）形式，而是直接利用 MLE 多项式的 Evaluation (Lagrange Basis) 形式进行证明。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>[ZXZS19] Jiaheng Zhang, Tiancheng Xie, Yupeng Zhang, and Dawn Song. “Transparent Polynomial Delegation and Its Applications to Zero Knowledge Proof”. In 2020 IEEE Symposium on Security and Privacy (SP), pp. 859-876. IEEE, 2020. <a class="reference external" href="https://eprint.iacr.org/2019/1482">https://eprint.iacr.org/2019/1482</a>.</p></li>
+<li><p>[PH23] Papini, Shahar, and Ulrich Haböck. “Improving logarithmic derivative lookups using GKR.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/1284">https://eprint.iacr.org/2023/1284</a>.</p></li>
+<li><p>[BCRSVW19] Eli Ben-Sasson, Alessandro Chiesa, Michael Riabzev, Nicholas Spooner, Madars Virza, and Nicholas P. Ward. “Aurora: Transparent succinct arguments for R1CS.” Advances in Cryptology–EUROCRYPT 2019: 38th Annual International Conference on the Theory and Applications of Cryptographic Techniques, Darmstadt, Germany, May 19–23, 2019, Proceedings, Part I 38. Springer International Publishing, 2019. <a class="reference external" href="https://eprint.iacr.org/2018/828">https://eprint.iacr.org/2018/828</a>.</p></li>
+<li><p>[BC99] Byott, Nigel P., and Robin J. Chapman. “Power sums over finite subspaces of a field.” <em>Finite Fields and Their Applications</em> 5, no. 3 (1999): 254-265.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./virgo-pcs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../libra-pcs/libra-pcs.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Libra-PCS</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../ph23/ph23-pcs-01.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">缺失的协议 PH23-PCS（一）</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 协议原理</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 简化协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">协议参数</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">承诺计算</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation">Evaluation 证明</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">公开输入</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round 5.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-knowledge">3. 支持 Zero-Knowledge</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">承诺计算</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Evaluation 证明</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">公开输入</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Round 4.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Round 5.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">4. 总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

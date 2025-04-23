@@ -1,0 +1,1229 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Missing Protocol PH23-PCS (Part 3) &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ph23/ph23-pcs-zk';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fph23/ph23-pcs-zk.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/ph23/ph23-pcs-zk.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Missing Protocol PH23-PCS (Part 3)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-support-zk">1. How to Support ZK</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-kzg10">Hiding KZG10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#zk-for-sum-proof">ZK for Sum Proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#proof">Proof</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zk-ph23-kzg10-protocol-optimized-version">2. ZK-PH23-KZG10 Protocol (Optimized Version)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precomputation">Precomputation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-computation-process">Commit Computation Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-protocol">Evaluation Proof Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#common-inputs">Common inputs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Round 4.</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-representation">Proof Representation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-process">Verification Process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimized-performance-analysis">3. Optimized Performance Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="missing-protocol-ph23-pcs-part-3">
+<h1>Missing Protocol PH23-PCS (Part 3)<a class="headerlink" href="#missing-protocol-ph23-pcs-part-3" title="Link to this heading">#</a></h1>
+<p>This article adds support for Zero-knowledge to the PH23-KZG10 protocol.</p>
+<section id="how-to-support-zk">
+<h2>1. How to Support ZK<a class="headerlink" href="#how-to-support-zk" title="Link to this heading">#</a></h2>
+<p>To make the PH23-KZG10 protocol support ZK, we need to modify two parts of the protocol. First, we need to support Hiding in the KZG10 sub-protocol, which means that no information other than the evaluation will be leaked in any Evaluation proof. Second, we need to ensure that no information about the Witness vector <span class="math notranslate nohighlight">\(\vec{a}\)</span> is leaked in the PH23 protocol.</p>
+<p>First, we need a Perfect Hiding KZG10 protocol that can guarantee that no information other than the polynomial evaluation is leaked after each opening of the polynomial. The following is the KZG10 protocol from [KT23], with its main ideas derived from [PST13], [ZGKPP17], and [XZZPS19].</p>
+<section id="hiding-kzg10">
+<h3>Hiding KZG10<a class="headerlink" href="#hiding-kzg10" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+SRS = ([1]_1, [\tau]_1, [\tau^2]_1, [\tau^3]_1, \ldots, [\tau^D]_1, {\color{red}[\gamma]_1}, [1]_2, [\tau]_2, {\color{red}[\gamma]_2})
+\]</div>
+<p>The commitment of a polynomial <span class="math notranslate nohighlight">\(f(X)\in\mathbb{F}[X]\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+C_f=\mathsf{KZG.Commit}(f(X);\rho_f) = f_0 \cdot [1]_1 + f_1 \cdot [\tau]_1 + \cdots + f_d \cdot [\tau^d]_1 + {\color{blue}\rho_f} \cdot {\color{red}[\gamma]_1}
+\]</div>
+<p>According to the properties of polynomial rings, <span class="math notranslate nohighlight">\(f(X)\)</span> can be decomposed as:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = q(X)\cdot(X-z) + f(z)
+\]</div>
+<p>The commitment of the quotient polynomial is calculated as follows, also requiring a Blinding Factor <span class="math notranslate nohighlight">\({\color{blue}\rho_q}\)</span> to protect the commitment of <span class="math notranslate nohighlight">\(q(X)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+Q = \mathsf{KZG.Commit}(q(X); {\color{blue}\rho_q}) &amp; = q_0 \cdot [1]_1 + q_1 \cdot [\tau]_1 + \cdots + q_d \cdot [\tau^{d-1}]_1 + {\color{blue}\rho_q} \cdot {\color{red}[\gamma]_1} \\
+&amp; = [q(\tau)]_1 + {\color{blue}\rho_q}\cdot{\color{red}[\gamma}]_1
+\end{aligned}
+\end{split}\]</div>
+<p>The Prover also needs to calculate an additional <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> element below to balance the verification formula:</p>
+<div class="math notranslate nohighlight">
+\[
+\color{blue}E = \rho_f \cdot [1]_1 - \rho_q \cdot [\tau]_1 + (\rho_q\cdot z)\cdot [1]_1
+\]</div>
+<p>Then, the Evaluation proof consists of two <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> elements:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi = (Q, {\color{blue}E})
+\]</div>
+<p>Thus, the Verifier can verify using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big(C_f - f(z)\cdot[1]_1,\ [1]_2\Big) = e\Big(Q,\ [\tau]_2 - z\cdot[1]_2\Big) + {\color{blue}e\Big(E,\ {\color{red}[\gamma]_2}\Big)}
+\]</div>
+</section>
+<section id="zk-for-sum-proof">
+<h3>ZK for Sum Proof<a class="headerlink" href="#zk-for-sum-proof" title="Link to this heading">#</a></h3>
+<p>In the process where the Prover uses the accumulation polynomial <span class="math notranslate nohighlight">\(z(X)\)</span> to prove the sum value, information about the <span class="math notranslate nohighlight">\(\vec{z}\)</span> vector, including information about the Witness <span class="math notranslate nohighlight">\(\vec{a}\)</span>, would also be leaked. Therefore, we need a ZK version of the sum proof protocol.</p>
+<p>We have a multiplicative subgroup <span class="math notranslate nohighlight">\(H\subset\mathbb{F}\)</span> of order <span class="math notranslate nohighlight">\(N\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+H=(1, \omega, \omega^2, \ldots, \omega^{N-1})
+\]</div>
+<p>We denote <span class="math notranslate nohighlight">\(\{L_i(X)\}_{i=0}^{N-1}\)</span> as the Lagrange polynomials with respect to <span class="math notranslate nohighlight">\(H\)</span>, and <span class="math notranslate nohighlight">\(v_H(X)=X^N-1\)</span> is the vanishing polynomial on <span class="math notranslate nohighlight">\(H\)</span>.</p>
+<p>Suppose we have a vector <span class="math notranslate nohighlight">\(\vec{a}=(a_0, a_1, \ldots, a_{N-1})\)</span> with <span class="math notranslate nohighlight">\(N\)</span> elements, and we want to prove <span class="math notranslate nohighlight">\(\sum_i a_i = v\)</span>. The Prover has actually computed the commitment of <span class="math notranslate nohighlight">\(\vec{a}\)</span>, denoted as <span class="math notranslate nohighlight">\(C_a\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+C_a = \mathsf{KZG10.Commit}(a(X); {\color{blue}\rho_a}) = [a(\tau)]_1 + {\color{blue}\rho_a\cdot[\gamma]_1}
+\]</div>
+<section id="round-1">
+<h4>Round 1<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h4>
+<p>First, we need to determine how many times <span class="math notranslate nohighlight">\(z(X)\)</span> will be opened, for example, <span class="math notranslate nohighlight">\(z(X)\)</span> will be opened at <span class="math notranslate nohighlight">\(\zeta\)</span> and <span class="math notranslate nohighlight">\(\omega^{-1}\cdot\zeta\)</span>. Then we introduce a random polynomial: <span class="math notranslate nohighlight">\(r(X)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+r(X) = r_0\cdot L_0(X) + r_1\cdot L_1(X) + r_2\cdot L_2(X) + r_3\cdot L_3(X)
+\]</div>
+<p>This polynomial contains four random factors. Why four? We’ll see later.</p>
+<p>The Prover then computes the commitment of <span class="math notranslate nohighlight">\(r(X)\)</span> and introduces an additional Blinding Factor <span class="math notranslate nohighlight">\({\color{blue}\rho_r}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+C_r = \mathsf{KZG10.Commit}(r(X); {\color{blue}\rho_r}) = [r(\tau)]_1 + {\color{blue}\rho_r\cdot[\gamma]_1}
+\]</div>
+<p>The Prover computes a new sum <span class="math notranslate nohighlight">\(\sum_i r_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+v_r = r_0 + r_1 + r_2 + r_3
+\]</div>
+<p>The Prover sends <span class="math notranslate nohighlight">\(C_r\)</span> and <span class="math notranslate nohighlight">\(v_r\)</span> to the Verifier.</p>
+</section>
+<section id="round-2">
+<h4>Round 2<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h4>
+<p>The Verifier sends a random challenge <span class="math notranslate nohighlight">\(\beta\leftarrow_{\$}\mathbb{F}\)</span> to the Prover.</p>
+<p>The Prover constructs a new polynomial <span class="math notranslate nohighlight">\(a'(X)\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+{\color{blue}a'(X) = a(X) + \beta\cdot r(X)}
+\]</div>
+<p>The Prover sends a mixed sum value <span class="math notranslate nohighlight">\(v'\)</span> to the Verifier:</p>
+<div class="math notranslate nohighlight">
+\[
+{\color{blue}v' = v_r + \beta\cdot v}
+\]</div>
+<p>At this point, the Prover and Verifier convert the sum proof target <span class="math notranslate nohighlight">\(\sum_i a_i=v\)</span> into <span class="math notranslate nohighlight">\(\sum_i (a_i + \beta\cdot r_i) = v + \beta\cdot v_r\)</span>.</p>
+</section>
+<section id="round-3">
+<h4>Round 3<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h4>
+<p>The Verifier sends another random number <span class="math notranslate nohighlight">\(\alpha\leftarrow_{\$}\mathbb{F}\)</span> to the Prover.</p>
+<p>The Prover constructs constraint polynomials <span class="math notranslate nohighlight">\(h_0(X), h_1(X), h_2(X)\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h_0(X) &amp;= L_0(X)\cdot\big(z(X) - a(X) \big) \\
+h_1(X) &amp;= (X-1)\cdot\big(z(X)-z(\omega^{-1}\cdot X)-a(X)\big) \\
+h_2(X) &amp; = L_{N-1}(X)\cdot\big( z(X) - v \big) \\
+\end{split}
+\end{split}\]</div>
+<p>The Prover constructs polynomial <span class="math notranslate nohighlight">\(h(X)\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{split}
+h(X) &amp;= h_0(X) + \alpha \cdot h_1(X) + \alpha^2 \cdot h_2(X)
+\end{split}
+\]</div>
+<p>The Prover computes the quotient polynomial <span class="math notranslate nohighlight">\(t(X)\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+h(X) =t(X)\cdot v_H(X)
+\]</div>
+<p>The Prover computes the commitment of <span class="math notranslate nohighlight">\(z(X)\)</span>, <span class="math notranslate nohighlight">\(C_z\)</span>, and sends <span class="math notranslate nohighlight">\(C_z\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+C_z = \mathsf{KZG10.Commit}(z(X); \rho_z) = [z(\tau)]_1 + {\color{blue}\rho_z\cdot[\gamma]_1}
+\]</div>
+<p>The Prover computes the commitment of <span class="math notranslate nohighlight">\(t(X)\)</span>, <span class="math notranslate nohighlight">\(C_t\)</span>, and sends <span class="math notranslate nohighlight">\(C_t\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+C_t = \mathsf{KZG10.Commit}(t(X); \rho_t) = [t(\tau)]_1 + {\color{blue}\rho_t\cdot[\gamma]_1}
+\]</div>
+</section>
+<section id="round-4">
+<h4>Round 4<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h4>
+<p>The Verifier sends a random evaluation point <span class="math notranslate nohighlight">\(\zeta\leftarrow_{\$}\mathbb{F}\)</span></p>
+<p>The Prover constructs quotient polynomials <span class="math notranslate nohighlight">\(q_{a}(X)\)</span>, <span class="math notranslate nohighlight">\(q_z(X)\)</span>, <span class="math notranslate nohighlight">\(q_t(X)\)</span>, and <span class="math notranslate nohighlight">\(q'_z(X)\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+q_{a}(X) = \frac{a'(X) - a'(\zeta)}{X-\zeta}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+q_t(X) = \frac{t(X) - t(\zeta)}{X-\zeta}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+q_z(X) = \frac{z(X) - z(\zeta)}{X-\zeta}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+q'_z(X) = \frac{z(X) - z(\omega^{-1}\cdot\zeta)}{X-\omega^{-1}\cdot\zeta}
+\]</div>
+<p>The Prover computes the commitments of the four quotient polynomials and introduces corresponding Blinding Factors <span class="math notranslate nohighlight">\({\color{blue}\rho_{q_a}}, {\color{blue}\rho_{q_z}}, {\color{blue}\rho_{q_t}}, {\color{blue}\rho_{q'_z}}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+Q_{a} &amp;= \mathsf{KZG10.Commit}(q_{a}(X); {\color{blue}\rho_{q_{a}}}) = [q_{a}(\tau)]_1 + {\color{blue}\rho_{q_{a}}\cdot[\gamma]_1} \\
+Q_z &amp;= \mathsf{KZG10.Commit}(q_z(X); {\color{blue}\rho_{q_z}}) = [q_z(\tau)]_1 + {\color{blue}\rho_{q_z}\cdot[\gamma]_1} \\
+Q_t &amp;= \mathsf{KZG10.Commit}(q_t(X); {\color{blue}\rho_{q_t}}) = [q_t(\tau)]_1 + {\color{blue}\rho_{q_t}\cdot[\gamma]_1} \\
+Q'_z &amp;= \mathsf{KZG10.Commit}(q'_z(X); {\color{blue}\rho_{q'_z}}) = [q'_z(\tau)]_1 + {\color{blue}\rho_{q'_z}\cdot[\gamma]_1} \\
+\end{split}
+\end{split}\]</div>
+<p>The Prover also needs to construct four corresponding Blinding Factor commitments and send them to the Verifier:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+E_a &amp;= (\rho_{a} + \beta\cdot\rho_{r})\cdot[1]_1 - \rho_{q_a}\cdot[\tau]_1 + (\rho_{q_a}\cdot\zeta)\cdot[1]_1 \\
+E_z &amp;= \rho_{z}\cdot[1]_1 - \rho_{q_z}\cdot[\tau]_1 + (\rho_{q_z}\cdot\zeta)\cdot[1]_1 \\
+E_t &amp;= \rho_{t}\cdot[1]_1 - \rho_{q_t}\cdot[\tau]_1 + (\rho_{q_t}\cdot\zeta)\cdot[1]_1 \\
+E'_z &amp;= \rho_{z}\cdot[1]_1 - \rho_{q'_z}\cdot[\tau]_1 + (\rho_{q'_z}\cdot\omega^{-1}\cdot\zeta)\cdot[1]_1 \\
+\end{split}
+\end{split}\]</div>
+<p>Here we can see that during the proof process, the Prover needs to evaluate four polynomials, and the evaluations of these four polynomials would all leak information about <span class="math notranslate nohighlight">\(\vec{a}\)</span>. Therefore, the Prover adds a random polynomial <span class="math notranslate nohighlight">\(r(X)\)</span> containing two additional random factors in Round 1. This way, all polynomial evaluations in the proof process are performed on <span class="math notranslate nohighlight">\(a'(X)\)</span>, rather than directly computing and evaluating <span class="math notranslate nohighlight">\(a(X)\)</span>.</p>
+</section>
+<section id="proof">
+<h4>Proof<a class="headerlink" href="#proof" title="Link to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+\pi = (C_r, v_r, C_z, C_t, a'(\zeta), z(\zeta), t(\zeta), z(\omega^{-1}\cdot\zeta), Q_a, Q_z, Q_t, Q'_z, E_a, E_z, E_t, E'_z)
+\]</div>
+</section>
+<section id="verification">
+<h4>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h4>
+<p>The Verifier first checks the following equation:</p>
+<div class="math notranslate nohighlight">
+\[
+h(\zeta) = t(\zeta)\cdot v_H(\zeta)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(v_H(\zeta)\)</span> is computed by the Verifier, and <span class="math notranslate nohighlight">\(h(\zeta)\)</span> is calculated using the following equation:
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+h(\zeta) &amp;= L_0(\zeta)\cdot\big(z(\zeta) - a'(\zeta) \big) \\
+&amp;+ \alpha\cdot(\zeta-1)\cdot\big(z(\zeta)-z(\omega^{-1}\cdot\zeta)-a'(\zeta)\big) \\
+&amp;+ \alpha^2\cdot L_{N-1}(\zeta)\cdot\big( z(\zeta) - (v_r + \beta\cdot v) \big)
+\end{aligned}
+\)</span>$</p>
+<p>Then the Verifier checks the correctness of <span class="math notranslate nohighlight">\(a'(\zeta), z(\zeta), t(\zeta), z(\omega^{-1}\cdot\zeta)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+e\Big(C_{a'} - a'(\zeta)\cdot[1]_1,\ [1]_2\Big) &amp;= e\Big(Q_a,\ [\tau]_2 - \zeta\cdot[1]_2\Big) + e\Big(E_a,\ [\gamma]_2\Big) \\
+e\Big(C_z - z(\zeta)\cdot[1]_1,\ [1]_2\Big) &amp;= e\Big(Q_z,\ [\tau]_2 - \zeta\cdot[1]_2\Big) + e\Big(E_z,\ [\gamma]_2\Big) \\
+e\Big(C_t - t(\zeta)\cdot[1]_1,\ [1]_2\Big) &amp;= e\Big(Q_t,\ [\tau]_2 - \zeta\cdot[1]_2\Big) + e\Big(E_t,\ [\gamma]_2\Big) \\
+e\Big(C_z - (\omega^{-1}\cdot\zeta)\cdot[1]_1,\ [1]_2\Big) &amp;= e\Big(Q'_z,\ [\tau]_2 - \omega^{-1}\cdot\zeta\cdot[1]_2\Big) + e\Big(E'_z,\ [\gamma]_2\Big) \\
+\end{aligned}
+\end{split}\]</div>
+</section>
+</section>
+</section>
+<section id="zk-ph23-kzg10-protocol-optimized-version">
+<h2>2. ZK-PH23-KZG10 Protocol (Optimized Version)<a class="headerlink" href="#zk-ph23-kzg10-protocol-optimized-version" title="Link to this heading">#</a></h2>
+<p>Below is the complete PH23-KZG10 protocol supporting Zero-knowledge.</p>
+<section id="precomputation">
+<h3>Precomputation<a class="headerlink" href="#precomputation" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Precompute <span class="math notranslate nohighlight">\(s_0(X),\ldots, s_{n-1}(X)\)</span> and <span class="math notranslate nohighlight">\(v_H(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+v_H(X) = X^N -1 
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+s_i(X) = \frac{v_H(X)}{v_{H_i}(X)} = \frac{X^N-1}{X^{2^i}-1}
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Precompute the Barycentric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span> on <span class="math notranslate nohighlight">\(D=(1, \omega, \omega^2, \ldots, \omega^{2^{n-1}})\)</span>. This can accelerate</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_j = \prod_{l\neq j} \frac{1}{\omega^{2^j} - \omega^{2^l}}
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Precompute the KZG10 SRS for Lagrange Basis <span class="math notranslate nohighlight">\(A_0 =[L_0(\tau)]_1, A_1= [L_1(\tau)]_1, A_2=[L_2(\tau)]_1, \ldots, A_{N-1} = [L_{2^{n-1}}(\tau)]_1\)</span></p></li>
+</ol>
+</section>
+<section id="commit-computation-process">
+<h3>Commit Computation Process<a class="headerlink" href="#commit-computation-process" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>The Prover constructs a univariate polynomial <span class="math notranslate nohighlight">\(a(X)\)</span> such that its Evaluation form equals <span class="math notranslate nohighlight">\(\vec{a}=(a_0, a_1, \ldots, a_{N-1})\)</span>, where <span class="math notranslate nohighlight">\(a_i = \tilde{f}(\mathsf{bits}(i))\)</span>, which is the value of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> on the Boolean Hypercube <span class="math notranslate nohighlight">\(\{0,1\}^n\)</span>.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+a(X) = a_0\cdot L_0(X) + a_1\cdot L_1(X) + a_2\cdot L_2(X)
++ \cdots + a_{N-1}\cdot L_{N-1}(X)
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>The Prover samples a random number <span class="math notranslate nohighlight">\(\rho_a\leftarrow_{\$}\mathbb{F}\)</span> to protect the commitment of <span class="math notranslate nohighlight">\(\vec{a}\)</span>.</p></li>
+<li><p>The Prover computes the commitment of <span class="math notranslate nohighlight">\(\hat{f}(X)\)</span>, <span class="math notranslate nohighlight">\(C_a\)</span>, and sends <span class="math notranslate nohighlight">\(C_a\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{a} = a_0\cdot A_0 + a_1\cdot A_1 + a_2\cdot A_2 + \cdots + a_{N-1}\cdot A_{N-1} + {\color{blue}\rho_a\cdot[\gamma]_1} = [\hat{f}(\tau)]_1 + {\color{blue}\rho_a\cdot[\gamma]_1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(A_0 =[L_0(\tau)]_1, A_1= [L_1(\tau)]_1, A_2=[L_2(\tau)]_1, \ldots, A_{N-1} = [L_{2^{n-1}}(\tau)]_1\)</span> have been obtained in the precomputation process.</p>
+</section>
+<section id="evaluation-proof-protocol">
+<h3>Evaluation Proof Protocol<a class="headerlink" href="#evaluation-proof-protocol" title="Link to this heading">#</a></h3>
+<section id="common-inputs">
+<h4>Common inputs<a class="headerlink" href="#common-inputs" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_a=[\hat{f}(\tau)]_1\)</span>:  the (uni-variate) commitment of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, \ldots, u_{n-1})\)</span>: evaluation point</p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(u_0,u_1,\ldots, u_{n-1})\)</span>: The computed value of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at <span class="math notranslate nohighlight">\(\vec{X}=\vec{u}\)</span>.</p></li>
+</ol>
+<p>Recall the constraint of the polynomial computation to be proven:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, u_2, \ldots, u_{n-1}) = v
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, u_2, \ldots, u_{n-1})\)</span> is a public challenge point.</p>
+</section>
+<section id="id1">
+<h4>Round 1.<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<p>Prover:</p>
+<ol class="arabic simple">
+<li><p>Compute vector <span class="math notranslate nohighlight">\(\vec{c}\)</span>, where each element <span class="math notranslate nohighlight">\(c_i=\overset{\sim}{eq}(\mathsf{bits}(i), \vec{u})\)</span></p></li>
+<li><p>Construct polynomial <span class="math notranslate nohighlight">\(c(X)\)</span>, whose evaluation results on <span class="math notranslate nohighlight">\(H\)</span> are exactly <span class="math notranslate nohighlight">\(\vec{c}\)</span>.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+c(X) = \sum_{i=0}^{N-1} c_i \cdot L_i(X)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Compute the commitment of <span class="math notranslate nohighlight">\(c(X)\)</span>, <span class="math notranslate nohighlight">\(C_c= [c(\tau)]_1\)</span>, and send <span class="math notranslate nohighlight">\(C_c\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_c = \mathsf{KZG10.Commit}(\vec{c})  =  [c(\tau)]_1 
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Construct a Blinding polynomial <span class="math notranslate nohighlight">\(\color{blue}r(X) = r_0\cdot L_0(X) + r_1\cdot L_{1}(X)\)</span>, where <span class="math notranslate nohighlight">\(\{r_0, r_1\}\leftarrow_{\$}\mathbb{F}^2\)</span> are randomly sampled Blinding Factors.</p></li>
+<li><p>Compute the commitment of <span class="math notranslate nohighlight">\(\color{blue}r(X)\)</span>, <span class="math notranslate nohighlight">\(C_r = [\color{blue}r(\tau)]_1\)</span>, and send <span class="math notranslate nohighlight">\(C_r\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_r = \mathsf{KZG10.Commit}({\color{blue}r(X)}; \rho_r)  =  [\color{blue}r(\tau)]_1 + \rho_r\cdot[\gamma]_1
+\]</div>
+<ol class="arabic simple" start="6">
+<li><p>Compute <span class="math notranslate nohighlight">\(\color{blue} v_r = \langle \vec{r}, \vec{c}\rangle\)</span>, and send <span class="math notranslate nohighlight">\(v_r\)</span>,  where <span class="math notranslate nohighlight">\(\vec{r}\)</span> is defined as:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\vec{r}\in\mathbb{F}^{N} = (r_0, r_1, 0, \cdots, 0)
+\]</div>
+</section>
+<section id="id2">
+<h4>Round 2.<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
+<p>Verifier: Send challenge numbers <span class="math notranslate nohighlight">\(\alpha, {\color{blue}\beta}\leftarrow_{\$}\mathbb{F}^2_p\)</span></p>
+<p>Prover:</p>
+<ol class="arabic simple">
+<li><p>Construct constraint polynomials <span class="math notranslate nohighlight">\(p_0(X),\ldots, p_{n}(X)\)</span> for <span class="math notranslate nohighlight">\(\vec{c}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+p_0(X) &amp;= s_0(X) \cdot \Big( c(X) - (1-u_0)(1-u_1)...(1-u_{n-1}) \Big) \\
+p_k(X) &amp;= s_{k-1}(X) \cdot \Big( u_{n-k}\cdot c(X) - (1-u_{n-k})\cdot c(\omega^{2^{n-k}}\cdot X)\Big) , \quad k=1\ldots n
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Aggregate <span class="math notranslate nohighlight">\(\{p_i(X)\}\)</span> into one polynomial <span class="math notranslate nohighlight">\(p(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+p(X) = p_0(X) + \alpha\cdot p_1(X) + \alpha^2\cdot p_2(X) + \cdots + \alpha^{n}\cdot p_{n}(X)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Construct <span class="math notranslate nohighlight">\(\color{blue}a'(X)\)</span>, and compute <span class="math notranslate nohighlight">\(\color{blue}\langle \vec{a}', \vec{c}\rangle=v'\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\color{blue}a'(X) = a(X) + \beta\cdot r(X)
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Construct accumulation polynomial <span class="math notranslate nohighlight">\(z(X)\)</span> satisfying</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+z(1) &amp;= {\color{blue}a'_0}\cdot c_0 \\
+z(\omega_{i}) - z(\omega_{i-1}) &amp;=  {\color{blue}a'(\omega_{i})}\cdot c(\omega_{i}), \quad i=1,\ldots, N-1 \\ 
+z(\omega^{N-1}) &amp;= {\color{blue}v'} \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Construct constraint polynomials <span class="math notranslate nohighlight">\(h_0(X), h_1(X), h_2(X)\)</span> satisfying</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h_0(X) &amp;= L_0(X)\cdot\big(z(X) - c_0\cdot {\color{blue}a'(X)} \big) \\
+h_1(X) &amp;= (X-1)\cdot\big(z(X)-z(\omega^{-1}\cdot X)- {\color{blue}a'(X)}\cdot c(X)) \\
+h_2(X) &amp; = L_{N-1}(X)\cdot\big( z(X) - {\color{blue}v'} \big) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Aggregate <span class="math notranslate nohighlight">\(p(X)\)</span> and <span class="math notranslate nohighlight">\(h_0(X), h_1(X), h_2(X)\)</span> into one polynomial <span class="math notranslate nohighlight">\(h(X)\)</span> satisfying</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\begin{split}
+h(X) &amp;= p(X) + \alpha^{n+1} \cdot h_0(X) + \alpha^{n+2} \cdot h_1(X) + \alpha^{n+3} \cdot h_2(X)
+\end{split}
+\]</div>
+<ol class="arabic simple" start="6">
+<li><p>Compute the Quotient polynomial <span class="math notranslate nohighlight">\(t(X)\)</span> satisfying</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) =t(X)\cdot v_H(X)
+\]</div>
+<ol class="arabic simple" start="7">
+<li><p>Sample <span class="math notranslate nohighlight">\(\rho_t, \rho_z\leftarrow_{\$}\mathbb{F}^2_p\)</span>, compute <span class="math notranslate nohighlight">\(C_t=[t(\tau)]_1+{\color{blue}\rho_t\cdot[\gamma]_1}\)</span>, <span class="math notranslate nohighlight">\(C_z=[z(\tau)]_1+{\color{blue}\rho_z\cdot[\gamma]_1}\)</span>, and send <span class="math notranslate nohighlight">\(C_t\)</span> and <span class="math notranslate nohighlight">\(C_z\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+C_t &amp;= \mathsf{KZG10.Commit}(t(X); {\color{blue}\rho_t}) = [t(\tau)]_1 + {\color{blue}\rho_t\cdot[\gamma]_1} \\
+C_z &amp;= \mathsf{KZG10.Commit}(z(X); {\color{blue}\rho_z}) = [z(\tau)]_1 + {\color{blue}\rho_z\cdot[\gamma]_1}
+\end{split}
+\end{split}\]</div>
+</section>
+<section id="id3">
+<h4>Round 3.<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<p>Verifier: Send random evaluation point <span class="math notranslate nohighlight">\(\zeta\leftarrow_{\$}\mathbb{F}\)</span></p>
+<p>Prover:</p>
+<ol class="arabic simple">
+<li><p>Compute the values of <span class="math notranslate nohighlight">\(s_i(X)\)</span> at <span class="math notranslate nohighlight">\(\zeta\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+s_0(\zeta), s_1(\zeta), \ldots, s_{n-1}(\zeta)
+\]</div>
+<p>Here the Prover can quickly compute <span class="math notranslate nohighlight">\(s_i(\zeta)\)</span>. From the formula of <span class="math notranslate nohighlight">\(s_i(X)\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  s_i(\zeta) &amp; = \frac{\zeta^N - 1}{\zeta^{2^i} - 1} \\
+  &amp; = \frac{(\zeta^N - 1)(\zeta^{2^i} +1)}{(\zeta^{2^i} - 1)(\zeta^{2^i} +1)} \\
+  &amp; = \frac{\zeta^N - 1}{\zeta^{2^{i + 1}} - 1} \cdot (\zeta^{2^i} +1) \\
+  &amp; = s_{i + 1}(\zeta) \cdot (\zeta^{2^i} +1)
+\end{aligned} 
+\end{split}\]</div>
+<p>Therefore, the value of <span class="math notranslate nohighlight">\(s_i(\zeta)\)</span> can be calculated from <span class="math notranslate nohighlight">\(s_{i + 1}(\zeta)\)</span>, and</p>
+<div class="math notranslate nohighlight">
+\[
+s_{n-1}(\zeta) = \frac{\zeta^N - 1}{\zeta^{2^{n-1}} - 1} = \zeta^{2^{n-1}} + 1
+\]</div>
+<p>Thus, we can obtain an <span class="math notranslate nohighlight">\(O(n)\)</span> algorithm to compute <span class="math notranslate nohighlight">\(s_i(\zeta)\)</span>, and it doesn’t involve division operations. The computation process is: <span class="math notranslate nohighlight">\(s_{n-1}(\zeta) \rightarrow s_{n-2}(\zeta) \rightarrow \cdots \rightarrow s_0(\zeta)\)</span>.</p>
+<ol class="arabic simple" start="2">
+<li><p>Define the evaluation Domain <span class="math notranslate nohighlight">\(D'\)</span>, which includes <span class="math notranslate nohighlight">\(n+1\)</span> elements:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+D'=D\zeta = \{\zeta, \omega\zeta, \omega^2\zeta,\omega^4\zeta, \ldots, \omega^{2^{n-1}}\zeta\}
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Compute and send the values of <span class="math notranslate nohighlight">\(c(X)\)</span> on <span class="math notranslate nohighlight">\(D'\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+c(\zeta), c(\zeta\cdot\omega), c(\zeta\cdot\omega^2), c(\zeta\cdot\omega^4), \ldots, c(\zeta\cdot\omega^{2^{n-1}})
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Compute and send <span class="math notranslate nohighlight">\(z(\omega^{-1}\cdot\zeta)\)</span></p></li>
+<li><p>Compute the Linearized Polynomial <span class="math notranslate nohighlight">\(l_\zeta(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+l_\zeta(X) =&amp; \Big(s_0(\zeta) \cdot (c(\zeta) - c_0) \\
+&amp; + \alpha\cdot s_0(\zeta) \cdot (u_{n-1}\cdot c(\zeta) - (1-u_{n-1})\cdot c(\omega^{2^{n-1}}\cdot\zeta))\\
+  &amp; + \alpha^2\cdot s_1(\zeta) \cdot (u_{n-2}\cdot c(\zeta) - (1-u_{n-2})\cdot c(\omega^{2^{n-2}}\cdot\zeta)) \\
+  &amp; + \cdots \\
+  &amp; + \alpha^{n-1}\cdot s_{n-2}(\zeta)\cdot (u_{1}\cdot c(\zeta) - (1-u_{1})\cdot c(\omega^2\cdot\zeta))\\
+  &amp; + \alpha^n\cdot s_{n-1}(\zeta)\cdot (u_{0}\cdot c(\zeta) - (1-u_{0})\cdot c(\omega\cdot\zeta)) \\
+  &amp; + \alpha^{n+1}\cdot (L_0(\zeta)\cdot\big(z(X) - c_0\cdot {\color{blue}a'(X)})\\
+  &amp; + \alpha^{n+2}\cdot (\zeta - 1)\cdot\big(z(X)-z(\omega^{-1}\cdot\zeta)-c(\zeta)\cdot {\color{blue}a'(X)} ) \\
+  &amp; + \alpha^{n+3}\cdot L_{N-1}(\zeta)\cdot(z(X) - {\color{blue}v'}) \\
+  &amp; - v_H(\zeta)\cdot t(X)\ \Big)
+\end{split}
+\end{split}\]</div>
+<p>Obviously, <span class="math notranslate nohighlight">\(r_\zeta(\zeta)= 0\)</span>, so this computed value doesn’t need to be sent to the Verifier, and <span class="math notranslate nohighlight">\([r_\zeta(\tau)]_1\)</span> can be constructed by the Verifier themselves.</p>
+<ol class="arabic simple" start="6">
+<li><p>Construct polynomial <span class="math notranslate nohighlight">\(c^*(X)\)</span>, which is the interpolation polynomial of the following vector on <span class="math notranslate nohighlight">\(D\zeta\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\alpha^{n+1}L_0(\zeta)(\rho_z - c_0\cdot\rho_a) \\
++\alpha^{n+2}(\zeta-1)(\rho_z - c(\zeta)\cdot\rho_a) \\
++ \alpha^{n+3}L_{N-1}(\zeta)\cdot \rho_z \\
+- v_H(\zeta)\cdot\rho_t
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+\vec{c^*}= \Big(c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), c(\zeta)\Big)
+\]</div>
+<p>The Prover can use the pre-computed Barycentric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span> on <span class="math notranslate nohighlight">\(D\)</span> to quickly compute <span class="math notranslate nohighlight">\(c^*(X)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+c^*(X) = \frac{c^*_0 \cdot \frac{\hat{w}_0}{X-\omega\zeta} + c^*_1 \cdot \frac{\hat{w}_1}{X-\omega^{2}\zeta} + \cdots + c^*_n \cdot \frac{\hat{w}_n}{X-\omega^{2^n}\zeta}}{
+   \frac{\hat{w}_0}{X-\omega\zeta} + \frac{\hat{w}_1}{X-\omega^2\zeta} + \cdots + \frac{\hat{w}_n}{X-\omega^{2^n}\zeta}
+  }
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\hat{w}_j\)</span> are pre-computed values:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}_j = \prod_{l\neq j} \frac{1}{\omega^{2^j} - \omega^{2^l}}
+\]</div>
+<ol class="arabic simple" start="7">
+<li><p>Because <span class="math notranslate nohighlight">\(l_\zeta(\zeta)= 0\)</span>, there exists a Quotient polynomial <span class="math notranslate nohighlight">\(q_\zeta(X)\)</span> satisfying</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_\zeta(X) = \frac{1}{X-\zeta}\cdot l_\zeta(X)
+\]</div>
+<ol class="arabic simple" start="8">
+<li><p>Compute the commitment of <span class="math notranslate nohighlight">\(q_\zeta(X)\)</span>, <span class="math notranslate nohighlight">\(Q_\zeta\)</span>, and simultaneously sample a random number <span class="math notranslate nohighlight">\({\color{blue}\rho_q}\leftarrow_{\$}\mathbb{F}\)</span> as the Blinding Factor for the commitment:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+Q_\zeta = \mathsf{KZG10.Commit}(q_\zeta(X); {\color{blue}\rho_q}) = [q_\zeta(\tau)]_1 + {\color{blue}\rho_q\cdot[\gamma]_1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}{\color{blue}
+\begin{split}
+E_\zeta &amp;= \big(\alpha^{n+1}L_0(\zeta)(\rho_z - c_0\cdot(\rho_a + \beta\cdot\rho_r)) \\
+&amp; \quad +\alpha^{n+2}(\zeta-1)(\rho_z - c(\zeta)\cdot(\rho_a + \beta\cdot\rho_r)) \\
+&amp; \quad + \alpha^{n+3}L_{N-1}(\zeta)\cdot \rho_z - v_H(\zeta)\cdot\rho_t\big)\cdot [1]_1  \\
+&amp;- \rho_q\cdot[\tau]_1 + (\zeta\cdot\rho_q)\cdot[1]_1 \\
+\end{split}}
+\end{split}\]</div>
+<ol class="arabic simple" start="9">
+<li><p>Construct the vanishing polynomial <span class="math notranslate nohighlight">\(z_{D_{\zeta}}(X)\)</span> on <span class="math notranslate nohighlight">\(D\zeta\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+z_{D_{\zeta}}(X) = (X-\zeta\omega)\cdots (X-\zeta\omega^{2^{n-1}})(X-\zeta)
+\]</div>
+<ol class="arabic simple" start="10">
+<li><p>Construct Quotient polynomial <span class="math notranslate nohighlight">\(q_c(X)\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_c(X) = \frac{(c(X) - c^*(X))}{(X-\zeta)(X-\omega\zeta)(X-\omega^2\zeta)\cdots(X-\omega^{2^{n-1}}\zeta)}
+\]</div>
+<ol class="arabic simple" start="11">
+<li><p>Compute the commitment of <span class="math notranslate nohighlight">\(q_c(X)\)</span>, <span class="math notranslate nohighlight">\(Q_c\)</span> and <span class="math notranslate nohighlight">\(E_c\)</span>. Since <span class="math notranslate nohighlight">\(c(X)\)</span> doesn’t contain any private information, there’s no need to add a Blinding Factor:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+Q_c = \mathsf{KZG10.Commit}(q_c(X)) = [q_c(\tau)]_1
+\]</div>
+<ol class="arabic simple" start="12">
+<li><p>Construct Quotient polynomial <span class="math notranslate nohighlight">\(q_{\omega\zeta}(X)\)</span> to prove the value of <span class="math notranslate nohighlight">\(z(X)\)</span> at <span class="math notranslate nohighlight">\(\omega^{-1}\cdot\zeta\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q_{\omega\zeta}(X) = \frac{z(X) - z(\omega^{-1}\cdot\zeta)}{X - \omega^{-1}\cdot\zeta}
+\]</div>
+<ol class="arabic simple" start="13">
+<li><p>Compute the commitment of <span class="math notranslate nohighlight">\(q_{\omega\zeta}(X)\)</span>, <span class="math notranslate nohighlight">\(Q_{\omega\zeta}\)</span>, and simultaneously sample a random number <span class="math notranslate nohighlight">\({\color{blue}\rho_{q}'}\leftarrow_{\$}\mathbb{F}\)</span> as the Blinding Factor for the commitment:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+Q_{\omega\zeta} = \mathsf{KZG10.Commit}(q_{\omega\zeta}(X); {\color{blue}\rho_{q}'}) = [q_{\omega\zeta}(\tau)]_1 + {\color{blue}\rho_{q}'\cdot[\gamma]_1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+{\color{blue}E_{\omega\zeta} = \rho_z\cdot[1]_1 - \rho_{q}'\cdot[\tau]_1 + (\omega^{-1}\cdot\zeta\cdot\rho_{q}')\cdot[1]_1}
+\]</div>
+<ol class="arabic simple" start="14">
+<li><p>Send <span class="math notranslate nohighlight">\(\big(Q_c, Q_\zeta, {\color{blue}E_\zeta}, Q_{\omega\zeta}, {\color{blue}E_{\omega\zeta}} \big)\)</span></p></li>
+</ol>
+</section>
+<section id="id4">
+<h4>Round 4.<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Verifier sends a second random challenge point <span class="math notranslate nohighlight">\(\xi\leftarrow_{\$}\mathbb{F}\)</span></p></li>
+<li><p>The Prover constructs a third Quotient polynomial <span class="math notranslate nohighlight">\(q_\xi(X)\)</span>
+$<span class="math notranslate nohighlight">\(
+q_\xi(X) = \frac{c(X) - c^*(\xi) - z_{D_\zeta}(\xi)\cdot q_c(X)}{X-\xi}
+\)</span>$</p></li>
+<li><p>The Prover computes and sends the commitment of <span class="math notranslate nohighlight">\(q_\xi(X)\)</span>, <span class="math notranslate nohighlight">\(Q_\xi\)</span>
+$<span class="math notranslate nohighlight">\(
+Q_\xi = \mathsf{KZG10.Commit}(q_\xi(X)) = [q_\xi(\tau)]_1
+\)</span>$</p></li>
+</ol>
+</section>
+</section>
+<section id="proof-representation">
+<h3>Proof Representation<a class="headerlink" href="#proof-representation" title="Link to this heading">#</a></h3>
+<p><span class="math notranslate nohighlight">\(9\cdot\mathbb{G}_1\)</span>, <span class="math notranslate nohighlight">\((n+1)\cdot\mathbb{F}\)</span>
+$<span class="math notranslate nohighlight">\(
+\begin{split}
+\pi_{eval} &amp;= \big(z(\omega^{-1}\cdot\zeta), c(\zeta)，c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), \\
+&amp; C_{c}, C_{t}, C_{z}, Q_c, Q_\zeta, {\color{blue}E_\zeta}, Q_\xi, Q_{\omega\zeta}, {\color{blue}E_{\omega\zeta}}\big)
+\end{split}
+\)</span>$</p>
+</section>
+<section id="verification-process">
+<h3>Verification Process<a class="headerlink" href="#verification-process" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>The Verifier computes <span class="math notranslate nohighlight">\(\color{blue}C'_a\)</span> and <span class="math notranslate nohighlight">\(\color{blue} v'\)</span>
+$<span class="math notranslate nohighlight">\(
+\color{blue}C'_a = C_a + \beta \cdot C_b
+\)</span>$</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\color{blue} v' = v + \beta \cdot v_b
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>The Verifier computes <span class="math notranslate nohighlight">\(c^*(\xi)\)</span> using pre-computed Barycentric Weights <span class="math notranslate nohighlight">\(\{\hat{w}_i\}\)</span>
+$<span class="math notranslate nohighlight">\(
+c^*(\xi)=\frac{\sum_i c_i\frac{w_i}{\xi-x_i}}{\sum_i \frac{w_i}{\xi-x_i}}
+\)</span>$</p></li>
+<li><p>The Verifier computes <span class="math notranslate nohighlight">\(v_H(\zeta), L_0(\zeta), L_{N-1}(\zeta)\)</span>
+$<span class="math notranslate nohighlight">\(
+v_H(\zeta) = \zeta^N - 1
+\)</span>$</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+L_0(\zeta) = \frac{1}{N}\cdot \frac{z_{H}(\zeta)}{\zeta-1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+L_{N-1}(\zeta) = \frac{\omega^{N-1}}{N}\cdot \frac{z_{H}(\zeta)}{\zeta-\omega^{N-1}}
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>The Verifier computes <span class="math notranslate nohighlight">\(s_0(\zeta), \ldots, s_{n-1}(\zeta)\)</span>, which can be calculated using the recursive method mentioned earlier.</p></li>
+<li><p>The Verifier computes the commitment of the linearization polynomial <span class="math notranslate nohighlight">\(C_l\)</span>
+$<span class="math notranslate nohighlight">\(
+\begin{split}
+C_l &amp; = 
+\Big( (c(\zeta) - c_0)s_0(\zeta) \\
+&amp; + \alpha \cdot (u_{n-1}\cdot c(\zeta) - (1-u_{n-1})\cdot c(\omega^{2^{n-1}}\cdot\zeta))\cdot s_0(\zeta)\\
+&amp; + \alpha^2\cdot (u_{n-2}\cdot c(\zeta) - (1-u_{n-2})\cdot c(\omega^{2^{n-2}}\cdot\zeta))\cdot s_1(\zeta)  \\
+&amp; + \cdots \\
+&amp; + \alpha^{n-1}\cdot (u_{1}\cdot c(\zeta) - (1-u_{1})\cdot c(\omega^2\cdot\zeta))\cdot s_{n-2}(\zeta)\\
+&amp; + \alpha^n\cdot (u_{0}\cdot c(\zeta) - (1-u_{0})\cdot c(\omega\cdot\zeta))\cdot s_{n-1}(\zeta) \\
+&amp; + \alpha^{n+1}\cdot L_0(\zeta)\cdot(C_z - c_0\cdot C_a)\\
+&amp; + \alpha^{n+2}\cdot (\zeta-1)\cdot\big(C_z - z(\omega^{-1}\cdot \zeta)-c(\zeta)\cdot C_{a} ) \\
+&amp; + \alpha^{n+3}\cdot L_{N-1}(\zeta)\cdot(C_z - {\color{blue}v'}) \\
+&amp; - v_H(\zeta)\cdot C_t \Big)
+\end{split}
+\)</span>$</p></li>
+<li><p>The Verifier generates a random number <span class="math notranslate nohighlight">\(\eta\)</span> to merge the following Pairing verifications:
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+e(C_l + \zeta\cdot Q_\zeta, [1]_2) &amp; \overset{?}{=} e(Q_\zeta, [\tau]_2) + {\color{blue}e(E_\zeta, [\gamma]_2)}\\
+e(C - C^*(\xi) - z_{D_\zeta}(\xi)\cdot Q_c + \xi\cdot Q_\xi, [1]_2) &amp; \overset{?}{=} e(Q_\xi, [\tau]_2)\\
+e(Z + \zeta\cdot Q_{\omega\zeta} - z(\omega^{-1}\cdot\zeta)\cdot[1]_1, [1]_2) &amp;\overset{?}{=} e(Q_{\omega\zeta}, [\tau]_2) + {\color{blue}e(E_{\omega\zeta}, [\gamma]_2)}\\
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+The merged verification only requires two Pairing operations:
+\)</span><span class="math notranslate nohighlight">\(
+\begin{aligned}
+P &amp;= \Big(C_l + \zeta\cdot Q_\zeta\Big) \\
+&amp;+ \eta\cdot \Big(C - C^* - z_{D_\zeta}(\xi)\cdot Q_c + \xi\cdot Q_\xi\Big) \\
+&amp;+ \eta^2\cdot\Big(C_z + \zeta\cdot Q_{\omega\zeta} - z(\omega^{-1}\cdot\zeta)\cdot[1]_1\Big)
+\end{aligned}
+\)</span>$</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e\Big(P, [1]_2\Big) \overset{?}{=} e\Big(Q_\zeta + \eta\cdot Q_\xi + \eta^2\cdot Q_{\omega\zeta}, [\tau]_2\Big) + {\color{blue}e\Big(E_\zeta + \eta^2\cdot E_{\omega\zeta}, [\gamma]_2\Big)}
+\]</div>
+</section>
+</section>
+<section id="optimized-performance-analysis">
+<h2>3. Optimized Performance Analysis<a class="headerlink" href="#optimized-performance-analysis" title="Link to this heading">#</a></h2>
+<p>Proof size:  <span class="math notranslate nohighlight">\(9~\mathbb{G}_1 + (n+1)~\mathbb{F}\)</span></p>
+<p>Verifier: <span class="math notranslate nohighlight">\(4~\mathbb{F} + O(n)~\mathbb{F}+ 3~\mathbb{G}_1 + 2~P\)</span></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BDFG20] Dan Boneh, Justin Drake, Ben Fisch, and Ariel Gabizon. “Efficient polynomial commitment schemes for multiple points and polynomials”. Cryptology {ePrint} Archive, Paper 2020/081. <a class="reference external" href="https://eprint.iacr.org/2020/081">https://eprint.iacr.org/2020/081</a>.</p></li>
+<li><p>[KZG10] Kate, Aniket, Gregory M. Zaverucha, and Ian Goldberg. “Constant-size commitments to polynomials and their applications.” Advances in Cryptology-ASIACRYPT 2010: 16th International Conference on the Theory and Application of Cryptology and Information Security, Singapore, December 5-9, 2010. Proceedings 16. Springer Berlin Heidelberg, 2010.</p></li>
+<li><p>[KT23] Kohrita, Tohru, and Patrick Towa. “Zeromorph: Zero-knowledge multilinear-evaluation proofs from homomorphic univariate commitments.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/917">https://eprint.iacr.org/2023/917</a></p></li>
+<li><p>[PST13] Papamanthou, Charalampos, Elaine Shi, and Roberto Tamassia. “Signatures of correct computation.” Theory of Cryptography Conference. Berlin, Heidelberg: Springer Berlin Heidelberg, 2013. <a class="reference external" href="https://eprint.iacr.org/2011/587">https://eprint.iacr.org/2011/587</a></p></li>
+<li><p>[ZGKPP17] “A Zero-Knowledge Version of vSQL.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2017/1146">https://eprint.iacr.org/2017/1146</a></p></li>
+<li><p>[XZZPS19] Tiancheng Xie, Jiaheng Zhang, Yupeng Zhang, Charalampos Papamanthou, and Dawn Song. “Libra: Succinct Zero-Knowledge Proofs with Optimal Prover Computation.” <a class="reference external" href="https://eprint.iacr.org/2019/317">https://eprint.iacr.org/2019/317</a></p></li>
+<li><p>[CHMMVW19] Alessandro Chiesa, Yuncong Hu, Mary Maller, Pratyush Mishra, Psi Vesely, and Nicholas Ward. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./ph23"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-support-zk">1. How to Support ZK</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-kzg10">Hiding KZG10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#zk-for-sum-proof">ZK for Sum Proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#proof">Proof</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zk-ph23-kzg10-protocol-optimized-version">2. ZK-PH23-KZG10 Protocol (Optimized Version)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precomputation">Precomputation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-computation-process">Commit Computation Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-protocol">Evaluation Proof Protocol</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#common-inputs">Common inputs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Round 1.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Round 2.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Round 3.</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Round 4.</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-representation">Proof Representation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-process">Verification Process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimized-performance-analysis">3. Optimized Performance Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

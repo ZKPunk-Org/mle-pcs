@@ -1,0 +1,78 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+
+
+
+parts:
+
+  - caption: Basefold
+    chapters:
+    - file: basefold/basefold-01.zh
+    - file: basefold/basefold-02.zh
+    - file: basefold/basefold-03.zh
+    - file: basefold/basefold-04.zh
+    - file: basefold/basefold-05.zh
+
+  - caption: FRI
+    chapters:
+    - file: fri/BBHR18-FRI.zh
+    - file: fri/BCIKS20-proximity-gaps.zh
+    - file: fri/fri-proximity-gap.zh
+    - file: fri/stir.zh
+    - file: fri/whir.zh
+    - file: fri/deepfold.zh
+
+  - caption: FRI Binius
+    chapters:
+    - file: fri-binius/binius-01.zh
+    - file: fri-binius/binius-02.zh
+
+  - caption: Gemini
+    chapters:
+    - file: gemini/Gemini-PCS-1.zh
+    - file: gemini/Gemini-PCS-2.zh
+    - file: gemini/hyperkzg-pcs-01.zh
+
+  - caption: KZG
+    chapters:
+    - file: kzg10/kzg_hiding.zh
+    - file: kzg10/kzg notes/kzg-extractability-based-on-rom.zh
+
+  - caption: Hyrax
+    chapters:
+    - file: hyrax-pcs/hyrax-01.zh
+
+  - caption: Libra
+    chapters:
+    - file: libra-pcs/libra-pcs.zh
+
+  - caption: Virgo
+    chapters:
+    - file: virgo-pcs/virgo-pcs-01.zh
+
+  - caption: PH23
+    chapters:
+    - file: ph23/ph23-pcs-01.zh
+    - file: ph23/ph23-pcs-02.zh
+    - file: ph23/ph23-pcs-zk.zh
+    - file: ph23/ph23-pcs-fri-01.zh
+    - file: ph23/ph23-pcs-fri-02.zh
+    - file: ph23/ph23
+
+  - caption: Zeromorph
+    chapters:
+    - file: zeromorph/zeromorph.zh
+    - file: zeromorph/zeromorph-fri.zh
+    - file: zeromorph/zeromorph_mapping_tutorial
+
+  - caption: Mercury
+    chapters:
+    - file: mercury/mercury-01.zh
+    - file: mercury/mercury-02.zh
+  - caption: Reductions
+    chapters:
+    - file: reductions/barrett.zh
+    - file: reductions/montgomery.zh

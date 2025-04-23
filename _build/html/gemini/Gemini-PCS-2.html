@@ -1,0 +1,658 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gemini-PCS (Part II) &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gemini/Gemini-PCS-2';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fgemini/Gemini-PCS-2.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/gemini/Gemini-PCS-2.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gemini-PCS (Part II)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gemini-PCS (Part II)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#review">Review</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#security-analysis">Security Analysis</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-zero-knowledge">Implementing Zero-Knowledge</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gemini-pcs-part-ii">
+<h1>Gemini-PCS (Part II)<a class="headerlink" href="#gemini-pcs-part-ii" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Tianyu ZHENG <a class="reference external" href="mailto:tian-yu&#46;zheng&#37;&#52;&#48;connect&#46;polyu&#46;hk">tian-yu<span>&#46;</span>zheng<span>&#64;</span>connect<span>&#46;</span>polyu<span>&#46;</span>hk</a></p></li>
+</ul>
+<p>In the first part, we introduced the Tensor product check protocol in Gemini [BCH+22] for implementing multivariate polynomial evaluation proofs, and briefly explained how to apply it to practical proof systems to convert multivariate polynomials to univariate polynomials. In this part, we mainly focus on the security of the Tensor product check protocol and propose some optimizations based on Gemini.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="review">
+<h1>Review<a class="headerlink" href="#review" title="Link to this heading">#</a></h1>
+<p>For ease of reading, let’s first review the process of the tensor product check protocol:</p>
+<p><strong>[Tensor-product Check Protocol]</strong></p>
+<p>Target relation: <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle = u\)</span></p>
+<p>Prover input: Public parameters, instance <span class="math notranslate nohighlight">\(x = (\rho_0,...,\rho_{n-1}, u)\)</span>, secret <span class="math notranslate nohighlight">\(w = \vec{f}\)</span></p>
+<p>Verifier input: Public parameters, instance <span class="math notranslate nohighlight">\(x = (\rho_0,...,\rho_{n-1}, u)\)</span></p>
+<ol class="arabic simple">
+<li><p>The prover constructs a univariate polynomial <span class="math notranslate nohighlight">\(f^{(0)}(X) = f(X)\)</span>.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(j \in 1,...,n\)</span>, the prover computes</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+f^{(j)}(X) = f_e^{(j-1)}(X) + \rho_{j-1} \cdot f_o^{(j-1)}(X)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f_e^{(j-1)}, f_o^{(j-1)}\)</span> are polynomials composed of even and odd order terms of <span class="math notranslate nohighlight">\(f^{(j-1)}\)</span> respectively, satisfying <span class="math notranslate nohighlight">\(f^{(j-1)}(X) = f_e^{(j-1)}(X^2) + X \cdot f_o^{(j-1)}(X^2)\)</span>.</p>
+<ol class="arabic simple" start="3">
+<li><p>The prover sends Oracles of <span class="math notranslate nohighlight">\(f^{(0)},f^{(1)},...,f^{(n-1)}\)</span> to the verifier.</p></li>
+<li><p>The verifier randomly selects a challenge value <span class="math notranslate nohighlight">\(\beta \leftarrow \mathbb{F}\)</span> and makes the following queries to the Oracles:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e^{(j-1)}:= f^{(j-1)}(\beta), \bar{e}^{(j-1)} := f^{(j-1)}(-\beta), \hat{e}^{(j-1)} := f^{(j)}(\beta^2)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(j=1,...,n\)</span>, when <span class="math notranslate nohighlight">\(j=n\)</span>, ignore the query <span class="math notranslate nohighlight">\(f^{(n)}(\beta^2)\)</span>, and directly set <span class="math notranslate nohighlight">\(\hat{e}^{(n-1)} := u\)</span>.</p>
+<ol class="arabic simple" start="5">
+<li><p>For <span class="math notranslate nohighlight">\(j = 0,...,n-1\)</span>, the verifier checks</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{e}^{(j)} = \frac{e^{(j)} + \bar{e}^{(j)}}{2} + \rho_j \cdot \frac{e^{(j)}-\bar{e}^{(j)}}{2\beta}
+\]</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="security-analysis">
+<h1>Security Analysis<a class="headerlink" href="#security-analysis" title="Link to this heading">#</a></h1>
+<p><strong>[Completeness]</strong></p>
+<p>Given a polynomial coefficient vector satisfying <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle = u\)</span>, a prover honestly executing the above protocol will certainly pass the verification. According to our discussion in the [Split-and-fold Check Protocol], when the prover correctly performs the split to obtain <span class="math notranslate nohighlight">\(f_e^{(j-1)}(X), f_o^{(j-1)}(X)\)</span>, the folded <span class="math notranslate nohighlight">\(f^{(j)}(X)\)</span> will definitely pass the verification, and <span class="math notranslate nohighlight">\(f^{(j)}(X)\)</span> satisfies the following expression</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(j)}(X) = \sum_{i_0,...,i_{n-1} \in \{ 0,1 \}} f_{i_0\cdots i_{n-1}} \cdot \rho_0^{i_0} \cdots \rho_{j-1}^{i_{j-1}} \cdot X^{\langle \vec{i}_{[j:n-1]}, \vec{2}^{n-1-j}\rangle}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\vec{2}^{n-1-j} = (2^0,...,2^{n-1-j})\)</span>. Obviously, when <span class="math notranslate nohighlight">\(j=n\)</span>, <span class="math notranslate nohighlight">\(f^{(n)}(X) = \tilde{f}(\vec{\rho})= u\)</span>.</p>
+<p><strong>[Soundness]</strong></p>
+<p>Here we adopt a different proof method from the original Gemini paper, which is easier to understand. Assume <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle \neq u\)</span>, for a malicious prover, if it can output a series of interaction data, including Oracles of polynomials <span class="math notranslate nohighlight">\(f^{(j)}, j=0,...,n-1\)</span>, and pass the verification. Then there must be at least one pair of Oracles whose contained polynomials do not satisfy the split-and-fold relationship. That is, there exists a <span class="math notranslate nohighlight">\(j\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+p_j(X) = f^{(j)}(X^2) - \frac{f^{(j-1)}(X)+f^{(j-1)}(-X)}{2} - \rho_{j-1}\frac{f^{(j-1)}(X)-f^{(j-1)}(-X)}{2X}
+\]</div>
+<p>is a non-zero polynomial. Note that the highest order of <span class="math notranslate nohighlight">\(p_j(X)\)</span> is <span class="math notranslate nohighlight">\(2^{n-(j-1)}-1\)</span>. Let event <span class="math notranslate nohighlight">\(E_j\)</span> represent that <span class="math notranslate nohighlight">\(p_j(X)\)</span> is a non-zero polynomial and <span class="math notranslate nohighlight">\(p_j(\beta) = 0\)</span>. According to the Schwartz-Zippel lemma, <span class="math notranslate nohighlight">\(Pr(E_j) \leq deg(p_j)/|F|\)</span>. Then, for all <span class="math notranslate nohighlight">\(p_1(X),...,p_{n}(X)\)</span>, the probability that there exists a non-zero polynomial that happens to be 0 at point <span class="math notranslate nohighlight">\(\beta\)</span> can be bounded by the union bound</p>
+<div class="math notranslate nohighlight">
+\[
+Pr(E_1 \vee \cdots \vee E_n) \leq Pr(E_1) + \cdots + Pr(E_n) = \sum_{j=1}^n \frac{deg(p_j)}{|F|} = \frac{2N}{|F|}
+\]</div>
+<p><strong>[About degree bound]</strong></p>
+<p>Note that in the original Gemini paper, the verifier needs to check that the order of each <span class="math notranslate nohighlight">\(f^{(j)}\)</span> is strictly less than or equal to <span class="math notranslate nohighlight">\(2^{n-j}-1\)</span>. This point is also reflected in the above proof: assuming that the highest order of <span class="math notranslate nohighlight">\(p_j(X)\)</span> is <span class="math notranslate nohighlight">\(2^{n-(j-1)}-1\)</span>.</p>
+<p>However, after research, we find that the degree check is not necessary: even if a malicious prover is allowed to construct an illegal <span class="math notranslate nohighlight">\(f^{(j')}\)</span> in each round, whose order is greater than the legal <span class="math notranslate nohighlight">\(f^{(j)}\)</span> but less than or equal to <span class="math notranslate nohighlight">\(N\)</span>, we can still get a negligible soundness error (although slightly larger than the original). Specifically, for any <span class="math notranslate nohighlight">\(E_j\)</span>, we have <span class="math notranslate nohighlight">\(Pr(E_j) \leq N/|F|\)</span>, so we can get <span class="math notranslate nohighlight">\(Pr(E_1 \vee \cdots \vee E_n) \leq N \log N/|F|\)</span> (when <span class="math notranslate nohighlight">\(N &lt; D\)</span>, it’s <span class="math notranslate nohighlight">\(D \log N / |F|\)</span>).</p>
+<p>Therefore, the degree bound check in the Tensor-product check protocol based on KZG10 implemented in the first part can be ignored to reduce <span class="math notranslate nohighlight">\(\log N\)</span> <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> elements in the proof.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="implementing-zero-knowledge">
+<h1>Implementing Zero-Knowledge<a class="headerlink" href="#implementing-zero-knowledge" title="Link to this heading">#</a></h1>
+<p>Gemini did not discuss how to implement the ZK property of the tensor product check. Here we provide two feasible schemes.</p>
+<p><strong>[Scheme One]</strong></p>
+<p>Adopting a similar idea to implementing zk sumcheck in the paper [CAS17], we can directly add a blinding polynomial <span class="math notranslate nohighlight">\(g(X)\)</span> of the same size to the original polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>. That is, for each non-zero coefficient monomial in <span class="math notranslate nohighlight">\(f(X)\)</span>, <span class="math notranslate nohighlight">\(g(X)\)</span> contains a corresponding monomial with a random coefficient. Let <span class="math notranslate nohighlight">\(\langle\vec{g}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle = v\)</span>.</p>
+<p>Next, the prover only needs to additionally commit to <span class="math notranslate nohighlight">\(g(X)\)</span> and send the commitment value <span class="math notranslate nohighlight">\(cm(g(X))\)</span> and <span class="math notranslate nohighlight">\(v\)</span> to the verifier. The verifier then randomly selects a challenge <span class="math notranslate nohighlight">\(c\)</span> to combine the tensor product relations of <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+u+c\cdot v = \langle\vec{f}+c\cdot \vec{g}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle
+\]</div>
+<p>Then, the prover and verifier jointly complete the Tensor product check protocol for the above relation. We won’t elaborate further on the specific construction of this scheme.</p>
+<p><strong>[Scheme Two]</strong></p>
+<p>The above method is very straightforward, but the disadvantage is that the prover needs to add an additional random polynomial as large as <span class="math notranslate nohighlight">\(f(X)\)</span> (length <span class="math notranslate nohighlight">\(N\)</span>). Referring to the optimization scheme of zk sumcheck in [CFS17] in Libra [XZZPS19], we can also propose an optimized scheme to implement the zk tensor product protocol, which can significantly reduce the size of the blinding polynomial.</p>
+<p>The idea of this optimization scheme is: since the prover only sends a total of <span class="math notranslate nohighlight">\(3n\)</span> point values in the tensor product check, the blinding polynomial needs to contain at least <span class="math notranslate nohighlight">\(3n\)</span> random coefficients to ensure the zero-knowledge property of the protocol.</p>
+<p>Specifically, let the blinding polynomial be:</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = a_{0,1}X + a_{0,2}X^2 + \sum_{i=1}^{n-1} \left( a_{i,1} X^{3i} + a_{i,2} X^{3i+1} + a_{i,3} X^{3i+2} \right) + a_n
+\]</div>
+<p><strong>[Zero-Knowledge Tensor Product Check Protocol]</strong></p>
+<p>To prove <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle = u\)</span></p>
+<ol class="arabic simple">
+<li><p>The prover constructs a blinding polynomial <span class="math notranslate nohighlight">\(g(X)\)</span> and pads its coefficient vector with zeros to length <span class="math notranslate nohighlight">\(N\)</span></p></li>
+<li><p>The prover computes and sends the following data to the verifier</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+v = \langle\vec{g}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle \\ C_g = cm(g(X))
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>The verifier randomly selects <span class="math notranslate nohighlight">\(c \in F^*\)</span> and sends it to the prover, then computes <span class="math notranslate nohighlight">\(u + c\cdot v, C_f + c\cdot C_g\)</span>.</p></li>
+<li><p>The prover and verifier run the tensor product check protocol to prove the following relation</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+u+c\cdot v = \langle\vec{f}+c\cdot \vec{g}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle
+\]</div>
+<p>For convenience, let <span class="math notranslate nohighlight">\(h(X) = f(X) + c\cdot g(X)\)</span>. The proof that the above construction satisfies zero-knowledge is as follows:</p>
+<p><strong>[Proof]</strong></p>
+<p>First, the simulator <span class="math notranslate nohighlight">\(S\)</span> can be constructed according to the following steps:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(S\)</span> first inputs a random challenge value <span class="math notranslate nohighlight">\(c \neq 0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S\)</span> uniformly randomly generates vector <span class="math notranslate nohighlight">\(\vec{h}\)</span> and computes polynomial <span class="math notranslate nohighlight">\(h(X)\)</span>, as well as <span class="math notranslate nohighlight">\(C_h = \mathsf{Commit}(h(X)), w = \langle\vec{h}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S\)</span> computes <span class="math notranslate nohighlight">\(v = (w-u)/c\)</span> and commitment <span class="math notranslate nohighlight">\(C_g = (C_h/C_f)^{1/c}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(S\)</span> runs a tensor product check protocol with <span class="math notranslate nohighlight">\(V^*\)</span>, where the proof relation is <span class="math notranslate nohighlight">\(w = \langle\vec{h}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle\)</span>.</p></li>
+</ol>
+<p>Obviously, the messages in steps 1 and 3 are probabilistically indistinguishable from those sent by an honest prover <span class="math notranslate nohighlight">\(P\)</span>.</p>
+<p>Next, we only need to show that the tensor product check protocol run by <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(V^*\)</span> in step 4 also satisfies this property. Specifically, because the protocol satisfies soundness, for each oracle <span class="math notranslate nohighlight">\(h^{(j)}, j=0,...,n-1\)</span>, it satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+h^{(j)}(X^2)=\frac{h^{(j-1)}(X)+h^{(j-1)}(-X)}{2} + \rho \cdot \frac{h^{(j-1)}(X)-h^{(j-1)}(-X)}{2X}
+\]</div>
+<p>Note that for <span class="math notranslate nohighlight">\(h^{(j-1)}(X)\)</span> on the right side of the equation, its corresponding oracle also satisfies an equation related to <span class="math notranslate nohighlight">\(h^{(j-2)}(X)\)</span>. Therefore, we can always expand the right expression satisfied by any <span class="math notranslate nohighlight">\(h^{(j)}(X^2)\)</span> into a form that only includes <span class="math notranslate nohighlight">\(h^{(0)}(X), h^{(0)}(-X), h^{(0)}(X^2)\)</span>. Thus, the response obtained by <span class="math notranslate nohighlight">\(V^*\)</span> querying the oracle <span class="math notranslate nohighlight">\(h^{(j)}\)</span> at any point <span class="math notranslate nohighlight">\(\beta\)</span> must be a linearly independent constraint on <span class="math notranslate nohighlight">\(\vec{h}\)</span>.</p>
+<p>In summary, after performing the tensor product check protocol, <span class="math notranslate nohighlight">\(V^*\)</span> will obtain <span class="math notranslate nohighlight">\(3\cdot (n-1)\)</span>, <span class="math notranslate nohighlight">\(2\)</span> values on <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span>, and one value of <span class="math notranslate nohighlight">\(h^{(n)}(X)\)</span>, i.e., <span class="math notranslate nohighlight">\(u+c\cdot v\)</span>. Because <span class="math notranslate nohighlight">\(h\)</span> contains a blinding polynomial of size <span class="math notranslate nohighlight">\(3n\)</span>, the verifier cannot interpolate to obtain all coefficients of the blinding polynomial, so this protocol is indistinguishable from the protocol executed by an honest verifier.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<p>[BCH+22] Bootle, Jonathan, Alessandro Chiesa, Yuncong Hu, **et al. “Gemini: Elastic SNARKs for Diverse Environments.” <em>Cryptology ePrint Archive</em> (2022). <a class="reference external" href="https://eprint.iacr.org/2022/420">https://eprint.iacr.org/2022/420</a></p>
+<p>[CFS17**]** Chiesa, Alessandro, Michael A. Forbes, and Nicholas Spooner. “A zero knowledge sumcheck and its applications.” <a class="reference external" href="https://eprint.iacr.org/2017/305"><em>arXiv preprint arXiv:1704.02086</em> (2017)</a>.</p>
+<p>[XZZPS19] Xie, T., Zhang, J., Zhang, Y., Papamanthou, C., &amp; Song, D. “Libra: Succinct zero-knowledge proofs with optimal prover computation.” <a class="reference external" href="https://eprint.iacr.org/2019/317">https://eprint.iacr.org/2019/317</a></p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./gemini"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gemini-PCS (Part II)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#review">Review</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#security-analysis">Security Analysis</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#implementing-zero-knowledge">Implementing Zero-Knowledge</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

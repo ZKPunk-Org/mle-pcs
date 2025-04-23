@@ -1,0 +1,1000 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on HyperKZG &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gemini/hyperkzg-pcs-01';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fgemini/hyperkzg-pcs-01.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/gemini/hyperkzg-pcs-01.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on HyperKZG</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Notes on HyperKZG</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#review-of-gemini-pcs-principles">1. Review of Gemini-PCS Principles</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-folding-of-evaluation-form">2. Linear Folding of Evaluation-form</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-description">3. Protocol Description</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#witness-input">Witness Input:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-input">Public Input:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-optimization">4. Protocol Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Round 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Round 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Verification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-analysis">5. Performance Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-hyperkzg">
+<h1>Notes on HyperKZG<a class="headerlink" href="#notes-on-hyperkzg" title="Link to this heading">#</a></h1>
+<p>In Gemini-PCS [BCHO22], a coefficient-form MLE polynomial corresponds to a univariate polynomial,</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + \cdots + f_{2^n-1}X_0X_1\cdots X_{n-1}
+\]</div>
+<p>corresponds to a univariate polynomial:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = f_0 + f_1X + f_2X^2 + \cdots + f_{2^n-1}X^{2^n-1}
+\]</div>
+<p>When we determine a public evaluation point <span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, \ldots, u_{n-1})\)</span>, the value of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at <span class="math notranslate nohighlight">\(\vec{u}\)</span> can be expressed as the following Tensor Product:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, \ldots, u_{n-1}) = \langle\vec{f}, \otimes_{i=0}^{n-1}(1, u_i)\rangle
+\]</div>
+<p>Next, Gemini-PCS uses the Split-and-fold approach to convert the above equation into the correctness of evaluations of multiple univariate polynomials, which can be proven using KZG10.</p>
+<p>However, MLE polynomials are usually represented in point-value form by default,</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = \sum_{i=0}^{2^n-1} a_i \cdot \overset{\sim}{eq}(\mathsf{bits}(i), (X_0, X_1, \ldots, X_{n-1}))
+\]</div>
+<p>To use Gemini-PCS, the Prover needs to first convert the point-value form of MLE to the coefficient form mentioned above, i.e., calculate the <span class="math notranslate nohighlight">\(\vec{f}\)</span> vector from the <span class="math notranslate nohighlight">\(\vec{a}\)</span> vector. This conversion algorithm is similar to FFT computation, with a time complexity of <span class="math notranslate nohighlight">\(O(N\log{N})\)</span>, where <span class="math notranslate nohighlight">\(N=2^n\)</span>.</p>
+<p>The idea of HyperKZG is to still utilize the core Split-and-fold approach of Gemini-PCS, but without the need for polynomial conversion similar to FFT. This may sound incredible at first, but the key point here is that MLE polynomials are essentially linear polynomials in multidimensional space. Whether in Evaluation-form or Coefficient-form, their computation process is actually a linear operation. At the same time, the Split-and-fold approach adopted by Gemini-PCS is also a mapping process that continuously reduces the dimensionality of high-dimensional space. Therefore, this Split-and-fold process can be transplanted to the Evaluation-form of MLE, achieving the same folding effect, but perfectly avoiding the complex calculations of polynomial Basis conversion.</p>
+<section id="review-of-gemini-pcs-principles">
+<h2>1. Review of Gemini-PCS Principles<a class="headerlink" href="#review-of-gemini-pcs-principles" title="Link to this heading">#</a></h2>
+<p>Gemini [BCHO22] provides a method for mapping MLE polynomials to univariate polynomials. Below is the definition of an MLE:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + \cdots + f_{2^n-1}X_0X_1\cdots X_{n-1}
+\]</div>
+<p>If we use a coefficient vector <span class="math notranslate nohighlight">\(\vec{f}\)</span> of length <span class="math notranslate nohighlight">\(N=2^n\)</span> to represent <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, then we can define a Univariate polynomial <span class="math notranslate nohighlight">\(f(X)\)</span> that has the same coefficients as <span class="math notranslate nohighlight">\(\tilde{f}(X_0,\ldots, X_{n-1})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = f_0 + f_1X + f_2X^2 + \cdots + f_{2^n-1}X^{2^n-1}
+\]</div>
+<p>If we substitute <span class="math notranslate nohighlight">\(X=-X\)</span> into the above equation, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+f(-X) = f_0 - f_1X + f_2X^2 - \cdots - f_{2^n-1}X^{2^n-1}
+\]</div>
+<p>Then by adding and subtracting these two equations respectively, we can get:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) + f(-X) = 2(f_0 + f_2X^2 + \cdots + f_{2^n-2}X^{2^n-2}) 
+\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f(X) - f(-X) &amp; = 2X(f_1 + f_3X^2 + \cdots + f_{2^n-1}X^{2^n-2}) \\
+\end{split}
+\end{split}\]</div>
+<p>Now let’s observe the “partial computation” Partial Evaluation of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span>, i.e., instantiating only one unknown <span class="math notranslate nohighlight">\(X_0=u_0\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}({\color{red}u_0}, X_1, \ldots, X_{n-1}) &amp;= f_0 + f_1{\color{red}u_0} + f_2X_1 + f_3{\color{red}u_0}X_1 + f_4X_2 + f_5{\color{red}u_0}X_2 + f_6X_1X_2 + f_7{\color{red}u_0}X_1X_2 + \cdots + f_{2^n-1}{\color{red}u_0}X_1\cdots X_{n-1}\\
+&amp;= (f_0 + f_1{\color{red}u_0}) + (f_2 + f_3{\color{red}u_0})X_1 + (f_4 + f_5{\color{red}u_0})X_2 + (f_6 + f_7{\color{red}u_0})X_1X_2 + \cdots + (f_{2^n-2} + f_{2^n-1}{\color{red}u_0})X_1\cdots X_{n-1} \\
+&amp;= \tilde{f}^{(1)}(X_1, X_2, \ldots, X_{n-1}) \\
+\end{split}
+\end{split}\]</div>
+<p>Here, the coefficient vector of <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_1, X_2, \ldots, X_{n-1})\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+(f_0 + f_1{\color{red}u_0}), (f_2 + f_3{\color{red}u_0}), (f_4 + f_5{\color{red}u_0}), (f_6 + f_7{\color{red}u_0}), \ldots, (f_{2^n-2} + f_{2^n-1}{\color{red}u_0})
+\]</div>
+<p>It is exactly the same as the coefficient vector of the following UniPoly:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(X) = (f_0 + f_1{\color{red}u_0}) + (f_2 + f_3{\color{red}u_0})X + (f_4 + f_5{\color{red}u_0})X^2 + \cdots + (f_{2^n-2} + f_{2^n-1}{\color{red}u_0})X^{2^{n-1}-1}
+\]</div>
+<p>And the univariate polynomial <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span> plus <span class="math notranslate nohighlight">\(f(X)\)</span>, <span class="math notranslate nohighlight">\(f(-X)\)</span>, the three exactly satisfy the following relationship:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(1)}(X^2) &amp;= (f_0 + f_1{\color{red}u_0}) + (f_2 + f_3{\color{red}u_0})X^2 + (f_4 + f_5{\color{red}u_0})X^4 + \cdots + (f_{2^n-2} + f_{2^n-1}{\color{red}u_0})X^{2^{n}-1} \\
+&amp;=\frac{1}{2}(f(X) + f(-X)) + u_0\cdot \frac{1}{2X}(f(X) - f(-X)) \\
+\end{split}
+\end{split}\]</div>
+<p>So, if we want to prove that <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_1,\ldots,X_{n-1})\)</span> is the Partial Evaluation of <span class="math notranslate nohighlight">\(\tilde{f}(X_0,X_1,\ldots, X_{n-1})\)</span>, we only need to prove that the above equation holds.</p>
+<p>Similarly, if we want to prove <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots,X_{n-1})=v\)</span>, we can introduce several intermediate results, namely Partial Evaluated MLE polynomials, and their isomorphic mappings to univariate polynomials</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(0)}(X_0, X_1, \ldots, X_{n-1}) &amp; \mapsto f^{(0)}(X) \\
+\tilde{f}^{(1)}(u_0, X_1, \ldots, X_{n-1}) &amp; \mapsto f^{(1)}(X) \\
+\tilde{f}^{(2)}(u_0, u_1, \ldots, X_{n-1}) &amp; \mapsto f^{(2)}(X) \\
+\vdots &amp;  \\
+\tilde{f}^{(n-1)}(u_0, u_1, \ldots,u_{n-2}, X_{n-1}) &amp; \mapsto f^{(n-1)}(X) \\
+\tilde{f}^{(n)}(u_0, u_1, \ldots, u_{n-2}, u_{n-1}) &amp; \mapsto f^{(n)}(X) \\
+\end{split}
+\end{split}\]</div>
+<p>where the last <span class="math notranslate nohighlight">\(f^{(n)}(X)\)</span> is a constant polynomial, which is exactly the complete computation result of <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, \ldots, u_{n-1})\)</span>, i.e., <span class="math notranslate nohighlight">\(f^{(n)}(X)=v\)</span>.</p>
+<p>And, these introduced univariate polynomials <span class="math notranslate nohighlight">\(f^{(0)}(X), \ldots, f^{(n-1)}(X)\)</span> satisfy the following relationship between every two adjacent items:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i+1)}(X^2) = \frac{f^{(i)}(X) + f^{(i)}(-X)}{2} + u_i\cdot \frac{f^{(i)}(X) - f^{(i)}(-X)}{2X}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{f}^{(n)}(u_0, u_1, \ldots, u_{n-2})=v\)</span> is the final MLE computation result, and <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span> is the UniPoly isomorphic to <span class="math notranslate nohighlight">\(\tilde{f}\)</span>: <span class="math notranslate nohighlight">\(h^{(0)}(X)=f(X)\)</span>.</p>
+<p>Back to our proof goal: <span class="math notranslate nohighlight">\(\tilde{f}^{(n)}(u_0, u_1, \ldots, u_{n-1})=v\)</span>, we split the proof of this computation process into the following steps:</p>
+<ul class="simple">
+<li><p>Construct a Univariate polynomial <span class="math notranslate nohighlight">\(f(X)\)</span> such that its coefficient vector is equal to the coefficients of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, and construct the polynomial commitment <span class="math notranslate nohighlight">\(\mathsf{cm}(f(X))\)</span></p></li>
+<li><p>The polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span> computation process includes <span class="math notranslate nohighlight">\(n\)</span> steps of partial computation, each intermediate partial computation will produce a new MLE polynomial: <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}, \tilde{f}^{(2)}, \ldots, \tilde{f}^{(n-1)}\)</span></p></li>
+<li><p>Prove that the Univariate polynomials corresponding to these intermediate MLEs satisfy a recursive relationship, which is randomly sampled and checked through the random number <span class="math notranslate nohighlight">\(\beta\)</span> provided by the Verifier:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+f^{(i+1)}(\beta^2) = \frac{f^{(i)}(\beta) + f^{(i)}(-\beta)}{2} + u_i\cdot \frac{f^{(i)}(\beta) - f^{(i)}(-\beta)}{2\beta}
+\]</div>
+<ul class="simple">
+<li><p>Prove that <span class="math notranslate nohighlight">\(f^{(n)}(\beta^2)=v\)</span></p></li>
+<li><p>Prove that all Univariate polynomials <span class="math notranslate nohighlight">\(\{f^{(i)}(X)\}\)</span> are correctly evaluated at <span class="math notranslate nohighlight">\(X=\beta,X=-\beta, X=\beta^2\)</span></p></li>
+</ul>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="linear-folding-of-evaluation-form">
+<h1>2. Linear Folding of Evaluation-form<a class="headerlink" href="#linear-folding-of-evaluation-form" title="Link to this heading">#</a></h1>
+<p>If we use the evaluation-form of MLE in the PIOP proof system, then we need a conversion operation similar to FFT to convert it to the coefficient-form of MLE. The complexity of this conversion operation is <span class="math notranslate nohighlight">\(O(N\log{N})\)</span>.</p>
+<p>In Nova’s implementation, Setty provided an improved scheme for HyperKZG. It utilizes a general technique behind the Gemini PCS scheme, which is independent of whether <span class="math notranslate nohighlight">\(\tilde{f}\)</span> is in Evaluation-form or Coefficient-form, as long as they can split the calculation process into multiple steps of linear operations.</p>
+<p>Reviewing the MLE operation evaluation proof introduced in the Gemini paper in the previous section, it decomposes the Evaluation process of <span class="math notranslate nohighlight">\(\tilde{f}(X_0,X_1,\ldots,X_{n-1})\)</span> into <span class="math notranslate nohighlight">\(\log{n}\)</span> steps, then maps the coefficient vector of each intermediate MLE to the coefficients of a UniPoly, and then proves the relationship between these UniPolys to ensure the correctness of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> operation.</p>
+<p>For an MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(\vec{X})\)</span> in Evaluation-form, let’s look at its evaluation process:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{n-1}) = a_0E_0(X_0, X_1, \ldots, X_{n-1}) + a_1E_1(X_0, X_1, \ldots, X_{n-1}) + \cdots + a_{2^n-1}E_{2^n-1}(X_0, X_1, \ldots, X_{n-1})
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(E_i(\vec{X})\)</span> are Lagrange Polynomials, defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+E_i(X_0, X_1, \ldots, X_{n-1}) = \prod_{j=0}^{n-1} \big(\mathsf{bits}(i)_j\cdot X_j + (1-\mathsf{bits}(i)_j)(1-X_j)\big)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathsf{bits}(i)_j\)</span> is the <span class="math notranslate nohighlight">\(j\)</span>-th bit of the binary representation of <span class="math notranslate nohighlight">\(i\)</span> (note that Big-endian representation is used here). For example, if <span class="math notranslate nohighlight">\(i=5\)</span>, its binary representation is <span class="math notranslate nohighlight">\(101\)</span>, then <span class="math notranslate nohighlight">\(\mathsf{bits}(5)_0=1\)</span>, <span class="math notranslate nohighlight">\(\mathsf{bits}(5)_1=0\)</span>, <span class="math notranslate nohighlight">\(\mathsf{bits}(5)_2=1\)</span>.</p>
+<p>It’s easy to see from the definition that <span class="math notranslate nohighlight">\(E_i(\vec{X})\)</span> satisfies the following splitting property (Tensor Structure):</p>
+<div class="math notranslate nohighlight">
+\[
+E_{i\parallel j}(\vec{X}, \vec{Y}) = E_i(\vec{X})\cdot E_i(\vec{Y})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(k = i\parallel j\)</span> is the splitting of the binary bit vector of <span class="math notranslate nohighlight">\(k\)</span>. For example, <span class="math notranslate nohighlight">\(i=23\)</span>, its binary representation is <span class="math notranslate nohighlight">\(10111\)</span>, which can be split into <span class="math notranslate nohighlight">\(10\parallel 111\)</span>, or written as <span class="math notranslate nohighlight">\(23=2\parallel 7\)</span>. According to the splitting property, we can get:</p>
+<div class="math notranslate nohighlight">
+\[
+E_{i\parallel b}(X_0, (X_1, \ldots, X_{n-1})) = E_b(X_0)\cdot E_i(X_1, \ldots, X_{n-1})
+\]</div>
+<p>Then let’s observe what <span class="math notranslate nohighlight">\(\tilde{f}\)</span> looks like after one Partial Evaluation, let <span class="math notranslate nohighlight">\(X_0=u_0\)</span>, <span class="math notranslate nohighlight">\(\vec{X}=(X_1, \ldots, X_{n-1})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}(u_0, \vec{X}) &amp;= a_0E_0(u_0, \vec{X}) + a_1E_1(u_0, \vec{X}) + \cdots + a_{2^n-2}E_{2^n-2}(u_0, \vec{X}) + a_{2^n-1}E_{2^n-1}(u_0, \vec{X}) \\
+&amp;= \Big(a_0E_0(u_0)\Big)\cdot E_{\color{red}0}(\vec{X}) + \Big(a_1E_1(u_0)\Big)\cdot E_{\color{red}0}(\vec{X}) + \cdots + \Big(a_{2^n-1}E_{0}(u_0)\Big)\cdot E_{2^{\color{red}n-1}-1}(\vec{X})
++ \Big(a_{2^n-1}E_1(u_0)\Big)\cdot E_{2^{\color{red}n-1}-1}(\vec{X}) \\
+&amp;= \Big(a_0(1-u_0)\Big)\cdot E_{0}(\vec{X}) + \Big(a_1u_0\Big)\cdot E_{0}(\vec{X}) + \cdots + \Big(a_{2^n-2}(1-u_0)\Big)\cdot E_{2^{n-1}-1}(\vec{X}) + \Big(a_{2^n-1}u_0\Big)\cdot E_{2^{n-1}-1}(\vec{X}) \\
+&amp;= \Big(a_0(1-u_0)\Big)\cdot E_0(\vec{X}) + \Big(a_1u_0\Big)\cdot E_0(\vec{X}) + \cdots + \Big(a_{2^n-2}(1-u_0)\Big)\cdot E_{2^{n-1}-1}(\vec{X}) + \Big(a_{2^n-1}u_0\Big)\cdot E_{2^{n-1}-1}(\vec{X}) \\
+&amp;= \Big(a_0(1-u_0) + a_1u_0\Big)\cdot E_0(\vec{X}) + \cdots + \Big(a_{2^n-2}(1-u_0) + a_{2^n-1}u_0\Big)\cdot E_{2^{n-1}-1}(\vec{X}) \\
+&amp;= \tilde{h}^{(1)}(\vec{X})
+\end{split}
+\end{split}\]</div>
+<p>We can see that the Evaluation point value vector of <span class="math notranslate nohighlight">\(\tilde{h}^{(1)}(\vec{X})\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[
+\Big(a_0(1-u_0) + a_1u_0\Big), \Big(a_2(1-u_0) + a_3u_0\Big), \ldots, \Big(a_{2^n-2}(1-u_0) + a_{2^n-1}u_0\Big)
+\]</div>
+<p>Comparing with the coefficient vector of <span class="math notranslate nohighlight">\(\tilde{f}(u_0, \vec{X})\)</span>, we will find that both are only half the original length, but the halving method is different. The former is <span class="math notranslate nohighlight">\(\big((1-u)\cdot a + u\cdot b\big)\)</span>, while the latter is <span class="math notranslate nohighlight">\(\big(a + u\cdot b\big)\)</span>. This new halving method does not prevent us from using Gemini-PCS technology to ensure the correctness of Split-and-fold, but perfectly avoids the complex calculations of polynomial Basis conversion.
+We can still introduce <span class="math notranslate nohighlight">\(n-1\)</span> partially computed MLE polynomials, and map their Evaluations to the coefficients of multiple UniPolys:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{h}^{(0)}(X_0, X_1, \ldots, X_{n-1}) &amp; \mapsto h^{(0)}(X) \\
+\tilde{h}^{(1)}(u_0, X_1, \ldots, X_{n-1}) &amp; \mapsto h^{(1)}(X) \\
+\tilde{h}^{(2)}(u_0, u_1, \ldots, X_{n-1}) &amp; \mapsto h^{(2)}(X) \\
+\vdots &amp;  \\
+\tilde{h}^{(n-1)}(u_0, u_1, \ldots, u_{n-1}) &amp; \mapsto h^{(n-1)}(X) \\
+\end{split}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{h}^{(0)}(\vec{X})=\tilde{f}(\vec{X})\)</span>, and <span class="math notranslate nohighlight">\(\tilde{h}^{(n-1)}(u_0, u_1, \ldots, u_{n-1})=v\)</span>,</p>
+<p>And give a “similar” recursive relationship that their Evaluation forms satisfy:</p>
+<div class="math notranslate nohighlight">
+\[
+h^{(i+1)}(X^2) = (1-u_i)\cdot \frac{h^{(i)}(X) + h^{(i)}(-X)}{2} + u_i\cdot \frac{h^{(i)}(X) - h^{(i)}(-X)}{2X}
+\]</div>
+<p>Therefore, the Verifier can then send a unique random challenge point <span class="math notranslate nohighlight">\(X=\beta\)</span> to check whether <span class="math notranslate nohighlight">\(\{h^{(i)}(\beta)\}\)</span> satisfy the recursive relationship defined by the above equation. This is where the KZG10 PCS scheme for Univariate polynomials can be connected to complete the rest of the proof.</p>
+<section id="protocol-description">
+<h2>3. Protocol Description<a class="headerlink" href="#protocol-description" title="Link to this heading">#</a></h2>
+<p>This section provides a description of the protocol flow. The protocol is to prove that the computation result of an MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span> at a given point <span class="math notranslate nohighlight">\((u_0, u_1, \ldots, u_{n-1})\)</span> equals <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<section id="witness-input">
+<h3>Witness Input:<a class="headerlink" href="#witness-input" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{a}=(a_0, a_1, \ldots, a_{2^n-1})\)</span>: The coefficient vector of polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+f(X) = a_0 + a_1X + a_2X^2 + \cdots + a_{2^n-1}X^{2^n-1}
+\]</div>
+</section>
+<section id="public-input">
+<h3>Public Input:<a class="headerlink" href="#public-input" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(C_f\)</span>: The commitment of the isomorphic polynomial <span class="math notranslate nohighlight">\(f(X)\)</span> of MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{n-1})\)</span>,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_f = \mathsf{KZG10.Commit}(f(X))
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p><span class="math notranslate nohighlight">\(\vec{u}=(u_0, u_1, \ldots, u_{n-1})\)</span>: The coordinates of the evaluation point</p></li>
+<li><p><span class="math notranslate nohighlight">\(v=\tilde{f}(u_0, u_1, \ldots, u_{n-1})\)</span>: The result of the computation</p></li>
+</ol>
+</section>
+<section id="round-1">
+<h3>Round 1<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Prover computes <span class="math notranslate nohighlight">\(h^{(1)}(X), h^{(2)}(X), \ldots, h^{(n-1)}(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(1)}(X) &amp; = ((1-u_0)a_0+u_0a_1) + ((1-u_0)a_2+u_0a_3)X + \cdots + ((1-u_0)a_{2^n-2}+u_0a_{2^n-1})X^{2^{n-1}-1} \\
+h^{(2)}(X) &amp; = ((1-u_1)a^{(1)}_0+u_1a^{(1)}_1) + ((1-u_1)a^{(1)}_2+u_1a^{(1)}_3)X + \ldots + ((1-u_1)a^{(1)}_{2^{n-1}-2}+u_1a^{(1)}_{2^{n-1}-1})X^{2^{n-2}-1} \\
+\vdots &amp; \\
+h^{(n-1)}(X) &amp; = ((1-u_{n-1})a^{(n-2)}_0+u_{n-1}a^{(n-2)}_1) + ((1-u_{n-1})a^{(n-2)}_2+u_{n-1}a^{(n-2)}_3)X \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover outputs commitments <span class="math notranslate nohighlight">\(\big(C_{h^{(1)}}, C_{h^{(2)}},\ldots, C_{h^{(n-1)}}\big)\)</span></p></li>
+</ol>
+</section>
+<section id="round-2">
+<h3>Round 2<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Verifier sends random challenge number <span class="math notranslate nohighlight">\(\beta\in\mathbb{F}\)</span>,</p></li>
+<li><p>Prover computes and sends
+<span class="math notranslate nohighlight">\(\Big(h^{(0)}(\beta), h^{(0)}(-\beta)\Big)\)</span>,
+<span class="math notranslate nohighlight">\(\Big(h^{(1)}(\beta), h^{(1)}(-\beta), h^{(1)}(\beta^2)\Big)\)</span>,
+<span class="math notranslate nohighlight">\(\Big(h^{(2)}(\beta), h^{(2)}(-\beta), h^{(2)}(\beta^2)\Big)\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span>,
+<span class="math notranslate nohighlight">\(\Big(h^{(n-2)}(\beta), h^{(n-2)}(-\beta), h^{(n-2)}(\beta^2)\Big)\)</span></p></li>
+<li><p>Prover proves the correctness of the above Evaluations and sends proofs: <span class="math notranslate nohighlight">\(\Big(\pi_{0,\beta}, \pi_{0,-\beta}\Big)\)</span>,
+<span class="math notranslate nohighlight">\(\Big(\pi_{1,\beta}, \pi_{1,-\beta}, \pi_{1,\beta^2}\Big)\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span>, <span class="math notranslate nohighlight">\(\Big(\pi_{n-1,\beta}, \pi_{n-1,-\beta}, \pi_{n-1,\beta^2}\Big)\)</span></p></li>
+</ol>
+</section>
+<section id="verification">
+<h3>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Verify if the values of <span class="math notranslate nohighlight">\(h^{(0)}, \ldots, h^{(n-1)}\)</span> at <span class="math notranslate nohighlight">\(X=\beta\)</span>, <span class="math notranslate nohighlight">\(X=-\beta\)</span> and <span class="math notranslate nohighlight">\(X=\beta^2\)</span> satisfy the recursive formula:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(1)}(\beta^2) &amp;\overset{?}{=} \frac{h^{(0)}(\beta) + h^{(0)}(-\beta)}{2} + u_0\cdot \frac{h^{(0)}(\beta) - h^{(0)}(-\beta)}{2\beta} \\
+h^{(2)}(\beta^2) &amp;\overset{?}{=} \frac{h^{(1)}(\beta) + h^{(1)}(-\beta)}{2} + u_1\cdot \frac{h^{(1)}(\beta) - h^{(1)}(-\beta)}{2\beta} \\
+\vdots &amp; \\
+h^{(n-1)}(\beta^2) &amp;\overset{?}{=} \frac{h^{(n-2)}(\beta) + h^{(n-2)}(-\beta)}{2} + u_{n-2}\cdot \frac{h^{(n-2)}(\beta) - h^{(n-2)}(-\beta)}{2\beta} \\
+ v &amp;\overset{?}{=} \frac{h^{(n-1)}(\beta) + h^{(n-1)}(-\beta)}{2} + u_{n-1}\cdot \frac{h^{(n-1)}(\beta) - h^{(n-1)}(-\beta)}{2\beta} \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Based on <span class="math notranslate nohighlight">\(C_f, C_{h^{(1)}}, C_{h^{(2)}},\ldots, C_{h^{(n-1)}}\)</span>, verify the correctness of polynomial evaluation operations:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{lllll}
+\mathsf{KZG10.Verify}&amp;(C_f, &amp;\beta, &amp;h^{(0)}(\beta), &amp;\pi_{0,\beta}) &amp;\overset{?}{=} 1 \\
+\mathsf{KZG10.Verify}&amp;(C_f, &amp;-\beta, &amp;h^{(0)}(-\beta), &amp;\pi_{0,-\beta}) &amp;\overset{?}{=} 1 \\
+\mathsf{KZG10.Verify}&amp;(C_{h^{(1)}}, &amp;\beta, &amp;h^{(1)}(\beta), &amp;\pi_{1,\beta}) &amp;\overset{?}{=} 1 \\
+\mathsf{KZG10.Verify}&amp;(C_{h^{(1)}}, &amp;-\beta, &amp;h^{(1)}(-\beta), &amp;\pi_{1,-\beta}) &amp;\overset{?}{=} 1 \\
+\mathsf{KZG10.Verify}&amp;(C_{h^{(1)}}, &amp;\beta^2, &amp;h^{(1)}(\beta^2), &amp;\pi_{1,\beta^2}) &amp;\overset{?}{=} 1 \\
+&amp; &amp; \vdots \\
+\mathsf{KZG10.Verify}&amp;(C_{h^{(n-1)}}, &amp;\beta, &amp;h^{(n-1)}(\beta), &amp;\pi_{n-1,\beta}) &amp;\overset{?}{=} 1 \\
+\mathsf{KZG10.Verify}&amp;(C_{h^{(n-1)}}, &amp;-\beta, &amp;h^{(n-1)}(-\beta), &amp;\pi_{n-1,-\beta}) &amp;\overset{?}{=} 1 \\
+\mathsf{KZG10.Verify}&amp;(C_{h^{(n-1)}}, &amp;\beta^2, &amp;h^{(n-1)}(\beta^2), &amp;\pi_{n-1,\beta^2}) &amp;\overset{?}{=} 1 \\
+\end{array}
+\end{split}\]</div>
+</section>
+</section>
+<section id="protocol-optimization">
+<h2>4. Protocol Optimization<a class="headerlink" href="#protocol-optimization" title="Link to this heading">#</a></h2>
+<p>There are several points that can be optimized in the above protocol:</p>
+<ol class="arabic simple">
+<li><p>The Prover doesn’t need to send all computation values at <span class="math notranslate nohighlight">\(X=\beta^2\)</span> except for <span class="math notranslate nohighlight">\(h^{(0)}(\beta^2)\)</span>, because the Verifier can calculate them through the following recursive relationship. This can reduce the Prover’s communication volume, and at the same time, the Verifier’s calculation process is equivalent to performing verification simultaneously, thus saving the recursive formula verification process.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h^{(i+1)}(\beta^2) = \frac{h^{(i)}(\beta) + h^{(i)}(-\beta)}{2} + u_i\cdot \frac{h^{(i)}(\beta) - h^{(i)}(-\beta)}{2\beta}
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>The Prover can aggregate <span class="math notranslate nohighlight">\(h^{(0)}(X),\ldots, h^{(n-1)}(X)\)</span> together through a random number <span class="math notranslate nohighlight">\(\gamma\)</span>, obtaining <span class="math notranslate nohighlight">\(h(X)\)</span>, and then prove the values of <span class="math notranslate nohighlight">\(h(X)\)</span> at <span class="math notranslate nohighlight">\(X=\beta,-\beta, \beta^2\)</span>. This can avoid the Prover sending <span class="math notranslate nohighlight">\(3n-1\)</span> independent KZG10 Evaluation proofs, and only need to send three Evaluation proofs.</p></li>
+</ol>
+<p>Below is the protocol description after optimization</p>
+<section id="id1">
+<h3>Round 1<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Prover computes <span class="math notranslate nohighlight">\(h^{(1)}(X), h^{(2)}(X), \ldots, h^{(n-1)}(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(1)}(X) &amp; = ((1-u_0)a_0+u_0a_1) + ((1-u_0)a_2+u_0a_3)X + \cdots + ((1-u_0)a_{2^n-2}+u_0a_{2^n-1})X^{2^{n-1}-1} \\
+h^{(2)}(X) &amp; = ((1-u_1)a^{(1)}_0+u_1a^{(1)}_1) + ((1-u_1)a^{(1)}_2+u_1a^{(1)}_3)X + \ldots + ((1-u_1)a^{(1)}_{2^{n-1}-2}+u_1a^{(1)}_{2^{n-1}-1})X^{2^{n-2}-1} \\
+\vdots &amp; \\
+h^{(n-1)}(X) &amp; = ((1-u_{n-1})a^{(n-2)}_0+u_{n-1}a^{(n-2)}_1) + ((1-u_{n-1})a^{(n-2)}_2+u_{n-1}a^{(n-2)}_3)X \\
+\end{split}
+\end{split}\]</div>
+<p>Prover sends polynomial commitments <span class="math notranslate nohighlight">\(\big(C_{h^{(1)}}, C_{h^{(2)}},\ldots, C_{h^{(n-1)}}\big)\)</span></p>
+</section>
+<section id="id2">
+<h3>Round 2<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Verifier sends random challenge number <span class="math notranslate nohighlight">\(\beta\in\mathbb{F}\)</span>,</p></li>
+<li><p>Prover computes and sends
+<span class="math notranslate nohighlight">\(\Big(h^{(0)}(\beta), h^{(0)}(-\beta), {\color{blue}h^{(0)(\beta^2)}}\Big)\)</span>,
+<span class="math notranslate nohighlight">\(\Big(h^{(1)}(\beta), h^{(1)}(-\beta)\Big)\)</span>,
+<span class="math notranslate nohighlight">\(\Big(h^{(2)}(\beta), h^{(2)}(-\beta)\Big)\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span>,
+<span class="math notranslate nohighlight">\(\Big(h^{(n-1)}(\beta), h^{(n-1)}(-\beta)\Big)\)</span></p></li>
+</ol>
+</section>
+<section id="round-3">
+<h3>Round 3<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Verifier sends random challenge number <span class="math notranslate nohighlight">\(\gamma\in\mathbb{F}\)</span>,</p></li>
+<li><p>Prover computes aggregated polynomial <span class="math notranslate nohighlight">\(h(X)\)</span>,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) = h^{(0)}(X) + \gamma\cdot h^{(1)}(X) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(X)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover computes <span class="math notranslate nohighlight">\(v_{\beta}, v_{-\beta}, v_{\beta^2}\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+v_{\beta} &amp; = h^{(0)}(\beta) + \gamma\cdot h^{(1)}(\beta) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(\beta) \\
+v_{-\beta} &amp; = h^{(0)}(-\beta) + \gamma\cdot h^{(1)}(-\beta) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(-\beta) \\
+v_{\beta^2} &amp; = h^{(0)}(\beta^2) + \gamma\cdot h^{(1)}(\beta^2) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(\beta^2) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Prover computes <span class="math notranslate nohighlight">\(h^*(x)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h^*(X) = h(\beta)\cdot L_\beta(X) + h(-\beta)\cdot L_{-\beta}(X) + h(\beta^2)\cdot L_{\beta^2}(X)
+\]</div>
+<p>Here, assume Domain <span class="math notranslate nohighlight">\(D=\{\beta, -\beta, \beta^2\}\)</span>, and <span class="math notranslate nohighlight">\(\{L_\beta(X), L_{-\beta}(X), L_{\beta^2}(X)\}\)</span> are Lagrange Polynomials on <span class="math notranslate nohighlight">\(D\)</span>. Then <span class="math notranslate nohighlight">\(h^*(X)\)</span> satisfies the following equation: there exists a quotient polynomial <span class="math notranslate nohighlight">\(q(X)\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{EQ1}: h(X) - h^*(X) = q(X)\cdot(X-\beta)(X+\beta)(X-\beta^2)
+\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Prover computes quotient polynomial <span class="math notranslate nohighlight">\(q(X)\)</span> and sends its polynomial commitment <span class="math notranslate nohighlight">\(C_q = \mathsf{cm}(q(X))\)</span></p></li>
+</ol>
+</section>
+<section id="round-4">
+<h3>Round 4<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Verifier sends random challenge number <span class="math notranslate nohighlight">\(\zeta\in\mathbb{F}_p\)</span></p></li>
+<li><p>Prover computes linearization polynomial <span class="math notranslate nohighlight">\(r_\zeta(X)\)</span> of <span class="math notranslate nohighlight">\(\mathsf{EQ1}\)</span>, satisfying <span class="math notranslate nohighlight">\(r_\zeta(\zeta)=0\)</span>,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+r_\zeta(X) = h(X) - h^*(\zeta) - q(X)\cdot(\zeta-\beta)(\zeta+\beta)(\zeta-\beta^2)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover sends the commitment of the linearization polynomial <span class="math notranslate nohighlight">\(C_r=[r(x)]_1\)</span></p></li>
+<li><p>Prover computes quotient polynomial <span class="math notranslate nohighlight">\(w(X)\)</span> satisfying:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+w(X) = \frac{r_\zeta(X)}{X-\zeta}
+\]</div>
+<p>Prover sends <span class="math notranslate nohighlight">\(C_w=[w(x)]_1\)</span></p>
+</section>
+<section id="id3">
+<h3>Verification<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Compute <span class="math notranslate nohighlight">\(\Big(h^{(1)}(\beta^2), h^{(2)}(\beta^2), \ldots, h^{(n-1)}(\beta^2)\Big)\)</span>,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(1)}(\beta^2) &amp;= \frac{h^{(0)}(\beta) + h^{(0)}(-\beta)}{2} + u_0\cdot \frac{h^{(0)}(\beta) - h^{(0)}(-\beta)}{2\beta} \\
+h^{(2)}(\beta^2) &amp;= \frac{h^{(1)}(\beta) + h^{(1)}(-\beta)}{2} + u_1\cdot \frac{h^{(1)}(\beta) - h^{(1)}(-\beta)}{2\beta} \\
+\vdots &amp; \\
+h^{(n-1)}(\beta^2) &amp;=\frac{h^{(n-2)}(\beta) + h^{(n-2)}(-\beta)}{2} + u_{n-2}\cdot \frac{h^{(n-2)}(\beta) - h^{(n-2)}(-\beta)}{2\beta} \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Compute <span class="math notranslate nohighlight">\(h(\beta), h(-\beta), h(\beta^2)\)</span>,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+h(\beta) = h^{(0)}(\beta) + \gamma\cdot h^{(1)}(\beta) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(\beta) \\
+h(-\beta) = h^{(0)}(-\beta) + \gamma\cdot h^{(1)}(-\beta) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(-\beta) \\
+h(\beta^2) = h^{(0)}(\beta^2) + \gamma\cdot h^{(1)}(\beta^2) + \cdots + \gamma^{n-1}\cdot h^{(n-1)}(\beta^2) \\
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Compute the value of <span class="math notranslate nohighlight">\(c(X)\)</span> at <span class="math notranslate nohighlight">\(X=\zeta\)</span>, <span class="math notranslate nohighlight">\(c(\zeta)\)</span>,</p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(C_h=C_f+\gamma\cdot C_{h^{(1)}}+\gamma^2\cdot C_{h^{(2)}}+\cdots+\gamma^{n-1}\cdot C_{h^{(n-1)}}\)</span></p></li>
+<li><p>Compute the commitment of <span class="math notranslate nohighlight">\(C_r = [r_\zeta(x)]_1\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_r = [r_\zeta(x)]_1 = C_h - c(\zeta)\cdot [1]_1 - (\zeta-\beta)(\zeta+\beta)(\zeta-\beta^2)\cdot C_q
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Verify the relationship between <span class="math notranslate nohighlight">\(C_h\)</span> and <span class="math notranslate nohighlight">\(C_w\)</span>:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e(C_r + \zeta\cdot C_w, [1]_2) \overset{?}{=} e(C_w, [x]_2)
+\]</div>
+</section>
+</section>
+<section id="performance-analysis">
+<h2>5. Performance Analysis<a class="headerlink" href="#performance-analysis" title="Link to this heading">#</a></h2>
+<p>Proof size: <span class="math notranslate nohighlight">\((n+1)\cdot\mathbb{G}_1\)</span> + <span class="math notranslate nohighlight">\((2n+1)\cdot\mathbb{F}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\pi=\big(C_{h^{(1)}}, C_{h^{(2)}},\ldots, C_{h^{(n-1)}}, C_q, C_w, \{h^{(i)}(\beta), h^{(i)}(-\beta)\}_{i=0}^{n-1}, h^{(0)}(\beta^2) \big)
+\]</div>
+<p>Verifier Cost: <span class="math notranslate nohighlight">\((2n+2)\cdot\mathsf{EccMul}^{\mathbb{G}_1}\)</span> + <span class="math notranslate nohighlight">\((3n)\cdot\mathbb{F} + 2\cdot\mathsf{Pairing}\)</span></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(2n\cdot\mathbb{F}.\mathsf{Mult}\)</span></p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(h(\beta),h(-\beta), h(\beta^2)\)</span>： <span class="math notranslate nohighlight">\(3n\cdot\mathbb{F}.\mathsf{Mult}\)</span></p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(c(\zeta)\)</span>： <span class="math notranslate nohighlight">\(O(1)\cdot\mathbb{F}.\mathsf{Mult}\)</span></p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(C_h\)</span>: <span class="math notranslate nohighlight">\(n\cdot\mathbb{G}_1\)</span> Scalar Multiplication</p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(P\)</span>: <span class="math notranslate nohighlight">\(2\cdot\mathbb{G}_1\)</span> Scalar Multiplication</p></li>
+</ol>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./gemini"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Notes on HyperKZG</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#review-of-gemini-pcs-principles">1. Review of Gemini-PCS Principles</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-folding-of-evaluation-form">2. Linear Folding of Evaluation-form</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-description">3. Protocol Description</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#witness-input">Witness Input:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#public-input">Public Input:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-optimization">4. Protocol Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Round 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Round 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Verification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-analysis">5. Performance Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
