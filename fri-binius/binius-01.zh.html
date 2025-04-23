@@ -1,0 +1,972 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on FRI-Binius (Part I): Binary Towers &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri-binius/binius-01.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notes on Binius (Part II): Subspace Polynomial" href="binius-02.zh.html" />
+    <link rel="prev" title="DeepFold 笔记：协议概览" href="../fri/deepfold.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri-binius/binius-01.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri-binius/binius-01.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on FRI-Binius (Part I): Binary Towers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-fields">Extension Fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-field">Binary Field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#field-embedding">Field Embedding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-tower">Extension Tower</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wiedemann-tower">Wiedemann Tower</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multilinear-basis">Multilinear Basis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primitive-element">寻找 Primitive element</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">乘法优化</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artin-schreier-tower-conway-tower">Artin-Schreier Tower (Conway Tower)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-fri-binius-part-i-binary-towers">
+<h1>Notes on FRI-Binius (Part I): Binary Towers<a class="headerlink" href="#notes-on-fri-binius-part-i-binary-towers" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>二进制域拥有优美的内部结构，而 Binius 是意图充分利用这些内部结构，构造高效的 SNARK 证明系统。本文主要讨论 Binius 底层所依赖的 Binary Fields 以及 基于 Binary Fields 的 Extension Tower 的构造方法。Binary Fields 提供了更小的 Fields，并且兼容传统密码学中的各种工具构造，同时也可以充分利用硬件上的特殊指令的优化。选用 Extension Tower 优点主要有两个，一个是递归的 Extension 构造提供了一致的、增量式的 Basis 选择，从而使得 Small Field 可以以非常自然的方式嵌入到一个 Large Field 中，另一个优点是乘法和求逆运算存在高效的递归算法。</p>
+<section id="extension-fields">
+<h2>Extension Fields<a class="headerlink" href="#extension-fields" title="Link to this heading">#</a></h2>
+<p>我们尝试用简单的语言来描述下 Extension Field 的概念，为后续我们研究 Binary Tower 做铺垫，深入学习请参考有限域教科书中的严格定义和证明。</p>
+<p>素数域 <span class="math notranslate nohighlight">\(\mathbb{F}_{p}\)</span> 是有 <span class="math notranslate nohighlight">\(p\)</span> 个元素的有限域，其中 <span class="math notranslate nohighlight">\(p\)</span> 必定是一个素数。它同构于 <span class="math notranslate nohighlight">\(\mathbb{Z}/p\mathbb{Z}\)</span> ，也就是说我们可以用整数集合 <span class="math notranslate nohighlight">\(\{0, 1, \ldots, p-1\}\)</span> 来表示 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> 的全体元素。</p>
+<p>我们可以把素数域的任意两个元素组成一个 Tuple，即 <span class="math notranslate nohighlight">\((a, b)\in\mathbb{F}_{p}^2\)</span>，那么这个 Tuple 也构成了一个域，其元素数量为 <span class="math notranslate nohighlight">\(p^2\)</span>。我们可以检验一下， <span class="math notranslate nohighlight">\(a+b\in\mathbb{F}_p\)</span>，那么我们定义 Tuple 的加法如下：</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1, b_1) + (a_2, b_2) = (a_1 + a_2, b_1 + b_2)
+\]</div>
+<p>可以验证， <span class="math notranslate nohighlight">\(\mathbb{F}_{p}^2\)</span> 构成了一个向量空间， 因此它是一个加法群，其中零元素为 <span class="math notranslate nohighlight">\((0, 0)\)</span> 。接下来是怎么定义乘法的问题，我们希望乘法可以封闭，即：</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1, b_1)\cdot (a_2, b_2) = (c, d)
+\]</div>
+<p>一种最简单的做法是采用 Entry-wise Mulplication 来定义乘法，即 <span class="math notranslate nohighlight">\((a_1, b_1)\cdot (a_2, b_2) = (a_1a_2, b_1b_2)\)</span>，并且乘法单位元为 <span class="math notranslate nohighlight">\((1, 1)\)</span>，貌似这样我们构造可以让乘法封闭。但是这并不能保证每一个元素都有逆元素。例如 <span class="math notranslate nohighlight">\((1, 0)\)</span>，它乘上任何 Tuple 都不能得到 <span class="math notranslate nohighlight">\((1, 1)\)</span>，因为 Tuple 的第二个部分怎么计算都是 <span class="math notranslate nohighlight">\(0\)</span>。因此，这样的乘法无法构成一个「域」。</p>
+<p>在有限域理论中，Tuple 的乘法运算是通过多项式模乘来实现的。也就是我们把 <span class="math notranslate nohighlight">\((a_1, b_1)\)</span> 看成是一个 Degree 为 1 的多项式的系数，同样 <span class="math notranslate nohighlight">\((a_2, b_2)\)</span> 也可以看成是一个 Degree 为 1 的多项式的系数，通过两者相乘，我们得到一个 Degree 为 2 的多项式：</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1 + b_1\cdot X) \cdot (a_2 + b_2\cdot X) = a_1a_2 + (a_1b_2 + a_2b_1)X + b_1b_2X^2
+\]</div>
+<p>然后我们再把结果多项式模掉一个 Degree 为 2 的不可约的多项式 <span class="math notranslate nohighlight">\(f(X)\)</span>，得到一个余数多项式，这个余数多项式的系数即是 <span class="math notranslate nohighlight">\((c, d)\)</span>。那么我们定义新的 Tuple 乘法如下：</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1 + b_1\cdot X) \cdot (a_2 + b_2\cdot X) = c + d\cdot X \mod f(X)
+\]</div>
+<p>并且定义 <span class="math notranslate nohighlight">\((1, 0)\)</span> 为乘法单位元。这里我们强调 <span class="math notranslate nohighlight">\(f(X)\)</span> 必须是一个不可约多项式。那么假如 <span class="math notranslate nohighlight">\(f(X)\)</span> 是一个可约多项式，会有什么后果？比如 <span class="math notranslate nohighlight">\(f(X)=(u_1+u_2X)(v_1+v_2X)\)</span>，那么 <span class="math notranslate nohighlight">\((u_1, u_2)\)</span> 和 <span class="math notranslate nohighlight">\((v_1, v_2)\)</span> 这两个非零元素的乘积等于 <span class="math notranslate nohighlight">\((0, 0)\)</span>，跳出了乘法群。严格的说，Zero Divisor 的出现破坏了乘法群的结构，从而无法构成一个「域」。</p>
+<p>接下来的问题是，是否存在一个不可约的 Degree 为 2 的多项式 <span class="math notranslate nohighlight">\(f(X)\)</span>。如果不存在 <span class="math notranslate nohighlight">\(f(X)\)</span> ，那么构造一个 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> 的域也就无从谈起。对于素数域 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>，任取 <span class="math notranslate nohighlight">\(w\in\mathbb{F}_p\)</span>，它不是任何元素的平方，数论中它属于非二次剩余类，即 <span class="math notranslate nohighlight">\(w\in QNR(p)\)</span> 。如果 <span class="math notranslate nohighlight">\(w\)</span> 存在，那么 <span class="math notranslate nohighlight">\(f(X)=X^2-w\)</span> 就是一个不可约多项式。进一步，<span class="math notranslate nohighlight">\(w\)</span> 的存在性如何保证？如果 <span class="math notranslate nohighlight">\(p\)</span> 是一个奇数，那么 <span class="math notranslate nohighlight">\(w\)</span> 必然存在。如果 <span class="math notranslate nohighlight">\(p=2\)</span>，虽然 <span class="math notranslate nohighlight">\(w\)</span> 不存在，但我们可以指定 <span class="math notranslate nohighlight">\(f(X)=X^2+X+1\in\mathbb{F}_2[X]\)</span> 作为一个不可约多项式。</p>
+<p>我们现在把 <span class="math notranslate nohighlight">\(\mathbb{F}_{p}^2\)</span> 这个 Tuple 构成的集合，连同定义的加法和乘法运算，构成的域记为 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> ，元素个数为 <span class="math notranslate nohighlight">\(p^2\)</span>。根据有限域理论，我们可以把二元 Tuple 扩大到 <span class="math notranslate nohighlight">\(n\)</span> 元 Tuple，从而可以构成更大的有限域 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>。</p>
+<p>对于某个 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> 上的不可约多项式 <span class="math notranslate nohighlight">\(f(X) = c_0 + c_1X + X^2\)</span> ，它在 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> 中一定可以被分解。<span class="math notranslate nohighlight">\(f(X) = (X-\alpha)(X-\alpha')\)</span> ，其中 <span class="math notranslate nohighlight">\(\alpha\)</span> 和 <span class="math notranslate nohighlight">\(\alpha'\)</span> 互为共轭（Conjugate），并且它们都属于  <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span>，但不属于 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> 。按照扩张域的定义，<span class="math notranslate nohighlight">\(\mathbb{F}_p(\alpha)\)</span> 是一个 Degree 为 2 的代数扩张，它与前面我们通过不可约多项式的模乘构造的有限域同构。因此，我们也可以用 <span class="math notranslate nohighlight">\(a_1 + a_2\cdot\alpha\)</span> 来表示 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> 中的任意一个元素。或者进一步，我们可以把 <span class="math notranslate nohighlight">\((1, \alpha)\)</span> 看成是 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> 向量空间的一组 Basis，任意一个 <span class="math notranslate nohighlight">\(a\in \mathbb{F}_{p^2}\)</span> ，都可以表示为 Basis 的线性组合：</p>
+<div class="math notranslate nohighlight">
+\[
+a = a_0 \cdot 1 + a_1 \cdot \alpha, \quad a_0, a_1\in\mathbb{F}_p
+\]</div>
+<p>这样一来，我们就可以用符号 <span class="math notranslate nohighlight">\(a_0 + a_1\cdot \alpha\)</span> 来表示 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> 中的元素，而非 <span class="math notranslate nohighlight">\(a_0 + a_1\cdot X\)</span> 这样的多项式表示。元素的「多项式表示」并没有指定我们到底采用了哪个不可约多项式来构造的扩张域，而采用 <span class="math notranslate nohighlight">\(\alpha\)</span> 这个不不可约多项式的根作为构建扩张域的方式，则不存在二义性。</p>
+<p>把这个概念推广到 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>，对于任意一个元素 <span class="math notranslate nohighlight">\(a\in\mathbb{F}_{p^n}\)</span>，都可以表示为：</p>
+<div class="math notranslate nohighlight">
+\[
+a = a_0 + a_1\cdot\alpha + a_2\cdot\alpha^2 + \cdots + a_{n-1}\cdot\alpha^{n-1}
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\alpha\)</span> 是 <span class="math notranslate nohighlight">\(n\)</span> 次不可约多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 的根。因此 <span class="math notranslate nohighlight">\((1, \alpha, \alpha^2, \cdots, \alpha^{n-1})\)</span> 可以看成是 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span> 的一组 Basis，这个 Basis 被称为有限域的 Polynomial Basis。注意 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span> 作为一个 <span class="math notranslate nohighlight">\(n\)</span> 维的向量空间，它有很多很多个不同的 Basis。后续我们将看到 Basis 选择是一个非常重要的步骤，恰当的 Basis 可以大大优化或简化一些表示或运算。</p>
+<blockquote>
+<div><p>TODO: Fp* 乘法循环群</p>
+</div></blockquote>
+</section>
+<section id="binary-field">
+<h2>Binary Field<a class="headerlink" href="#binary-field" title="Link to this heading">#</a></h2>
+<p>对于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^n}\)</span> ，我们称之为二进制域，因为它的元素都可以表达为由 <span class="math notranslate nohighlight">\(0\)</span> 和 <span class="math notranslate nohighlight">\(1\)</span> 组成的长度为 <span class="math notranslate nohighlight">\(n\)</span> 的向量。构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^n}\)</span> 可以通过两类方法构造，一种是通过 <span class="math notranslate nohighlight">\(n\)</span> 次的不可约多项式；另一种是反复使用二次扩张的方法，被称为 Extension Tower。域扩张的路径非常多，对于 <span class="math notranslate nohighlight">\(2^n\)</span> ，它有多个 2 因子，因此存在多种介于两种方法之间的构造方式，比如对于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^8}\)</span>，可以先构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>，再通过二次扩张得到 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^8}\)</span>，也可以先构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>，再通过四次不可约多项式进行扩张，构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^8}\)</span>。</p>
+<p>我们先热身下，利用二次扩张的方法构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>。前面我们讨论过 <span class="math notranslate nohighlight">\(f(X)=X^2+X+1\)</span> 是一个 <span class="math notranslate nohighlight">\(\mathbb{F}_2[X]\)</span> 的不可约多项式，假设 <span class="math notranslate nohighlight">\(\eta\)</span> 是 <span class="math notranslate nohighlight">\(f(X)\)</span> 的一个根，那么 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 可以表示为 <span class="math notranslate nohighlight">\(a_0 + b_0\cdot\eta\)</span>。考虑到 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 只有四个元素，可以列在下面</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^2} = \{0, 1, \eta, \eta+1\}
+\]</div>
+<p>并且 <span class="math notranslate nohighlight">\(\eta\)</span> 作为生成元可以产生乘法群 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}^*=\langle \eta \rangle\)</span>，它的 Order 为 3:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\eta^0 &amp;= 1 \\
+\eta^1 &amp;= \eta \\
+\eta^2 &amp;= \eta+1 \\
+\end{split}
+\end{split}\]</div>
+<p>我们演示下 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 的两种构造方式。第一种是直接采用一个 4 次 <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span> 上的不可约多项式。其实总共有 3 个不同的 4 次不可约多项式，因此总共有 3 种不同的构造方式。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f_1(X) &amp;= X^4 + X + 1 \\
+f_2(X) &amp;= X^4 + X^3 + 1 \\
+f_3(X) &amp;= X^4 + X^3 + X^2 + X + 1 \\
+\end{split}
+\end{split}\]</div>
+<p>因为只需要选择一个不可约多项式即可，那我们就选择 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 来定义 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^4} = \mathbb{F}_2[X]/\langle f_1(X)\rangle 
+\]</div>
+<p>我们把 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 在 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 上的根记为 <span class="math notranslate nohighlight">\(\theta\)</span>，那么 <span class="math notranslate nohighlight">\(a\in\mathbb{F}_{2^4}\)</span> 元素可以唯一地表示为：</p>
+<div class="math notranslate nohighlight">
+\[
+a = a_0 + a_1\cdot\theta + a_2\cdot\theta^2 + \cdots + a_{n-1}\cdot\theta^{n-1}
+\]</div>
+<p>这里补充一下，<span class="math notranslate nohighlight">\(f_1(X)\)</span> 同时还是一个 Primitive 多项式，它的根 <span class="math notranslate nohighlight">\(\theta\)</span> 同时也是 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 的一个 Primitive Element。注意并不是所有的不可约多项式都是 Primitive 多项式，例如上面列出的 <span class="math notranslate nohighlight">\(f_3(X)\)</span> 就不是一个 Primitive 多项式。</p>
+<p>下面我们可以列出 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的所有元素，每一个元素对应一个 4bit 的二进制向量：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{ccccccc}
+0000 &amp; 0001 &amp; 0010 &amp; 0011 &amp; 0100 &amp; 0101 &amp; 0110 &amp; 0111 \\
+0 &amp; 1 &amp; \theta &amp; \theta+1 &amp; \theta^2 &amp; \theta^2+1 &amp; \theta^2+\theta &amp; \theta^2+\theta+1 \\
+\hline
+1000 &amp; 1001 &amp; 1010 &amp; 1011 &amp; 1100 &amp; 1101 &amp; 1110 &amp; 1111 \\
+\theta^3 &amp; \theta^3+1 &amp; \theta^3+\theta &amp; \theta^3+\theta+1 &amp; \theta^3+\theta^2 &amp; \theta^3+\theta^2+1 &amp; \theta^3+\theta^2+\theta &amp; \theta^3+\theta^2+\theta+1 \\
+\end{array}
+\end{split}\]</div>
+<p>对于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中两个元素的加法，我们只需要把它们的二进制表示按位相加即可，例如：</p>
+<div class="math notranslate nohighlight">
+\[
+(0101) + (1111) = (1010)
+\]</div>
+<p>这个运算实际上就是 XOR 按位异或运算。而对于乘法，比如 <span class="math notranslate nohighlight">\(a\cdot\theta\)</span>，则对应于二进制上的移位运算：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(0101) &lt;&lt; 1 &amp;= (1010)\\
+(\theta^2 + 1)\cdot\theta &amp;= \theta^3 + \theta \\
+\end{split}
+\end{split}\]</div>
+<p>如果继续乘以 <span class="math notranslate nohighlight">\(\theta\)</span>，就会出现移位溢出的情况，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(\theta^3 + \theta)\cdot\theta &amp;= {\color{blue}\theta^4} + \theta^2 = \theta^2 + \theta + 1 \\
+(1010) &lt;&lt; 1  &amp;= (0100) + (0011) = (0111)\\
+\end{split}
+\end{split}\]</div>
+<p>对于溢出位，则需要补加上 <span class="math notranslate nohighlight">\(0011\)</span>，这是由不可约多项式 <span class="math notranslate nohighlight">\(f_1(X)\)</span> 的定义决定的， <span class="math notranslate nohighlight">\(\theta^4=\theta+1\)</span>。所以一旦高位的 bit 移位溢出，就需要做一个与 <span class="math notranslate nohighlight">\(0011\)</span> 的 XOR 运算。由此，我们看到 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 的乘法运算规则实际上取决于不可约多项式的选择。所以说，如何选择合适的不可约多项式也是二进制域乘法优化的关键步骤。</p>
+</section>
+<section id="field-embedding">
+<h2>Field Embedding<a class="headerlink" href="#field-embedding" title="Link to this heading">#</a></h2>
+<p>如果我们要基于二进制域的构造 SNARK 证明系统，我们会将较小的数字用小位数来表示，但是不管怎么样，在协议的挑战轮，Verifier 都要给出一个在较大的扩张域中的随机数，以期望达到足够的密码学安全强度。这就需要我们在小域中用多项式编码 witness 信息，但在一个较大的域中对这些多项式进行取值运算。那么，我们需要找到一种办法把小域 <span class="math notranslate nohighlight">\(K\)</span> 「嵌入」到大域 <span class="math notranslate nohighlight">\(L\)</span> 中。</p>
+<p>所谓的嵌入（Embedding），指的是把一个域 <span class="math notranslate nohighlight">\(K\)</span> 中的元素映射到另一个域 <span class="math notranslate nohighlight">\(L\)</span> 中，记为 <span class="math notranslate nohighlight">\(\phi: K\to L\)</span>。这个映射是 Injective 的，并且这个同态映射保持了加法和乘法运算的结构：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\phi(a+b) &amp;= \phi(a) + \phi(b) \\
+\phi(a\cdot b) &amp;= \phi(a)\cdot\phi(b)
+\end{split}
+\end{split}\]</div>
+<p>即如果 <span class="math notranslate nohighlight">\(a\in K\)</span>，那么 <span class="math notranslate nohighlight">\(a\)</span> 在 <span class="math notranslate nohighlight">\(L\)</span> 中也有唯一的表示。为了保持乘法运算的结构，那么其实我们只要能找到一个 K 中的 Primitive Element <span class="math notranslate nohighlight">\(\alpha\)</span> 对应到 <span class="math notranslate nohighlight">\(L\)</span> 中的某个元素 <span class="math notranslate nohighlight">\(\beta\)</span>，那么这个同态映射就唯一确定了，因为 <span class="math notranslate nohighlight">\(K\)</span> 中的任意一个元素都可以表示为 <span class="math notranslate nohighlight">\(\alpha\)</span> 的幂次。不过，通常这个嵌入的同态映射并不是一个轻而易举可以找到。我们以 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\subset\mathbb{F}_{2^4}\)</span> 为例，看看如何找到前者嵌入到后者的映射。</p>
+<p>因为 <span class="math notranslate nohighlight">\(\eta\)</span> 是 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 中的一个 Primitive Element，所以我们只要考虑 <span class="math notranslate nohighlight">\(\eta\)</span> 在 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的表示即可。</p>
+<p>我们先看看 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的 Primitive Element <span class="math notranslate nohighlight">\(\theta\)</span> ，是否 <span class="math notranslate nohighlight">\(\eta\mapsto\theta\)</span> 是一个嵌入映射？</p>
+<div class="math notranslate nohighlight">
+\[
+\eta^2 = \eta+1 \quad \text{but} \quad \theta^2 \neq \theta+1
+\]</div>
+<p>很显然，<span class="math notranslate nohighlight">\(\eta^2 \neq \theta^2\)</span>，所以 <span class="math notranslate nohighlight">\(\eta\mapsto\theta\)</span> 不是一个嵌入映射。联想到不可约多项式决定了元素间乘法的关系，而因为 <span class="math notranslate nohighlight">\(\eta\)</span> 是 <span class="math notranslate nohighlight">\(X^2+X+1\)</span> 的根，而 <span class="math notranslate nohighlight">\(\theta\)</span> 是 <span class="math notranslate nohighlight">\(X^4+X+1\)</span> 的根，所以 <span class="math notranslate nohighlight">\(\eta\)</span> 和 <span class="math notranslate nohighlight">\(\theta\)</span> 的乘法关系肯定不一样。在 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中，也存在 <span class="math notranslate nohighlight">\(X^2+X+1\)</span> 的两个根，分别为 <span class="math notranslate nohighlight">\(\theta^2+\theta\)</span> 和 <span class="math notranslate nohighlight">\(\theta^2+\theta+1\)</span>，读者可以验证下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[
+(\theta^2+\theta)^2 + (\theta^2+\theta) + 1 = \theta^4 + \theta^2 + \theta^2 + \theta + 1 = 0
+\]</div>
+<p>那么，我们就定义嵌入映射：</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{split}
+\phi &amp;: \mathbb{F}_{2^2} \to \mathbb{F}_{2^4},\quad \eta \mapsto \theta^2+\theta
+\end{split}
+\]</div>
+<p>这就意味着二进制 <span class="math notranslate nohighlight">\((10)\)</span> 对应于 <span class="math notranslate nohighlight">\(L=\mathbb{F}_{2^4}\)</span> 中的 <span class="math notranslate nohighlight">\((0110)\)</span> ；而二进制 <span class="math notranslate nohighlight">\((11)\)</span> （也就是 <span class="math notranslate nohighlight">\(\eta+1\)</span>）对应于 <span class="math notranslate nohighlight">\(L\)</span> 中的 <span class="math notranslate nohighlight">\((\theta^2+\theta+1)\)</span>，即 <span class="math notranslate nohighlight">\((0111)\)</span> 。这里要注意，我们也可以用 <span class="math notranslate nohighlight">\(\phi': \eta \mapsto \theta^2+\theta+1\)</span> 作为另一个不同的嵌入映射，其内在原理是 <span class="math notranslate nohighlight">\(\theta^2+\theta\)</span> 和 <span class="math notranslate nohighlight">\(\theta^2+\theta+1\)</span> 互为共轭，它们是完美对称的，因此这两种映射都可以作为嵌入映射，除了映射到不同元素上，从整体结构上并且没有明显区别。</p>
+<p>而对于任意的 <span class="math notranslate nohighlight">\([L:K]=n\)</span> 而言，我们将 <span class="math notranslate nohighlight">\(K\)</span> 嵌入到 <span class="math notranslate nohighlight">\(L\)</span>，一个直接的方法就是找 <span class="math notranslate nohighlight">\(f(X)\)</span> <span class="math notranslate nohighlight">\(L\)</span> 中 的根，当然这个计算并不简单。并且嵌入和反嵌入都需要额外的计算，这无疑增加了系统的复杂性。</p>
+<p>而 Binius 论文提到的采用递归式 Extension Tower 的构造方法，通过选取合适的不可约多项式和 Basis，我们就可以得到非常直接（称为 Zero-cost）的嵌入和反嵌入映射。</p>
+</section>
+<section id="extension-tower">
+<h2>Extension Tower<a class="headerlink" href="#extension-tower" title="Link to this heading">#</a></h2>
+<p>我们可以通过两次的二次扩张来构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>，首先我们选择一个二次不可约多项式 <span class="math notranslate nohighlight">\(f(X)=X^2+X+1\)</span>，那么我们可以构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>，然后基于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 再找到一个二次不可约多项式，从而构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>。</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^2} = \mathbb{F}_2[X]/\langle X^2+X+1 \rangle \cong\mathbb{F}_2(\eta)
+\]</div>
+<p>接下我们要找到 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}[X]\)</span> 中的一个二次不可约多项式。首先注意，<span class="math notranslate nohighlight">\(X^2+X+1\)</span> 已经不能使用，根据 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 的定义，它已经可以被分解。再考虑下 <span class="math notranslate nohighlight">\(X^2+1\)</span>，它也可以被分解 <span class="math notranslate nohighlight">\((X+1)(X+1)\)</span>， 事实上所有的 <span class="math notranslate nohighlight">\(\mathbb{F}_2[X]\)</span> 的二次多项式都可以被分解。而一个<span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}[X]\)</span> 中的二次不可约多项式，其系数中必然包含一个带有新元素 <span class="math notranslate nohighlight">\(\eta\)</span> 的项。</p>
+<p>比如 <span class="math notranslate nohighlight">\(X^2+X+\eta\)</span> 就是一个 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 上的二次不可约多项式。那么我们可以构造 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^4} = \mathbb{F}_{2^2}[X]/\langle X^2+X+\eta \rangle 
+\]</div>
+<p>我们把 <span class="math notranslate nohighlight">\(X^2+X+\eta\)</span> 在 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的根记为 <span class="math notranslate nohighlight">\(\zeta\)</span>，那么 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 可以表示为：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^4} \cong \mathbb{F}_{2^2}(\zeta)  \cong \mathbb{F}_2(\eta)(\zeta) \cong \mathbb{F}_2(\eta, \zeta)
+\]</div>
+<img src="img/image-2.png" align=center width="40%">
+<p>那么 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 的全部元素可以用 <span class="math notranslate nohighlight">\(\eta, \zeta\)</span> 来表示：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{ccccccc}
+\hline
+0000 &amp; 0001 &amp; 0010 &amp; 0011 &amp; 0100 &amp; 0101 &amp; 0110 &amp; 0111 \\
+0 &amp; 1 &amp; \eta &amp; \eta+1 &amp; \zeta &amp; \zeta+\eta &amp; \zeta+\eta+1 &amp; \zeta+\eta+1 \\
+\hline
+1000 &amp; 1001 &amp; 1010 &amp; 1011 &amp; 1100 &amp; 1101 &amp; 1110 &amp; 1111 \\
+\zeta\eta &amp; \zeta\eta + 1 &amp; \zeta\eta + \eta &amp; \zeta\eta + \eta + 1 &amp; \zeta\eta + \zeta &amp; \zeta\eta + \zeta +1 &amp; \zeta\eta+\zeta+\eta &amp; \zeta\eta+\zeta+\eta+1 \\
+\hline
+\end{array}
+\end{split}\]</div>
+<p>这时，4bit 二进制中的每一个 bit 都对应于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的一个元素，<span class="math notranslate nohighlight">\((1000)\)</span> 对应 <span class="math notranslate nohighlight">\(\zeta\eta\)</span>，<span class="math notranslate nohighlight">\((0100)\)</span> 对应 <span class="math notranslate nohighlight">\(\zeta\)</span>，<span class="math notranslate nohighlight">\((0010)\)</span> 对应 <span class="math notranslate nohighlight">\(\eta\)</span>，<span class="math notranslate nohighlight">\((0001)\)</span> 对应 <span class="math notranslate nohighlight">\(1\)</span>。因此我们可以用下面的 Basis 来表示 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的所有元素：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B} = (1,\ \eta,\ \zeta,\ \eta\zeta)
+\]</div>
+<p>这时候，<span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 的二进制表示直接对应于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 二进制表示的「低两位」，例如：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(1010) &amp;= (10) || (10) = \zeta\eta + \eta \\
+\end{split}
+\end{split}\]</div>
+<p>因此，我们可以直接在 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 的二进制表示的高两位补零，即可以得到 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 的对应元素。反之，只要把高位两个零去除，一个 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 中的元素直接映射回 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 中的元素。</p>
+<img src="img/image-1.png" width="40%">
+<p>如上图所示，<span class="math notranslate nohighlight">\((1011)\)</span> 是 <span class="math notranslate nohighlight">\(\zeta\eta+\eta+1\)</span> 的二进制表示，它的低两位 <span class="math notranslate nohighlight">\((11)\)</span> 直接对应于 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> 中的 <span class="math notranslate nohighlight">\((\eta+1)\)</span> 。这种嵌入是一种「自然嵌入」，因此 Binus 论文称之为 Zero-cost Embedding。</p>
+<p>不过 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> 还是一个很小的域，不够用，如果继续往上进行二次扩张，怎么能找到合适的不可约多项式呢？方案并不唯一，我们先看看 Binius 论文 [DP23] 中给出的一个方案 —— Wiedemann Tower [Wie88]。</p>
+</section>
+<section id="wiedemann-tower">
+<h2>Wiedemann Tower<a class="headerlink" href="#wiedemann-tower" title="Link to this heading">#</a></h2>
+<p>Wiedemann Tower 是一个基于 <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span> 的递归扩张塔。最底部的 Base Field 记为 <span class="math notranslate nohighlight">\(\mathcal{T}_0\)</span>，其元素仅为 <span class="math notranslate nohighlight">\(0\)</span> 和 <span class="math notranslate nohighlight">\(1\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_0 = \mathbb{F}_2 \cong \{0,1\}
+\]</div>
+<p>然后我们引入一个未知数 <span class="math notranslate nohighlight">\(X_0\)</span>，构造一个一元多项式环 <span class="math notranslate nohighlight">\(\mathbb{F}_2[X_0]\)</span> 。如前所讨论，<span class="math notranslate nohighlight">\(X^2 + X + 1\)</span> 是一个 <span class="math notranslate nohighlight">\(\mathcal{T}_0\)</span> 上的不可约多项式，因此，我们可以用它来构造 <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span>。</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_1 = \mathbb{F}_2[X_0]/\langle  X_0^2+X_0+1 \rangle = \{0, 1, X_0, X_0+1\} \cong \mathbb{F}_{2^2} \cong \mathbb{F}_2(\alpha_0)
+\]</div>
+<p>接下来，我们找到一个 <span class="math notranslate nohighlight">\(\mathcal{T}_1[X_1]\)</span> 中的二次不可约多项式 <span class="math notranslate nohighlight">\(X_1^2+\alpha_0\cdot X_1+1\)</span>，那么我们可以构造 <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_2 = \mathcal{T}_1[X_1]/\langle  X_1^2+ \alpha_0\cdot X_1+1\rangle \cong \mathbb{F}_{2^4} \cong \mathbb{F}_2(\alpha_0, \alpha_1)
+\]</div>
+<p>依次类推，我们可以构造出 <span class="math notranslate nohighlight">\(\mathcal{T}_3, \mathcal{T}_4, \cdots, \mathcal{T}_n\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_{i+1} = \mathcal{T}_i[X_i]/\langle  X_i^2+\alpha_{i-1}\cdot X_i+1\rangle \cong \mathbb{F}_{2^{2^i}} \cong \mathbb{F}_2(\alpha_0, \alpha_1, \ldots, \alpha_i),\quad i\geq 1
+\]</div>
+<p>这里，<span class="math notranslate nohighlight">\(\alpha_0, \alpha_1, \ldots, \alpha_{n-1}\)</span> 是依次引入的二次不可约多项式的根，使得：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_{n} = \mathbb{F}_2(\alpha_0, \alpha_1, \ldots, \alpha_{n-1})
+\]</div>
+<p>而 <span class="math notranslate nohighlight">\(|\mathcal{T}_{n}| = 2^{2^{n}}\)</span>。这些引入的根之间的关系满足下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{i+1} + \alpha^{-1}_{i+1} = \alpha_i
+\]</div>
+<p>不难检验，<span class="math notranslate nohighlight">\(\alpha_0+\alpha^{-1}_0=1\)</span>。并且多元多项式环 <span class="math notranslate nohighlight">\(\mathcal{T}_0[X_0, X_1, \ldots, X_n]\)</span> 中的多项式 <span class="math notranslate nohighlight">\(X_i^2+X_{i-1}X_i+1\)</span> 的两个根为 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 和 <span class="math notranslate nohighlight">\(\alpha^{-1}_i\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[
+(\alpha^{-1}_i)^2 + \alpha_{i-1}\alpha^{-1}_i + 1 = \alpha^{-1}_i + \alpha_{i-1} + \alpha_i = \alpha_{i-1} + \alpha_{i-1} = 0
+\]</div>
+<p>并且，<span class="math notranslate nohighlight">\(\alpha_i\)</span> 和 <span class="math notranslate nohighlight">\(\alpha_{i+1}\)</span> 满足下面的递推关系：</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{i+1} + \alpha^{-1}_{i+1} = \alpha_i
+\]</div>
+<p>这是因为等式两边都乘以 <span class="math notranslate nohighlight">\(\alpha_{i+1}\)</span> 就会得到：<span class="math notranslate nohighlight">\(\alpha_{i+1}^2 + \alpha_i\alpha_{i+1} + 1 = 0\)</span> ，这正是我们递归构造二次扩张的不可约多项式。</p>
+<section id="multilinear-basis">
+<h3>Multilinear Basis<a class="headerlink" href="#multilinear-basis" title="Link to this heading">#</a></h3>
+<p>对于 <span class="math notranslate nohighlight">\(\mathcal{T}_{i+1}\)</span> over <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span>，构成了一个关于 <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span> 的 <span class="math notranslate nohighlight">\(n+1\)</span> 维向量空间。我们可以使用 这些不可约多项式的根来构造 Multilinear Basis：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathcal{B}_{i+1} &amp;= (1, \alpha_0)\otimes (1, \alpha_1) \otimes \cdots \otimes (1,\alpha_i)  \\
+&amp; = (1, \alpha_0, \alpha_1, \alpha_0\alpha_1, \alpha_2,\ \ldots,\ \alpha_0\alpha_1\cdots \alpha_i)
+\end{split}
+\end{split}\]</div>
+<p>这与我们前面讨论过的，使用 <span class="math notranslate nohighlight">\((1, \eta, \zeta, \zeta\eta)\)</span> 作为 <span class="math notranslate nohighlight">\(\mathbb{F}_{2}(\eta, \zeta)\)</span> 的 Basis 是一致的。我们可以快速地验证下，首先 <span class="math notranslate nohighlight">\((1, \alpha_0)\)</span> 是 <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span> 的 Basis，因为 <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span> 的每一个元素都可以表示为</p>
+<div class="math notranslate nohighlight">
+\[
+a_0 + b_0\cdot \alpha_0,  \quad a_0, b_0\in\mathcal{T}_0
+\]</div>
+<p>当 <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span> 通过 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 扩张到 <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span> 后，<span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span> 的元素都可以表示为：</p>
+<div class="math notranslate nohighlight">
+\[
+a_1 + b_1\cdot \alpha_1,  \quad a_1, b_1\in\mathcal{T}_1
+\]</div>
+<p>代入 <span class="math notranslate nohighlight">\(a_1=a_0+b_0\cdot \alpha_0\)</span>，<span class="math notranslate nohighlight">\(b_1=a_0'+b_0'\cdot \alpha_1\)</span>，于是有：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a_1 + b_1\cdot \alpha_1 &amp;= (a_0+b_0\cdot \alpha_0) + (a'_0+b'_0\cdot \alpha_0)\cdot \alpha_1 \\
+ &amp;= a_0 + b_0\alpha_0 + a'_0\cdot\alpha_1+ b_0'\cdot \alpha_0\alpha_1
+\end{split}
+\end{split}\]</div>
+<p>于是，<span class="math notranslate nohighlight">\((1, \alpha_0, \alpha_1, \alpha_0\alpha_1)\)</span> 就构成了 <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span> 的 Basis。依次类推，<span class="math notranslate nohighlight">\((1, \alpha_0, \alpha_1, \alpha_0\alpha_1, \alpha_2, \alpha_0\alpha_2, \alpha_1\alpha_2, \alpha_0\alpha_1\alpha_2)\)</span> 是 <span class="math notranslate nohighlight">\(\mathcal{T}_3\)</span> 的 Basis。最后，<span class="math notranslate nohighlight">\(\mathcal{B}_{n}\)</span> 正是 <span class="math notranslate nohighlight">\(\mathcal{T}_{n}\)</span> 的 Basis。</p>
+</section>
+<section id="primitive-element">
+<h3>寻找 Primitive element<a class="headerlink" href="#primitive-element" title="Link to this heading">#</a></h3>
+<p>前面我们讨论过 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 和 <span class="math notranslate nohighlight">\(\alpha^{-1}_{i}\)</span> 互为共轭根，由 Galois 理论，</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{i}^{2^{2^n}} = \alpha^{-1}_{i} 
+\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 都满足下面的性质：</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_i^{F_i} = 1
+\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(F_n\)</span> 代表费马数（Fermat Number），<span class="math notranslate nohighlight">\(F_n=2^{2^n}+1\)</span>。一个著名的定理是 <span class="math notranslate nohighlight">\(\mathsf{gcd}(F_i, F_j) = 1,  i\neq j\)</span>，即任意的两个不同的费马数互质，因此</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{ord}(\alpha_0\alpha_1\cdots \alpha_i) = \mathsf{ord}(\alpha_0)\mathsf{ord}(\alpha_1)\cdots\mathsf{ord}(\alpha_i) 
+\]</div>
+<p>因此，如果费马数 <span class="math notranslate nohighlight">\(F_i\)</span> 为素数，那么很显然 <span class="math notranslate nohighlight">\(\mathsf{ord}(\alpha_i)=F_i\)</span>。目前我们已知 <span class="math notranslate nohighlight">\(i\leq 4\)</span> 的情况下， <span class="math notranslate nohighlight">\(F_i\)</span> 都是素数，那么</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{ord}(\alpha_0\cdot \alpha_1\cdot \cdots \cdot \alpha_i) &amp;= \mathsf{ord}(\alpha_0)\cdot \mathsf{ord}(\alpha_1)\cdot \cdots \cdot \mathsf{ord}(\alpha_n) \\
+&amp; = F_0\cdot F_1\cdot \cdots \cdot F_i = 2^{2^{i+1}} - 1 \\
+&amp; = |\mathcal{T}_{n+1}| -1
+\end{split}
+\end{split}\]</div>
+<p>如果 <span class="math notranslate nohighlight">\(\alpha_0\cdots \alpha_i, i\leq 4\)</span>，那么根据有限域的性质，它是 <span class="math notranslate nohighlight">\(\mathcal{T}_{n+1}\)</span> 的一个 Primitive Element。</p>
+<p>另外，通过计算机程序检查验证，对于 <span class="math notranslate nohighlight">\(5\leq i \leq 8\)</span> 的情况，<span class="math notranslate nohighlight">\(\alpha_i\)</span> 的 Order 仍然等于 <span class="math notranslate nohighlight">\(F_i\)</span>。这个 <span class="math notranslate nohighlight">\(\alpha_0\cdots \alpha_8\)</span> 是有限域 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^{512}}\)</span>的大小已经能满足类似 Binius 证明系统的需求。但在数学上，是否所有的 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 都满足这个性质？这个似乎还是个未解问题 [Wie88]。</p>
+</section>
+</section>
+<section id="id1">
+<h2>乘法优化<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>采用 Extension Tower 的另一个显著的优点是乘法运算的优化。</p>
+<p>第一种优化是 “Small-by-large Multiplication”，即 <span class="math notranslate nohighlight">\(a\in\mathcal{T}_\iota\)</span> 与 <span class="math notranslate nohighlight">\(b\in\mathcal{T}_{\iota+\kappa}\)</span> 两个数的乘法运算。因为 <span class="math notranslate nohighlight">\(b\)</span> 可以分解为 <span class="math notranslate nohighlight">\(2^\kappa\)</span> 个 <span class="math notranslate nohighlight">\(\mathcal{T}_\iota\)</span> 元素，因此这个乘法运算等价于 <span class="math notranslate nohighlight">\(2^\kappa\)</span> 次 <span class="math notranslate nohighlight">\(\mathcal{T}_\iota\)</span> 上的乘法运算。</p>
+<div class="math notranslate nohighlight">
+\[
+a \cdot (b_0, b_1, \cdots, b_{2^\kappa-1}) = (a\cdot b_0, a\cdot b_1, \cdots, a\cdot b_{\kappa-1})
+\]</div>
+<p>即使对于同一个域上的两个元素的乘法，也同样有优化手段。假设 <span class="math notranslate nohighlight">\(a, b\in\mathcal{T}_{i+1}\)</span>，那么根据 Tower 构造的定义，可以分别表示为 <span class="math notranslate nohighlight">\(a_0 + a_1\cdot\alpha_i\)</span> 与 <span class="math notranslate nohighlight">\(b_0 + b_1\cdot \alpha_i\)</span> ，那么它们的乘法可以推导如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a\cdot b  &amp; = (a_0 + a_1\cdot\alpha_i)\cdot (b_0 + b_1\cdot\alpha_i) \\
+ &amp;= a_0b_0 + (a_0b_1+a_1b_0)\cdot\alpha_i + a_1b_1\cdot\alpha_i^2 \\
+&amp; = a_0b_0 + (a_0b_1+a_1b_0)\cdot\alpha_i + a_1b_1\cdot(\alpha_{i-1}\alpha_i+1) \\
+&amp; = a_0b_0  + a_1b_1 + (a_0b_1 + a_1b_0 + a_1b_1\cdot\alpha_{i-1})\cdot\alpha_i \\
+&amp; = a_0b_0  + a_1b_1 + \big((a_0+a_1)(b_0+b_1) - a_0b_0 - a_1b_1) + a_1b_1\cdot\alpha_{i-1}\big)\cdot\alpha_i
+\end{split}
+\end{split}\]</div>
+<p>注意上面等式的右边，我们只需要计算三个 <span class="math notranslate nohighlight">\(\mathcal{T}_{i}\)</span> 上的乘法，分别为 <span class="math notranslate nohighlight">\(A=a_0b_0\)</span>， <span class="math notranslate nohighlight">\(B=(a_0+a_1)(b_0+b_1)\)</span> 与 <span class="math notranslate nohighlight">\(C=a_1b_1\)</span>，然后上面的公式可以转换为：</p>
+<div class="math notranslate nohighlight">
+\[
+a\cdot b = (A + C) + (B-A-C+C\cdot \alpha_{i-1})\cdot\alpha_i 
+\]</div>
+<p>其中还漏了一个 <span class="math notranslate nohighlight">\(C\cdot \alpha_{i-1}\)</span>，这是一个常数乘法，因为 <span class="math notranslate nohighlight">\(\alpha_{i-1}\in\mathcal{T}_{i}\)</span> 是一个常数。这个常数乘法可以被归约到一个 <span class="math notranslate nohighlight">\(\mathcal{T}_{i-1}\)</span> 上的常数乘法运算，如下所示：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+C\cdot \alpha_{i-1} &amp;= (c_0 + c_1\alpha_{i-1})\cdot \alpha_{i-1} \\
+&amp; = c_0\cdot \alpha_{i-1} + c_1\cdot \alpha_{i-1}^2 \\
+&amp; = c_0\cdot \alpha_{i-1} + c_1\cdot (\alpha_{i-2}\cdot \alpha_{i-1} + 1) \\
+&amp; = c_1 + (c_0 + {\color{blue}c_1\cdot \alpha_{i-2}})\cdot \alpha_{i-1}
+\end{split}
+\end{split}\]</div>
+<p>其中蓝色部分表达式，<span class="math notranslate nohighlight">\({\color{blue}c_1\cdot \alpha_{i-2}}\)</span> 为需要递归计算的 <span class="math notranslate nohighlight">\(\mathcal{T}_{i-2}\)</span> 上的常数乘法运算。全部递归过程只需要计算若干次加法即可完成。</p>
+<p>再回头看看 <span class="math notranslate nohighlight">\(a\cdot b\)</span> 的运算，我们也可以构造一个 Karatsuba 风格的递归算法，每一层递归只需要完成三次乘法运算，比不优化的四次乘法运算少一次。综合起来，优化效果会非常明显。</p>
+<p>进一步，<span class="math notranslate nohighlight">\(\mathcal{T}_{i}\)</span> 上的乘法逆运算也可以被大大优化 [FP97]。考虑 <span class="math notranslate nohighlight">\(a, b\in\mathcal{T}_{i+1}\)</span>，满足 <span class="math notranslate nohighlight">\(a\cdot b=1\)</span>，展开 <span class="math notranslate nohighlight">\(a\)</span> 和 <span class="math notranslate nohighlight">\(b\)</span> 的表达式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a\cdot b &amp;= (a_0 + a_1\cdot\alpha_i)\cdot (b_0 + b_1\cdot\alpha_i) \\
+&amp; = a_0b_0  + a_1b_1 + \big((a_0+a_1)(b_0+b_1) - a_0b_0 - a_1b_1) + a_1b_1\cdot\alpha_{i-1}\big)\cdot\alpha_i\\
+&amp;= 1\\
+\end{split}
+\end{split}\]</div>
+<p>我们可以计算得到 <span class="math notranslate nohighlight">\(b_0, b_1\)</span> 的表达式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+b_0 &amp;= \frac{a_0 + a_1\alpha_{i-1}}{a_0(a_0 + a_1\alpha_{i-1}) + a_1^2}  \\[2ex]
+b_1 &amp;= \frac{a_1}{a_0(a_0 + a_1\alpha_{i-1}) + a_1^2} \\
+\end{split}
+\end{split}\]</div>
+<p>所以，<span class="math notranslate nohighlight">\(b_0\)</span> 和 <span class="math notranslate nohighlight">\(b_1\)</span> 的计算包括：一次求逆运算，三次乘法，两次加法，一次常数乘法，还有一次平方运算。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+d_0 &amp;= \alpha_{i-1}a_1\\
+d_1 &amp;= a_0 + d_0 \\
+d_2 &amp;= a_0 \cdot d_1 \\
+d_3 &amp;= a_1^2   \\
+d_4 &amp;= d_2 + d_3 \\
+d_5 &amp;= 1/d_4 \\
+b_0 &amp; = d_1\cdot d_5\\
+b_1 &amp; = a_1 \cdot d_5\\
+\end{split}
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(d_5\)</span> 的求逆运算可以沿着 Extension Tower 逐层递归，递归过程中的主要运算开销为三次乘法运算。还有 <span class="math notranslate nohighlight">\(d_3\)</span> 的平方运算，它也可以递归地计算：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a_1^2 &amp;= (e_0 + e_1\cdot\alpha_{i-1})^2 \\
+&amp; = e_0^2 + e_1^2\cdot\alpha_{i-1}^2 \\
+&amp; = e_0^2 + e_1^2\cdot(\alpha_{i-2}\alpha_{i-1} + 1) \\
+&amp; = (e_0^2 + e_1^2) + (e_1^2\alpha_{i-2})\cdot\alpha_{i-1}  \\
+\end{split}
+\end{split}\]</div>
+<p>详细的递归效率分析可以参考 [FP97]。总体上，这个计算复杂度和 Karatsuba 算法复杂度相当，从而很大程度上降低了求逆的算法复杂度。</p>
+</section>
+<section id="artin-schreier-tower-conway-tower">
+<h2>Artin-Schreier Tower (Conway Tower)<a class="headerlink" href="#artin-schreier-tower-conway-tower" title="Link to this heading">#</a></h2>
+<p>还有一种构造 Binary Tower 的方法，源自 Amil Artin 与 Otto Schreier 发表在 1927 年的论文中，也出现在 Conway 的 「On Numbers and Games」一书中。关于这个历史溯源与相关理论，请参考 [CHS24]。</p>
+<p>对于任意的 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>，我们选择 <span class="math notranslate nohighlight">\(h(X_{i+1}) = X_{i+1}^p - X_{i+1} - \alpha_0\alpha_1\cdots \alpha_i\)</span> 作为每一层 Tower 的不可约多项式。而 <span class="math notranslate nohighlight">\(\alpha_{i+1}\)</span> 作为 <span class="math notranslate nohighlight">\(h(X_{i+1})=0\)</span> 在上一层 Tower 上的根。这样 我们可以得到一个 Extension Tower：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_2 \subset \mathbb{F}_{2^2}\cong\mathbb{F}_2(\alpha_0) \subset \mathbb{F}_{2^4}\cong\mathbb{F}_{2^2}(\alpha_1) \subset \mathbb{F}_{2^8}\cong\mathbb{F}_{2^4}(\alpha_2)
+\]</div>
+<p>而且 <span class="math notranslate nohighlight">\((1, \alpha_0)\otimes(1, \alpha_1)\otimes\cdots \otimes (1, \alpha_n)\)</span> 构成了 <span class="math notranslate nohighlight">\(\mathbb{F}_{2^{2^{i+1}}}\)</span> 向量空间的 Basis。依照我们前面的讨论，这组 Basis 也支持 Zero-cost 的子域嵌入。这类的 Multilinear Basis 也被称为 Cantor Basis [Can89]。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[Wie88] Wiedemann, Doug. “An iterated quadratic extension of GF (2).” Fibonacci Quart 26.4 (1988): 290-295.</p></li>
+<li><p>[DP23] Diamond, Benjamin E., and Jim Posen. “Succinct arguments over towers of binary fields.” Cryptology ePrint Archive (2023).</p></li>
+<li><p>[DP24] Diamond, Benjamin E., and Jim Posen. “Polylogarithmic Proofs for Multilinears over Binary Towers.” Cryptology ePrint Archive (2024).</p></li>
+<li><p>[LN97] Lidl, Rudolf, and Harald Niederreiter. Finite fields. No. 20. Cambridge university press, 1997.</p></li>
+<li><p>[FP97] Fan, John L., and Christof Paar. “On efficient inversion in tower fields of characteristic two.” Proceedings of IEEE International Symposium on Information Theory. IEEE, 1997.</p></li>
+<li><p>[CHS24] Cagliero, Leandro, Allen Herman, and Fernando Szechtman. “Artin-Schreier towers of finite fields.” arXiv preprint arXiv:2405.10159 (2024).</p></li>
+<li><p>[Can89] David G. Cantor. On arithmetical algorithms over finite fields. J. Comb. Theory Ser. A, 50(2):285–300, March 1989.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri-binius"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../fri/deepfold.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DeepFold 笔记：协议概览</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="binius-02.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notes on Binius (Part II): Subspace Polynomial</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-fields">Extension Fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-field">Binary Field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#field-embedding">Field Embedding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-tower">Extension Tower</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wiedemann-tower">Wiedemann Tower</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multilinear-basis">Multilinear Basis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primitive-element">寻找 Primitive element</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">乘法优化</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artin-schreier-tower-conway-tower">Artin-Schreier Tower (Conway Tower)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

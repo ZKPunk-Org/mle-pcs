@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gemini-PCS (Part I) &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gemini/Gemini-PCS-1';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fgemini/Gemini-PCS-1.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/gemini/Gemini-PCS-1.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gemini-PCS (Part I)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gemini-PCS (Part I)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-and-tensor-product">MLE and Tensor Product</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#split-and-fold-method">Split-and-Fold Method</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tensor-product-check-protocol">Tensor Product Check Protocol</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-to-univariate-conversion">Multivariate to Univariate Conversion</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-based-on-kzg">Implementation Based on KZG</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gemini-pcs-part-i">
+<h1>Gemini-PCS (Part I)<a class="headerlink" href="#gemini-pcs-part-i" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Tianyu ZHENG <a class="reference external" href="mailto:tian-yu&#46;zheng&#37;&#52;&#48;connect&#46;polyu&#46;hk">tian-yu<span>&#46;</span>zheng<span>&#64;</span>connect<span>&#46;</span>polyu<span>&#46;</span>hk</a></p></li>
+</ul>
+<p>Gemini [BCH+22] is an elastic SNARK, where “elastic” means that the prover can balance between proof time and memory by setting parameters to meet the requirements of different usage scenarios.</p>
+<p>As the core algorithm of Gemini, Tensor Product Check provides us with a method to prove the evaluation of multilinear polynomials, such as <span class="math notranslate nohighlight">\(\tilde{f}(\vec{\rho}) = u\)</span>. In other words, this method realizes the conversion from multivariate polynomials to univariate polynomials, thus inspiring us to construct a new multivariate polynomial commitment scheme.</p>
+<p>In terms of specific construction, Tensor Product Check adopts the split-and-fold idea similar to previous work (Sumcheck, Bulletproofs, FRI), achieving relatively efficient communication and verifier complexity, while its prover algorithm can achieve elastic properties.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="mle-and-tensor-product">
+<h1>MLE and Tensor Product<a class="headerlink" href="#mle-and-tensor-product" title="Link to this heading">#</a></h1>
+<p>In the Zeromorph notes, we mentioned that a Multilinear Extension uniquely corresponds to a function mapping from Boolean vectors to finite fields, in the form of <span class="math notranslate nohighlight">\(f: \{0,1\}^n \rightarrow \mathbb{F}_q\)</span>. The figure below is an example of a three-dimensional MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0,X_1,X_2)\)</span>, which can be uniquely represented by the “point-value vector” <span class="math notranslate nohighlight">\((a_0, a_1,...,a_7)\)</span>.</p>
+<img src="image/mle.png" align=center width="40%">
+<p>Similarly, an MLE polynomial can also be represented using a “coefficient form”. For example, the above figure can be written as</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,X_2) = f_0+f_1X_0+f_2X_1+f_3X_2+f_4X_0X_1+f_5X_0X_2 + f_6X_1X_2 + f_7X_0X_1X_2
+\]</div>
+<p>The ordering of monomials in this expression is based on Lexicographic Order.</p>
+<p>In addition to the “point-value form” and “coefficient form”, we will now introduce a new form of expression - the expression based on “tensor product”.</p>
+<p>Simply put, tensor product is a special “multiplication” between two vectors, denoted as <span class="math notranslate nohighlight">\(\vec{a} \otimes \vec{b}\)</span>. Specifically, we can first calculate <span class="math notranslate nohighlight">\(a b^T\)</span> (assuming <span class="math notranslate nohighlight">\(\vec{a}, \vec{b}\)</span> are both column vectors), then concatenate the resulting matrix into a vector column by column, and this vector is the result of the tensor product. For example, for <span class="math notranslate nohighlight">\(\vec{a}=(a_1,a_2)\)</span> and <span class="math notranslate nohighlight">\(\vec{b}=(b_1, b_2, b_3)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}a_1 \\ a_2\end{bmatrix} \cdot \begin{bmatrix}b_1, b_2,b_3\end{bmatrix} = \begin{bmatrix}a_1b_1, a_1b_2, a_1b_3 \\ a_2b_1, a_2b_2, a_2b_3\end{bmatrix}
+\end{split}\]</div>
+<p>We get <span class="math notranslate nohighlight">\(\vec{a} \otimes \vec{b} = (a_1b_1, a_2b_1, a_1b_2, a_2b_2, a_1b_3, a_2b_3)\)</span>.</p>
+<p>Comparing with the MLE polynomial expressed in “coefficient form” that we mentioned earlier, we will find that all its monomials can be obtained by a continuous tensor product:</p>
+<div class="math notranslate nohighlight">
+\[
+(1,X_0)\otimes(1,X_1)\otimes(1,X_2) = (1, X_0, X_1, X_0X_1, X_2, X_0X_2, X_1X_2, X_0X_1X_2)
+\]</div>
+<p>We abbreviate the left-hand side as <span class="math notranslate nohighlight">\(\otimes_{j=0}^2 (1,X_j)\)</span>. Then an MLE polynomial can be written in inner product form:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,X_2) = \langle \vec{f}, \otimes_{j=0}^2 (1,X_j) \rangle
+\]</div>
+<p>where the left element is the coefficient vector <span class="math notranslate nohighlight">\(\vec{f}\)</span>, and the right element is a monomial vector <span class="math notranslate nohighlight">\(\otimes_{j=0}^2 (1,X_j)\)</span>.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="split-and-fold-method">
+<h1>Split-and-Fold Method<a class="headerlink" href="#split-and-fold-method" title="Link to this heading">#</a></h1>
+<p>In Gemini, the authors present a protocol for checking the correctness of tensor products based on a univariate polynomial commitment scheme (such as KZG10). Based on this protocol, we can further construct a conversion from multivariate to univariate polynomials. We will first use the three-dimensional MLE polynomial mentioned earlier as an example to explain the main idea of Tensor Product Check.</p>
+<p>Suppose the prover wants to prove the instance: <span class="math notranslate nohighlight">\(\vec{f} = (f_0,...,f_7)\)</span>, satisfying the relation <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle = u\)</span>, where <span class="math notranslate nohighlight">\(\rho_0,\rho_1, \rho_2\)</span> are in the finite field <span class="math notranslate nohighlight">\(F\)</span>.</p>
+<p>For convenience, we rewrite the subscripts of elements in vector <span class="math notranslate nohighlight">\(\vec{f}\)</span> into binary representation in little-endian order, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+f_i = f_{i_0i_1i_2}, i = \langle (2^0, 2^1, 2^2), (i_0,i_1,i_2) \rangle
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(i_0,i_1,i_2 \in \{0,1\}\)</span>.</p>
+<p>After expanding the renumbered tensor product, we get the following equation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{matrix} &amp;&amp;\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle &amp; \\ &amp; = &amp; f_{000}\rho_0^{0}\rho_1^{0}\rho_2^{0}&amp; + &amp;f_{100}\rho_0^{1}\rho_1^{0}\rho_2^{0}&amp; + &amp;f_{010}\rho_0^{0}\rho_1^{1}\rho_2^{0}&amp; + &amp;f_{110}\rho_0^{1}\rho_1^{1}\rho_2^{0} \\ &amp; + &amp; f_{001}\rho_0^{0}\rho_1^{0}\rho_2^{1}&amp; + &amp;f_{101}\rho_0^{1}\rho_1^{0}\rho_2^{1}&amp; + &amp;f_{011}\rho_0^{0}\rho_1^{1}\rho_2^{1}&amp; + &amp;f_{111}\rho_0^{1}\rho_1^{1}\rho_2^{1} \end{matrix}
+\end{split}\]</div>
+<p>We will find that the subscripts of each coefficient <span class="math notranslate nohighlight">\(f_{i_0i_1i_2}\)</span> correspond one-to-one with the exponents of the multiplied <span class="math notranslate nohighlight">\(\rho_0,\rho_1,\rho_2\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+f_{i_0i_1i_2} \cdot \rho_0^{i_0}\rho_1^{i_1} \rho_2^{i_2}, \text{ for all } i_0,i_1,i_2 \in \{ 0,1 \}
+\]</div>
+<p>Therefore, we can always divide <span class="math notranslate nohighlight">\(\vec{f}\)</span> into two equal-length parts according to the exponent <span class="math notranslate nohighlight">\(i_j\)</span> of <span class="math notranslate nohighlight">\(\rho_j\)</span>, and the two parts satisfy a tensor product subproblem respectively. For example, after dividing <span class="math notranslate nohighlight">\(\vec{f}\)</span> according to <span class="math notranslate nohighlight">\(\rho_0\)</span>, we can obtain two tensor product relations about <span class="math notranslate nohighlight">\(\vec{f}_1, \vec{f}_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle =  \langle\vec{f}_1, \otimes_{j=1}^{2}(1,\rho_j) \rangle + \rho_0 \langle\vec{f}_2, \otimes_{j=1}^{2}(1,\rho_j) \rangle
+\]</div>
+<p>Note that in these two subproblems, the right elements of the inner product are the same: both are <span class="math notranslate nohighlight">\(\otimes_{j=1}^2 (1,\rho_j)\)</span>, so they can be further combined into one <span class="math notranslate nohighlight">\(\langle\vec{f}_1 + \rho_0 \vec{f}_2, \otimes_{j=1}^{2}(1,\rho_j) \rangle\)</span>.</p>
+<p>It can be seen that for a vector <span class="math notranslate nohighlight">\(\vec{f}\)</span> of length <span class="math notranslate nohighlight">\(N\)</span>, we divide it into two vectors of length <span class="math notranslate nohighlight">\(N/2\)</span>, and then combine them into one vector. Through this round of operation, we turn a tensor product problem of size <span class="math notranslate nohighlight">\(N\)</span> into a problem of size <span class="math notranslate nohighlight">\(N/2\)</span>.</p>
+<p>By analogy, this problem can eventually be reduced to size <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<p><strong>[Multivariate Polynomial Split-and-fold]</strong></p>
+<p>As mentioned earlier, we can view a tensor product relation as a multivariate polynomial evaluation relation, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\langle\vec{f}, \otimes_{j=0}^{2}(1,\rho_j) \rangle = u \quad \Leftrightarrow \quad \tilde{f}(\rho_0,\rho_1,\rho_2) = u
+\]</div>
+<p>For the multivariate polynomial <span class="math notranslate nohighlight">\(\tilde{f}^{(0)} = \tilde{f}\)</span>, its split-and-fold process in the <span class="math notranslate nohighlight">\(j\)</span>-th round (<span class="math notranslate nohighlight">\(j\in[1,3]\)</span>) is as follows:</p>
+<ul class="simple">
+<li><p><strong>split:</strong> The prover divides the multivariate polynomial <span class="math notranslate nohighlight">\(\tilde{f}^{(j-1)}\)</span> into two parts: the first part contains any monomial that includes <span class="math notranslate nohighlight">\(X_j\)</span> of order 0 (denoted as <span class="math notranslate nohighlight">\(\tilde{f}_e^{(j-1)}\)</span>), the second part contains any monomial that includes <span class="math notranslate nohighlight">\(X_{j-1}\)</span> of order 1 (denoted as <span class="math notranslate nohighlight">\(X_{j-1} \cdot \tilde{f}_o^{(j-1)}\)</span>), satisfying</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(j-1)} = \tilde{f}_{e}^{(j-1)} + X_{j-1} \cdot \tilde{f}_{o}^{(j-1)}
+\]</div>
+<ul class="simple">
+<li><p><strong>fold:</strong> The prover linearly combines the two separated polynomials <span class="math notranslate nohighlight">\(\tilde{f}_e^{(j-1)}, \tilde{f}_o^{(j-1)}\)</span>, using <span class="math notranslate nohighlight">\(\rho_{j-1}\)</span> as the weight for combination, resulting in a new multivariate polynomial denoted as <span class="math notranslate nohighlight">\(\tilde{f}^{(j)}(X) = \tilde{f}_e^{(j-1)}(X) + \rho_{j-1} \cdot \tilde{f}_o^{(j-1)}(X)\)</span>.</p></li>
+</ul>
+<p>The figure below shows the calculation process when <span class="math notranslate nohighlight">\(j=1\)</span>:</p>
+<img src="image/Gemini-multipoly.png" align=center width="60%">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="tensor-product-check-protocol">
+<h1>Tensor Product Check Protocol<a class="headerlink" href="#tensor-product-check-protocol" title="Link to this heading">#</a></h1>
+<p>Through the above recursive algorithm, we reduce the correctness check of a tensor product relation of length <span class="math notranslate nohighlight">\(N\)</span> to checking the correctness of <span class="math notranslate nohighlight">\(n = \left \lceil \log N \right \rceil\)</span> split-and-fold processes.</p>
+<p>In fact, this divide-and-conquer problem-solving idea (split-and-fold) has appeared in many previous protocols, such as Sumcheck, Bulletproofs, and FRI. The difference is that Gemini provides a protocol based on KZG10 to prove the split-and-fold process, which requires <span class="math notranslate nohighlight">\(n= \log(|\vec{f}|)\)</span> interactions.</p>
+<p>We present the PIOP protocol for proving tensor product relations as follows:</p>
+<p><strong>[Tensor-product Check Protocol]</strong></p>
+<p>Target relation: <span class="math notranslate nohighlight">\(\langle\vec{f}, \otimes_{j=0}^{n-1}(1,\rho_j) \rangle = u\)</span></p>
+<p>Prover input: Public parameters, instance <span class="math notranslate nohighlight">\(x = (\rho_0,...,\rho_{n-1}, u)\)</span>, secret <span class="math notranslate nohighlight">\(w = \vec{f}\)</span></p>
+<p>Verifier input: Public parameters, instance <span class="math notranslate nohighlight">\(x = (\rho_0,...,\rho_{n-1}, u)\)</span></p>
+<ol class="arabic simple">
+<li><p>The prover constructs a univariate polynomial <span class="math notranslate nohighlight">\(f^{(0)}(X) = f(X)\)</span>.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(j \in 1,...,n\)</span>, the prover calculates</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+f^{(j)}(X) = f_e^{(j-1)}(X) + \rho_{j-1} \cdot f_o^{(j-1)}(X)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f_e^{(j-1)}, f_o^{(j-1)}\)</span> are polynomials composed of even-order terms and odd-order terms of <span class="math notranslate nohighlight">\(f^{(j-1)}\)</span> respectively, satisfying <span class="math notranslate nohighlight">\(f^{(j-1)}(X) = f_e^{(j-1)}(X^2) + X \cdot f_o^{(j-1)}(X^2)\)</span>.</p>
+<ol class="arabic simple" start="3">
+<li><p>The prover sends Oracles of <span class="math notranslate nohighlight">\(f^{(0)},f^{(1)},...,f^{(n-1)}\)</span> to the verifier.</p></li>
+<li><p>The verifier randomly selects a challenge value <span class="math notranslate nohighlight">\(\beta \leftarrow \mathbb{F}\)</span> and makes the following queries to the Oracles:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e^{(j-1)}:= f^{(j-1)}(\beta), \bar{e}^{(j-1)} := f^{(j-1)}(-\beta), \hat{e}^{(j-1)} := f^{(j)}(\beta^2)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(j=1,...,n\)</span>, when <span class="math notranslate nohighlight">\(j=n\)</span>, ignore the query <span class="math notranslate nohighlight">\(f^{(n)}(\beta^2)\)</span>, and directly set <span class="math notranslate nohighlight">\(\hat{e}^{(n-1)} := u\)</span>.</p>
+<ol class="arabic simple" start="5">
+<li><p>For <span class="math notranslate nohighlight">\(j = 0,...,n-1\)</span>, the verifier checks</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{e}^{(j)} = \frac{e^{(j)} + \bar{e}^{(j)}}{2} + \rho_j \cdot \frac{e^{(j)}-\bar{e}^{(j)}}{2\beta}
+\]</div>
+<p>In each round, the prover will generate Oracles for the polynomials before split and after fold respectively. Specifically, a split-and-fold relation can be written as:</p>
+<blockquote>
+<div><p>Given <span class="math notranslate nohighlight">\(f(X), f_e(X), f_o(X),f'(X)\)</span>, weight <span class="math notranslate nohighlight">\(\rho\)</span>, they satisfy the following relations</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; f(X)=f_e(X^2)+X\cdot f_o(X^2) \qquad \% \ \text{split} \\ f'(X) = f_e(X)+\rho \cdot f_o(X)\qquad \% \ \text{fold}
+&gt; \end{split}\]</div>
+</div></blockquote>
+<p>Since even and odd polynomials satisfy (1) <span class="math notranslate nohighlight">\(f_e(X^2)=(f(X)+f(-X))/2\)</span>, (2) <span class="math notranslate nohighlight">\(f_o(X^2)=(f(X)-f(-X))/2X\)</span> respectively, we can further write the above two equations into one, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+f'(X^2)=\frac{f(X)+f(-X)}{2} + \rho \cdot \frac{f(X)-f(-X)}{2X}
+\]</div>
+<p>To check if this equation holds, the verifier only needs to randomly select a challenge value <span class="math notranslate nohighlight">\(\beta\)</span> in the finite field <span class="math notranslate nohighlight">\(F\)</span>, and check if the values of <span class="math notranslate nohighlight">\(f,f'\)</span> satisfy the relation when <span class="math notranslate nohighlight">\(X=\beta\)</span>.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="multivariate-to-univariate-conversion">
+<h1>Multivariate to Univariate Conversion<a class="headerlink" href="#multivariate-to-univariate-conversion" title="Link to this heading">#</a></h1>
+<p>Before introducing the protocol for multivariate to univariate conversion, let’s delve deeper into some principles hidden in the tensor product protocol. Although the goal of the tensor product protocol is to prove the value of a multivariate polynomial, apart from inputting the coefficient vector of the multivariate polynomial, all polynomials involved in the protocol are univariate.</p>
+<p>Let’s write out the Split-and-fold process using univariate polynomials:</p>
+<p><strong>[Univariate Polynomial Split-and-fold]</strong> In the <span class="math notranslate nohighlight">\(j\)</span>-th round:</p>
+<ul class="simple">
+<li><p><strong>split:</strong> The prover divides the univariate polynomial <span class="math notranslate nohighlight">\(f^{(j-1)}\)</span> into two parts: the first part contains any monomial that includes <span class="math notranslate nohighlight">\(X\)</span> of even order (denoted as <span class="math notranslate nohighlight">\(f_e^{(j-1)}\)</span>), the second part contains any monomial that includes <span class="math notranslate nohighlight">\(X\)</span> of odd order (denoted as <span class="math notranslate nohighlight">\(X \cdot f_o^{(j-1)}\)</span>), satisfying</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+f^{(j-1)}(X) = f_e^{(j-1)}(X^2) + X \cdot f_o^{(j-1)}(X^2)
+\]</div>
+<ul class="simple">
+<li><p><strong>fold:</strong> The prover linearly combines the two separated polynomials <span class="math notranslate nohighlight">\(f_e^{(j-1)}, f_o^{(j-1)}\)</span>, using <span class="math notranslate nohighlight">\(\rho_{j-1}\)</span> as the weight for combination, resulting in a new univariate polynomial denoted as <span class="math notranslate nohighlight">\(f^{(j)}(X) = f_e^{(j-1)}(X) + \rho_{j-1} \cdot f_o^{(j-1)}(X)\)</span>. [Note] Here we need to introduce an additional mapping <span class="math notranslate nohighlight">\(X^2 \mapsto X\)</span> to obtain <span class="math notranslate nohighlight">\(f_e^{(j-1)}(X), f_o^{(j-1)}(X)\)</span>.</p></li>
+</ul>
+<p>Therefore, the tensor product protocol can be seen as the prover simultaneously executing a recursive algorithm on the univariate polynomial <span class="math notranslate nohighlight">\(f\)</span> to simulate the calculation process of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>.</p>
+<p>We use a three-dimensional polynomial as an example to describe the calculation process in the <span class="math notranslate nohighlight">\(j=1\)</span> round:</p>
+<p>The split-and-fold calculation of univariate polynomials is as follows:</p>
+<img src="image/Gemini-unipoly.png" align=center width="60%">
+<p>Compared with the split-and-fold of multivariate polynomials, the variable <span class="math notranslate nohighlight">\(X\)</span> in the first round of univariate polynomials corresponds to <span class="math notranslate nohighlight">\(X_0\)</span> in the multivariate, and in the second round, <span class="math notranslate nohighlight">\(X^2\)</span> corresponds to <span class="math notranslate nohighlight">\(X_1\)</span>. In fact, these two processes are calculations on the coefficient vector <span class="math notranslate nohighlight">\(\vec{f}\)</span> in different “bases”.</p>
+<p>When we need to calculate the value of a multivariate polynomial on the basis <span class="math notranslate nohighlight">\(\{X_0,X_1,X_2\}\)</span>, we only need to perform the same operation synchronously on <span class="math notranslate nohighlight">\(\{X^1,X^2,X^4\}\)</span> (i.e., on univariate polynomials) to simulate the evaluation process of multivariate polynomials using univariate polynomials.</p>
+<p>More formally, we get a mapping relation from the multivariate basis vector space to the univariate basis vector space:</p>
+<div class="math notranslate nohighlight">
+\[
+\iota: \{ X_0,X_1,X_2 \} \rightarrow \{ X^1, X^2, X^4\}
+\]</div>
+<p>Therefore, we say that the tensor product protocol provides us with a proof method from multivariate to univariate, i.e., multi-to-uni IOP. As shown in the figure below, ideally, we hope that the prover can directly generate an Oracle of a multivariate polynomial and send it to the verifier. However, in engineering, there is a lack of efficient multivariate polynomial commitment schemes, so the prover can only construct a proof protocol for Tensor Product Check (i.e., Multi-Uni-IOP) to simulate the calculation process of multivariate polynomial evaluation on univariate polynomials.</p>
+<p>The prover needs to send Oracles of <span class="math notranslate nohighlight">\(n\)</span> univariate polynomials, allowing the verifier to make queries and checks respectively. Since these checks are independent of each other, the verifier can make queries on all Oracles at a certain point <span class="math notranslate nohighlight">\(\beta\)</span> at once, without needing <span class="math notranslate nohighlight">\(O(n)\)</span> points.</p>
+<img src="image/Gemini-PIOP.png" align=center width="60%">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="implementation-based-on-kzg">
+<h1>Implementation Based on KZG<a class="headerlink" href="#implementation-based-on-kzg" title="Link to this heading">#</a></h1>
+<p>For the IOP protocol given above, we can deploy a univariate polynomial commitment scheme (KZG10) to compile it into an AoK (Argument of Knowledge). KZG10 can support the evaluation proof of a polynomial at a certain point, with the advantage of constant-sized proofs and support for batch proofs. The disadvantage is that it requires trusted initialization, and the proof complexity is relatively high (requiring FFT computation).</p>
+<p>[Note] Since we compile IOP into Argument of Knowledge, KZG10 needs to satisfy extractability, the proof of which is given in Marlin [CHM+19].</p>
+<p>Let’s briefly review the proof principle of KZG10: Given public parameters: <span class="math notranslate nohighlight">\(\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, G, H, e\)</span>. In the initialization phase, randomly select <span class="math notranslate nohighlight">\(\tau \in \mathbb{}F\)</span> and calculate <span class="math notranslate nohighlight">\(\tau H \in \mathbb{G}_2\)</span> and vector</p>
+<div class="math notranslate nohighlight">
+\[
+(G,\tau G,\ldots \tau^{D-1}G,\tau^{D}G)\in \mathbb{G}_1^{D+1}
+\]</div>
+<p>We use bracket notation <span class="math notranslate nohighlight">\([a]_1\)</span> to represent scalar multiplication <span class="math notranslate nohighlight">\(a \cdot G\)</span> on an elliptic curve group element. The KZG proof process is as follows:</p>
+<ol class="arabic simple">
+<li><p>The prover calculates the commitment of the univariate polynomial <span class="math notranslate nohighlight">\(f(X)\)</span> of degree <span class="math notranslate nohighlight">\(d\)</span>: <span class="math notranslate nohighlight">\([f(\tau)]_1 = \sum_{j=0}^d f_j \cdot \tau^j G\)</span>.</p></li>
+<li><p>The prover publicly announces the value of the polynomial at point <span class="math notranslate nohighlight">\(\rho\)</span> as <span class="math notranslate nohighlight">\(f(\rho)=u\)</span>, and calculates the quotient polynomial</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+q(X) = \frac{f(X)-f(\rho)}{X-\rho}
+\]</div>
+<p>Generate evaluation proof <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span>.</p>
+<ol class="arabic simple" start="3">
+<li><p>The verifier checks the evaluation proof <span class="math notranslate nohighlight">\(e([f(\tau)]_1-[u]_1, [1]_2) = e([q(\tau)]_1, [\tau-\rho]_2)\)</span>.</p></li>
+</ol>
+<p>Therefore, to compile the IOP protocol, we only need to commit to the polynomials <span class="math notranslate nohighlight">\(f^{(1)},...,f^{(n-1)}\)</span> produced in the protocol respectively, and open them at specified points <span class="math notranslate nohighlight">\(\beta, -\beta, \beta^2\)</span>. However, there are two points that still need our attention: (1) The degrees of these polynomials are not the same. To prevent the prover from cheating using polynomials that do not satisfy the degree requirements, we need to use the method in Marlin, Zeromorph [CHM+19, KT23] to limit the Degree Bound of polynomials. (2) Most polynomials need to be opened at three points <span class="math notranslate nohighlight">\(\beta, -\beta, \beta^2\)</span>. If we generate evaluation proofs for each point separately, it will increase the proof size and verification complexity. Multi-point evaluation proof techniques can be used to optimize this problem.</p>
+<p><strong>Degree Bound Proof:</strong> To prove <span class="math notranslate nohighlight">\(deg(f)\leq d\)</span></p>
+<ul class="simple">
+<li><p>The prover provides <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span> and additionally sends <span class="math notranslate nohighlight">\([\tau^{D-d}\cdot f(\tau)]_1\)</span> to the verifier</p></li>
+<li><p>The verifier checks the equation <span class="math notranslate nohighlight">\(e([f(\tau)]_1, [\tau^{D-d}]_2) = e([\tau^{D-d}\cdot f(\tau)]_1, [1]_2)\)</span></p></li>
+</ul>
+<p><strong>Multi-point Evaluation Proof:</strong> To prove that <span class="math notranslate nohighlight">\(f(X)\)</span> is opened as <span class="math notranslate nohighlight">\(u_1,u_2,u_3\)</span> at <span class="math notranslate nohighlight">\(\beta_1, \beta_2, \beta_3\)</span></p>
+<ul class="simple">
+<li><p>The prover randomly generates a polynomial <span class="math notranslate nohighlight">\(g(X)\)</span> of the same degree as <span class="math notranslate nohighlight">\(f(X)\)</span>, which needs to pass through points <span class="math notranslate nohighlight">\((\beta, u_1),(-\beta, u_2),(\beta^2, u_3)\)</span></p></li>
+<li><p>The prover provides <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span> and the evaluation proof <span class="math notranslate nohighlight">\([q(\tau)]_1 = \frac{f(\tau)-g(\tau)}{(\tau-\beta_1)(\tau-\beta_2)(\tau-\beta_3)}\)</span></p></li>
+<li><p>The verifier checks the equation <span class="math notranslate nohighlight">\(e([f(\tau)]_1 - [g(\tau)]_1, [1]_2) = e([q(\tau)]_1, [(\tau-\beta_1)(\tau-\beta_2)(\tau-\beta_3)]_2)\)</span></p></li>
+</ul>
+<p>[Note] Both of the above techniques require additional generation of <span class="math notranslate nohighlight">\((H,\tau H,\ldots \tau^{D-1}H,\tau^{D}H)\in \mathbb{G}_2^{D+1}\)</span> in the Setup phase.</p>
+<p><strong>[Protocol Description]</strong></p>
+<p>Below we first give the Multi-to-Uni AoK scheme compiled based on KZG:</p>
+<p><strong>Instance</strong></p>
+<ul class="simple">
+<li><p>Univariate polynomial commitment <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span> of vector <span class="math notranslate nohighlight">\(\vec{f}\)</span>, length <span class="math notranslate nohighlight">\(N\)</span></p></li>
+<li><p>Evaluation point vector <span class="math notranslate nohighlight">\(\vec{\rho}\)</span></p></li>
+<li><p>Evaluation result <span class="math notranslate nohighlight">\(\tilde{f}(\rho) = u\)</span></p></li>
+</ul>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>Coefficient vector <span class="math notranslate nohighlight">\(\vec{f}\)</span> of the multivariate polynomial</p></li>
+</ul>
+<p><strong>Interaction Process</strong></p>
+<ol class="arabic simple">
+<li><p>The prover generates polynomials <span class="math notranslate nohighlight">\(f^{(1)},...,f^{(n-1)}\)</span> and calculates and sends their commitments <span class="math notranslate nohighlight">\([f^{(1)}(\tau)]_1,\ldots,[f^{(n-1)}(\tau)]_1\)</span></p></li>
+<li><p>The prover calculates and sends degree bound proofs of polynomials <span class="math notranslate nohighlight">\(f^{(0)},...,f^{(n-1)}\)</span>: <span class="math notranslate nohighlight">\([\tau^{D-N\cdot 2^{-j} + 1}\cdot f^{(j)}(\tau)]_1, j = 0,\ldots n-1\)</span></p></li>
+<li><p>The verifier randomly selects point <span class="math notranslate nohighlight">\(\beta\)</span> and sends it to the prover</p></li>
+<li><p>The prover calculates the evaluation proof for each polynomial, where</p></li>
+</ol>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\([q^{(0)}(\tau)]_1 = \frac{f^{(0)}(\tau)-g^{(0)}(\tau)}{(\tau-\beta)(\tau+\beta)}\)</span>                    % <span class="math notranslate nohighlight">\(f^{(0)}(\beta), f^{(0)}(-\beta)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\([q^{(j)}(\tau)]_1 = \frac{f^{(j)}(\tau)-g^{(j)}(\tau)}{(\tau-\beta)(\tau+\beta)(\tau-\beta^2)}\)</span>              % <span class="math notranslate nohighlight">\(f^{(j)}(\beta), f^{(j)}(-\beta), f^{(j)}(\beta^2), j=1,...,n-1\)</span></p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>The verifier checks:</p></li>
+</ol>
+<ul class="simple">
+<li><p>The correctness of degree bound proofs <span class="math notranslate nohighlight">\([\tau^{D-N\cdot 2^{-j} + 1}\cdot f^{(j)}(\tau)]_1, j = 0,\ldots n-1\)</span> for <span class="math notranslate nohighlight">\(f^{(0)},...,f^{(n-1)}\)</span></p></li>
+<li><p>The correctness of multi-point evaluation proofs <span class="math notranslate nohighlight">\([q^{(0)}(\tau)]_1,\ldots [q^{(n-1)}(\tau)]_1\)</span> for <span class="math notranslate nohighlight">\(f^{(0)},...,f^{(n-1)}\)</span></p></li>
+<li><p>The correctness of split-and-fold relations, i.e., for <span class="math notranslate nohighlight">\(j = 0,...,n-1\)</span>, whether the following equation holds:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\hat{e}^{(j)} = \frac{e^{(j)} + \bar{e}^{(j)}}{2} + \rho_j \cdot \frac{e^{(j)}-\bar{e}^{(j)}}{2\beta}
+\]</div>
+<p><strong>[Performance Analysis]</strong></p>
+<ul class="simple">
+<li><p>Proof size: <span class="math notranslate nohighlight">\(3\log N \ \mathbb{G}_1\)</span> elements</p></li>
+<li><p>Verifier computation: <span class="math notranslate nohighlight">\(4 \log N \ \mathsf{Pairing},\ O(\log N) \ \mathsf{EccMul}^{\mathbb{G}_1 \text{ or } \mathbb{G}_2}\)</span></p></li>
+</ul>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<p>[BCH+22] Bootle, Jonathan, Alessandro Chiesa, Yuncong Hu, **et al. “Gemini: Elastic SNARKs for Diverse Environments.” <em>Cryptology ePrint Archive</em> (2022). <a class="reference external" href="https://eprint.iacr.org/2022/420">https://eprint.iacr.org/2022/420</a></p>
+<p>[KT23] Kohrita, Tohru, and Patrick Towa. “Zeromorph: Zero-knowledge multilinear-evaluation proofs from homomorphic univariate commitments.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/917">https://eprint.iacr.org/2023/917</a></p>
+<p>[CHM+19] Chiesa, Alessandro, Yuncong Hu, Mary Maller, et al. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <em>Cryptology ePrint Archive</em> (2019). <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./gemini"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Gemini-PCS (Part I)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#mle-and-tensor-product">MLE and Tensor Product</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#split-and-fold-method">Split-and-Fold Method</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tensor-product-check-protocol">Tensor Product Check Protocol</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-to-univariate-conversion">Multivariate to Univariate Conversion</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-based-on-kzg">Implementation Based on KZG</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

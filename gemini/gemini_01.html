@@ -1,0 +1,1393 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>&lt;no title&gt; &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gemini/gemini_01';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fgemini/gemini_01.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/gemini/gemini_01.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1><no title></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################################################################</span>
+<span class="c1"># SageMath code to convert from the &quot;point-value&quot; representation of a</span>
+<span class="c1"># 3D multilinear polynomial f: {0,1}^3 -&gt; GF(17) to its &quot;coefficient form&quot;,</span>
+<span class="c1"># and then construct the polynomial symbolically.</span>
+<span class="c1">################################################################################</span>
+
+<span class="c1"># 1) Choose q = 17 and define the field GF(17).</span>
+<span class="n">q</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+<span class="c1"># 2) Create the polynomial ring in three variables over GF(17).</span>
+<span class="n">R</span><span class="o">.&lt;</span><span class="n">X0</span><span class="p">,</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">point_value_to_coefficient</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given the values (a_0, ..., a_7) of a multilinear polynomial f</span>
+<span class="sd">    at the corners of the Boolean cube {0,1}^3,</span>
+<span class="sd">    return its coefficient vector (f_0, ..., f_7).</span>
+<span class="sd">    </span>
+<span class="sd">    The ordering of (a_0,...,a_7) is assumed to be:</span>
+<span class="sd">        a_0 = f(0,0,0)</span>
+<span class="sd">        a_1 = f(1,0,0)</span>
+<span class="sd">        a_2 = f(0,1,0)</span>
+<span class="sd">        a_3 = f(1,1,0)</span>
+<span class="sd">        a_4 = f(0,0,1)</span>
+<span class="sd">        a_5 = f(1,0,1)</span>
+<span class="sd">        a_6 = f(0,1,1)</span>
+<span class="sd">        a_7 = f(1,1,1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="n">a4</span><span class="p">,</span> <span class="n">a5</span><span class="p">,</span> <span class="n">a6</span><span class="p">,</span> <span class="n">a7</span> <span class="o">=</span> <span class="n">a</span>
+    
+    <span class="n">f0</span> <span class="o">=</span> <span class="n">a0</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">-</span> <span class="n">a0</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">a2</span> <span class="o">-</span> <span class="n">a0</span>
+    <span class="n">f3</span> <span class="o">=</span> <span class="n">a4</span> <span class="o">-</span> <span class="n">a0</span>            <span class="c1"># because a4 = f(0,0,1)</span>
+    <span class="n">f4</span> <span class="o">=</span> <span class="n">a3</span> <span class="o">-</span> <span class="n">a2</span> <span class="o">-</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">a0</span>  <span class="c1"># x0*x1</span>
+    <span class="n">f5</span> <span class="o">=</span> <span class="n">a5</span> <span class="o">-</span> <span class="n">a4</span> <span class="o">-</span> <span class="n">a1</span> <span class="o">+</span> <span class="n">a0</span>  <span class="c1"># x0*x2</span>
+    <span class="n">f6</span> <span class="o">=</span> <span class="n">a6</span> <span class="o">-</span> <span class="n">a4</span> <span class="o">-</span> <span class="n">a2</span> <span class="o">+</span> <span class="n">a0</span>  <span class="c1"># x1*x2</span>
+    <span class="n">f7</span> <span class="o">=</span> <span class="n">a7</span> <span class="o">-</span> <span class="n">a6</span> <span class="o">-</span> <span class="n">a5</span> <span class="o">+</span> <span class="n">a4</span> <span class="o">-</span> <span class="n">a3</span> <span class="o">+</span> <span class="n">a2</span> <span class="o">+</span> <span class="n">a1</span> <span class="o">-</span> <span class="n">a0</span>
+    
+    <span class="k">return</span> <span class="p">[</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span><span class="p">,</span> <span class="n">f5</span><span class="p">,</span> <span class="n">f6</span><span class="p">,</span> <span class="n">f7</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">polynomial_from_coefficients</span><span class="p">(</span><span class="n">coeffs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given the coefficient vector [f0, f1, f2, f3, f4, f5, f6, f7]</span>
+<span class="sd">    for a multilinear polynomial in X0, X1, X2,</span>
+<span class="sd">    return the symbolic polynomial f(X0, X1, X2).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span><span class="p">,</span> <span class="n">f5</span><span class="p">,</span> <span class="n">f6</span><span class="p">,</span> <span class="n">f7</span> <span class="o">=</span> <span class="n">coeffs</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">f0</span>
+            <span class="o">+</span> <span class="n">f1</span><span class="o">*</span><span class="n">X0</span>
+            <span class="o">+</span> <span class="n">f2</span><span class="o">*</span><span class="n">X1</span>
+            <span class="o">+</span> <span class="n">f3</span><span class="o">*</span><span class="n">X2</span>
+            <span class="o">+</span> <span class="n">f4</span><span class="o">*</span><span class="n">X0</span><span class="o">*</span><span class="n">X1</span>
+            <span class="o">+</span> <span class="n">f5</span><span class="o">*</span><span class="n">X0</span><span class="o">*</span><span class="n">X2</span>
+            <span class="o">+</span> <span class="n">f6</span><span class="o">*</span><span class="n">X1</span><span class="o">*</span><span class="n">X2</span>
+            <span class="o">+</span> <span class="n">f7</span><span class="o">*</span><span class="n">X0</span><span class="o">*</span><span class="n">X1</span><span class="o">*</span><span class="n">X2</span><span class="p">)</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1"># Example usage:</span>
+<span class="c1"># Let&#39;s pick a point-value vector a = (a0, a1, ..., a7) in GF(17).</span>
+<span class="c1">################################################################################</span>
+
+<span class="n">a_example</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>  <span class="c1"># a0 = f(0,0,0)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>  <span class="c1"># a1 = f(1,0,0)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>  <span class="c1"># a2 = f(0,1,0)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>  <span class="c1"># a3 = f(1,1,0)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>  <span class="c1"># a4 = f(0,0,1)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>  <span class="c1"># a5 = f(1,0,1)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>  <span class="c1"># a6 = f(0,1,1)</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>  <span class="c1"># a7 = f(1,1,1)</span>
+<span class="p">]</span>
+
+<span class="c1"># 3) Convert the point-value vector to coefficient form</span>
+<span class="n">coeff_vector</span> <span class="o">=</span> <span class="n">point_value_to_coefficient</span><span class="p">(</span><span class="n">a_example</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coefficient vector =&quot;</span><span class="p">,</span> <span class="n">coeff_vector</span><span class="p">)</span>
+
+<span class="c1"># 4) Build the symbolic polynomial</span>
+<span class="n">f_poly</span> <span class="o">=</span> <span class="n">polynomial_from_coefficients</span><span class="p">(</span><span class="n">coeff_vector</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Multilinear polynomial f =&quot;</span><span class="p">,</span> <span class="n">f_poly</span><span class="p">)</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1"># Verification: Evaluate the polynomial at each corner of {0,1}^3 and compare</span>
+<span class="c1">################################################################################</span>
+
+<span class="n">test_points</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Verification of polynomial values:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x0v</span><span class="p">,</span> <span class="n">x1v</span><span class="p">,</span> <span class="n">x2v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">test_points</span><span class="p">):</span>
+     <span class="n">raw_val</span> <span class="o">=</span> <span class="n">f_poly</span><span class="p">(</span><span class="n">X0</span><span class="o">=</span><span class="n">x0v</span><span class="p">,</span> <span class="n">X1</span><span class="o">=</span><span class="n">x1v</span><span class="p">,</span> <span class="n">X2</span><span class="o">=</span><span class="n">x2v</span><span class="p">)</span>
+     <span class="n">val</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">raw_val</span><span class="p">)</span>  <span class="c1"># ensures a representative in 0..16</span>
+     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f(</span><span class="si">{</span><span class="n">x0v</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">x1v</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">x2v</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">, integer-rep = </span><span class="si">{</span><span class="n">raw_val</span><span class="si">}</span><span class="s2">, expected = </span><span class="si">{</span><span class="n">a_example</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Coefficient vector = [0, 1, 2, 3, 2, 5, 3, 0]
+Multilinear polynomial f = 2*X0*X1 + 5*X0*X2 + 3*X1*X2 + X0 + 2*X1 + 3*X2
+
+Verification of polynomial values:
+f(0,0,0) = 0, integer-rep = 0, expected = 0
+f(1,0,0) = 1, integer-rep = 1, expected = 1
+f(0,1,0) = 2, integer-rep = 2, expected = 2
+f(1,1,0) = 5, integer-rep = 5, expected = 5
+f(0,0,1) = 3, integer-rep = 3, expected = 3
+f(1,0,1) = 9, integer-rep = -8, expected = 9
+f(0,1,1) = 8, integer-rep = 8, expected = 8
+f(1,1,1) = 16, integer-rep = -1, expected = 16
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tensor_product</span><span class="p">(</span><span class="n">vec_u</span><span class="p">,</span> <span class="n">vec_v</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the Kronecker product of vec_u and vec_v.</span>
+<span class="sd">    If vec_u = (u_1, ..., u_m) and vec_v = (v_1, ..., v_n),</span>
+<span class="sd">    we return (u_1*v_1, ..., u_1*v_n, u_2*v_1, ..., u_m*v_n).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">u</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">vec_u</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vec_v</span><span class="p">]</span>
+
+
+
+<span class="k">def</span> <span class="nf">monomial_vector_3d</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the 8-dimensional monomial vector</span>
+<span class="sd">        (1, X0, X1, X0*X1, X2, X0*X2, X1*X2, X0*X1*X2)</span>
+<span class="sd">    by doing the Kronecker product of (1,X0), (1,X1), and (1,X2).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">X0</span><span class="p">]</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">X1</span><span class="p">]</span>
+    <span class="n">vec2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">X2</span><span class="p">]</span>
+    
+    <span class="c1"># First take the product of vec0 and vec1, then tensor with vec2</span>
+    <span class="n">tmp</span>  <span class="o">=</span> <span class="n">tensor_product</span><span class="p">(</span><span class="n">vec0</span><span class="p">,</span> <span class="n">vec1</span><span class="p">)</span>   <span class="c1"># yields 4 monomials</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">tensor_product</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span>  <span class="n">vec2</span><span class="p">)</span>   <span class="c1"># yields 8 monomials</span>
+    <span class="k">return</span> <span class="n">full</span>
+
+<span class="c1"># Set up GF(17) and a polynomial ring in X0, X1, X2:</span>
+<span class="n">q</span>  <span class="o">=</span> <span class="mi">17</span>
+<span class="n">F</span>  <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.&lt;</span><span class="n">X0</span><span class="p">,</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Example coefficient vector f = (f0, f1, ..., f7)</span>
+<span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
+
+<span class="c1"># Build the 8-component monomial vector via tensor product</span>
+<span class="n">monom_vec</span> <span class="o">=</span> <span class="n">monomial_vector_3d</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Monomial vector =&quot;</span><span class="p">,</span> <span class="n">monom_vec</span><span class="p">)</span>
+<span class="c1"># [1, X0, X1, X0*X1, X2, X0*X2, X1*X2, X0*X1*X2]</span>
+
+<span class="c1"># Now form the polynomial as the &#39;inner product&#39; of coeffs and monom_vec</span>
+<span class="n">f_poly</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">c</span> <span class="o">*</span> <span class="n">m</span> <span class="k">for</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">monom_vec</span><span class="p">)</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f(X0,X1,X2) =&quot;</span><span class="p">,</span> <span class="n">f_poly</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Monomial vector = [1, X2, X1, X1*X2, X0, X0*X2, X0*X1, X0*X1*X2]
+f(X0,X1,X2) = 3*X0*X1 + 5*X0*X2 + 3*X1*X2 + 2*X0 + 2*X1 + X2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################################################################</span>
+<span class="c1"># SageMath code to illustrate &quot;multivariate polynomial split-and-fold&quot; </span>
+<span class="c1"># for a 3-variable polynomial f^(0)(X0, X1, X2) over GF(17).</span>
+<span class="c1">################################################################################</span>
+
+<span class="c1"># 1) Define the field and ring</span>
+<span class="n">q</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.&lt;</span><span class="n">X0</span><span class="p">,</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># 2) Define an example polynomial f^(0) = f_init</span>
+<span class="n">f_init</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>         <span class="c1"># constant term</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">X0</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">X1</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">X0</span><span class="o">*</span><span class="n">X1</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">X2</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">*</span><span class="n">X0</span><span class="o">*</span><span class="n">X2</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">*</span><span class="n">X1</span><span class="o">*</span><span class="n">X2</span>
+          <span class="o">+</span> <span class="n">F</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">*</span><span class="n">X0</span><span class="o">*</span><span class="n">X1</span><span class="o">*</span><span class="n">X2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial polynomial f^(0) =&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_init</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># Helper function: split f into (f_even, f_odd), </span>
+<span class="c1"># where f = f_even + var*f_odd and &#39;var&#39; is one of X0, X1, X2.</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">polynomial_split</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return (f_even, f_odd) such that</span>
+<span class="sd">      f(X0,X1,X2) = f_even(X0,X1,X2) + var*f_odd(X0,X1,X2).</span>
+
+<span class="sd">    Here &#39;var&#39; should be one of the ring generators (X0, X1, or X2).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+    <span class="n">var_idx</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>  <span class="c1"># find which generator var is: 0 for X0, 1 for X1, 2 for X2</span>
+    <span class="n">f_even</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">f_odd</span>  <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">monomial</span><span class="p">,</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># monomial is a tuple of exponents, e.g. (2,1,0).</span>
+        <span class="n">exp_var</span> <span class="o">=</span> <span class="n">monomial</span><span class="p">[</span><span class="n">var_idx</span><span class="p">]</span>  <span class="c1"># exponent of &#39;var&#39; in this monomial</span>
+        <span class="c1"># Make a copy with that exponent set to 0 for the base monomial:</span>
+        <span class="n">base_monomial</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">monomial</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">exp_var</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">base_monomial</span><span class="p">[</span><span class="n">var_idx</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># factor out exactly one &#39;var&#39;</span>
+            <span class="n">f_odd</span> <span class="o">+=</span> <span class="n">R</span><span class="p">({</span><span class="nb">tuple</span><span class="p">(</span><span class="n">base_monomial</span><span class="p">):</span> <span class="n">coeff</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f_even</span> <span class="o">+=</span> <span class="n">R</span><span class="p">({</span><span class="nb">tuple</span><span class="p">(</span><span class="n">monomial</span><span class="p">):</span> <span class="n">coeff</span><span class="p">})</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">f_even</span><span class="p">,</span> <span class="n">f_odd</span><span class="p">)</span>
+
+
+<span class="c1"># 3) Define challenges rho_0, rho_1, rho_2 in GF(17). In a real protocol, these might come from a verifier&#39;s randomness.</span>
+<span class="n">rhos</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>  <span class="c1"># Just an example set</span>
+
+<span class="c1"># We&#39;ll keep track of polynomials f^(j) in a list: f_list[j] = f^(j).</span>
+<span class="n">f_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f_init</span><span class="p">]</span>
+
+<span class="c1"># We want to do j=1,2,3, where the variable to split on is X_{j-1}.</span>
+<span class="c1"># So for j=1 =&gt; X0, j=2 =&gt; X1, j=3 =&gt; X2:</span>
+<span class="n">vars_in_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== Split-and-Fold Round j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2"> (splitting on variable X</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">) ===&quot;</span><span class="p">)</span>
+    <span class="n">current_poly</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>         <span class="c1"># f^(j-1)</span>
+    <span class="n">var</span>          <span class="o">=</span> <span class="n">vars_in_order</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># X0 for j=1, X1 for j=2, X2 for j=3</span>
+    <span class="n">rho</span>          <span class="o">=</span> <span class="n">rhos</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>          <span class="c1"># rho_{j-1}</span>
+
+    <span class="c1"># ---- Split step ----</span>
+    <span class="n">f_even</span><span class="p">,</span> <span class="n">f_odd</span> <span class="o">=</span> <span class="n">polynomial_split</span><span class="p">(</span><span class="n">current_poly</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Split f^(j-1) into f_even + X</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2"> * f_odd:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  f_even = </span><span class="si">{</span><span class="n">f_even</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  f_odd  = </span><span class="si">{</span><span class="n">f_odd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check: f^(j-1) = f_even + X</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">*f_odd ? =&gt; </span><span class="si">{</span><span class="n">f_even</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">var</span><span class="o">*</span><span class="n">f_odd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+    <span class="c1"># ---- Fold step ----</span>
+    <span class="c1">#   f^(j) = f_even + rho * f_odd</span>
+    <span class="n">folded_poly</span> <span class="o">=</span> <span class="n">f_even</span> <span class="o">+</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">f_odd</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folded with rho_</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">rho</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; =&gt; f^(j) = f_even + rho * f_odd = </span><span class="si">{</span><span class="n">folded_poly</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+    <span class="n">f_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folded_poly</span><span class="p">)</span>
+
+<span class="c1"># 4) Final result after j=3 is f^(3)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final polynomial f^(3) =&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_list</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initial polynomial f^(0) =
+8*X0*X1*X2 + 3*X0*X1 + 6*X0*X2 + 7*X1*X2 + X0 + 2*X1 + 4*X2 + 5
+----------------------------------------------------------------------
+=== Split-and-Fold Round j=1 (splitting on variable X0) ===
+Split f^(j-1) into f_even + X0 * f_odd:
+  f_even = 7*X1*X2 + 2*X1 + 4*X2 + 5
+  f_odd  = 8*X1*X2 + 3*X1 + 6*X2 + 1
+Check: f^(j-1) = f_even + X0*f_odd ? =&gt; 8*X0*X1*X2 + 3*X0*X1 + 6*X0*X2 + 7*X1*X2 + X0 + 2*X1 + 4*X2 + 5
+----------------------------------------------------------------------
+Folded with rho_0 = 11
+ =&gt; f^(j) = f_even + rho * f_odd = -7*X1*X2 + X1 + 2*X2 - 1
+======================================================================
+=== Split-and-Fold Round j=2 (splitting on variable X1) ===
+Split f^(j-1) into f_even + X1 * f_odd:
+  f_even = 2*X2 - 1
+  f_odd  = -7*X2 + 1
+Check: f^(j-1) = f_even + X1*f_odd ? =&gt; -7*X1*X2 + X1 + 2*X2 - 1
+----------------------------------------------------------------------
+Folded with rho_1 = 13
+ =&gt; f^(j) = f_even + rho * f_odd = -4*X2 - 5
+======================================================================
+=== Split-and-Fold Round j=3 (splitting on variable X2) ===
+Split f^(j-1) into f_even + X2 * f_odd:
+  f_even = -5
+  f_odd  = -4
+Check: f^(j-1) = f_even + X2*f_odd ? =&gt; -4*X2 - 5
+----------------------------------------------------------------------
+Folded with rho_2 = 2
+ =&gt; f^(j) = f_even + rho * f_odd = 4
+======================================================================
+Final polynomial f^(3) =
+4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################################################################</span>
+<span class="c1"># SageMath code demonstrating:</span>
+<span class="c1">#   1) &quot;Split-and-fold&quot; for a univariate polynomial f^(0)(X) --&gt; f^(1)(X) --&gt; ...</span>
+<span class="c1">#   2) The verifier checks from steps 4 and 5 of &quot;tensor-product check protocol.&quot;</span>
+<span class="c1">################################################################################</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 1) Setup environment</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="n">q</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Tensor-product Check Protocol with Verifier Checks ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Working over GF(</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">).</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 2) Construct an example initial polynomial f^(0)(X).</span>
+<span class="c1">#    You can tweak the coefficients or degree as needed.</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="n">f_init</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">X</span><span class="o">^</span><span class="mi">5</span> <span class="o">+</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">*</span><span class="n">X</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">*</span><span class="n">X</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">X</span>   <span class="o">+</span>
+    <span class="n">F</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>    <span class="c1"># constant term</span>
+<span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># number of &quot;rounds&quot; we want</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;We will do </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> rounds of split-and-fold (hence building f^(0),...,f^(</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)).</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial polynomial f^(0)(X) =&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_init</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 3) Split function: f(X) = f_e(X^2) + X * f_o(X^2)</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">split_even_odd</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given f(X) = sum_{k} a_k * X^k,</span>
+<span class="sd">    produce f_e(X) and f_o(X) such that:</span>
+<span class="sd">      f(X) = f_e(X^2) + X * f_o(X^2).</span>
+
+<span class="sd">    Returns (f_e, f_o).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f_e</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">f_o</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">exp_tuple</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">exp_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># even exponent =&gt; a_k * X^(k/2) goes to f_e</span>
+            <span class="n">f_e</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">X</span><span class="o">^</span><span class="p">(</span><span class="n">k</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># odd exponent =&gt; a_k * X^((k-1)/2) goes to f_o</span>
+            <span class="n">f_o</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">X</span><span class="o">^</span><span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">f_e</span><span class="p">,</span> <span class="n">f_o</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">reconstruct_from_even_odd</span><span class="p">(</span><span class="n">f_e</span><span class="p">,</span> <span class="n">f_o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return f_e(X^2) + X*f_o(X^2).</span>
+<span class="sd">    Should match original f(X) if (f_e, f_o) came from split_even_odd.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fe_sub</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">exp_tuple</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span> <span class="ow">in</span> <span class="n">f_e</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">exp_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fe_sub</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">X</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="n">fo_sub</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">exp_tuple</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span> <span class="ow">in</span> <span class="n">f_o</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">exp_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fo_sub</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">X</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fe_sub</span> <span class="o">+</span> <span class="n">X</span><span class="o">*</span><span class="n">fo_sub</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 4) Folding: f^(j) = f_e(X) + rho * f_o(X).</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">fold_polynomial</span><span class="p">(</span><span class="n">f_e</span><span class="p">,</span> <span class="n">f_o</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">f_e</span> <span class="o">+</span> <span class="n">rho</span><span class="o">*</span><span class="n">f_o</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 5) Build the sequence of polynomials f^(0), f^(1), ..., f^(n).</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="n">f_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f_init</span><span class="p">]</span>
+
+<span class="c1"># Example: pick some rhos in GF(q).</span>
+<span class="n">rhos</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">F</span><span class="p">(</span><span class="mi">7</span><span class="p">)]</span>  <span class="c1"># one for each round j=1..n</span>
+
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Round j = </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Current polynomial f^(</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">)(X) =&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Split</span>
+    <span class="n">f_e</span><span class="p">,</span> <span class="n">f_o</span> <span class="o">=</span> <span class="n">split_even_odd</span><span class="p">(</span><span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">f_reconstructed</span> <span class="o">=</span> <span class="n">reconstruct_from_even_odd</span><span class="p">(</span><span class="n">f_e</span><span class="p">,</span> <span class="n">f_o</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Split into:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;     f_even(X) =&quot;</span><span class="p">,</span> <span class="n">f_e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;     f_odd(X)  =&quot;</span><span class="p">,</span> <span class="n">f_o</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Check f^({j-1})(X) == f_e(X^2) + X*f_o(X^2)? =&gt;&quot;</span><span class="p">,</span> 
+          <span class="p">(</span><span class="n">f_reconstructed</span> <span class="o">==</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    
+    <span class="c1"># Fold</span>
+    <span class="n">f_j</span> <span class="o">=</span> <span class="n">fold_polynomial</span><span class="p">(</span><span class="n">f_e</span><span class="p">,</span> <span class="n">f_o</span><span class="p">,</span> <span class="n">rhos</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Folding with rho_</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">rhos</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, yields f^(</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">)(X):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f_j</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="n">f_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_j</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">After </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> rounds, we have polynomials f^(0)..f^(</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final polynomial is f^(</span><span class="si">{n}</span><span class="s2">)(X) =&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_list</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 6) Verifier checks (steps 4 &amp; 5).</span>
+<span class="c1">#    We illustrate the queries:</span>
+<span class="c1">#       e^(j-1)     = f^(j-1)( beta )</span>
+<span class="c1">#       e~^(j-1)    = f^(j-1)(-beta )</span>
+<span class="c1">#       e^(j)       = f^(j)( beta^2 )    (for j &lt; n)</span>
+<span class="c1">#    Then the check:</span>
+<span class="c1">#       e^(j) == (e^(j-1)+e~^(j-1))/2  +  rho_{j-1} * ( e^(j-1)-e~^(j-1) )/(2*beta)</span>
+<span class="c1">#    For j=n, we skip f^(n)( beta^2 ) and pretend the final claim is &quot;u&quot;.</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">run_verifier_checks</span><span class="p">(</span><span class="n">f_list</span><span class="p">,</span> <span class="n">rhos</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">final_claim</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    f_list      : [ f^(0), f^(1), ..., f^(n) ]</span>
+<span class="sd">    rhos        : [ rho_0, rho_1, ..., rho_{n-1} ]</span>
+<span class="sd">    beta        : challenge in GF(q)</span>
+<span class="sd">    final_claim : the claimed value that would be f^(n)(beta^2), if we had an oracle.</span>
+<span class="sd">                  The protocol says &quot;ignore the actual query for j=n&quot; </span>
+<span class="sd">                  and just set e^(n) := final_claim.</span>
+<span class="sd">    </span>
+<span class="sd">    We&#39;ll check for j=1..n:</span>
+<span class="sd">       e^(j-1)     = f^(j-1)(beta)</span>
+<span class="sd">       e~^(j-1)    = f^(j-1)(-beta)</span>
+<span class="sd">       if j &lt; n:</span>
+<span class="sd">         e^(j)   = f^(j)(beta^2)</span>
+<span class="sd">       else:</span>
+<span class="sd">         e^(j)   = final_claim</span>
+<span class="sd">       </span>
+<span class="sd">       Then verify</span>
+<span class="sd">         e^(j) == ( e^(j-1) + e~^(j-1) )/2  +  rho_{j-1} * [ e^(j-1) - e~^(j-1) ] / [2 beta]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rhos</span><span class="p">)</span>  <span class="c1"># number of folds</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Verifier Checks (beta=</span><span class="si">{</span><span class="n">beta</span><span class="si">}</span><span class="s2">, final_claim=</span><span class="si">{</span><span class="n">final_claim</span><span class="si">}</span><span class="s2">) ===&quot;</span><span class="p">)</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Evaluate e^(j-1) and e~^(j-1):</span>
+        <span class="n">val_e_jm1</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">](</span><span class="n">beta</span><span class="p">)</span>
+        <span class="n">val_etilde_jm1</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">](</span><span class="o">-</span><span class="n">beta</span><span class="p">)</span>
+        
+        <span class="c1"># Either query e^(j)=f^(j)(beta^2) if j&lt;n, or set e^(j)=final_claim if j=n</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">val_e_j</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="p">](</span><span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val_e_j</span> <span class="o">=</span> <span class="n">final_claim</span>  <span class="c1"># as per the protocol&#39;s &quot;ignore the last query, take u&quot;</span>
+        
+        <span class="c1"># The right-hand side of the check:</span>
+        <span class="n">lhs</span> <span class="o">=</span> <span class="n">val_e_j</span>
+        <span class="n">rhs</span> <span class="o">=</span> <span class="p">(</span><span class="n">val_e_jm1</span> <span class="o">+</span> <span class="n">val_etilde_jm1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>  <span class="o">+</span>  <span class="n">rhos</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">val_e_jm1</span> <span class="o">-</span> <span class="n">val_etilde_jm1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Round j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  e^(j-1)       = </span><span class="si">{</span><span class="n">val_e_jm1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  e~^(j-1)      = </span><span class="si">{</span><span class="n">val_etilde_jm1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  e^(j)         = </span><span class="si">{</span><span class="n">val_e_j</span><span class="si">}</span><span class="s2">  (queried or final claim)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Checking: e^(j) == (e^(j-1)+ e~^(j-1))/2 + rho_</span><span class="si">{</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">*( e^(j-1)- e~^(j-1))/(2*beta)?&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    LHS = </span><span class="si">{</span><span class="n">lhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    RHS = </span><span class="si">{</span><span class="n">rhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">lhs</span> <span class="o">!=</span> <span class="n">rhs</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  =&gt; Mismatch! Verification fails.&quot;</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  =&gt; OK.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All checks passed successfully.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Verification failed in round j above.&quot;</span><span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># 7) Run the verifier checks.</span>
+<span class="c1">#    Suppose the final claimed value (u) is f^(n)(beta^2), i.e. if it *were* queried.</span>
+<span class="c1">#    We&#39;ll actually compute that here to see if the check passes.</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+<span class="c1"># We&#39;ll &quot;simulate&quot; the final claim as if the prover didn&#39;t let us query it.</span>
+<span class="c1"># So let&#39;s see what f^(n)(beta^2) actually is, just to confirm correctness:</span>
+<span class="n">actual_f_n_beta2</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">n</span><span class="p">](</span><span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">run_verifier_checks</span><span class="p">(</span>
+    <span class="n">f_list</span>   <span class="o">=</span> <span class="n">f_list</span><span class="p">,</span>
+    <span class="n">rhos</span>     <span class="o">=</span> <span class="n">rhos</span><span class="p">,</span>
+    <span class="n">beta</span>     <span class="o">=</span> <span class="n">beta</span><span class="p">,</span>
+    <span class="n">final_claim</span> <span class="o">=</span> <span class="n">actual_f_n_beta2</span>  <span class="c1"># in a real protocol, the prover would just &quot;claim&quot; this</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Tensor-product Check Protocol with Verifier Checks ===
+Working over GF(17).
+
+We will do 3 rounds of split-and-fold (hence building f^(0),...,f^(3)).
+
+Initial polynomial f^(0)(X) =
+2*X^5 + 7*X^3 - 8*X^2 + X - 6
+----------------------------------------------------------------------
+Round j = 1:
+  Current polynomial f^(0)(X) =
+2*X^5 + 7*X^3 - 8*X^2 + X - 6
+  Split into:
+     f_even(X) = -8*X - 6
+     f_odd(X)  = 2*X^2 + 7*X + 1
+  Check f^({j-1})(X) == f_e(X^2) + X*f_o(X^2)? =&gt; True
+  Folding with rho_0 = 3, yields f^(1)(X):
+6*X^2 - 4*X - 3
+----------------------------------------------------------------------
+Round j = 2:
+  Current polynomial f^(1)(X) =
+6*X^2 - 4*X - 3
+  Split into:
+     f_even(X) = 6*X - 3
+     f_odd(X)  = -4
+  Check f^({j-1})(X) == f_e(X^2) + X*f_o(X^2)? =&gt; True
+  Folding with rho_1 = 5, yields f^(2)(X):
+6*X - 6
+----------------------------------------------------------------------
+Round j = 3:
+  Current polynomial f^(2)(X) =
+6*X - 6
+  Split into:
+     f_even(X) = -6
+     f_odd(X)  = 6
+  Check f^({j-1})(X) == f_e(X^2) + X*f_o(X^2)? =&gt; True
+  Folding with rho_2 = 7, yields f^(3)(X):
+2
+----------------------------------------------------------------------
+
+After 3 rounds, we have polynomials f^(0)..f^(3).
+Final polynomial is f^({n})(X) =
+2
+======================================================================
+
+=== Verifier Checks (beta=11, final_claim=2) ===
+Round j=1:
+  e^(j-1)       = 10
+  e~^(j-1)      = 14
+  e^(j)         = 13  (queried or final claim)
+  Checking: e^(j) == (e^(j-1)+ e~^(j-1))/2 + rho_0*( e^(j-1)- e~^(j-1))/(2*beta)?
+    LHS = 13
+    RHS = 13
+  =&gt; OK.
+----------------------------------------------------------------------
+Round j=2:
+  e^(j-1)       = 16
+  e~^(j-1)      = 2
+  e^(j)         = 6  (queried or final claim)
+  Checking: e^(j) == (e^(j-1)+ e~^(j-1))/2 + rho_1*( e^(j-1)- e~^(j-1))/(2*beta)?
+    LHS = 6
+    RHS = 6
+  =&gt; OK.
+----------------------------------------------------------------------
+Round j=3:
+  e^(j-1)       = 9
+  e~^(j-1)      = 13
+  e^(j)         = 2  (queried or final claim)
+  Checking: e^(j) == (e^(j-1)+ e~^(j-1))/2 + rho_2*( e^(j-1)- e~^(j-1))/(2*beta)?
+    LHS = 2
+    RHS = 2
+  =&gt; OK.
+----------------------------------------------------------------------
+All checks passed successfully.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###############################################################################</span>
+<span class="c1"># Scalar-only KZG demonstration with Multi-to-Uni &quot;split-and-fold.&quot;</span>
+<span class="c1"># No sage.crypto.pairing needed; we do everything as field scalars.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">########################################################</span>
+<span class="c1"># 1) Basic Setup</span>
+<span class="c1">########################################################</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">127</span>  <span class="c1"># a small prime field for demonstration</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.&lt;</span><span class="n">x</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>  <span class="c1"># univariate polynomials over F</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Multi-to-Uni + &#39;Scalar-Only&#39; KZG Demo ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using prime field GF(</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
+
+<span class="c1"># Max polynomial degree</span>
+<span class="n">D</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="c1"># &quot;Secret&quot; alpha in the field</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>   <span class="c1"># deterministically chosen (or random if you like)</span>
+
+<span class="c1"># Build the SRS as a list of powers [alpha^0, alpha^1, ..., alpha^D].</span>
+<span class="c1"># We&#39;ll keep them in python list &#39;srs_scalars&#39;.</span>
+<span class="n">srs_scalars</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">D</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">srs_scalars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">srs_scalars</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Scalar SRS (alpha^i in F):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">srs_scalars</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  i=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: alpha^i = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="c1">########################################################</span>
+<span class="c1"># 2) &quot;Scalar-Only&quot; KZG Routines</span>
+<span class="c1">########################################################</span>
+
+<span class="k">def</span> <span class="nf">kzg_commit</span><span class="p">(</span><span class="n">poly</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Summation_{k} [poly[k] * alpha^k], in F.</span>
+<span class="sd">    That is, c_f = f(alpha).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span> <span class="ow">in</span> <span class="n">poly</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">srs_scalars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">c</span>
+
+<span class="k">def</span> <span class="nf">poly_eval</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Just polynomial evaluation in R. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">poly</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">kzg_eval_proof</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build q(x) = (f(x) - val)/(x-rho).</span>
+<span class="sd">    Return c_q = q(alpha) as the &quot;proof&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># f(x) - val</span>
+    <span class="n">poly_minus</span> <span class="o">=</span> <span class="n">poly</span> <span class="o">-</span> <span class="n">val</span>
+    <span class="c1"># polynomial division</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">poly_minus</span> <span class="o">//</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">rho</span><span class="p">)</span>
+    <span class="c1"># commit to q, i.e. q(alpha)</span>
+    <span class="n">c_q</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">ccoef</span><span class="p">)</span> <span class="ow">in</span> <span class="n">q</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">c_q</span> <span class="o">+=</span> <span class="n">ccoef</span> <span class="o">*</span> <span class="n">srs_scalars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">c_q</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">kzg_verify_eval</span><span class="p">(</span><span class="n">c_f</span><span class="p">,</span> <span class="n">c_q</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check: (c_f - val) == c_q*(alpha - rho).</span>
+<span class="sd">    If that equality holds in F, we say &quot;KZG =&gt; True.&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left</span>  <span class="o">=</span> <span class="n">c_f</span> <span class="o">-</span> <span class="n">val</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">c_q</span><span class="o">*</span><span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">rho</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">left</span> <span class="o">==</span> <span class="n">right</span><span class="p">)</span>
+
+
+<span class="c1">########################################################</span>
+<span class="c1"># 3) &quot;Split-and-Fold&quot; for univariate polynomials</span>
+<span class="c1">########################################################</span>
+
+<span class="k">def</span> <span class="nf">split_even_odd</span><span class="p">(</span><span class="n">fx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    f(x) = f_even(x^2) + x*f_odd(x^2).</span>
+<span class="sd">    Return (f_even, f_odd).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fe</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fo</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">fx</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">e</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fe</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">x</span><span class="o">^</span><span class="p">(</span><span class="n">e</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fo</span> <span class="o">+=</span> <span class="n">coeff</span> <span class="o">*</span> <span class="n">x</span><span class="o">^</span><span class="p">((</span><span class="n">e</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">fe</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">reconstruct_from_even_odd</span><span class="p">(</span><span class="n">fe</span><span class="p">,</span> <span class="n">fo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return fe(x^2) + x*fo(x^2).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fe_sub</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fe</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">fe_sub</span> <span class="o">+=</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">e</span><span class="p">))</span>
+    <span class="n">fo_sub</span> <span class="o">=</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fo</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">fo_sub</span> <span class="o">+=</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">^</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">e</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">fe_sub</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">fo_sub</span>
+
+<span class="k">def</span> <span class="nf">fold_polynomial</span><span class="p">(</span><span class="n">fe</span><span class="p">,</span> <span class="n">fo</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    f_new(x) = fe(x) + r * fo(x).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">fe</span> <span class="o">+</span> <span class="n">r</span><span class="o">*</span><span class="n">fo</span>
+
+
+<span class="c1">########################################################</span>
+<span class="c1"># 4) Build the chain f^(0)-&gt;f^(1)-&gt;...-&gt;f^(n_rounds).</span>
+<span class="c1">########################################################</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">def</span> <span class="nf">random_poly_deg_at_most</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="n">deg</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">deg</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">R</span><span class="p">(</span><span class="n">coeffs</span><span class="p">)</span>
+
+<span class="n">n_rounds</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># Let&#39;s build f^(0) as a random polynomial deg &lt;= D</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="n">random_poly_deg_at_most</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+<span class="n">f_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">f0</span><span class="p">]</span>
+
+<span class="c1"># pick random fold challenges</span>
+<span class="n">fold_rhos</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rounds</span><span class="p">)]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Building chain of polynomials f^(0)-&gt;f^(1)-&gt;...-&gt;f^(</span><span class="si">{</span><span class="n">n_rounds</span><span class="si">}</span><span class="s2">) ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rounds</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">f_prev</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fe</span><span class="p">,</span> <span class="n">fo</span> <span class="o">=</span> <span class="n">split_even_odd</span><span class="p">(</span><span class="n">f_prev</span><span class="p">)</span>
+    <span class="n">recon</span> <span class="o">=</span> <span class="n">reconstruct_from_even_odd</span><span class="p">(</span><span class="n">fe</span><span class="p">,</span> <span class="n">fo</span><span class="p">)</span>
+    <span class="n">check_ok</span> <span class="o">=</span> <span class="p">(</span><span class="n">recon</span> <span class="o">==</span> <span class="n">f_prev</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Round j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">: reconstructed == f^(j-1)? =&gt; </span><span class="si">{</span><span class="n">check_ok</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">f_new</span> <span class="o">=</span> <span class="n">fold_polynomial</span><span class="p">(</span><span class="n">fe</span><span class="p">,</span> <span class="n">fo</span><span class="p">,</span> <span class="n">fold_rhos</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">f_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_new</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">fpoly</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f_list</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f^(</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">)(x) = </span><span class="si">{</span><span class="n">fpoly</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="c1">########################################################</span>
+<span class="c1"># 5) Commit to each f^(j) in the scalar-only KZG</span>
+<span class="c1">########################################################</span>
+<span class="n">comm_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">polyj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f_list</span><span class="p">):</span>
+    <span class="n">c_j</span> <span class="o">=</span> <span class="n">kzg_commit</span><span class="p">(</span><span class="n">polyj</span><span class="p">)</span>
+    <span class="n">comm_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_j</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">KZG Commitments (scalar-only):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">cval</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">comm_list</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">: commit = f^(j)(alpha) = </span><span class="si">{</span><span class="n">cval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="c1">########################################################</span>
+<span class="c1"># 6) Verifier picks beta. For j &lt; n_rounds, we query f^(j)(beta), f^(j)(-beta), f^(j)(beta^2)</span>
+<span class="c1">#    For j=n_rounds, skip f^(n_rounds)(beta^2).</span>
+<span class="c1">#    Then do the KZG single-point proofs, verifying the scalar condition.</span>
+<span class="c1">########################################################</span>
+
+<span class="n">beta</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Verifier picks beta = </span><span class="si">{</span><span class="n">beta</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+<span class="n">eval_points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rounds</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n_rounds</span><span class="p">:</span>
+        <span class="n">eval_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">j</span><span class="p">,</span> <span class="n">beta</span><span class="p">))</span>
+        <span class="n">eval_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="n">beta</span><span class="p">))</span>
+        <span class="n">eval_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">j</span><span class="p">,</span> <span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># final polynomial =&gt; skip beta^2 or treat as final claim</span>
+        <span class="n">eval_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">j</span><span class="p">,</span> <span class="n">beta</span><span class="p">))</span>
+        <span class="n">eval_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="n">beta</span><span class="p">))</span>
+
+<span class="n">eval_values</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">eval_proofs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Prover side: </span>
+<span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">pt</span><span class="p">)</span> <span class="ow">in</span> <span class="n">eval_points</span><span class="p">:</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="p">](</span><span class="n">pt</span><span class="p">)</span>
+    <span class="n">eval_values</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">pt</span><span class="p">)]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="c1"># produce proof</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">c_q</span> <span class="o">=</span> <span class="n">kzg_eval_proof</span><span class="p">(</span><span class="n">f_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pt</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="n">eval_proofs</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">pt</span><span class="p">)]</span> <span class="o">=</span> <span class="n">c_q</span>
+
+<span class="c1"># Verifier checks:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== KZG Single-Point Checks (scalar-only) ===&quot;</span><span class="p">)</span>
+<span class="n">all_ok</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">pt</span><span class="p">)</span> <span class="ow">in</span> <span class="n">eval_points</span><span class="p">:</span>
+    <span class="n">c_f</span> <span class="o">=</span> <span class="n">comm_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">eval_values</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">pt</span><span class="p">)]</span>
+    <span class="n">c_q</span> <span class="o">=</span> <span class="n">eval_proofs</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">pt</span><span class="p">)]</span>
+    
+    <span class="n">check_result</span> <span class="o">=</span> <span class="n">kzg_verify_eval</span><span class="p">(</span><span class="n">c_f</span><span class="p">,</span> <span class="n">c_q</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check f^(j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">)(</span><span class="si">{</span><span class="n">pt</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">:  KZG =&gt; </span><span class="si">{</span><span class="n">check_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">check_result</span><span class="p">:</span>
+        <span class="n">all_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="c1">########################################################</span>
+<span class="c1"># 7) Check the “split-and-fold” consistency with these evaluations</span>
+<span class="c1">#    e^(j)(beta^2) == ( e^(j-1)(beta)+ e^(j-1)(-beta) )/2</span>
+<span class="c1">#                    + rho_{j-1}*( e^(j-1)(beta)- e^(j-1)(-beta) )/(2*beta)</span>
+<span class="c1">########################################################</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Checking the split-and-fold consistency at univariate points ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rounds</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># e^(j)(beta^2) might be missing if j=n_rounds</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">eval_values</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Round j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">: no (beta^2) evaluation =&gt; skip final check.&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+    
+    <span class="n">lhs</span> <span class="o">=</span> <span class="n">eval_values</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">beta</span><span class="o">^</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="n">e_jm1_beta</span>  <span class="o">=</span> <span class="n">eval_values</span><span class="p">[(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">beta</span><span class="p">)]</span>
+    <span class="n">e_jm1_mbeta</span> <span class="o">=</span> <span class="n">eval_values</span><span class="p">[(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">beta</span><span class="p">)]</span>
+    <span class="c1"># rhos[j-1] is the fold challenge</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">fold_rhos</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">rhs</span> <span class="o">=</span> <span class="p">(</span><span class="n">e_jm1_beta</span> <span class="o">+</span> <span class="n">e_jm1_mbeta</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>  <span class="o">+</span>  <span class="n">r</span><span class="o">*</span><span class="p">(</span> <span class="n">e_jm1_beta</span> <span class="o">-</span> <span class="n">e_jm1_mbeta</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span>
+    <span class="n">eq_ok</span> <span class="o">=</span> <span class="p">(</span><span class="n">lhs</span> <span class="o">==</span> <span class="n">rhs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Round j=</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">: LHS=</span><span class="si">{</span><span class="n">lhs</span><span class="si">}</span><span class="s2">, RHS=</span><span class="si">{</span><span class="n">rhs</span><span class="si">}</span><span class="s2">, match? </span><span class="si">{</span><span class="n">eq_ok</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">eq_ok</span><span class="p">:</span>
+        <span class="n">all_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">all_ok</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">All checks passed successfully!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Some checks have failed!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Multi-to-Uni + &#39;Scalar-Only&#39; KZG Demo ===
+Using prime field GF(127).
+
+Scalar SRS (alpha^i in F):
+  i=0: alpha^i = 1
+  i=1: alpha^i = 7
+  i=2: alpha^i = 49
+  i=3: alpha^i = 89
+  i=4: alpha^i = 115
+  i=5: alpha^i = 43
+  i=6: alpha^i = 47
+
+=== Building chain of polynomials f^(0)-&gt;f^(1)-&gt;...-&gt;f^(2) ===
+Round j=1: reconstructed == f^(j-1)? =&gt; True
+Round j=2: reconstructed == f^(j-1)? =&gt; True
+f^(0)(x) = 61*x^2 + 44*x + 64
+f^(1)(x) = 61*x + 71
+f^(2)(x) = 55
+
+KZG Commitments (scalar-only):
+  j=0: commit = f^(j)(alpha) = 59
+  j=1: commit = f^(j)(alpha) = 117
+  j=2: commit = f^(j)(alpha) = 55
+
+Verifier picks beta = 16.
+
+=== KZG Single-Point Checks (scalar-only) ===
+Check f^(j=0)(16) = 1:  KZG =&gt; True
+Check f^(j=0)(111) = 117:  KZG =&gt; True
+Check f^(j=0)(2) = 15:  KZG =&gt; True
+Check f^(j=1)(16) = 31:  KZG =&gt; True
+Check f^(j=1)(111) = 111:  KZG =&gt; True
+Check f^(j=1)(2) = 66:  KZG =&gt; True
+Check f^(j=2)(16) = 55:  KZG =&gt; True
+Check f^(j=2)(111) = 55:  KZG =&gt; True
+
+=== Checking the split-and-fold consistency at univariate points ===
+Round j=1: LHS=66, RHS=66, match? True
+Round j=2: no (beta^2) evaluation =&gt; skip final check.
+
+All checks passed successfully!
+</pre></div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "sagemath"
+        },
+        kernelOptions: {
+            name: "sagemath",
+            path: "./gemini"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'sagemath'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

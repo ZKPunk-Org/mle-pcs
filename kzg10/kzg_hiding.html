@@ -1,0 +1,972 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Understanding Hiding KZG10 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'kzg10/kzg_hiding';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fkzg10/kzg_hiding.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/kzg10/kzg_hiding.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Understanding Hiding KZG10</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#none-hiding-kzg10">None-hiding KZG10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof">Evaluation proof</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-bound-proof">Degree Bound proof</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-hiding">Perfect Hiding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-of-hiding-kzg10">Evaluation proof of Hiding-KZG10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-bound-proof-of-hiding-kzg10">Degree Bound proof of Hiding-KZG10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-and-degree-bound-proof-of-hiding-kzg10">Evaluation-and-degree-bound proof of Hiding KZG10</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#another-construction-of-hiding-kzg10">Another construction of Hiding KZG10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-with-degree-bound-proof">Evaluation-with-degree-bound proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-with-degree-bound-protocol">Evaluation with degree bound protocol</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison">Comparison</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="understanding-hiding-kzg10">
+<h1>Understanding Hiding KZG10<a class="headerlink" href="#understanding-hiding-kzg10" title="Link to this heading">#</a></h1>
+<p>Hiding KZG10 is a variant of the KZG10 protocol that produces polynomial commitments with a random blinding factor, thus possessing the property of Perfect Hiding. This means that even if an attacker has unlimited computational power, they cannot reverse-engineer any information about the polynomial from the commitment. While Hiding KZG10 is not common, it is an important component in constructing zkSNARKs with Zero-knowledge properties or other secure protocols.</p>
+<p>This article introduces two different Hiding KZG10 schemes. The first scheme is from [KT23], and its main technique is a simplified version of multivariate polynomial commitment from [PST13], [ZGKPP17], and [XZZPS19]. The second scheme is from [CHMMVW19], which is an improvement on the original KZG10 protocol paper [KZG10].</p>
+<section id="none-hiding-kzg10">
+<h2>None-hiding KZG10<a class="headerlink" href="#none-hiding-kzg10" title="Link to this heading">#</a></h2>
+<p>Let’s first recall the basic KZG10 protocol. KZG10 is based on a pre-setup (Universal Trusted Setup) SRS:</p>
+<div class="math notranslate nohighlight">
+\[
+SRS = ([1]_1, [\tau]_1, [\tau^2]_1, [\tau^3]_1, \ldots, [\tau^D]_1, [1]_2, [\tau]_2)
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\tau\)</span> is a secret value that needs to be forgotten after the Setup phase, otherwise, any party knowing <span class="math notranslate nohighlight">\(\tau\)</span> could launch an attack. We use bracket notation <span class="math notranslate nohighlight">\([a]_1\)</span> to represent scalar multiplication (Scalar Multiplication) <span class="math notranslate nohighlight">\(a\cdot G\)</span> on an elliptic curve group element, where <span class="math notranslate nohighlight">\(G\in\mathbb{G}_1\)</span> is the generator of the group. The SRS consists of group elements from <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> and <span class="math notranslate nohighlight">\(\mathbb{G}_2\)</span>, which we call Base elements, as subsequent commitments to polynomials are based on linear operations of these Base elements.</p>
+<p>Since division operations on elliptic curve group elements are a difficult problem, if our computing power is limited, we cannot calculate <span class="math notranslate nohighlight">\(a\)</span> from <span class="math notranslate nohighlight">\([a]_1\)</span>. This can be seen as, once we multiply a value <span class="math notranslate nohighlight">\(a\in\mathbb{F}_r\)</span> by a Base element, <span class="math notranslate nohighlight">\(a\)</span> is hidden.</p>
+<p>KZG10 requires a pairing friendly curve, meaning there exists another elliptic curve group <span class="math notranslate nohighlight">\(\mathbb{G}_2\)</span> (with generator <span class="math notranslate nohighlight">\(G'\)</span>), where each element is represented as <span class="math notranslate nohighlight">\([b]_2\)</span>, i.e., <span class="math notranslate nohighlight">\(b\cdot G'\)</span>. And there exists a bilinear pairing operation that satisfies the following bilinearity and non-degeneracy properties:</p>
+<div class="math notranslate nohighlight">
+\[
+e(a\cdot G, b\cdot G') = (ab)\cdot e(G, G')
+\]</div>
+<p>Now assume we have a univariate polynomial <span class="math notranslate nohighlight">\(f(X)\in\mathbb{F}_r[X]\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = f_0 + f_1 X + f_2 X^2 + \cdots + f_d X^d
+\]</div>
+<p>Here, the Degree <span class="math notranslate nohighlight">\(d\)</span> of the polynomial needs to satisfy <span class="math notranslate nohighlight">\(d&lt; D\)</span>.
+Then the commitment <span class="math notranslate nohighlight">\(C_f\)</span> of the polynomial is calculated as follows:
+$<span class="math notranslate nohighlight">\(
+C_f = \mathsf{Commit}(f(X)) = f_0 \cdot [1]_1 + f_1 \cdot [\tau]_1 + f_2 \cdot [\tau^2]_1 + \cdots + f_d \cdot [\tau^d]_1
+\)</span>$</p>
+<p>After derivation, it’s not hard to find that the following equation holds</p>
+<div class="math notranslate nohighlight">
+\[
+C_f = [f(\tau)]
+\]</div>
+<section id="evaluation-proof">
+<h3>Evaluation proof<a class="headerlink" href="#evaluation-proof" title="Link to this heading">#</a></h3>
+<p>For any polynomial <span class="math notranslate nohighlight">\(f(X)\)</span> we choose, which is an element of the polynomial ring <span class="math notranslate nohighlight">\(\mathbb{F}_r[X]\)</span>, it satisfies the following division formula:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = q(X) \cdot g(X) + r(X)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(g(X)\)</span> is the divisor polynomial, <span class="math notranslate nohighlight">\(r(X)\)</span> is the remainder polynomial. Obviously, <span class="math notranslate nohighlight">\(\deg(r)&lt;\deg(g)\)</span>.</p>
+<p>If we let <span class="math notranslate nohighlight">\(g(X) = X-z\)</span>, then clearly <span class="math notranslate nohighlight">\(r(X)\)</span> is a constant polynomial, so the above division decomposition formula can be written as:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = q(X) \cdot (X-z) + r
+\]</div>
+<p>Furthermore, substituting <span class="math notranslate nohighlight">\(X=z\)</span> into the above equation, we can get <span class="math notranslate nohighlight">\(f(z)=r\)</span>. So, the above division decomposition formula can be rewritten as:</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = q(X) \cdot (X-z) + f(z)
+\]</div>
+<p>This formula is the core formula of the KZG10 protocol. That is, if we want to prove <span class="math notranslate nohighlight">\(f(z)=r\)</span>, we only need to prove that <span class="math notranslate nohighlight">\(f(X)-f(z)\)</span> can be divided by <span class="math notranslate nohighlight">\((X-z)\)</span>. Or in other words, there exists a quotient polynomial <span class="math notranslate nohighlight">\(q(X)\)</span> satisfying:</p>
+<div class="math notranslate nohighlight">
+\[
+q(X) = \frac{f(X)-f(z)}{X-z}
+\]</div>
+<p>If the value of <span class="math notranslate nohighlight">\(f(X)\)</span> at <span class="math notranslate nohighlight">\(X=z\)</span> is not equal to <span class="math notranslate nohighlight">\(r\)</span>, then <span class="math notranslate nohighlight">\(q(X)\)</span> is not a polynomial, but a Rational Function. And for any Rational Function whose denominator is not a constant polynomial, we cannot use the above SRS to calculate its commitment.</p>
+<p>Therefore, the Prover only needs to send the commitment of <span class="math notranslate nohighlight">\(q(X)\)</span> to prove the existence of <span class="math notranslate nohighlight">\(q(X)\)</span> to the Verifier, which is equivalent to proving that the evaluation of <span class="math notranslate nohighlight">\(f(X)\)</span> is correct.</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{eval} = q_0 \cdot [1]_1 + q_1 \cdot [\tau]_1 + \cdots + q_{d-1} \cdot [\tau^{d-1}]_1 = [q(\tau)]_1
+\]</div>
+<p>Then the Verifier uses the Base elements provided by SRS to check the correctness of the decomposition formula. For the Verifier, <span class="math notranslate nohighlight">\(f(z)\)</span> and <span class="math notranslate nohighlight">\(z\)</span> are public, so the Verifier can check the decomposition formula through the following formula:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big({\color{red}[f(\tau)]_1} - {\color{blue}f(z)}\cdot[1]_1,\ [1]_2\Big) = e\Big({\color{red}[q(\tau)]_1},\ [\tau] - {\color{blue}z}\cdot[1]_2\Big)
+\]</div>
+<p>The red parts in the above formula are provided by the Prover and do not expose the values inside <span class="math notranslate nohighlight">\([\cdot]_1\)</span>.</p>
+<p>The Polynomial Evaluation proof of the KZG10 protocol only contains one element <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span> of <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span>, with a size of <span class="math notranslate nohighlight">\(O(1)\)</span>. And the verification algorithm of the Verifier is also <span class="math notranslate nohighlight">\(O(1)\)</span>. It should be mentioned that the Verifier needs to complete two Pairing calculations, which, although of <span class="math notranslate nohighlight">\(O(1)\)</span> complexity, are quite expensive.</p>
+</section>
+<section id="degree-bound-proof">
+<h3>Degree Bound proof<a class="headerlink" href="#degree-bound-proof" title="Link to this heading">#</a></h3>
+<p>KZG10 also supports proving that the Degree of a polynomial <span class="math notranslate nohighlight">\(f(X)\in\mathbb{F}_r[X]\)</span> is less than or equal to <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<p>The Prover’s proof method is very straightforward, which is to construct a new polynomial <span class="math notranslate nohighlight">\(\hat{f}(X)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{f}(X) = X^{D-n}\cdot f(X)
+\]</div>
+<p>Obviously, the Degree of <span class="math notranslate nohighlight">\(\hat{f}(X)\)</span> is less than or equal to <span class="math notranslate nohighlight">\(D\)</span>. And because the highest power of <span class="math notranslate nohighlight">\(\tau\)</span> in the Base elements contained in the SRS is <span class="math notranslate nohighlight">\([\tau^D]_1\)</span>, theoretically, anyone (who doesn’t know the value of <span class="math notranslate nohighlight">\(\tau\)</span>) cannot construct the commitment of any polynomial with a degree greater than or equal to <span class="math notranslate nohighlight">\(D\)</span>.</p>
+<p>Therefore, the Prover can construct the Degree Bound proof <span class="math notranslate nohighlight">\(\pi\)</span> as:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{deg} = f_0\cdot [\tau^{D-d}]_1 + f_1\cdot [\tau^{D-d+1}]_1 + \cdots + f_{d}\cdot [\tau^D]_1 = [\tau^{D-d}\cdot f(\tau)]_1
+\]</div>
+<p>The Verifier’s verification method is also straightforward, checking whether <span class="math notranslate nohighlight">\(\hat{f}(X)\)</span> is obtained by multiplying <span class="math notranslate nohighlight">\(f(X)\)</span> with <span class="math notranslate nohighlight">\(X^{D-d}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big({\color{red}[\tau^{D-d}\cdot f(\tau)]_1},\ [1]_2\Big) = e\Big({\color{red}[f(\tau)]_1},\ [{\color{blue}\tau^{D-d}}]_2\Big)
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\([\tau^{D-d}]_2\)</span> should also be a Base element in the SRS. This requires the SRS of KZG10 to include more Base elements of <span class="math notranslate nohighlight">\(\mathbb{G}_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+SRS = \left(\begin{array}{ccccccc}[1]_1, &amp;[\tau]_1, &amp;[\tau^2]_1, &amp;[\tau^3]_1, &amp;\ldots, &amp;[\tau^D]_1\\[1ex]
+[1]_2, &amp;[\tau]_2, &amp;[\tau^2]_2, &amp;[\tau^3]_2, &amp;\ldots, &amp;[\tau^D]_2\\
+\end{array}\right)
+\end{split}\]</div>
+<p>Continuing to think, if the Prover needs to prove both the Degree Bound and Evaluation of <span class="math notranslate nohighlight">\(f(X)\)</span> at the same time, then when generating the commitment of <span class="math notranslate nohighlight">\(f(X)\)</span>, he needs to produce two elements of <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span>, <span class="math notranslate nohighlight">\(([\hat{f}(\tau)]_1, [\tau^{D-d}\hat{f}(\tau)]_1)\)</span>. Then the Verifier needs to complete 4 Pairing calculations to check both the Evaluation and Degree Bound proofs simultaneously.</p>
+</section>
+</section>
+<section id="perfect-hiding">
+<h2>Perfect Hiding<a class="headerlink" href="#perfect-hiding" title="Link to this heading">#</a></h2>
+<p>If we care more about privacy protection during protocol interaction, then KZG10 needs to enhance the protection of the polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>. In the above KZG10 protocol, we assume that the attacker’s computational power is limited, meaning the attacker cannot reverse-engineer any information about <span class="math notranslate nohighlight">\(f(X)\)</span> through <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span>.</p>
+<p>In comparison, the traditional Pedersen Commitment has the property of Perfect Hiding, because its commitment carries a random number as a blinding factor, so even if the attacker has infinite computing power, they cannot reverse-engineer any information about <span class="math notranslate nohighlight">\(f(X)\)</span> through <span class="math notranslate nohighlight">\([f(\tau)]_1\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{Pedersen.Commit}(f(X), r) = f_0 \cdot G_0 + f_1 \cdot G_1 + \cdots + f_d \cdot G_d + {\color{red}r} \cdot G'
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\{G_i\}_{i=0}^d\in\mathbb{G}^{d+1}_1\)</span> and <span class="math notranslate nohighlight">\(G'\in\mathbb{G}_1\)</span> are the public parameters of Pedersen Commitment. And <span class="math notranslate nohighlight">\(r\in\mathbb{F}_r\)</span> is the so-called blinding factor.</p>
+<p>We will now explain how to convert the KZG10 protocol into a Perfect Hiding protocol. This scheme is from [KT23], and its basic idea comes from [ZGKP17] and [PST13].</p>
+<p>First, we can “try” to consider adding a random number as a blinding factor when KZG10 commits to <span class="math notranslate nohighlight">\(f(X)\)</span>, for example:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{KZG.Commit}(f(X), r) = f_0 \cdot [1]_1 + f_1 \cdot [\tau]_1 + \cdots + f_d \cdot [\tau^d]_1 + {\color{red}r} \cdot [1]_1
+\]</div>
+<p>But such a commitment would have security issues. Because in Pedersen Commitment, the element <span class="math notranslate nohighlight">\(G'\)</span> used to commit <span class="math notranslate nohighlight">\(r\)</span> is a special Base element, and its relationship with other <span class="math notranslate nohighlight">\(G_i\)</span> is unknown (i.e., independent). Therefore, the introduction of <span class="math notranslate nohighlight">\(r\)</span> does not affect the commitment of the constant term <span class="math notranslate nohighlight">\(f_0\)</span> of <span class="math notranslate nohighlight">\(f(X)\)</span>.</p>
+<p>Therefore, we need to expand the SRS and introduce an additional preset random value <span class="math notranslate nohighlight">\(\gamma\)</span>, specifically used to commit the blinding factor <span class="math notranslate nohighlight">\(r\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+SRS = ([1]_1, [\tau]_1, [\tau^2]_1, [\tau^3]_1, \ldots, [\tau^D]_1, {\color{red}[\gamma]_1}, [1]_2, [\tau]_2, {\color{red}[\gamma]_2})
+\]</div>
+<p>Then the commitment of <span class="math notranslate nohighlight">\(f(X)\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{KZG.Commit}(f(X), r) = f_0 \cdot [1]_1 + f_1 \cdot [\tau]_1 + \cdots + f_d \cdot [\tau^d]_1 + r \cdot {\color{red}[\gamma]_1}
+\]</div>
+<p>We will use a shorter symbol <span class="math notranslate nohighlight">\(\mathsf{cm}(f)\)</span> below to represent the commitment of <span class="math notranslate nohighlight">\(f(X)\)</span>.</p>
+<section id="evaluation-proof-of-hiding-kzg10">
+<h3>Evaluation proof of Hiding-KZG10<a class="headerlink" href="#evaluation-proof-of-hiding-kzg10" title="Link to this heading">#</a></h3>
+<p>Although we add a Blinding Factor to the Commitment, the Evaluation proof of <span class="math notranslate nohighlight">\(f(X)\)</span> may still expose information about <span class="math notranslate nohighlight">\(f(X)\)</span>.</p>
+<p>Imagine if the Prover wants to prove <span class="math notranslate nohighlight">\(f(z)=v\)</span> to the Verifier, he needs to calculate the quotient polynomial <span class="math notranslate nohighlight">\(q(X)\)</span>, compute and send its commitment <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span>. If <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span> is sent directly, this would break the Perfect Hiding property we want, because an attacker with “infinite computing power” could reverse-engineer <span class="math notranslate nohighlight">\(q(X)\)</span> from <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span>, and then continue to calculate <span class="math notranslate nohighlight">\(f(X)\)</span>.</p>
+<p>Therefore, we also need to add another different blinding factor to <span class="math notranslate nohighlight">\([q(\tau)]_1\)</span>, denoted as <span class="math notranslate nohighlight">\(\color{green}s\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathsf{KZG.Commit}(q(X), {\color{green}s}) &amp; = q_0 \cdot [1]_1 + q_1 \cdot [\tau]_1 + \cdots + q_d \cdot [\tau^{d-1}]_1 + {\color{green}s} \cdot {\color{red}[\gamma]_1} \\
+&amp; = [q(\tau) + {\color{green}s}\cdot{\color{red}\gamma}]_1
+\end{aligned}
+\end{split}\]</div>
+<p>We denote the commitment of <span class="math notranslate nohighlight">\(q(X)\)</span> with the blinding factor added as the short symbol <span class="math notranslate nohighlight">\(\mathsf{cm}(q)\)</span>.</p>
+<p>Continuing to recall, the Verifier of Non-hiding KZG10 needs to check the following equation to verify the commitment of <span class="math notranslate nohighlight">\(q(X)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big({\color{red}[f(\tau)]_1} - {\color{blue}f(z)}\cdot[1]_1,\ [1]_2\Big) = e\Big({\color{red}[q(\tau)]_1},\ [\tau] - {\color{blue}z}\cdot[1]_2\Big)
+\]</div>
+<p>However, in Hiding-KZG10, since both the polynomial commitment <span class="math notranslate nohighlight">\(\mathsf{cm}(f)\)</span> and the quotient polynomial commitment <span class="math notranslate nohighlight">\(\mathsf{cm}(q)\)</span> have blinding factors, the Verifier can no longer complete the verification according to the above Pairing equation:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big([f(\tau) + {\color{red}r\cdot\gamma}]_1 - {\color{blue}f(z)}\cdot[1]_1,\ [1]_2\Big) \neq e\Big([q(\tau)+{\color{red}s\cdot\gamma}]_1,\ [\tau] - {\color{blue}z}\cdot[1]_2\Big)
+\]</div>
+<p>Let’s reason why the above equation doesn’t hold. First, look at the left side of the equation, which is equivalent to calculating</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+lhs &amp; = f(\tau) + r\cdot\gamma - f(z) \\
+&amp; = f(\tau) - f(z) + r\cdot\gamma
+\end{aligned}
+\end{split}\]</div>
+<p>The right side of the equation is equivalent to calculating</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+rhs &amp; = (q(\tau) + s\cdot\gamma) \cdot (\tau - z) \\
+&amp; = q(\tau)\cdot(\tau - z) + s\cdot(\tau - z)\cdot\gamma\\
+&amp; = f(\tau) - f(z) + s\cdot(\tau - z)\cdot\gamma\\
+\end{aligned}
+\end{split}\]</div>
+<p>The difference between the left and right sides is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+lhs - rhs &amp; = r\cdot\gamma - s\cdot(\tau - z)\cdot\gamma \\
+&amp; = (r - s\cdot(\tau - z)) \cdot \gamma \\ 
+\end{aligned}
+\end{split}\]</div>
+<p>To allow the Verifier to verify, we need to introduce an additional “group element” to balance the Pairing verification formula:</p>
+<div class="math notranslate nohighlight">
+\[
+E = r \cdot [1]_1 - s \cdot [\tau]_1 + (s\cdot z)\cdot [1]_1
+\]</div>
+<p>Thus, the Verifier can verify through the following formula:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big([f(\tau) + r\cdot\gamma] - f(z)\cdot[1]_1,\ [1]_2\Big) = e\Big([q(\tau)+s\cdot\gamma],\ [\tau] - z\cdot[1]_2\Big) + e\Big(E,\ [\gamma]_2\Big)
+\]</div>
+<p>Or written as:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big({\color{red}\mathsf{cm}(f)} - {\color{blue}f(z)}\cdot[1]_1,\ [1]_2\Big) = e\Big({\color{red}\mathsf{cm}(q)},\ [\tau] - {\color{blue}z}\cdot[1]_2\Big) + e\Big({\color{red}E},\ [\gamma]_2\Big)
+\]</div>
+<p>Where the red parts are provided by the Prover, and the blue parts are public values.</p>
+</section>
+<section id="degree-bound-proof-of-hiding-kzg10">
+<h3>Degree Bound proof of Hiding-KZG10<a class="headerlink" href="#degree-bound-proof-of-hiding-kzg10" title="Link to this heading">#</a></h3>
+<p>To prove the Degree Bound of <span class="math notranslate nohighlight">\(f(X)\)</span>, we also need to add a Blinding Factor to the polynomial <span class="math notranslate nohighlight">\(\hat{f}(X)\)</span>, then calculate its commitment as the Degree Bound proof of <span class="math notranslate nohighlight">\(f(X)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{cm}(\hat{f}) = [\tau^{D-d}\cdot f(\tau)]_1 + {\color{red}\eta}\cdot[\gamma]_1
+\]</div>
+<p>At the same time, an additional element <span class="math notranslate nohighlight">\(E \in\mathbb{G}_1\)</span> is needed for balancing,</p>
+<div class="math notranslate nohighlight">
+\[
+E = \rho\cdot[\tau^{D-d}]_1 - {\color{red}\eta}\cdot[1]_1
+\]</div>
+<p>This way, the Verifier can verify the Degree Bound proof of <span class="math notranslate nohighlight">\(f(X)\)</span> through the following equation:</p>
+<div class="math notranslate nohighlight">
+\[
+e\Big({\color{red}\mathsf{cm}(f)},\ [\tau^{D-d}]_2\Big) = e\Big({\color{red}\mathsf{cm}(\hat{f})},\ [1]_2\Big) + e\Big({\color{red}E},\ [\gamma]_2\Big)
+\]</div>
+<p>Readers can verify for themselves why the above equation holds.</p>
+</section>
+<section id="evaluation-and-degree-bound-proof-of-hiding-kzg10">
+<h3>Evaluation-and-degree-bound proof of Hiding KZG10<a class="headerlink" href="#evaluation-and-degree-bound-proof-of-hiding-kzg10" title="Link to this heading">#</a></h3>
+<p>Suppose for the same Polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>, the Prover needs to prove both the Evaluation and Degree Bound of <span class="math notranslate nohighlight">\(f(X)\)</span> simultaneously. If we use the above Evaluation and Degree Bound proof protocols separately, the Prover would need to send two <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> elements, and then the Verifier would need to complete 4 Pairing calculations. In fact, we can combine these two proof steps into one: the Prover only sends two <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> elements, and the Verifier only needs to use two Pairings to complete the verification.</p>
+<p>The Prover needs to construct two <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> elements,
+$<span class="math notranslate nohighlight">\(
+\mathsf{cm}(q) = [\tau^{D-d}\cdot q(\tau)]_1 + \eta\cdot[\gamma]_1
+\)</span><span class="math notranslate nohighlight">\(
+Another element \)</span>E<span class="math notranslate nohighlight">\( is defined as:
+\)</span><span class="math notranslate nohighlight">\(
+E = \rho\cdot[\tau^{D-d}]_1 - \eta\cdot[\tau]_1 + (\eta\cdot z)\cdot[1]_1
+\)</span><span class="math notranslate nohighlight">\(
+The Prover sends the proof
+\)</span><span class="math notranslate nohighlight">\(
+\pi = (\mathsf{cm}(q), E)
+\)</span><span class="math notranslate nohighlight">\(
+And the Verifier needs to verify the following equation:
+\)</span><span class="math notranslate nohighlight">\(
+e\Big({\color{red}\mathsf{cm}(f)} - {\color{blue}f(z)}\cdot[1]_1,\ [\tau^{D-d}]_2\Big) = e\Big({\color{red}\mathsf{cm}(q)},\ [\tau] - {\color{blue}z}\cdot[1]_2\Big) + e\Big({\color{red}E},\ [\gamma]_2\Big)
+\)</span>$</p>
+</section>
+</section>
+<section id="another-construction-of-hiding-kzg10">
+<h2>Another construction of Hiding KZG10<a class="headerlink" href="#another-construction-of-hiding-kzg10" title="Link to this heading">#</a></h2>
+<p>In the original [KZG10] paper, a scheme for achieving Perfect Hiding was also provided. We can compare these two different styles of Hiding KZG10 variants.</p>
+<p>The idea of this scheme is to add a random polynomial <span class="math notranslate nohighlight">\(r(X)\)</span> when committing to <span class="math notranslate nohighlight">\(f(X)\)</span>, rather than just a single random blinding factor. Here, <span class="math notranslate nohighlight">\(f(X)\)</span> and <span class="math notranslate nohighlight">\(r(X)\)</span> are defined as follows:
+$<span class="math notranslate nohighlight">\(
+f(X)=\sum_{i=0}^{d}f_i\cdot X^i\qquad r(X)=\sum_{i=0}^{d}r_i\cdot X^i
+\)</span><span class="math notranslate nohighlight">\(
+Note that here, the Degree of the blinding polynomial \)</span>r(X)<span class="math notranslate nohighlight">\( is consistent with the Degree of \)</span>f(X)<span class="math notranslate nohighlight">\(. To support the blinding polynomial (Blinding Polynomial), the SRS produced in the initial Setup phase needs to introduce a random number \)</span>\gamma<span class="math notranslate nohighlight">\( to isolate the blinding factor from the normal message to be committed. So the SRS is expanded to:
+\)</span><span class="math notranslate nohighlight">\(
+SRS = \left(
+    \begin{array}{ccccccc}
+    [1]_1, &amp;[\tau]_1, &amp;[\tau^2]_1, &amp;[\tau^3]_1, &amp;\ldots, &amp;[\tau^D]_1\\[1ex]
+    [{\color{red}\gamma}]_1, &amp;[{\color{red}\gamma}\tau]_1, &amp;[{\color{red}\gamma}\tau^2]_1, &amp;[{\color{red}\gamma}\tau^3]_1, &amp;\ldots, &amp;[{\color{red}\gamma}\tau^D]_1\\[1ex]
+    [1]_2, &amp;[\tau]_2, &amp;[\tau^2]_2, &amp;[\tau^3]_2, &amp;\ldots, &amp;[\tau^D]_2\\
+\end{array}\right)
+\)</span><span class="math notranslate nohighlight">\(
+Below we define the calculation formula for \)</span>\mathsf{cm}(f)<span class="math notranslate nohighlight">\(:
+\)</span><span class="math notranslate nohighlight">\(
+\begin{split}
+\mathsf{KZG10.Commit}(f(X), r(X)) &amp; = \sum_{i=0}^{d}f_i\cdot[\tau^i]_1 + \sum_{i=0}^{d}r_i\cdot[{\color{red}\gamma}\tau^i]_1 \\
+&amp; = [f(\tau) + {\color{red}\gamma}\cdot r(\tau)]_1
+\end{split}
+\)</span><span class="math notranslate nohighlight">\(
+Essentially, the commitment to the polynomial \)</span>f(X)<span class="math notranslate nohighlight">\( is actually a commitment to \)</span>\bar{f}(X) = f(X) + {\color{red}\gamma}\cdot r(X)<span class="math notranslate nohighlight">\(.
+\)</span><span class="math notranslate nohighlight">\(
+\mathsf{cm}(f) = [f(\tau) + {\color{red}\gamma}\cdot r(\tau)]_1 = [\bar{f}(\tau)]_1
+\)</span><span class="math notranslate nohighlight">\(
+When the Prover needs to prove \)</span>f(z)=v<span class="math notranslate nohighlight">\(, he not only needs to send the commitment of the quotient polynomial \)</span>q(X)<span class="math notranslate nohighlight">\(, but also needs to calculate the value of \)</span>r(X)<span class="math notranslate nohighlight">\( at \)</span>X=z<span class="math notranslate nohighlight">\(.
+\)</span><span class="math notranslate nohighlight">\(
+\pi = (\mathsf{cm}(q), r(z))
+\)</span><span class="math notranslate nohighlight">\(
+Where the polynomial \)</span>\bar{q}(X)<span class="math notranslate nohighlight">\( is the quotient polynomial after dividing \)</span>\bar{f}(X)<span class="math notranslate nohighlight">\( with blinding polynomial by \)</span>(X-z)<span class="math notranslate nohighlight">\(:
+\)</span><span class="math notranslate nohighlight">\(
+\bar{q}(X) = q(X) + \gamma\cdot q'(X) = \frac{f(X)-f(z)}{X-z} + \gamma\cdot \frac{r(X)-r(z)}{X-z}
+\)</span><span class="math notranslate nohighlight">\(
+When the Verifier receives \)</span>\pi_{eval}=(\mathsf{cm}(\bar{q}), r(z))<span class="math notranslate nohighlight">\(, he can verify the following equation:
+\)</span><span class="math notranslate nohighlight">\(
+e\Big({\color{red}\mathsf{cm}(\bar{f})} - {\color{blue}f(z)}\cdot[1]_1 - {\color{red}r(z)}\cdot[\gamma]_1,\ [1]_2\Big) = e\Big({\color{red}\mathsf{cm}(\bar{q})},\ [\tau] - {\color{blue}z}\cdot[1]_2\Big)
+\)</span><span class="math notranslate nohighlight">\(
+Intuitively, although the Prover sent the value of \)</span>r(X)<span class="math notranslate nohighlight">\( at \)</span>r(z)<span class="math notranslate nohighlight">\(, as long as the Degree of \)</span>r(X)<span class="math notranslate nohighlight">\( is greater than or equal to 1, the attacker cannot reverse-engineer \)</span>r(X)<span class="math notranslate nohighlight">\( through the value of \)</span>r(z)<span class="math notranslate nohighlight">\( alone, so there is at least one random factor still protecting \)</span>f(X)$.</p>
+<p>In fact, if we know that <span class="math notranslate nohighlight">\(f(X)\)</span> will be opened at most <span class="math notranslate nohighlight">\(k&lt;d\)</span> times throughout its lifecycle, then we don’t need to force the Degree of <span class="math notranslate nohighlight">\(r(X)\)</span> to be d, but it can be a polynomial of Degree <span class="math notranslate nohighlight">\(k\)</span>. Because the <span class="math notranslate nohighlight">\(k\)</span>-degree blinding factor polynomial consists of <span class="math notranslate nohighlight">\(k+1\)</span> random factors, when <span class="math notranslate nohighlight">\(r(X)\)</span> is calculated <span class="math notranslate nohighlight">\(k\)</span> times, there is still one random factor protecting the commitment of <span class="math notranslate nohighlight">\(f(X)\)</span>.</p>
+<p>Take an extreme example where the Degree of <span class="math notranslate nohighlight">\(r(X)\)</span> is 1, then when the Prover proves the value at a different point again, say <span class="math notranslate nohighlight">\(f(z')=v'\)</span>, the Verifier would have the ability to recover <span class="math notranslate nohighlight">\(r(X)\)</span>, thus breaking the Perfect Hiding property of the commitment to <span class="math notranslate nohighlight">\(f(X)\)</span>.</p>
+<section id="evaluation-with-degree-bound-proof">
+<h3>Evaluation-with-degree-bound proof<a class="headerlink" href="#evaluation-with-degree-bound-proof" title="Link to this heading">#</a></h3>
+<p>The next question is, in this Hiding-KZG10 scheme, can we prove <span class="math notranslate nohighlight">\(f(z)=v\)</span> and <span class="math notranslate nohighlight">\(\deg{f}\leq d\)</span> simultaneously like in the first scheme? The paper [CHMMVW19] provided a scheme, which is different from the first scheme. This scheme requires an interactive process (or using Fiat-Shamir transformation) when proving Evaluation with degree bound, that is, the Verifier needs to provide a public random challenge number.</p>
+<section id="commit">
+<h4>Commit<a class="headerlink" href="#commit" title="Link to this heading">#</a></h4>
+<p>Assuming <span class="math notranslate nohighlight">\(f(X)\)</span> is opened at most <span class="math notranslate nohighlight">\(e\)</span> times, then the Degree of the blinding polynomial <span class="math notranslate nohighlight">\(r(X)\)</span> only needs to be equal to <span class="math notranslate nohighlight">\(e\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+C_{f}=\mathsf{Commit}(f(X),r(X)) &amp; = \Big(\sum_{i=0}^{d}f_i\cdot[\tau^i]_1\Big) + \Big(\sum_{i=0}^{e}r_i\cdot[{\color{red}\gamma}\tau^i]_1\Big) \\
+&amp; = [f(\tau) + {\color{red}\gamma}\cdot r(\tau)]_1
+\end{aligned}
+\end{split}\]</div>
+<p>To prove the Degree Bound, we also need to commit to <span class="math notranslate nohighlight">\(X^{D-d}\cdot f(X)\)</span>:
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+C_{xf}=\mathsf{Commit}(X^{D-d}\cdot f(X),s(X)) &amp; = \Big(\sum_{i=0}^{d}f_i\cdot[\tau^{D-d+i}]_1\Big) + \Big(\sum_{i=0}^{d}s_i\cdot[{\color{red}\gamma}\cdot \tau^{i}]_1\Big) \\
+&amp; = [\tau^{D-d}\cdot f(\tau) + {\color{red}\gamma}\cdot s(\tau)]_1
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+So overall, the commitment \)</span>\mathsf{cm}(f)<span class="math notranslate nohighlight">\( of \)</span>f(X)<span class="math notranslate nohighlight">\( is defined as:
+\)</span><span class="math notranslate nohighlight">\(
+\mathsf{cm}(f) = (C_{f}, C_{xf})
+\)</span>$</p>
+</section>
+<section id="evaluation-with-degree-bound-protocol">
+<h4>Evaluation with degree bound protocol<a class="headerlink" href="#evaluation-with-degree-bound-protocol" title="Link to this heading">#</a></h4>
+<p><strong>Public inputs</strong>:</p>
+<ol class="arabic simple">
+<li><p>Commitment <span class="math notranslate nohighlight">\(C_f\)</span> of polynomial <span class="math notranslate nohighlight">\(f(X)\)</span></p></li>
+<li><p>Commitment <span class="math notranslate nohighlight">\(C_{xf}\)</span> of polynomial <span class="math notranslate nohighlight">\(X^{D-d}\cdot f(X)\)</span></p></li>
+<li><p>Evaluation point of polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>, <span class="math notranslate nohighlight">\(X=z\)</span></p></li>
+<li><p>Evaluation result of polynomial: <span class="math notranslate nohighlight">\(f(z)=v\)</span></p></li>
+</ol>
+<p><strong>Witness</strong>:</p>
+<ol class="arabic simple">
+<li><p>Blinding polynomial <span class="math notranslate nohighlight">\(r(X)\)</span> of polynomial <span class="math notranslate nohighlight">\(f(X)\)</span></p></li>
+<li><p>Blinding polynomial <span class="math notranslate nohighlight">\(s(X)\)</span> of polynomial <span class="math notranslate nohighlight">\(X^{D-d}\cdot f(X)\)</span></p></li>
+</ol>
+<p><strong>Step 1</strong>: Verifier sends random number <span class="math notranslate nohighlight">\(\alpha\leftarrow\mathbb{F}_r\)</span>,</p>
+<p><strong>Step 2</strong>: Prover follows these steps</p>
+<ol class="arabic simple">
+<li><p>Prover calculates quotient polynomial <span class="math notranslate nohighlight">\(q(X)\)</span>:
+$<span class="math notranslate nohighlight">\(
+q(X) = \frac{f(X) - f(z)}{X-z}
+\)</span>$</p></li>
+<li><p>Prover calculates aggregated blinding polynomial <span class="math notranslate nohighlight">\(t(X)\)</span>, obviously <span class="math notranslate nohighlight">\(\deg(t)\leq d\)</span>
+$<span class="math notranslate nohighlight">\(
+t(X) = r(X)  + \alpha\cdot s(X) 
+\)</span>$</p></li>
+<li><p>Prover calculates quotient polynomial <span class="math notranslate nohighlight">\(q_t(X)\)</span>
+$<span class="math notranslate nohighlight">\(
+q_t(X) = \frac{t(X) - t(z)}{X-z}
+\)</span>$</p></li>
+<li><p>Prover introduces an auxiliary polynomial <span class="math notranslate nohighlight">\(f^*(X)\)</span>, which takes value 0 at <span class="math notranslate nohighlight">\(X=z\)</span>, i.e., <span class="math notranslate nohighlight">\(f^*(z)=0\)</span>
+$<span class="math notranslate nohighlight">\(
+f^*(X)=X^{D-d}\cdot f(X)-X^{D-d}\cdot f(z)
+\)</span>$</p></li>
+<li><p>Prover calculates the quotient polynomial <span class="math notranslate nohighlight">\(q^*(X)\)</span> of <span class="math notranslate nohighlight">\(f^*(X)\)</span> divided by <span class="math notranslate nohighlight">\((X-z)\)</span>,
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+q^*(X) &amp; = \frac{f^*(X) - f^*(z)}{X-z} \\
+&amp; = \frac{\big(X^{D-d}\cdot f(X) - X^{D-d}\cdot f(z)\big) - 0}{X-z} \\
+&amp; = X^{D-d}\cdot q(X)
+\end{aligned}
+\)</span>$</p></li>
+<li><p>Prover commits to quotient polynomial <span class="math notranslate nohighlight">\(q(X)\)</span>, without adding any blinding factor
+$<span class="math notranslate nohighlight">\(
+Q = \sum_{i=0}^{d-1}q_i\cdot[\tau^{i}]_1 = [q(\tau)]_1
+\)</span>$</p></li>
+<li><p>Prover commits to quotient polynomial <span class="math notranslate nohighlight">\(q^*(X)\)</span>, without adding any blinding factor
+$<span class="math notranslate nohighlight">\(
+Q^* = \sum_{i=0}^{d-1}q_i\cdot[\tau^{D-d+i}]_1 = [q^*(\tau)]_1
+\)</span>$</p></li>
+<li><p>Prover commits to quotient polynomial <span class="math notranslate nohighlight">\(q_t(X)\)</span> of blinding polynomial
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+Q_{t} &amp; = \sum_{i=0}^{d-1}q_{t,i}\cdot[{\color{red}\gamma}\tau^{i}]_1 \\
+&amp; = [{\color{red}\gamma}\cdot q_t(\tau)]_1
+\end{aligned}
+\)</span>$</p></li>
+<li><p>Prover calculates merged commitment <span class="math notranslate nohighlight">\(Q\)</span>
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+Q &amp; = Q + \alpha\cdot {Q^*} + Q_{t} \\
+&amp; = [q(\tau)]_1 + \alpha\cdot [q^*(\tau)]_1 + [{\color{red}\gamma}\cdot q_t(\tau)]_1
+\end{aligned}
+\)</span>$</p></li>
+<li><p>Prover outputs proof <span class="math notranslate nohighlight">\(\pi = \big(Q, t(z)\big)\)</span></p></li>
+</ol>
+<p>The principle of this protocol can actually be understood from another perspective. The construction process can be decomposed into: Batch of evaluations of two polynomials at the same point (using random number <span class="math notranslate nohighlight">\(\alpha\)</span>). One is to prove that the polynomial <span class="math notranslate nohighlight">\(f(X)\)</span> takes value <span class="math notranslate nohighlight">\(f(z)\)</span> at <span class="math notranslate nohighlight">\(X=z\)</span>, and the other is to prove that <span class="math notranslate nohighlight">\(f^*(X)\)</span> takes value 0 at <span class="math notranslate nohighlight">\(X=z\)</span>. We can introduce an auxiliary polynomial <span class="math notranslate nohighlight">\(g(X)\)</span> to represent the random linear combination of these two polynomials about <span class="math notranslate nohighlight">\(\alpha\)</span>:
+$<span class="math notranslate nohighlight">\(
+g(X) = f(X) + \alpha\cdot (X^{D-d}\cdot f(X) - X^{D-d}\cdot f(z))
+\)</span><span class="math notranslate nohighlight">\(
+And the quotient polynomial \)</span>q_g(X)<span class="math notranslate nohighlight">\( of this aggregated polynomial \)</span>g(X)<span class="math notranslate nohighlight">\( divided by \)</span>(X-z)<span class="math notranslate nohighlight">\( can be expressed as:
+\)</span><span class="math notranslate nohighlight">\(
+q_g(X) = \frac{g(X) - g(z)}{X-z} = q(X) + \alpha\cdot q^*(X)
+\)</span><span class="math notranslate nohighlight">\(
+Finally, the commitment \)</span>Q<span class="math notranslate nohighlight">\( calculated by the Prover is exactly equal to the commitment \)</span>[q_g(\tau)]<span class="math notranslate nohighlight">\( of the quotient polynomial plus the commitment of the random polynomial \)</span>[{\color{red}\gamma}\cdot q_t(\tau)]$.</p>
+<p>Therefore, this proof idea is actually consistent with the idea of Evaluation proof.</p>
+<p><strong>Verification</strong></p>
+<p>The proof received by the Verifier is <span class="math notranslate nohighlight">\(\pi = \big(Q, t(z)\big)\)</span>, then verify according to the following steps:</p>
+<ol class="arabic simple">
+<li><p>Calculate the commitment of <span class="math notranslate nohighlight">\(g(X)+t(X)\)</span>, denoted as <span class="math notranslate nohighlight">\(C_{g+t}\)</span>:
+$<span class="math notranslate nohighlight">\(
+C_{g+t} = {\color{red}C_{f}} + \alpha\cdot ({\color{red}C_{xf}} - {\color{blue}f(z)}\cdot[\tau^{D-d}]_1)
+\)</span>$</p></li>
+<li><p>Calculate the commitment of the value of <span class="math notranslate nohighlight">\(g(X)+t(X)\)</span> at <span class="math notranslate nohighlight">\(X=z\)</span>, denoted as <span class="math notranslate nohighlight">\(V_{g+t}\)</span>:
+$<span class="math notranslate nohighlight">\(
+V_{g+t} = f(z)\cdot[1]_1 + {\color{red}t(z)}\cdot[\gamma]_1
+\)</span>$</p></li>
+<li><p>Verify the correctness of <span class="math notranslate nohighlight">\(C_{g+t}\)</span>:
+$<span class="math notranslate nohighlight">\(
+e\Big(C_{g+t} - V_{g+t},\ [1]_2\Big) = e\Big({\color{red}Q},\ [\tau] - {\color{blue}z}\cdot[1]_2\Big) 
+\)</span>$</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="comparison">
+<h2>Comparison<a class="headerlink" href="#comparison" title="Link to this heading">#</a></h2>
+<p>In the first scheme, the Prover doesn’t need to care about how many times the polynomial will be opened in the future when committing, and only needs to add one random factor to achieve Perfect Hiding. The second scheme requires the Prover to add enough random factors (in the form of random polynomials) at once, and ensure that the number of times the polynomial is opened in the future will not exceed this random factor.</p>
+<p>An advantage brought by the second scheme is that in each proof of Evaluation, the proof only includes one <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> element, plus one <span class="math notranslate nohighlight">\(\mathbb{F}_r\)</span> element; while the first scheme requires two <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> elements.</p>
+<p>Furthermore, the first advantage brought by the second scheme is that the Verifier only needs to calculate two Pairings, while the first scheme requires three Pairings.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[KZG10] Kate, Aniket, Gregory M. Zaverucha, and Ian Goldberg. “Constant-size commitments to polynomials and their applications.” Advances in Cryptology-ASIACRYPT 2010: 16th International Conference on the Theory and Application of Cryptology and Information Security, Singapore, December 5-9, 2010. Proceedings 16. Springer Berlin Heidelberg, 2010.</p></li>
+<li><p>[KT23] Kohrita, Tohru, and Patrick Towa. “Zeromorph: Zero-knowledge multilinear-evaluation proofs from homomorphic univariate commitments.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/917">https://eprint.iacr.org/2023/917</a></p></li>
+<li><p>[PST13] Papamanthou, Charalampos, Elaine Shi, and Roberto Tamassia. “Signatures of correct computation.” Theory of Cryptography Conference. Berlin, Heidelberg: Springer Berlin Heidelberg, 2013. <a class="reference external" href="https://eprint.iacr.org/2011/587">https://eprint.iacr.org/2011/587</a></p></li>
+<li><p>[ZGKPP17] “A Zero-Knowledge Version of vSQL.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2017/1146">https://eprint.iacr.org/2017/1146</a></p></li>
+<li><p>[XZZPS19] Tiancheng Xie, Jiaheng Zhang, Yupeng Zhang, Charalampos Papamanthou, and Dawn Song. “Libra: Succinct Zero-Knowledge Proofs with Optimal Prover Computation.” <a class="reference external" href="https://eprint.iacr.org/2019/317">https://eprint.iacr.org/2019/317</a></p></li>
+<li><p>[CHMMVW19] Alessandro Chiesa, Yuncong Hu, Mary Maller, Pratyush Mishra, Psi Vesely, and Nicholas Ward. “Marlin: Preprocessing zkSNARKs with Universal and Updatable SRS.” <a class="reference external" href="https://eprint.iacr.org/2019/1047">https://eprint.iacr.org/2019/1047</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./kzg10"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#none-hiding-kzg10">None-hiding KZG10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof">Evaluation proof</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-bound-proof">Degree Bound proof</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-hiding">Perfect Hiding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-proof-of-hiding-kzg10">Evaluation proof of Hiding-KZG10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-bound-proof-of-hiding-kzg10">Degree Bound proof of Hiding-KZG10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-and-degree-bound-proof-of-hiding-kzg10">Evaluation-and-degree-bound proof of Hiding KZG10</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#another-construction-of-hiding-kzg10">Another construction of Hiding KZG10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-with-degree-bound-proof">Evaluation-with-degree-bound proof</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-with-degree-bound-protocol">Evaluation with degree bound protocol</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison">Comparison</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

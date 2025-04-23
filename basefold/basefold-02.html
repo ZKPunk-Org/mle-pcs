@@ -1,0 +1,747 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Basefold (Part II): IOPP &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-02';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-02.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-02.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Basefold (Part II): IOPP</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-proximity">Proof of Proximity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-phase">Commit-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-phase">Query-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-basefold-part-ii-iopp">
+<h1>Notes on Basefold (Part II): IOPP<a class="headerlink" href="#notes-on-basefold-part-ii-iopp" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<section id="proof-of-proximity">
+<h2>Proof of Proximity<a class="headerlink" href="#proof-of-proximity" title="Link to this heading">#</a></h2>
+<p>Below, we present a proof of implementing IOPP using Foldable codes.</p>
+<p>Suppose there is an MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> represented as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{d-1}) = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + \cdots + f_{2^d-1}X_{d-1} 
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\tilde{f}(X)\)</span> is a multivariate polynomial, there are <span class="math notranslate nohighlight">\(d-1\)</span> unknowns, making the length of its coefficient vector <span class="math notranslate nohighlight">\(2^d\)</span>. Note that we choose the Lexicographic Order as the sorting method for the polynomial.</p>
+<p>We encode the coefficient vector <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> of <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> to obtain the codeword <span class="math notranslate nohighlight">\(c_\mathbf{f} = \mathsf{Enc}(\mathbf{f})\)</span>, which has a length of <span class="math notranslate nohighlight">\(n_d\)</span>. Then, we use a Hash-based Merkle Tree to generate the commitment:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{cm}(\mathbf{f}) = \mathsf{Merklize}(\mathsf{Enc}(f_0, f_1, f_2, \ldots, f_{2^d-1}))
+\]</div>
+<p>Similar to the FRI protocol, the Basefold-IOPP protocol is used to prove that a commitment <span class="math notranslate nohighlight">\(\pi_d=\mathbf{cm}(\mathbf{f})\)</span> is with high probability “close” to a vector encoded by <span class="math notranslate nohighlight">\(C_d\)</span>. Therefore, this protocol is called a Proof of Proximity. This protocol is one of the core protocols for constructing the Evaluation Argument.</p>
+<p>Proof of Proximity leverages a remarkable property of linear codes: the “Proximity Gap.” Specifically, if two vectors <span class="math notranslate nohighlight">\(\pi, \pi'\)</span> are far from the legitimate codeword space, then their random linear combination <span class="math notranslate nohighlight">\(\pi+\alpha\cdot \pi'\)</span> will either have a very low probability of becoming legitimate or will remain far from the legitimate codeword space:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{cases}
+\Delta(\pi_{i}, C_i) = 0 &amp; \text{(with negligible probability)} \\
+\Delta(\pi_{i}, C_i) \leq \Delta(\pi_{i+1}, C_{i+1}) &amp; \text{(with non-negligible probability)} \\
+\end{cases}
+\end{split}\]</div>
+<p>This indicates that the folding process of the codeword does not disrupt the distance between the vector and the legitimate codeword space. By folding the vector sufficiently, the Verifier can use a very short code to verify whether the final folded vector is a legitimate codeword, thereby determining whether the original vector is a legitimate codeword.</p>
+<blockquote>
+<div><p>📖 <strong>Notes on Proximity Gap</strong>
+Proof of Proximity utilizes a remarkable property of linear codes: the “Proximity Gap.” Specifically, for two vectors <span class="math notranslate nohighlight">\(\pi, \pi'\)</span>, folding them with a random scalar <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span> yields a set <span class="math notranslate nohighlight">\(A = \{\pi+\alpha\cdot \pi': \alpha \in \mathbb{F}\}\)</span>. Different <span class="math notranslate nohighlight">\(\alpha\)</span> correspond to different elements in set <span class="math notranslate nohighlight">\(A\)</span>. The “Proximity Gap” theorem states that the elements in this set are either all close to the legitimate codeword space <span class="math notranslate nohighlight">\(C_{i}\)</span> or only a negligible fraction of the elements are close to <span class="math notranslate nohighlight">\(C_{i}\)</span>, while the majority are at a distance of <span class="math notranslate nohighlight">\(\delta\)</span> from <span class="math notranslate nohighlight">\(C_{i}\)</span>. In probabilistic terms:</p>
+</div></blockquote>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; \Pr_{a \in A}[\Delta(a, C_{i}) \le \delta] = \begin{cases}
+&gt;    \epsilon \quad \text{(small enough)}\\
+&gt;    1
+&gt; \end{cases}
+&gt; \end{split}\]</div>
+<p>Thus, the Verifier can confidently use a random scalar <span class="math notranslate nohighlight">\(\alpha\)</span> for folding, because even if only one of the two vectors <span class="math notranslate nohighlight">\(\pi, \pi'\)</span> provided by a cheating Prover is at a distance <span class="math notranslate nohighlight">\(\delta\)</span> from <span class="math notranslate nohighlight">\(C_i\)</span>, the probability that the folded result is close to <span class="math notranslate nohighlight">\(C_i\)</span> is only <span class="math notranslate nohighlight">\(\epsilon\)</span>, which is very small. In other words, a cheating Prover would need to be as lucky as winning the lottery to evade detection by the Verifier’s scrutiny. Therefore, if the Prover initially selects a <span class="math notranslate nohighlight">\(\pi_d\)</span> that is far from the legitimate codeword space, the Verifier selects a series of random scalars to iteratively fold it until obtaining <span class="math notranslate nohighlight">\(\pi_0\)</span>. During this process, there is a high probability that <span class="math notranslate nohighlight">\(\pi_0\)</span> does not become close to the legitimate codeword space, allowing the Verifier to detect cheating.</p>
+</div></blockquote>
+<blockquote>
+<div><p>The “Proximity Gap” theorem provides a significant advantage to the Verifier: instead of verifying all elements in the set <span class="math notranslate nohighlight">\(A = \{\pi+\alpha\cdot \pi': \alpha \in \mathbb{F}\}\)</span> to check their proximity to the legitimate codeword space, the Verifier only needs to randomly select one point for verification. This greatly reduces the Verifier’s computational load.</p>
+</div></blockquote>
+<p>The Proof of Proximity protocol consists of two phases: the Commit-phase and the Query-phase. The former involves the subprotocol that performs multiple folding processes of the codeword and generates commitments (or oracles) for each folded codeword. The latter, the Query-phase, involves the Verifier performing random sampling to verify the legitimacy of each folding step.</p>
+</section>
+<section id="commit-phase">
+<h2>Commit-phase<a class="headerlink" href="#commit-phase" title="Link to this heading">#</a></h2>
+<p>First, we explain the Commit-phase. The Prover performs multiple foldings of the encoded <span class="math notranslate nohighlight">\(\pi_d\)</span> (with length <span class="math notranslate nohighlight">\(n_d\)</span>), obtaining codewords of lengths <span class="math notranslate nohighlight">\(n_{d-1}, \ldots, n_0\)</span>, denoted as <span class="math notranslate nohighlight">\((\pi_{d-1}, \pi_{d-2}, \ldots, \pi_0)\)</span>, and then sends them to the Verifier.</p>
+<p>Remember that this is an interactive protocol with a total of <span class="math notranslate nohighlight">\(d\)</span> rounds of interaction. In each round (assume the <span class="math notranslate nohighlight">\(i\)</span>-th round, <span class="math notranslate nohighlight">\(0 \leq i &lt; d\)</span>), the Prover folds <span class="math notranslate nohighlight">\(\pi_{i+1}\)</span> based on the random scalar <span class="math notranslate nohighlight">\(\alpha_{i}\)</span> sent by the Verifier to obtain a new codeword, denoted as <span class="math notranslate nohighlight">\(\pi_{i}\)</span>. After <span class="math notranslate nohighlight">\(d\)</span> rounds, the Prover obtains a codeword of length <span class="math notranslate nohighlight">\(n_0\)</span>, denoted as <span class="math notranslate nohighlight">\(\pi_0\)</span>. The Prover then commits to each <span class="math notranslate nohighlight">\((\pi_d, \ldots, \pi_0)\)</span> and sends <span class="math notranslate nohighlight">\(\mathsf{cm}(\pi_d), \ldots, \mathsf{cm}(\pi_0)\)</span> as the output of <span class="math notranslate nohighlight">\(\mathsf{IOPP.Commit}\)</span>.</p>
+<p>Next, we analyze the technical details of a single folding <span class="math notranslate nohighlight">\(\pi_{i}\)</span>. Suppose <span class="math notranslate nohighlight">\(\pi_{i}\in C_i\)</span> is a legitimate codeword (i.e., satisfying <span class="math notranslate nohighlight">\(\pi_{i} = \mathbf{m}G_i\)</span>), with length <span class="math notranslate nohighlight">\(n_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_i = (c_0, c_1, c_2, \ldots, c_{n_{i}-1})
+\]</div>
+<p>We split this vector into two parts and stack them:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left(
+\begin{array}{cccc}
+c_0, &amp; c_1, &amp; \ldots, &amp; c_{n_{i-1}-1} \\
+c_{n_{i-1}}, &amp; c_{n_{i-1}+1}, &amp; \ldots, &amp; c_{n_{i}-1} \\
+\end{array}
+\right)
+\end{split}\]</div>
+<p>At this point, the Verifier needs to provide a random scalar <span class="math notranslate nohighlight">\(\alpha^{(i)}\)</span>. We perform a random linear combination of the two rows, or in other words, fold them:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{i-1} = \big(\mathsf{fold}_{\alpha_i}(c_0, c_{n_{i-1}}), \mathsf{fold}_{\alpha_i}(c_1, c_{n_{i-1}+1}), \ldots, \mathsf{fold}_{\alpha_i}(c_{n_{i-1}}, c_{n_{i}-1})\big)
+\]</div>
+<p>The above is the folded vector <span class="math notranslate nohighlight">\(\pi_{i-1}\)</span>. Assuming the Prover is honest, the folded vector should be a legitimate <span class="math notranslate nohighlight">\(C_{i-1}\)</span> codeword. The function <span class="math notranslate nohighlight">\(\mathsf{fold}_{\alpha_i}\)</span> in the above equation is defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_{\alpha}(c_j, c_{n_{i-1}+j}) = \frac{t_j\cdot c_{n_{i-1}+j} - t'_j\cdot c_{j} }{t_j + t'_j} + \alpha\cdot \frac{(c_{j} - c_{n_{i-1}+j})}{t_j - t'_j}
+\]</div>
+<p>How should we understand the <span class="math notranslate nohighlight">\(\mathsf{fold}_{\alpha}(\cdot, \cdot)\)</span> function? It is essentially a polynomial interpolation process. We treat the two rows to be folded as sets of points on two separate domains, specifically the <span class="math notranslate nohighlight">\(\mathsf{diag}(T_i)=(t_0, t_1, \ldots, t_{n_{i-1}-1})\)</span> and <span class="math notranslate nohighlight">\(\mathsf{diag}(T'_i)=(t'_0, t'_1, \ldots, t'_{n_{i-1}-1})\)</span> used in the recursive encoding process:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left(
+\begin{array}{cccc}
+(t_0, c_0), &amp; (t_1, c_1), &amp; \ldots, &amp; (t_{i-1}, c_{n_{i-1}-1}) \\
+(t'_0, c_{n_{i-1}}), &amp; (t'_1, c_{n_{i-1}+1}), &amp; \ldots, &amp; (t'_{i-1}, c_{n_{i}-1}) \\
+\end{array}
+\right)
+\end{split}\]</div>
+<p>We then interpolate each column of the above matrix over the domain <span class="math notranslate nohighlight">\((t_j, t'_j)\)</span> to produce a set of <span class="math notranslate nohighlight">\(n_{i-1}={n_i}/{2}\)</span> polynomials, denoted as <span class="math notranslate nohighlight">\(p^{(i-1)}_j(X)\)</span>, where <span class="math notranslate nohighlight">\(0\leq j &lt; n_{i-1}\)</span>. The Prover then evaluates each <span class="math notranslate nohighlight">\(p^{(i-1)}_j(X)\)</span> at <span class="math notranslate nohighlight">\(X = \alpha_{i}\)</span>, resulting in <span class="math notranslate nohighlight">\(n_{i-1}\)</span> values at <span class="math notranslate nohighlight">\(X=\alpha_{i}\)</span>. These values constitute the new codeword <span class="math notranslate nohighlight">\(\pi_{i-1}\)</span>.</p>
+<p>The definition of the folding function aligns with the linear polynomial interpolation process. We can manually derive the origin of the folding function definition. Since we are performing a half-folding of <span class="math notranslate nohighlight">\(\pi_{i}\)</span>, the folded codeword will have <span class="math notranslate nohighlight">\(n_{i-1}\)</span> values corresponding to “linear polynomials.” Suppose the <span class="math notranslate nohighlight">\(j\)</span>-th polynomial describes a line passing through two points <span class="math notranslate nohighlight">\((x_0, y_0)\)</span> and <span class="math notranslate nohighlight">\((x_1, y_1)\)</span>. The interpolating polynomial <span class="math notranslate nohighlight">\(p(X)\)</span> for these two points can be defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+p(X) &amp;= \frac{y_0}{x_0-x_1}(X-x_1) + \frac{y_1}{x_1-x_0}(X-x_0) \\[2ex]
+     &amp;= \frac{x_0y_1-x_1y_0}{x_0-x_1} + \frac{y_0-y_1}{x_0-x_1}\cdot X
+\end{split}
+\end{split}\]</div>
+<p><img alt="alt text" src="../_images/inter-poly.png" /></p>
+<p>Substituting  <span class="math notranslate nohighlight">\(x_0=t_j, x_1=t'_j\)</span>, and <span class="math notranslate nohighlight">\(X=\alpha\)</span> yields the definition of the folding function <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha(y_0, y_1)\)</span> as above.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}_\alpha(y_0, y_1) = p(\alpha) &amp;= \frac{t_j\cdot y_1 - t'_j\cdot y_0}{t_j - t'_j} + \frac{y_0-y_1}{t_j - t'_j}\cdot \alpha\\
+\end{split}
+\end{split}\]</div>
+<p>If <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span> are negatives of each other, i.e., <span class="math notranslate nohighlight">\(t_j=-t'_j\)</span>, then <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha(y_0, y_1)\)</span> becomes the familiar definition from the FRI protocol:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_\alpha(y_0, y_1) = \frac{1}{2}(y_0 + y_1) + \alpha\cdot \frac{y_0-y_1}{2\cdot t_j}
+\]</div>
+<p>Since we have defined the folded codeword <span class="math notranslate nohighlight">\(\mathbf{c}^{(i-1)}\)</span>, the definition of the folding function needs to be consistent with the codeword space generated by the generator matrix <span class="math notranslate nohighlight">\(G_{i-1}\)</span>. Continuing with this intuition, assume that in the <span class="math notranslate nohighlight">\(i\)</span>-th round, if <span class="math notranslate nohighlight">\(\mathbf{c}^{(i)}\)</span> is indeed the encoding of <span class="math notranslate nohighlight">\(\mathbf{m}\)</span>, then by definition, it satisfies the properties of Foldable Codes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\pi_{i} &amp;= \mathbf{m} G_i \\
+&amp; = (\mathbf{m}_l \parallel \mathbf{m}_r)\begin{bmatrix}
+G_{i-1} &amp; G_{i-1} \\
+G_{i-1}\cdot T_{i-1} &amp; G_{i-1}\cdot T'_{i-1}
+\end{bmatrix}\\[4ex]
+&amp;=\Big(\mathbf{m}_l G_{i-1} + \mathbf{m}_r G_{i-1}\circ \mathbf{diag}(T_{i-1})\Big) \parallel \Big(\mathbf{m}_l G_{i-1} + \mathbf{m}_r G_{i-1}\circ \mathbf{diag}(T'_{i-1})\Big)\\
+\end{split}
+\end{split}\]</div>
+<p>The Prover folds it in half to obtain the new codeword:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}_\alpha(\pi_{i}) &amp;= \Big(\mathsf{fold}_\alpha(\pi_{i}[0], \pi_{i}[n_{i-1}]), \mathsf{fold}_\alpha(\pi_{i}[1], \pi_{i}[n_{i-1}+1]), \ldots, \mathsf{fold}_\alpha(\pi_{i}[n_{i-1}-1], \pi_{i}[n_{i}-1])\Big) \\
+\end{split}
+\end{split}\]</div>
+<p>We now verify that each <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha(\pi_{i}[j], \pi_{i}[n_{i-1}+j])\)</span> is a linear combination of <span class="math notranslate nohighlight">\(\mathbf{m}_lG_{i-1}[j]\)</span> and <span class="math notranslate nohighlight">\(\mathbf{m}_rG_{i-1}[j]\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}_\alpha(\pi_{i}[j], \pi_{i}[n_{i-1}+j]) &amp; = \frac{1}{t_j - t'_j}\cdot\Big(
+t_j\cdot (\mathbf{m}_l G_{i-1}[j] + t'_j\cdot \mathbf{m}_r G_{i-1}[j]) - t'_j\cdot(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j]) \Big)\\
+&amp; + \frac{\alpha}{t_j - t'_j}\cdot \Big(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j] - \mathbf{m}_l G_{i-1}[j] - t'_j\cdot \mathbf{m}_r G_{i-1}[j] \Big) \\
+&amp; = \mathbf{m}_l G_{i-1}[j] + \alpha\cdot \mathbf{m}_r G_{i-1}[j]
+\end{split}
+\end{split}\]</div>
+<p>Thus, the entire folding of <span class="math notranslate nohighlight">\(\pi_{i}\)</span> is equivalent to a linear combination of <span class="math notranslate nohighlight">\(\mathbf{m}_lG_{i-1}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{m}_rG_{i-1}\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_\alpha(\pi_{i}) = \mathbf{m}_l G_{i-1} + \alpha\cdot \mathbf{m}_r G_{i-1} = (\mathbf{m}_l + \alpha\cdot \mathbf{m}_r)G_{i-1} 
+\]</div>
+<p>The folded codeword is exactly the half-folded version of <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha\)</span>, denoted as <span class="math notranslate nohighlight">\(\mathbf{m}^{(i-1)}\)</span>, and then encoded with <span class="math notranslate nohighlight">\(G_{i-1}\)</span> to obtain <span class="math notranslate nohighlight">\(\pi_{i-1}\)</span>. This is not surprising because Foldable Codes and the recursive folding of codewords are inverse processes, so the parameters <span class="math notranslate nohighlight">\(T_i\)</span> and <span class="math notranslate nohighlight">\(T'_i\)</span> introduced by the encoding are eliminated after folding.</p>
+<p>Below, we walk through a simple example to illustrate how the Commit-phase of the Basefold-IOPP protocol operates.</p>
+<p><strong>Public Input</strong></p>
+<ul class="simple">
+<li><p>The codeword of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\pi_3=\mathsf{Enc}_3(\mathbf{f})=\mathbf{f}G_3\)</span></p></li>
+</ul>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>The coefficient vector of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{f} = (f_0, f_1, f_2, f_3, f_4, f_5, f_6, f_7)\)</span></p></li>
+</ul>
+<p><strong>First Round:</strong> Verifier sends a random scalar <span class="math notranslate nohighlight">\(\alpha_2\)</span></p>
+<p><strong>Second Round:</strong> Prover computes <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{fold}_\alpha(\pi_3)\)</span> and sends it to the Verifier</p>
+<p>The process of computing <span class="math notranslate nohighlight">\(\pi_2\)</span> is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_2[j] = \mathsf{fold}_\alpha(\pi_3[j], \pi_3[j+4]), \quad j\in\{0, 1, 2, 3\}
+\]</div>
+<p>The computed <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{Enc}_2(f^{(2)})\)</span>, meaning <span class="math notranslate nohighlight">\(\pi_2\)</span> is the codeword of <span class="math notranslate nohighlight">\(f^{(2)}\)</span>, where <span class="math notranslate nohighlight">\(f^{(2)}\)</span> is the folding of <span class="math notranslate nohighlight">\(f\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(2)}(X_0, X_1) = f(X_0, X_1, \alpha_2) = (f_0 + f_4\alpha_2) + (f_1 + f_5\alpha_2)X_0 + (f_2 + f_6\alpha_2)X_1 + (f_3 + f_7\alpha_2)X_0X_1
+\]</div>
+<p><strong>Third Round:</strong> Verifier sends a random scalar <span class="math notranslate nohighlight">\(\alpha_1\)</span></p>
+<p><strong>Fourth Round:</strong> Prover computes <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{fold}_\alpha(\pi_2)\)</span> and sends it to the Verifier</p>
+<p>The process of computing <span class="math notranslate nohighlight">\(\pi_1\)</span> is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_1[j] = \mathsf{fold}_\alpha(\pi_2[j], \pi_2[j+2]), \quad j\in\{0, 1\}
+\]</div>
+<p>The computed <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{Enc}_1(f^{(1)})\)</span>, meaning <span class="math notranslate nohighlight">\(\pi_1\)</span> is the codeword of <span class="math notranslate nohighlight">\(f^{(1)}\)</span>, where <span class="math notranslate nohighlight">\(f^{(1)}\)</span> is the folding of <span class="math notranslate nohighlight">\(f^{(2)}\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(X_0) = f(X_0, \alpha_1, \alpha_2)  = (f_0 + f_4 \alpha_2 +  \alpha_1 (f_2 +  + f_6 \alpha_2)) + (f_1 + f_5 \alpha_2 +  \alpha_1 (f_3 +  + f_7 \alpha_2))X_0
+\]</div>
+<p><strong>Fifth Round:</strong> Verifier sends a random scalar <span class="math notranslate nohighlight">\(\alpha_0\)</span></p>
+<p><strong>Sixth Round:</strong> Prover computes <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{fold}_\alpha(\pi_1)\)</span> and sends it to the Verifier</p>
+<p>The process of computing <span class="math notranslate nohighlight">\(\pi_0\)</span> is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_0[j] = \mathsf{fold}_\alpha(\pi_1[j], \pi_1[j+1]), \quad j=0
+\]</div>
+<p>Similarly, <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{Enc}_0(f^{(0)})\)</span>, meaning <span class="math notranslate nohighlight">\(\pi_0\)</span> is the codeword of <span class="math notranslate nohighlight">\(f^{(0)}\)</span>, where <span class="math notranslate nohighlight">\(f^{(0)}\)</span> is the folding of <span class="math notranslate nohighlight">\(f\)</span> with respect to <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)} = f(\alpha_0, \alpha_1, \alpha_2) = f_0 + f_1\alpha_0 + f_2\alpha_1 + f_3\alpha_0 \alpha_1 + f_4\alpha_2 + f_5\alpha_0\alpha_2 + f_6\alpha_1\alpha_2 + f_7\alpha_0\alpha_1\alpha_2
+\]</div>
+<p>At this point, the Commit-phase ends, and the Prover has sent <span class="math notranslate nohighlight">\((\pi_{2}, \pi_{1}, \pi_0)\)</span> to the Verifier. Upon receiving them, the Verifier first checks whether <span class="math notranslate nohighlight">\(\pi_0\)</span> is a constant polynomial. However, this alone is insufficient; the Verifier also needs to validate that the Prover’s folding operations were honest. If all foldings <span class="math notranslate nohighlight">\(\pi_i\)</span> were to be verified, the Verifier would lose succinctness and, consequently, verification efficiency. Due to the Proximity Gap property, the Verifier only needs to perform a limited number of validations to ensure that <span class="math notranslate nohighlight">\(\pi_i\)</span> is a legitimate codeword.</p>
+</section>
+<section id="query-phase">
+<h2>Query-phase<a class="headerlink" href="#query-phase" title="Link to this heading">#</a></h2>
+<p>Similar to the FRI protocol, in the Query-phase, the Verifier conducts multiple rounds of random sampling on the <span class="math notranslate nohighlight">\((\pi_{d}, \pi_{d-1}, \ldots, \pi_0)\)</span> sent by the Prover to verify the honesty of the folding process. We now discuss each round of the sampling process.</p>
+<p>The Verifier will randomly select a position <span class="math notranslate nohighlight">\(\mu\)</span> within <span class="math notranslate nohighlight">\(\pi_{d}\)</span> and send it to the Prover, noting that <span class="math notranslate nohighlight">\(0\leq \mu &lt; n_{d-1}\)</span>, where <span class="math notranslate nohighlight">\(n_{d-1}\)</span> pertains only to <span class="math notranslate nohighlight">\(\pi_{d}\)</span>. The Prover opens the points <span class="math notranslate nohighlight">\(\pi_{d}[\mu]\)</span> and <span class="math notranslate nohighlight">\(\pi_{d}[\mu+n_{d-1}]\)</span> and also sends the value at position <span class="math notranslate nohighlight">\(\mu\)</span> in the folded codeword <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span>, i.e., <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu]\)</span>, along with the Merkle Path for these three points.</p>
+<p>Upon receiving these, the Verifier first verifies that these three points correspond correctly to the codewords <span class="math notranslate nohighlight">\(\pi_{d}\)</span> and <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span>. Then, the Verifier checks whether they satisfy the folding relationship:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_{d-1}[\mu] \overset{?}{=} \mathsf{fold}_{\alpha_{d-1}}(\pi_{d}[\mu], \pi_{d}[\mu+n_{d-1}])
+\]</div>
+<p>Merely verifying the folding relationship from <span class="math notranslate nohighlight">\(\pi_d\)</span> to <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> is insufficient. The Verifier must also validate the folding relationships from <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> to <span class="math notranslate nohighlight">\(\pi_{0}\)</span>. The Prover must additionally provide the points from <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> to <span class="math notranslate nohighlight">\(\pi_{d-2}\)</span>. Here, the Verifier does not need to select new random scalars but continues to use <span class="math notranslate nohighlight">\(\mu\)</span>, because in the next round of folding, the position <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu]\)</span> will be folded with another symmetrical point regarding <span class="math notranslate nohighlight">\(\alpha_{d-2}\)</span>. The specific symmetrical position depends on the situation: if <span class="math notranslate nohighlight">\(\mu &lt; n_{d-2}\)</span>, then <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu+n_{d-2}]\)</span> is the symmetrical point; if <span class="math notranslate nohighlight">\(\mu \geq n_{d-2}\)</span>, then <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu-n_{d-2}]\)</span> is the symmetrical point. Assume <span class="math notranslate nohighlight">\(\mu \geq n_{d-2}\)</span>; then the Prover sends <span class="math notranslate nohighlight">\(\pi_{d-1}[\mu-n_{d-2}]\)</span> and its Merkle Path to the Verifier to allow the Verifier to check the folding relationship from <span class="math notranslate nohighlight">\(\pi_{d-1}\)</span> to <span class="math notranslate nohighlight">\(\pi_{d-2}\)</span>.</p>
+<p>In this way, by providing a single random scalar <span class="math notranslate nohighlight">\(\mu\)</span>, the Verifier can verify all the folding relationships from <span class="math notranslate nohighlight">\(\pi_{d}\)</span> to <span class="math notranslate nohighlight">\(\pi_{0}\)</span>. This verification process constitutes one round.</p>
+<p>To elevate reliability to a sufficient level, the Verifier must perform multiple rounds to ensure that the Prover has no room to cheat. The Query-phase leverages the Proximity Gap property. A cheating Prover who alters the codeword is likely to be far from the legitimate encoding space, enabling the Verifier to detect cheating with only a small number of sampling attempts.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>This article described the framework of the Commit-phase and Query-phase of the Basefold-IOPP protocol. This framework generalizes and extends the FRI protocol, expanding from RS-Codes to any Foldable Linear Codes. However, it is important to note that Basefold does not support codeword folding of degree greater than 2. This is because the Basefold-IOPP protocol must not only perform Proximity Testing but also provide an operational result of an MLE polynomial. This will be the topic of the next article in this series.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ZCF23] Zeilberger, H., Chen, B., Fisch, B. (2024). BaseFold: Efficient Field-Agnostic Polynomial Commitment Schemes from Foldable Codes. In: Reyzin, L., Stebila, D. (eds) Advances in Cryptology – CRYPTO 2024. CRYPTO 2024. Lecture Notes in Computer Science, vol 14929. Springer, Cham.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proof-of-proximity">Proof of Proximity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-phase">Commit-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-phase">Query-phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

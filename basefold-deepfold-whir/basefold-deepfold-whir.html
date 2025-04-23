@@ -1,0 +1,1031 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>BaseFold vs DeepFold vs WHIR &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold-deepfold-whir/basefold-deepfold-whir';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold-deepfold-whir/basefold-deepfold-whir.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold-deepfold-whir/basefold-deepfold-whir.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>BaseFold vs DeepFold vs WHIR</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">从多元线性多项式到一元多项式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-sumcheck">Basefold: 借助 Sumcheck</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepfold-deep-fri">DeepFold: 引入 DEEP-FRI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whir-stir">WHIR: 引入 STIR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">效率对比</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold-vs-deepfold-vs-whir">
+<h1>BaseFold vs DeepFold vs WHIR<a class="headerlink" href="#basefold-vs-deepfold-vs-whir" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>本篇文章主要介绍并对比三个比较类似的多元线性<em>多项式承诺方案</em>（PCS），分别是 BaseFold [ZCF23]、DeepFold [GLHQTZ24] 与 WHIR [ACFY24b]。</p>
+<p>FRI [BBHR18] 协议是一种 <em>IOPP</em> (Interactive Oracle Proof of Proximity) 协议，用来判断一个单变量的多项式是否接近于一个事先约定的 Reed Solomon 编码空间，由此可以用来对一个多项式做<em>低度测试</em> (low degree test) 。FRI 协议天然支持的是单变量多项式，而非多元线性多项式，因此，要结合 FRI 协议来构造一个高效的多元线性多项式承诺方案并非易事，Basefold 协议借助于 sumcheck 协议做到了这一点。</p>
+<p>对于一个一元多项式，当对其应用 FRI 协议时，其实就是用随机数不断对该多项式进行折叠的过程，直到最后折叠到一个常数，Basefold 协议巧妙的发现该常数正好对应于一个多元线性多项式在一个随机点的取值，而在 Sumcheck 协议的最后一步也需要一个 Oracle 来得到一个多元线性多项式在一个随机点的值，如果同步的进行 FRI 协议与 sumcheck 协议，两者在协议过程中选取同样的随机数，那么自然 FRI 协议最后一步的常数就能充当 sumcheck 协议在最后一步 oracle 的功能，用来完成整个 sumcheck 协议。Basefold 整个协议思路是非常简洁巧妙的，结合了 sumcheck 与 FRI 协议构造了一个高效的多元线性多项式承诺方案。Basefold 协议其实不只适用于 Reed Solomon 编码，而是适用于所有满足 foldable code 定义的编码，在本文中，为了方便对这三个协议进行对比，仅考虑 Reed Solomon 编码。</p>
+<p>DeepFold 协议在 Basefold 协议基础上进行了改进，将 Basefold 协议中的 FRI 协议替换为 DEEP-FRI [BGKS20] 协议。DEEP-FRI 协议相比 FRI 协议，以牺牲一点点 Prover 的计算量的代价换来了 Verifier 的轮询次数的减少，从而降低整个协议的证明大小和 Verifier 的计算量。</p>
+<p>WHIR 协议相比 DeepFold 协议更进一步，将 Basefold 协议中的 FRI 协议改为 STIR [ACFY24a] 协议。STIR 协议相比 FRI 协议和 DEEP-FRI 协议，Verifier 的轮询次数更少，其思想是在协议的每一轮中降低码率，这样编码中的冗余增多，Verifier 就能有更多的信息来判断其接收到的消息是否属于一个编码空间了，从而减少了查询次数。</p>
+<p>总结下，三个协议的整体框架如下图所示。</p>
+<p><img alt="" src="../_images/basefold-deepfold-whir-compare.svg" /></p>
+<section id="id1">
+<h2>从多元线性多项式到一元多项式<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>在具体介绍这三个多元线性多项式承诺方案之前，先介绍下一个多元线性多项式与一元多项式之间的对应关系，在建立了这个对应关系的基础上，才能大胆的去调用仅适用于一元多项式的 FRI、DEEP-FRI 和 STIR 协议。</p>
+<p>对于一个 <span class="math notranslate nohighlight">\(n\)</span> 元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots, X_{n-1})\)</span> ，用系数形式表示为</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,\ldots,X_{n-1}) = a_0 + a_1 X_0 + a_2 X_1 + a_3 X_0X_1 + \ldots + a_{2^n - 1} \cdot X_0X_1 \cdots X_{n-1}
+\]</div>
+<p>其中多元线性多项式的基 <span class="math notranslate nohighlight">\((1, X_0, X_1, X_0X_1, \ldots, X_0X_1\cdots X_{n-1})\)</span> 按照字典序进行排列。</p>
+<p>将多元线性多项式的系数直接对应到单变量多项式的系数，与 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots, X_{n-1})\)</span> 相对应的一元多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = a_0 + a_1 X + a_2 X^2 + a_3 X^3 + \ldots + a_{2^n - 1} X^{2^n - 1}
+\]</div>
+<p>若在多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots, X_{n-1})\)</span> 中令 <span class="math notranslate nohighlight">\(X_0 = X^{2^0}, X_1 = X^{2^1}, \ldots , X_{n-1} = X^{2^{n - 1}}\)</span> ，则可以发现</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\tilde{f}(X^{2^0},X^{2^1},\ldots,X^{2^{n-1}})  &amp; = a_0 + a_1 \cdot X + a_2 \cdot X^2 + a_3 \cdot X \cdot X^2 + \ldots + a_{2^n - 1} \cdot X^{2^0} \cdot X^{2^1} \cdot X^{2^{n - 1}} \\
+ &amp; = a_0 + a_1 X + a_2 X^2 + a_3 X^3 + \ldots + a_{2^n - 1} X^{2^n - 1} \\
+ &amp; = f(X)
+\end{align}
+\end{split}\]</div>
+<p>上面的等式 <span class="math notranslate nohighlight">\(\tilde{f}(X^{2^0},X^{2^1},\ldots,X^{2^{n-1}}) = f(X)\)</span> 深刻地揭示了多元线性多项式与一元多项式的内在联系，这其实也可以看作是多元线性多项式的基 <span class="math notranslate nohighlight">\((1, X_0, X_1, \ldots , X_0X_1\cdots X_{n-1})\)</span> 与一元多项式的基 <span class="math notranslate nohighlight">\((1, X, X^2, X^3, \ldots , X^{2^{n} - 1})\)</span> 之间的转换关系，建立起这样的关系之后，一元多项式和多元线性多项式之间就能自由的转换，本质上只是基的不同。</p>
+<p>例如要求一元多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 在一个点 <span class="math notranslate nohighlight">\(\alpha\)</span> 处的值 <span class="math notranslate nohighlight">\(f(\alpha)\)</span> ，那么它就等于 <span class="math notranslate nohighlight">\(\tilde{f}(\alpha, \alpha^2, \alpha^4, \ldots, \alpha^{2^n - 1})\)</span> 。</p>
+<p>下面来看看适用于一元多项式的 FRI 协议中的折叠过程，先将 <span class="math notranslate nohighlight">\(f(X)\)</span> 进行奇偶项的拆分，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+f(X)  &amp; = a_0 + a_1 X + a_2 X^2 + a_3 X^3 +  \ldots + a_{2^n - 1} X^{2^n - 1} \\
+ &amp; = (a_0 + a_2 X^2 + \ldots + a_{2^{n}-2}X^{2^n - 2}) + X \cdot (a_1 + a_3 X^2 + \ldots + a_{2^n - 1} X^{2^n - 2}) \\
+ &amp; := f_{even}(X^2) + X \cdot f_{odd}(X^2)
+\end{align}
+\end{split}\]</div>
+<p>此时 <span class="math notranslate nohighlight">\(f_{even}(X)\)</span> 与 <span class="math notranslate nohighlight">\(f_{odd}(X)\)</span> 的次数界 <span class="math notranslate nohighlight">\(2^{n - 1}\)</span> 相比原来的多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 的次数界 <span class="math notranslate nohighlight">\(2^n\)</span> 已经减半了，用一个随机数 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 将这两个多项式折叠起来，得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+f^{(1)}(X)  &amp; = f_{even}(X) + \alpha_1 \cdot f_{odd}(X) \\
+ &amp; = (a_0 + a_2 X + \ldots + a_{2^{n}-2}X^{2^{n - 1} - 1}) + \alpha_1 \cdot (a_1 + a_3 X + \ldots + a_{2^n - 1} X^{2^{n - 1} - 1}) 
+\end{align}
+\end{split}\]</div>
+<p>再用多元线性多项式的角度来看这个折叠过程，将 <span class="math notranslate nohighlight">\(f(X)\)</span> 进行奇偶项拆分的过程是提出 <span class="math notranslate nohighlight">\(X\)</span> 的项，对应着在多元线性多项式中提出含有 <span class="math notranslate nohighlight">\(X_0\)</span> 的项，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+f(X)   &amp; = \tilde{f}(X^{2^0},X^{2^1},\ldots,X^{2^{n-1}})   \\
+ &amp; = \tilde{f}(X_0,\ldots,X_{n-1})  \\
+ &amp; = a_0 + a_1 X_0 + a_2 X_1 + \ldots + a_{2^n - 1} X_0X_1\cdots X_{n-1} \\
+&amp; = (a_0 + a_2 X_1 + \ldots + a_{2^{n}-2}X_1X_2\cdots X_{n-1}) + X_0 \cdot (a_1 + a_3 X_1 + \ldots + a_{2^n - 1} X_1X_2\cdots X_{n-1}) \\
+ &amp; := \tilde{f}_{even}(X_1,\ldots,X_{n-1}) + X_0 \cdot \tilde{f}_{odd}(X_1, \ldots, X_{n-1})
+\end{align}
+\end{split}\]</div>
+<p>此时 <span class="math notranslate nohighlight">\(\tilde{f}_{even}(X_1, \ldots, X_{n-1})\)</span> 与 <span class="math notranslate nohighlight">\(\tilde{f}_{odd}(X_1, \ldots, X_{n-1})\)</span> 中变量的个数已经少了一个了，只有 <span class="math notranslate nohighlight">\(n - 1\)</span> 个，用随机数 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 对多元线性多项式进行折叠，对应着</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+f^{(1)}(X)  &amp; = f_{even}(X) + \alpha_1 \cdot f_{odd}(X) \\
+ &amp; = \tilde{f}_{even}(X_0,\ldots,X_{n-2}) + \alpha_1 \cdot \tilde{f}_{odd}(X_0, \ldots, X_{n-2}) \\
+ &amp; = \tilde{f}(\alpha_1, X_0, X_1, \ldots, X_{n - 2})
+\end{align}
+\end{split}\]</div>
+<p>那么折叠之后的一元多项式 <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span> 对应的多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_0, X_1, \ldots, X_{n- 2})\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(1)}(X_0, X_1, \ldots, X_{n- 2}) = \tilde{f}(\alpha_1, X_0, X_1, \ldots, X_{n - 2})
+\]</div>
+<p>上面的式子说明了对一元多项式进行折叠的过程，对应着对多元线性多项式用同样的随机数进行折叠，其结果等于对原来的 <span class="math notranslate nohighlight">\(n\)</span> 元线性多项式进行变量替换，用 <span class="math notranslate nohighlight">\((\alpha_1, X_0, X_1, \ldots, X_{n-2})\)</span> 替换 <span class="math notranslate nohighlight">\((X_0, X_1, X_2, \ldots, X_{n - 1})\)</span> 。</p>
+<p>若对 <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span> 继续用上面的方法进行折叠，用随机数 <span class="math notranslate nohighlight">\(\alpha_2\)</span> 折叠得到 <span class="math notranslate nohighlight">\(f^{(2)}(X)\)</span> ，那么其对应的多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}^{(2)}(X_0, X_1, \ldots, X_{n - 3})\)</span> 就应该满足</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(2)}(X_0, X_1, \ldots, X_{n- 3}) = \tilde{f}(\alpha_1, \alpha_2, X_0, \ldots, X_{n - 3})
+\]</div>
+<p>以此类推，进行 <span class="math notranslate nohighlight">\(k\)</span> 折，选取 <span class="math notranslate nohighlight">\(k\)</span> 个随机数为 <span class="math notranslate nohighlight">\(\vec{\alpha} = (\alpha_1, \ldots, \alpha_k)\)</span> ，那么得到的折叠多项式 <span class="math notranslate nohighlight">\(f^{(k)}(X)\)</span> 对应的多元线性多项式满足</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(k)}(X_0, X_1, \ldots, X_{n- k - 1}) = \tilde{f}(\alpha_1, \alpha_2, \ldots, \alpha_k, X_0, \ldots, X_{n - k - 1})
+\]</div>
+<p>既然在 FRI 协议中对一元多项式的折叠隐含了对多元线性多项式进行类似的折叠，那么 FRI 协议适用的一元多项式的 Reed Solomon 编码空间也可以用多元线性多项式的视角来看待。根据 WHIR 论文 [ACFY24b] 中的描述，对于编码空间 <span class="math notranslate nohighlight">\(\mathsf{RS}[\mathbb{F}, \mathcal{L}, n]\)</span> ，其表示的是在有限域 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 上所有次数严格小于 <span class="math notranslate nohighlight">\(2^n\)</span> 的一元函数在 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 上求值的集合，那么</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{RS}[\mathbb{F}, \mathcal{L}, n] &amp; := \{f: \mathcal{L} \rightarrow \mathbb{F}: \exists \hat{g} \in \mathbb{F}^{&lt; 2^n}[X] \text{ s.t. } \forall x \in \mathcal{L}, f(x) = \hat{g}(x)\} \\
+    &amp; = \{f: \mathcal{L} \rightarrow \mathbb{F}: \exists \tilde{f} \in \mathbb{F}^{&lt; 2}[X_0, \ldots, X_{n - 1}] \text{ s.t. } \forall x \in \mathcal{L}, f(x) = \tilde{f}(x^{2^0}, x^{2^1},\ldots, x^{2^{n-1}})\}
+\end{aligned}
+\end{split}\]</div>
+<p>至此总结下，在一元线性多项式与多元线性多项式建立了系数的对应关系之后，它们之间满足等式 <span class="math notranslate nohighlight">\(\tilde{f}(X^{2^0},X^{2^1},\ldots,X^{2^{n-1}}) = f(X)\)</span> ，由此可以得到</p>
+<ol class="arabic simple">
+<li><p>一元多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 在一个点 <span class="math notranslate nohighlight">\(\alpha\)</span> 处求值  <span class="math notranslate nohighlight">\(f(\alpha) = \tilde{f}(\alpha, \alpha^2, \alpha^4, \ldots, \alpha^{2^n - 1})\)</span> 。</p></li>
+<li><p>对一元多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 依次用随机数 <span class="math notranslate nohighlight">\((\alpha_1, \ldots, \alpha_k)\)</span> 进行 <span class="math notranslate nohighlight">\(k\)</span> 次折叠，得到的折叠多项式 <span class="math notranslate nohighlight">\(f^{(k)}(X)\)</span> 对应的多元线性多项式满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(k)}(X_0, X_1, \ldots, X_{n- k - 1}) = \tilde{f}(\alpha_1, \alpha_2, \ldots, \alpha_k, X_0, \ldots, X_{n - k - 1})
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Reed Solomon 编码空间 <span class="math notranslate nohighlight">\(\mathsf{RS}[\mathbb{F}, \mathcal{L}, n]\)</span> 既可以用一元多项式的视角看待，也可以用多元线性多项式的视角看待，</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{RS}[\mathbb{F}, \mathcal{L}, n] &amp; := \{f: \mathcal{L} \rightarrow \mathbb{F}: \exists \hat{g} \in \mathbb{F}^{&lt; 2^n}[X] \text{ s.t. } \forall x \in \mathcal{L}, f(x) = \hat{g}(x)\} \\
+    &amp; = \{f: \mathcal{L} \rightarrow \mathbb{F}: \exists \tilde{f} \in \mathbb{F}^{&lt; 2}[X_0, \ldots, X_{n - 1}] \text{ s.t. } \forall x \in \mathcal{L}, f(x) = \tilde{f}(x^{2^0}, x^{2^1},\ldots, x^{2^{n-1}})\}
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="basefold-sumcheck">
+<h2>Basefold: 借助 Sumcheck<a class="headerlink" href="#basefold-sumcheck" title="Link to this heading">#</a></h2>
+<p>Prover 想向 Verifier 证明 <span class="math notranslate nohighlight">\(n\)</span> 元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots, X_{n-1})\)</span> 在一个公开点 <span class="math notranslate nohighlight">\(\vec{u} = (u_0, u_1, \ldots, u_{n - 1})\)</span> 处的值为 <span class="math notranslate nohighlight">\(v\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, \ldots, u_{n - 1}) = v \tag{1}
+\]</div>
+<p>对于多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots, X_{n-1})\)</span> ，也可以用在 boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B}^n = \{0,1\}^n\)</span> 上的值来表示，</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, \ldots, X_{n-1}) = \sum_{\vec{b} \in \{0,1\}^n} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, (X_0, \ldots, X_{n-1}))
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\tilde{eq}(\vec{b}, (X_0, \ldots, X_{n-1}))\)</span> 是 Lagrange 基函数，向量 <span class="math notranslate nohighlight">\(\vec{b}\)</span>  表示为 <span class="math notranslate nohighlight">\(\vec{b} = (b_0, \ldots, b_{n - 1})\)</span> ，那么</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{eq}((b_0, \ldots , b_{n - 1}), (X_0, \ldots, X_{n-1})) = \prod_{i = 0}^{n - 1} (b_i X_i + (1 - b_i)(1 - X_i))
+\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, \ldots, u_{n-1}) = \sum_{\vec{b} \in \{0,1\}^n} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, (u_0, \ldots, u_{n-1}))
+\]</div>
+<p>证明 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, \ldots, u_{n - 1}) = v\)</span> 就可以转换为证明一个在 boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B}^n = \{0,1\}^n\)</span> 上的求和式</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\vec{b} \in \{0,1\}^n} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, (u_0, \ldots, u_{n-1})) = v \tag{2}
+\]</div>
+<p>这恰恰可以借助于 sumcheck 协议来证明。</p>
+<p>首先 Prover 发送一个单变量多项式</p>
+<div class="math notranslate nohighlight">
+\[
+h_{1}(X) = \sum_{\vec{b} \in \{0,1\}^{n - 1}} \tilde{f}(X,\vec{b}) \cdot \tilde{eq}((X,\vec{b}), (u_0, \ldots, u_{n-1}))
+\]</div>
+<p><span class="math notranslate nohighlight">\(h_{1}(X)\)</span> 就是将 <span class="math notranslate nohighlight">\((2)\)</span> 式中的 <span class="math notranslate nohighlight">\(\vec{b} = (b_0, \ldots, b_{n - 1})\)</span> 中的第一个 <span class="math notranslate nohighlight">\(b_{0}\)</span> 替换为一个变量 <span class="math notranslate nohighlight">\(X\)</span> ，因此证明 <span class="math notranslate nohighlight">\((2)\)</span> 式就转换为验证 <span class="math notranslate nohighlight">\(h_{1}(0) + h_{1}(1) = v\)</span> 。为了相信 Prover 发送的 <span class="math notranslate nohighlight">\(h_{1}(X)\)</span> 的是正确构造的，Verifier 选取随机数 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 发送给 Prover ，Prover 计算</p>
+<div class="math notranslate nohighlight">
+\[
+h_{1}(\alpha_1) = \sum_{\vec{b} \in \{0,1\}^{n - 1}} \tilde{f}(\alpha_1, \vec{b}) \cdot \tilde{eq}((\alpha_1,\vec{b}), (u_0, \ldots, u_{n-1})) \tag{3}
+\]</div>
+<p>并向 Verifier 发送 <span class="math notranslate nohighlight">\(h_1(\alpha_1)\)</span> 。Prover 需要向 Verifier 证明发送的 <span class="math notranslate nohighlight">\(h_1(\alpha_1)\)</span> 的正确性，而 <span class="math notranslate nohighlight">\((3)\)</span> 式又是一个boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B}^{n-1} = \{0,1\}^{n-1}\)</span> 上的一个求和的形式，因此证明 <span class="math notranslate nohighlight">\((2)\)</span> 式就转换为了证明 <span class="math notranslate nohighlight">\((3)\)</span> 式。将上述过程继续下去，Verifier 再依次选取随机数 <span class="math notranslate nohighlight">\(\alpha_2,\ldots, \alpha_n\)</span> ，最后会转换为证明</p>
+<div class="math notranslate nohighlight">
+\[
+h_{n}(\alpha_{n}) =\tilde{f}(\alpha_1, \ldots, \alpha_n) \cdot \tilde{eq}((\alpha_1,\ldots, \alpha_n), (u_0, \ldots, u_{n-1}))
+\]</div>
+<p>此时 Verifier 需要得到 <span class="math notranslate nohighlight">\(\tilde{f}(\alpha_1, \ldots, \alpha_n)\)</span> 的值来验证上式。如果在 FRI 协议对 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots, X_{n-1})\)</span> 对应的一元多项式 <span class="math notranslate nohighlight">\(f(X)\)</span> 依次用相同的随机数 <span class="math notranslate nohighlight">\((\alpha_1,\alpha_2,\ldots, \alpha_n)\)</span> 进行折叠，那么折叠到最后一步会得到一个常数 <span class="math notranslate nohighlight">\(f^{(n)}\)</span> ，根据上一小节所得到的多元线性多项式与一元多项式的关系，可以知道</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(n)} = \tilde{f}(\alpha_1, \ldots, \alpha_n)
+\]</div>
+<p>Basefold 协议就是这样的思想，两边同步用相同的随机数做 sumcheck 协议和 FRI 协议，FRI 协议的最后一步提供了 sumcheck 协议最后一步想得到的 <span class="math notranslate nohighlight">\(\tilde{f}(\alpha_1, \ldots, \alpha_n)\)</span> 的值，因此可以完成整个 sumcheck 协议，从而证明了一个多元线性多项式在一点的打开值的正确性，即 <span class="math notranslate nohighlight">\((1)\)</span> 式。关于 Basefold 协议的更详细的描述可参考 <a class="reference external" href="https://github.com/sec-bit/mle-pcs/tree/main/basefold">Basefold 系列博客文章</a> ，在本文仅叙述关键的协议思想。</p>
+</section>
+<section id="deepfold-deep-fri">
+<h2>DeepFold: 引入 DEEP-FRI<a class="headerlink" href="#deepfold-deep-fri" title="Link to this heading">#</a></h2>
+<p>由于 Basefold 协议在原论文 [ZCF23] 中仅证明了在唯一解码下的 soundness ，DeepFold 协议的思路是在 Basefold 协议中通过引入 DEEP-FRI 协议来改进这一点，并证明了在 list decoding 下也是安全的。在 FRI、DEEP-FRI 以及 STIR 协议中，Verifier 需要通过重复向 Prover 轮询，来达到一定的安全性，若在安全性证明中，能证明的界越大，如从 unique decoding 达到 list decoding ，那么就可以大大减少 Verifier 的轮询次数，从而减少 proof size 和 Verifier 的计算量。</p>
+<p>在 FRI 协议的每一轮，Prover 都会发送 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 在一个区域 <span class="math notranslate nohighlight">\(\mathcal{L}_i\)</span> 上的值的 Merkle 承诺给 Verifier，即 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 的 Reed Solomon 编码的承诺，记 <span class="math notranslate nohighlight">\(\vec{v}^{(i)} = f^{(i)}|_{\mathcal{L}_i}\)</span> 。Verifier 在收到关于 <span class="math notranslate nohighlight">\(\vec{v}_i\)</span> 的 Merkle 承诺后，会去判断其距离对应的编码空间 <span class="math notranslate nohighlight">\(\mathsf{RS}[\mathbb{F}, \mathcal{L}_i, 2^{n - i}]\)</span> 是否比较近。现在在 list decoding 的情况下进行考虑，由于此时解码并不唯一，那么在第 <span class="math notranslate nohighlight">\(i\)</span> 轮，<span class="math notranslate nohighlight">\(f^{(i)'}\)</span>  距离 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 也比较近，作恶的 Prover 可能选取 <span class="math notranslate nohighlight">\(f^{(i)'}\)</span> 来进行后续的协议，也能通过 FRI 协议的后续检查，但是在最后一轮折叠得到的常数就变为了 <span class="math notranslate nohighlight">\(f^{(n)'}\)</span> ，其并不等于 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{\alpha})\)</span> ，不能在 sumcheck 协议的最后一轮检查中提供一个正确的值。DEEP-FRI [BGKS20] 协议中的 DEEP 方法通过让 Prover 多做一点点工作，来限制作恶的 Prover 只能发送正确的 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> ，否则 Prover 无法通过后续的检查，这样就将 list decoding 转换为了 unique decoding 。</p>
+<p><img alt="" src="../_images/basefold-deepfold-whir-list-decoding.svg" /></p>
+<p>DEEP 方法就是在 <span class="math notranslate nohighlight">\(\mathbb{F} \setminus \mathcal{L}_i\)</span> 中随机选取一个点 <span class="math notranslate nohighlight">\(\beta_i\)</span> ，要求 Prover 提供 <span class="math notranslate nohighlight">\(f^{(i)}(\beta_i)\)</span> 的值，并能确保该值确实是等于 <span class="math notranslate nohighlight">\(f^{(i)}(\beta_i)\)</span> ，这样就能限制 Prover 只能选择发生 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 而非 <span class="math notranslate nohighlight">\(f^{(i)'}\)</span> 。现在剩下的问题是要确保 <span class="math notranslate nohighlight">\(f^{(i)}(\beta_i)\)</span> 的正确性，Verifier 可以要求 Prover 再发送 <span class="math notranslate nohighlight">\(f^{(i)}(-\beta_i)\)</span> ，那么 Verifier 能自己通过这两个值算出 <span class="math notranslate nohighlight">\(f^{(i + 1)}(\beta_i^2)\)</span> ，通过多元线性多项式与一元多项式的转换，我们知道</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i + 1)}(\beta_i^2) = \tilde{f}(\alpha_1, \alpha_2, \ldots, \alpha_{i + 1}, \beta_i^2, \beta_i^4, \ldots, \beta_i^{2^{n - i - 1}})
+\]</div>
+<p>因此 Verifier 可以继续让 Prover 提供 <span class="math notranslate nohighlight">\(f^{(i+ 1)}(-\beta_i^2)\)</span> 的值，Verifier 自己算出 <span class="math notranslate nohighlight">\(f^{(i + 2)}(\beta_i^4)\)</span> ，以此类推，直到最后 Verifier 可以自己算出 <span class="math notranslate nohighlight">\(f^{(n)}(\beta_i^{2^{n-i-1}})\)</span> ，这个值应该等于</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(n)}(\beta_i^{2^{n-i-1}}) = \tilde{f}(\alpha_1, \alpha_2, \ldots, \alpha_{i + 1}, \ldots, \alpha_{n})
+\]</div>
+<p>而这个值正是 FRI 协议中对 <span class="math notranslate nohighlight">\(f(X)\)</span> 折叠到最后一步的值，Verifier 可以检查自己计算出的 <span class="math notranslate nohighlight">\(f^{(n)}(\beta_i^{2^{n-i-1}})\)</span> 的值是否等于 FRI 协议最后一步的值，这样就验证了 <span class="math notranslate nohighlight">\(f^{(i)}(\pm \beta_i)\)</span> 的正确性了。</p>
+<p>至此，总结下 DeepFold 协议的思路，DeepFold 协议借鉴 BaseFold 协议的框架，将其中的 FRI 协议替换为 DEEP-FRI 协议，以减少 Verifier 的查询次数。DeepFold 协议依然是同步进行 sumcheck 协议与 DEEP-FRI 协议，在使用 DEEP 技巧时，每一轮 Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F} \setminus \mathcal{L}_i\)</span> 中选取一个随机数 <span class="math notranslate nohighlight">\(\beta_i\)</span> ，Prover 向 Verifier 发送下列的值</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(-\beta_i),f^{(i + 1)}(- \beta_i^2), \ldots, f^{(n - 1)}(-\beta_i^{2^{n - i - 2}})
+\]</div>
+<p>Verifier 通过这些值自己算出 <span class="math notranslate nohighlight">\(f^{(n)}(\beta_i^{2^{n-i-1}})\)</span> ，来检验其与 FRI 折叠到最后一步的常数是否相等。</p>
+<p>关于 DeepFold 协议更详细的描述可参考博客文章 <a class="reference external" href="https://github.com/sec-bit/mle-pcs/blob/main/fri/deepfold.zh.md">DeepFold 笔记：协议概览</a> 。</p>
+</section>
+<section id="whir-stir">
+<h2>WHIR: 引入 STIR<a class="headerlink" href="#whir-stir" title="Link to this heading">#</a></h2>
+<p>对于 FRI 系列协议(包括 FRI、 DEEP-FRI)，Verifier 的查询次数影响着 proof size 和 Verifier 的计算量。STIR 协议 [ACFY24a] 是对 FRI 系列协议的一种改进，通过降低每一轮中的码率，增加编码中的冗余，从而减少 Verfier 的查询次数，需要注意的是 STIR 协议中每轮需要进行 2 折以上才能体现其优势，从而来降低每轮的码率。关于 STIR 协议更详细的介绍可见博客文章 <a class="reference external" href="https://github.com/sec-bit/mle-pcs/blob/main/fri/stir.zh.md">STIR: 提升码率来降低查询复杂度</a>。</p>
+<p>WHIR 协议将 Basefold 协议框架中的 FRI 协议替换为 STIR 协议，更进一步减少 Verifier 的查询次数。在 WHIR 论文 [ACFY24b] 中，其提出了 CRS (constrained Reed-Solomon code) 的概念，CRS 实际上是 Reed-Solomon 编码的一个 subcode，通过在 CRS 定义中引入类似 sumcheck 的约束，使得 WHIR 协议更加通用。</p>
+<p><strong>定义 1</strong> [ACFY24b, Definition 1] 对于域为 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> ，smooth evaluation domain 为 <span class="math notranslate nohighlight">\(\mathcal{L} \subseteq \mathbb{F}\)</span> ，变量的数量为 <span class="math notranslate nohighlight">\(n \in \mathbb{N}\)</span> ，权重多项式 <span class="math notranslate nohighlight">\(\hat{w} \in \mathbb{F}[Z, X_1, \ldots, X_n]\)</span> ，以及目标 <span class="math notranslate nohighlight">\(\sigma \in \mathbb{F}\)</span> 的  <strong>constrained Reed-Solomon code</strong> ，定义为</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{CRS}[\mathbb{F}, \mathcal{L}, n, \hat{w}, \sigma] := \left\{ f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, n]: \sum_{\vec{b} \in \{0,1\}^n} \hat{w}(\tilde{f}(\vec{b}), \vec{b}) = \sigma \right\}.
+\]</div>
+<p>从定义可以看出，CRS 首先是 RS code，即定义中的 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, n]\)</span> ，但在此之上还需要满足一个类似 sumcheck 的求和约束 <span class="math notranslate nohighlight">\(\sum_{\vec{b} \in \{0,1\}^n} \hat{w}(\tilde{f}(\vec{b}), \vec{b}) = \sigma\)</span> 。</p>
+<p>若想证明 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, \ldots, u_{n - 1}) = v\)</span> ，令 CRS 定义中的目标 <span class="math notranslate nohighlight">\(\sigma = v\)</span>  ，权重多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}(Z, \vec{X}) = Z \cdot \tilde{eq}(\vec{X}, \vec{u})
+\]</div>
+<p>那么 CRS 定义中类似 sumcheck 的约束就为</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\vec{b} \in \{0,1\}^n} \hat{w}(\tilde{f}(\vec{b}), \vec{b}) = \sum_{\vec{b} \in \{0,1\}^n} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, \vec{u}) = v
+\]</div>
+<p>而 <span class="math notranslate nohighlight">\(\sum_{\vec{b} \in \{0,1\}^n} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, \vec{u}) = \tilde{f}(u_0, u_1, \ldots, u_{n - 1})\)</span> ，因此上面类似 sumcheck 的约束正是 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, \ldots, u_{n - 1}) = v\)</span> ，从而针对 CRS 的 WHIR 协议是可以用来做多元线性多项式的承诺方案的。</p>
+<p>WHIR 协议的整体框架流程依然和 Basefold 协议一样，同步用相同的随机数进行 sumcheck 协议和 STIR 协议，由于 STIR 协议每一轮需要进行 2 折以上才能比 FRI 系列协议更优，因此在下面协议的描述中，每一轮对一元多项式进行 <span class="math notranslate nohighlight">\(2^k\)</span> 折。</p>
+<p>下面深入 WHIR 协议的一次迭代(来自[ACFYb, 2.1.3 WHIR protocol])，看看 WHIR 是如何具体结合 BaseFold 与 STIR 协议的。经过一次迭代，将测试 <span class="math notranslate nohighlight">\(f \in \mathcal{C} := \mathrm{CRS}[\mathbb{F}, \mathcal{L}, n, \hat{w}, \sigma]\)</span> 的 proximity 问题转换为测试 <span class="math notranslate nohighlight">\(f' \in \mathcal{C}' := \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, n - k, \hat{w}', \sigma']\)</span> ，其中 <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span> 的大小只有 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 的一半。记 <span class="math notranslate nohighlight">\(\mathrm{CRS}[\mathbb{F}, \mathcal{L}, n, \hat{w}, \sigma]\)</span> 的码率为 <span class="math notranslate nohighlight">\(\rho\)</span> ，则</p>
+<div class="math notranslate nohighlight">
+\[
+\rho = \frac{2^n}{|\mathcal{L}|}
+\]</div>
+<p>那么经过一次迭代之后 <span class="math notranslate nohighlight">\(\mathcal{C}' = \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, n - k, \hat{w}', \sigma']\)</span> 的码率为</p>
+<div class="math notranslate nohighlight">
+\[
+\rho' = \frac{2^{n - k}}{|\mathcal{L}^{(2)}|} = \frac{2^{n - k}}{\frac{|\mathcal{L}|}{2}} = \frac{2^{n - k + 1}}{|\mathcal{L}|} = 2^{1 - k} \cdot \rho = \left(\frac{1}{2}\right)^{k - 1} \cdot \rho
+\]</div>
+<p>当 <span class="math notranslate nohighlight">\(k \ge 2\)</span> 时，可以看到 <span class="math notranslate nohighlight">\(\rho'\)</span> 比 <span class="math notranslate nohighlight">\(\rho\)</span> 小，码率减小，这就是 STIR 协议的核心思想。虽然 <span class="math notranslate nohighlight">\(f\)</span> 在一次迭代的过程中进行了 <span class="math notranslate nohighlight">\(2^k\)</span> 折，但是 evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 每次保持只减少一半，而不是也缩小 <span class="math notranslate nohighlight">\(2^k\)</span> 倍，这样通过增大 evaluation domain，进而降低了码率，减少了 Verifier 的查询次数。</p>
+<p>WHIR 协议的一次迭代如下图所示。</p>
+<p><img alt="" src="../_images/basefold-deepfold-whir-whir.svg" /></p>
+<ol class="arabic">
+<li><p>Sumcheck rounds. Prover 和 Verifier 针对 <span class="math notranslate nohighlight">\(\mathrm{CRS}[\mathbb{F}, \mathcal{L}, n, \hat{w}, \sigma]\)</span> 中的约束</p>
+<div class="math notranslate nohighlight">
+\[
+    \sum_{\mathbf{b} \in \{0,1\}^n} \hat{w}(\hat{f}(\mathbf{b}), \mathbf{b}) = \sigma
+    \]</div>
+<p>进行 <span class="math notranslate nohighlight">\(k\)</span> 轮的 Sumcheck 交互，其中 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 是与 <span class="math notranslate nohighlight">\(f\)</span> 相对应的多元线性多项式。</p>
+<p>a. Prover 向 Verifier 发送一个单变量多项式 <span class="math notranslate nohighlight">\(\hat{h}_1(X) := \sum_{\mathbf{b} \in \{0,1\}^{n-1}} \hat{w}(\tilde{f}(X, \mathbf{b}), X, \mathbf{b})\)</span> ，Verifier 检查 <span class="math notranslate nohighlight">\(\hat{h}_1(0) + \hat{h}_1(1) = \sigma\)</span> ，选取随机数 <span class="math notranslate nohighlight">\(\alpha_1 \leftarrow \mathbb{F}\)</span> 并发送，sumcheck 的 claim 就变为 <span class="math notranslate nohighlight">\(\hat{h}_1(\alpha_1) := \sum_{\mathbf{b} \in \{0,1\}^{n-1}} \hat{w}(\tilde{f}(\alpha_1, \mathbf{b}), \alpha_1, \mathbf{b})\)</span> 。
+b. 对于第 <span class="math notranslate nohighlight">\(i\)</span> 轮，<span class="math notranslate nohighlight">\(i\)</span> 从 <span class="math notranslate nohighlight">\(2\)</span> 到 <span class="math notranslate nohighlight">\(k\)</span> ，Prover 发送一个单变量多项式</p>
+<div class="math notranslate nohighlight">
+\[
+    \hat{h}_i(X) := \sum_{\mathbf{b} \in \{0,1\}^{n-i}} \hat{w}(\tilde{f}(\alpha_1, \ldots, \alpha_{i - 1}, X, \mathbf{b}), \alpha_1, \ldots, \alpha_{i - 1}, X, \mathbf{b})
+    \]</div>
+<p>Verifier 检查 <span class="math notranslate nohighlight">\(\hat{h}_{i}(0) + \hat{h}_{i}(1) = \hat{h}_{i-1}(\alpha_{i-1})\)</span> ，选取随机数 <span class="math notranslate nohighlight">\(\alpha_i \leftarrow \mathbb{F}\)</span> ，sumcheck 的 claim 就变为</p>
+<div class="math notranslate nohighlight">
+\[
+    \sum_{\mathbf{b} \in \{0,1\}^{m-i}} \hat{w}(\tilde{f}(\alpha_1, \ldots, \alpha_{i - 1}, \alpha_i, \mathbf{b}), \alpha_1, \ldots, \alpha_{i - 1}, \alpha_i, \mathbf{b}) = \hat{h}_i(\alpha_i)
+    \]</div>
+<p>因此经过上述 <span class="math notranslate nohighlight">\(k\)</span> 轮的 sumcheck ，Prover 发送了多项式 <span class="math notranslate nohighlight">\((\hat{h}_1, \ldots, \hat{h}_k)\)</span> ，Verifier 选取了随机数 <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} = (\alpha_1, \ldots, \alpha_k) \in \mathbb{F}^k\)</span> 。最初的 claim 变为下面这样的声明</p>
+<div class="math notranslate nohighlight">
+\[
+    \sum_{\mathbf{b} \in \{0,1\}^{n-k}} \hat{w}(\tilde{f}(\boldsymbol{\alpha}, \mathbf{b}), \boldsymbol{\alpha}, \mathbf{b}) = \hat{h}_k(\alpha_k)
+    \]</div>
+</li>
+<li><p>Send folded function. Prover 发送函数 <span class="math notranslate nohighlight">\(g: \mathcal{L}^{(2)} \rightarrow \mathbb{F}\)</span> 。在 Prover 诚实的情况下，<span class="math notranslate nohighlight">\(\hat{g} \equiv \tilde{f}(\boldsymbol{\alpha}, \cdot)\)</span> ，<span class="math notranslate nohighlight">\(g\)</span> 的定义是 <span class="math notranslate nohighlight">\(\hat{g}\)</span> 在 domain <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span> 上的求值。</p>
+<p>这里的意思是先对 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 用随机数 <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> 进行 <span class="math notranslate nohighlight">\(2^k\)</span> 折，得到 <span class="math notranslate nohighlight">\(\hat{g} = \tilde{f}(\boldsymbol{\alpha}, \cdot)\)</span> ，此时 <span class="math notranslate nohighlight">\(\hat{g} : \mathcal{L}^{(2^k)} \rightarrow \mathbb{F}\)</span> ，其定义域的范围是 <span class="math notranslate nohighlight">\(\mathcal{L}^{(2^k)}\)</span> ，由于 <span class="math notranslate nohighlight">\(\hat{g}\)</span> 本质是一个多项式，那么我们可以改变其自变量的定义域，将其改为 <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span> ，函数 <span class="math notranslate nohighlight">\(g\)</span> 与 <span class="math notranslate nohighlight">\(\hat{g}\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span> 上的求值是一致的。</p>
+</li>
+<li><p>Out-of-domain sample. Verifier 选取一个随机数 <span class="math notranslate nohighlight">\(z_0 \leftarrow \mathbb{F}\)</span> 并发送给 Prover 。设 <span class="math notranslate nohighlight">\(\boldsymbol{z}_0 := (z_0^{2^0}, \ldots, z_0^{2^{n-k - 1}})\)</span> 。</p></li>
+<li><p>Out-of-domain answers. Prover 发送 <span class="math notranslate nohighlight">\(y_0 \in \mathbb{F}\)</span> 。在诚实的情况下，<span class="math notranslate nohighlight">\(y_0 := \hat{g}(\boldsymbol{z}_0)\)</span> 。</p></li>
+<li><p>Shift queries and combination randomness. 对于 Verifier，对于每一个 <span class="math notranslate nohighlight">\(i \in [t]\)</span> ，选取随机数 <span class="math notranslate nohighlight">\(z_i \leftarrow \mathcal{L}^{(2^k)}\)</span> 并发送，通过查询 <span class="math notranslate nohighlight">\(f\)</span> 可以得到 <span class="math notranslate nohighlight">\(y_i := \mathrm{Fold}(f, \boldsymbol{\alpha})(z_i)\)</span> 。设 <span class="math notranslate nohighlight">\(\boldsymbol{z}_i := (z_i^{2^0}, \ldots, z_i^{2^{n- k - 1}})\)</span> 。Verifier 另外选取随机数 <span class="math notranslate nohighlight">\(\gamma \leftarrow \mathbb{F}\)</span> 并发送。</p></li>
+<li><p>Recursive claim. Prover 和 Verifier 定义新的权重多项式与目标值：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}'(Z, \boldsymbol{X}) := \hat{w}(Z, \boldsymbol{\alpha}, \boldsymbol{X}) + Z \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{X})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\sigma' := \hat{h}_k(\alpha_k) + \sum_{i = 0}^t \gamma^{i+1} \cdot y_i,
+\]</div>
+<p>接着，递归地测试 <span class="math notranslate nohighlight">\(g \in \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, n - k, \hat{w}', \sigma']\)</span> 。</p>
+<p>新的权重多项式的定义 <span class="math notranslate nohighlight">\(\hat{w}'\)</span> 为</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}'(Z, \boldsymbol{X}) := \hat{w}(Z, \boldsymbol{\alpha}, \boldsymbol{X}) + Z \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{X})
+\]</div>
+<p>分为两部分：</p>
+<ol class="arabic simple">
+<li><p>第一部分 <span class="math notranslate nohighlight">\(\hat{w}(Z, \boldsymbol{\alpha}, \boldsymbol{X})\)</span> 约束了协议第 1 步中 <span class="math notranslate nohighlight">\(k\)</span> 轮 sumcheck 的正确性。</p></li>
+<li><p>第二部分 <span class="math notranslate nohighlight">\(Z \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{X})\)</span> 约束了 <span class="math notranslate nohighlight">\(g\)</span> 在 <span class="math notranslate nohighlight">\(\boldsymbol{z}_i\)</span> 的值是正确的，并用随机数 <span class="math notranslate nohighlight">\(\gamma\)</span> 对这 <span class="math notranslate nohighlight">\(t + 1\)</span> 个约束进行了线性组合。
+a. 对 <span class="math notranslate nohighlight">\(g(\boldsymbol{z}_0) = y_0\)</span> 的约束，实际是在验证 out-of-domain answers 的正确性。
+b. 对 <span class="math notranslate nohighlight">\(i \in [t]\)</span> ，约束 <span class="math notranslate nohighlight">\(g(\boldsymbol{z}_i) = y_i\)</span> ，是要求 shift queries 的正确性。</p></li>
+</ol>
+<p>由此也可见权重多项式定义的灵活性，能一次实现多个约束。</p>
+<p>在上述一次迭代的步骤中，第 1 步就是一次进行 <span class="math notranslate nohighlight">\(k\)</span> 轮的 sumcheck 协议，产生了 <span class="math notranslate nohighlight">\(k\)</span> 个随机数 <span class="math notranslate nohighlight">\(\alpha_1, \ldots, \alpha_k\)</span> ，接着第 2-5 步用相同的随机数 <span class="math notranslate nohighlight">\(\alpha_1, \ldots, \alpha_k\)</span> 进行 STIR 协议，最后第 6 步重新来定义权重多项式和目标值，为下一次迭代做准备。</p>
+</section>
+<section id="id2">
+<h2>效率对比<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>对于分别基于 FRI、DEEP-FRI 以及 STIR 协议的 Basefold、DeepFold 以及 WHIR 协议，它们的效率与 Verifier 的查询次数有很大的关系，主要影响着协议的 proof size 与 Verifier 的计算量，而这些协议的查询次数主要是有它们的 soundness 证明所确定的。</p>
+<p>对于一个可能作恶的 Prover <span class="math notranslate nohighlight">\(P^*\)</span>，假设其初始提供的 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 对应的一元函数 <span class="math notranslate nohighlight">\(f(X)\)</span> 距离 Reed Solomon 编码空间 <span class="math notranslate nohighlight">\(\mathsf{RS}[\mathbb{F}, \mathcal{L}, n]\)</span> 有 <span class="math notranslate nohighlight">\(\delta &gt; \Delta\)</span>  远，其中 <span class="math notranslate nohighlight">\(\Delta &lt; \Delta^*\)</span> ， <span class="math notranslate nohighlight">\(\Delta^*\)</span>  是在折叠过程中保持到对应编码空间距离的一个界，Verifier 在协议中的查询次数为 <span class="math notranslate nohighlight">\(l\)</span> ，那么 <span class="math notranslate nohighlight">\(P^*\)</span> 能通过协议的检查的概率大约不会超过</p>
+<div class="math notranslate nohighlight">
+\[
+(1 - \Delta)^l
+\]</div>
+<p>这个概率也被称为 soundness error。</p>
+<p>在要求整个协议达到 <span class="math notranslate nohighlight">\(\lambda\)</span> -比特的前提下，也就是要求 soundness error 小于 <span class="math notranslate nohighlight">\(2^{-\lambda}\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+(1 - \Delta)^l &lt; 2^{-\lambda}
+\]</div>
+<p>两边同时取对数，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+l &gt; \frac{\lambda}{- \log_2(1 - \Delta)}
+\]</div>
+<p>当 <span class="math notranslate nohighlight">\(\Delta\)</span> 能取得更大时，在同样达到 <span class="math notranslate nohighlight">\(\lambda\)</span> -比特安全时，查询次数 <span class="math notranslate nohighlight">\(l\)</span> 就可以取得更小。</p>
+<p>在这些协议的 soundness 证明中，都希望能尽可能提高 <span class="math notranslate nohighlight">\(\Delta\)</span> 能取到的界，而 <span class="math notranslate nohighlight">\(\Delta\)</span> 能取到的界是和 Reed Solomon 码的 unique decoding 以及 list decoding 紧密相关的，将常见的界从小到大依次排序有：</p>
+<ol class="arabic simple">
+<li><p>unique decoding bound: <span class="math notranslate nohighlight">\((1 - \rho)/2\)</span></p></li>
+<li><p>Johnson bound: <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span></p></li>
+<li><p>list decoding bound: <span class="math notranslate nohighlight">\(1 - \rho\)</span></p></li>
+</ol>
+<p>其中第 2 项和第 3 项都进入了 list decoding 范围。</p>
+<p><img alt="" src="../_images/basefold-deepfold-whir-bound.svg" /></p>
+<p>在 Basefold 原论文 [ZCF23] 中，其 soundness 只证明到 <span class="math notranslate nohighlight">\(\Delta\)</span> 最大能取到 <span class="math notranslate nohighlight">\((1 - \rho)/2\)</span> ，随后 Ulrich Haböck 在 [H24] 中证明了 Basefold 协议对于 Reed Solomon 能达到 Johnson bound <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> ，Hadas Zeilberger 在 Khatam [Z24] 论文中证明了 Basefold 协议对于一般的 linear code 能达到 <span class="math notranslate nohighlight">\(1 - \rho^{\frac{1}{3}}\)</span> 。</p>
+<p>对于 DeepFold 协议，在原论文 [GLHQTZ24] 中，基于一个针对 Reed Solomon 编码的 List Decodability 猜想([GLHQTZ24] Conjecture 1)，证明了其能达到 <span class="math notranslate nohighlight">\(1 - \rho\)</span> 的界。</p>
+<p>对于 WHIR 协议，在原论文 [ACFY24b] 中，其讨论的 soundness error 并不是要求整个协议达到 <span class="math notranslate nohighlight">\(\lambda\)</span> -比特安全，而是讨论更强的 round-by-round soundness error，意思是在每一轮中，Verifier 需要通过重复查询，使得每一轮都要达到 <span class="math notranslate nohighlight">\(\lambda\)</span>-比特安全。在这样的前提下，其证明了能达到的界为 <span class="math notranslate nohighlight">\((1 - \rho)/2\)</span> ，并猜想能达到 Johnson bound <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> 。Ulrich Haböck 在 [H24] 中也指出应用其论文中的方法应该可以证明 WHIR 协议能达到 Johnson bound 的。</p>
+<p>至此总结下上述三个协议的 soundness 证明。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>协议</p></th>
+<th class="head"><p>soundness</p></th>
+<th class="head"><p>原论文</p></th>
+<th class="head"><p>Khatam [Z24]</p></th>
+<th class="head"><p>[H24]</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BaseFold</p></td>
+<td><p>soundness</p></td>
+<td><p><span class="math notranslate nohighlight">\((1 - \rho)/2\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(1 - \rho^{\frac{1}{3}}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> （仅针对 RS 编码）</p></td>
+</tr>
+<tr class="row-odd"><td><p>DeepFold</p></td>
+<td><p>soundness</p></td>
+<td><p><span class="math notranslate nohighlight">\(1 - \rho\)</span> （基于 list decoding 猜想）</p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>WHIR</p></td>
+<td><p>round-by-round soundness (更强)</p></td>
+<td><p><span class="math notranslate nohighlight">\((1 - \rho)/2\)</span> ，猜想能达到 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span></p></td>
+<td><p></p></td>
+<td><p>提供了证明思路，能达到 <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>在 DeepFold 论文 [GLHQTZ24] 中已经比较了 BaseFold 协议与 DeepFold 协议， 不过其中 BaseFold 协议能达到的界为 unique decoding 的界 <span class="math notranslate nohighlight">\((1 - \rho)/2\)</span> ，而非最新在 [H24] 中已经证明的 Johnson bound <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> ，在这里借鉴 DeepFold 论文 [GLHQTZ24] 中的分析来对比 BaseFold 协议与 DeepFold 协议。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Scheme</p></th>
+<th class="head"><p>Soundness</p></th>
+<th class="head"><p>soundness bound</p></th>
+<th class="head"><p>Commit</p></th>
+<th class="head"><p>Evaluate</p></th>
+<th class="head"><p>Verify</p></th>
+<th class="head"><p>Proof Size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BaseFold</p></td>
+<td><p>soundness</p></td>
+<td><p><span class="math notranslate nohighlight">\((1 - \rho)/2\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(N \log N) ~ \mathbb{F} + O(N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(s_{U} \log^2N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(s_{U} \log^2N)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>BaseFold</p></td>
+<td><p>soundness</p></td>
+<td><p><span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(N \log N) ~ \mathbb{F} + O(N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(s_{J} \log^2N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(s_{J} \log^2N)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>DeepFold</p></td>
+<td><p>soundness</p></td>
+<td><p><span class="math notranslate nohighlight">\(1 - \rho\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(N \log N) ~ \mathbb{F} + O(N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(s_{L} \log^2N) ~ \mathbb{H}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O(s_{L} \log^2N)\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>在上表中，<span class="math notranslate nohighlight">\(N = 2^n\)</span> ，<span class="math notranslate nohighlight">\(s_{U}\)</span> ，<span class="math notranslate nohighlight">\(s_{J}\)</span> 与 <span class="math notranslate nohighlight">\(s_L\)</span> 分别表示在达到 unique decoding bound， Johnson bound 和 list decoding bound 下 Verifier 的查询次数。根据前面所推导的查询次数的计算公式</p>
+<div class="math notranslate nohighlight">
+\[
+l &gt; \frac{\lambda}{- \log_2(1 - \Delta)}
+\]</div>
+<p>代入   <span class="math notranslate nohighlight">\(\Delta &lt; (1 - \rho)/2\)</span>  ，<span class="math notranslate nohighlight">\(\Delta &lt; 1 - \sqrt{\rho}\)</span> ， <span class="math notranslate nohighlight">\(\Delta &lt; 1 - \rho\)</span> ，可以算出 <span class="math notranslate nohighlight">\(s_U\)</span> ，<span class="math notranslate nohighlight">\(s_J\)</span> 与 <span class="math notranslate nohighlight">\(s_L\)</span> 分别为</p>
+<div class="math notranslate nohighlight">
+\[
+s_U = \frac{\lambda}{-\log_2 (\frac{1 + \rho}{2})}, \qquad s_J = \frac{\lambda}{-\log_2 \sqrt{\rho}}, \qquad s_L = \frac{\lambda}{-\log_2 \rho} 
+\]</div>
+<p>取不同的 <span class="math notranslate nohighlight">\(\lambda\)</span> 与 <span class="math notranslate nohighlight">\(\rho\)</span> 的值，对计算出的结果向上取整，可以得到</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>查询次数</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\lambda = 100, \rho = 1/2\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\lambda = 100, \rho = 1/4\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\lambda = 100, \rho = 1/8\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\lambda = 128, \rho = 1/8\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(s_U\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(241\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(148\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(121\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(155\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(s_J\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(200\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(100\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(67\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(86\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(s_L\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(100\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(50\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(34\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(43\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>通过上表可以发现</p>
+<ol class="arabic simple">
+<li><p>能达到的 bound 越大，查询次数越少。</p></li>
+<li><p>码率越小，查询次数越少。</p></li>
+<li><p>要求达到的安全性越高，查询次数越多。</p></li>
+</ol>
+<p>由此也能得出，由于 DeepFold 协议能达到的 soundness bound 更大，因此相比 BaseFold 协议其查询次数更少，协议的证明大小与 Verifier 的计算量更小。在 Prover 的计算量上，这两个协议的差别并不大，DeepFold 协议由于使用了 DEEP-FRI 协议，Prover 计算量会稍比 BaseFold 协议多一些。</p>
+<p>当进行 <span class="math notranslate nohighlight">\(2\)</span> 折以上时，STIR 协议相比 FRI 协议和 DEEP-FRI 协议有更少的查询次数。根据 WHIR 论文 [ACFY24b] 中的结论， BaseFold 协议与 WHIR 协议的查询复杂度与 Verifier 计算复杂度对比如下表所示。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>协议</p></th>
+<th class="head"><p>Soundness</p></th>
+<th class="head"><p>Queries</p></th>
+<th class="head"><p>Verifier Time</p></th>
+<th class="head"><p>Alphabet</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BaseFold</p></td>
+<td><p>round-by-round soundness (更强)</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_{\mathsf{BF}} := O_{\rho}(\lambda \cdot n)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O_{\rho}(q_{\mathsf{BF}})\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbb{F}^2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>WHIR</p></td>
+<td><p>round-by-round soundness (更强)</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_{\mathsf{WHIR}} := O_{\rho}(\lambda + \frac{\lambda}{k} \cdot \log \frac{n}{k})\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(O_{\rho}(q_{\mathsf{WHIR}} \cdot (2^k + n))\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbb{F}^{2^k}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>在 WHIR 协议中每一轮对原来的一元多项式折叠 <span class="math notranslate nohighlight">\(2^k\)</span> 次，因此 Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F}^{2^k}\)</span> 中进行查询，而 BaseFold 协议中，一轮仅折叠 <span class="math notranslate nohighlight">\(2\)</span> 次，因此 Verifier 从 <span class="math notranslate nohighlight">\(\mathbb{F}^2\)</span> 中进行查询。</p>
+<p>当 <span class="math notranslate nohighlight">\(k &gt; 1\)</span> 时，可以发现 WHIR 协议中 Verifier 的查询次数关于 <span class="math notranslate nohighlight">\(n/k\)</span> 是对数级别的，而 BaseFold 协议中关于 <span class="math notranslate nohighlight">\(n\)</span> 是线性的，因此 WHIR 协议相比 BaseFold 协议有更少的查询复杂度，其 Verifier 计算量也更小。对于 DeepFold 协议，其使用的是 DEEP-FRI 协议，查询次数和 BaseFold 协议一样，关于 <span class="math notranslate nohighlight">\(n\)</span> 是线性的，因此 WHIR 协议相比 DeepFold 协议也有更少的查询复杂度。</p>
+<p>总结下这三个协议的效率，从 Verifier 查询次数来说，</p>
+<ol class="arabic simple">
+<li><p>由于 DeepFold 协议的 soundness 证明已证明到 <span class="math notranslate nohighlight">\(1 - \rho\)</span> 的界，因此其查询次数小于 BaseFold 协议。</p></li>
+<li><p>由于 WHIR 协议底层用的是相比 FRI 协议和 DEEP-FRI 协议查询复杂度都更小的 STIR 协议，因此 WHIR 协议的查询次数相比 BaseFold 协议与 DeepFold 协议都更少。</p></li>
+</ol>
+<p>若考虑三个协议都在 round-by-round soundness error，均达到 Johnson bound <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> 的前提下，理论上 WHIR 协议在进行 <span class="math notranslate nohighlight">\(2\)</span> 折以上时， Verifier 的计算量和证明大小上会比 BaseFold 协议与 DeepFold 协议更优。</p>
+</section>
+<section id="id3">
+<h2>总结<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>总结下 BaseFold 协议、DeepFold 协议与 WHIR 协议，这三个协议的框架都是 BaseFold 协议的框架，用相同的随机数同步进行 sumcheck 协议和 FRI/DEEP-FRI/STIR 协议，它们之间的不同主要也是来自 FRI 协议、DEEP-FRI 协议和 STIR 协议之间的不同。</p>
+<p>对比这三个协议的效率，Prover 的计算量差异不是特别明显，主要取决于 Verifier 的查询次数，查询次数越大，会造成 Verifier 的计算量与证明大小越大。由于 STIR 协议在理论上的查询复杂度比 FRI 协议和 DEEP-FRI 协议更优，因此 WHIR 协议相比 BaseFold 协议与 DeepFold 协议有更少的查询次数。</p>
+<p>另一方面，Verifier 的查询次数是和协议的 soundness 证明中能取到的 bound 相关的，根据目前的研究进展有：</p>
+<ol class="arabic simple">
+<li><p>基于 DEEP-FRI 协议的 DeepFold 协议，在基于一个简单的猜想下，能达到最优的界 <span class="math notranslate nohighlight">\(1 - \rho\)</span> 。若 FRI 协议想达到 <span class="math notranslate nohighlight">\(1 - \rho\)</span> 的界，其基于的猜想会更强（见 [BCIKS20] Conjecture 8.4）。</p></li>
+<li><p>BaseFold 协议在针对 Reed Solomon 编码下能达到 Johnson bound <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> 。</p></li>
+<li><p>WHIR 协议在原论文中仅证明了其能达到 <span class="math notranslate nohighlight">\((1 - \rho)/2\)</span> ，但根据 [H24] 中的方法，有望证明达到 Johnson bound <span class="math notranslate nohighlight">\(1 - \sqrt{\rho}\)</span> 。</p></li>
+</ol>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ACFY24a] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[ACFY24b] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[BBHR18] Eli Ben-Sasson, Iddo Bentov, Yinon Horesh, and Michael Riabzev. “Fast Reed–Solomon Interactive Oracle Proofs of Proximity”. In: <em>Proceedings of the 45th International Colloquium on Automata, Languages and Programming (ICALP)</em>, 2018.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. “DEEP-FRI: sampling outside the box improves soundness.” <em>arXiv preprint arXiv:1903.12243</em> (2019).</p></li>
+<li><p>[GLHQTZ24] Yanpei Guo, Xuanming Liu, Kexi Huang, Wenjie Qu, Tianyang Tao, and Jiaheng Zhang. “DeepFold: Efficient Multilinear Polynomial Commitment from Reed-Solomon Code and Its Application to Zero-knowledge Proofs.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+<li><p>[Z24] Zeilberger, Hadas. “Khatam: Reducing the Communication Complexity of Code-Based SNARKs.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold-deepfold-whir"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">从多元线性多项式到一元多项式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-sumcheck">Basefold: 借助 Sumcheck</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepfold-deep-fri">DeepFold: 引入 DEEP-FRI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whir-stir">WHIR: 引入 STIR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">效率对比</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

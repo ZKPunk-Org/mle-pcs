@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on FRI-Binius (Part I): Binary Towers &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri-binius/binius-01';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri-binius/binius-01.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri-binius/binius-01.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on FRI-Binius (Part I): Binary Towers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-fields">Extension Fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-field">Binary Field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#field-embedding">Field Embedding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-tower">Extension Tower</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wiedemann-tower">Wiedemann Tower</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multilinear-basis">Multilinear Basis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-primitive-element">Finding Primitive element</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiplication-optimization">Multiplication Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artin-schreier-tower-conway-tower">Artin-Schreier Tower (Conway Tower)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-fri-binius-part-i-binary-towers">
+<h1>Notes on FRI-Binius (Part I): Binary Towers<a class="headerlink" href="#notes-on-fri-binius-part-i-binary-towers" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>Binary fields possess elegant internal structures, and Binius aims to fully utilize these internal structures to construct efficient SNARK proof systems. This article mainly discusses the Binary Fields that Binius relies on at its core and the construction methods of Extension Towers based on Binary Fields. Binary Fields provide smaller fields and are compatible with various tool constructions in traditional cryptography while also being able to fully utilize optimization of special instructions on hardware. There are two main advantages to choosing Extension Towers: one is that the recursive Extension construction provides a consistent and incremental Basis selection, allowing Small Fields to be embedded into Large Fields in a very natural way; the other advantage is that multiplication and inversion operations have efficient recursive algorithms.</p>
+<section id="extension-fields">
+<h2>Extension Fields<a class="headerlink" href="#extension-fields" title="Link to this heading">#</a></h2>
+<p>Let’s try to describe the concept of Extension Fields in simple language to lay the groundwork for our study of Binary Towers. For in-depth learning, please refer to the strict definitions and proofs in finite field textbooks.</p>
+<p>The prime field <span class="math notranslate nohighlight">\(\mathbb{F}_{p}\)</span> is a finite field with <span class="math notranslate nohighlight">\(p\)</span> elements, where <span class="math notranslate nohighlight">\(p\)</span> must be a prime number. It is isomorphic to <span class="math notranslate nohighlight">\(\mathbb{Z}/p\mathbb{Z}\)</span>, which means we can use the set of integers <span class="math notranslate nohighlight">\(\{0, 1, \ldots, p-1\}\)</span> to represent all elements of <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>.</p>
+<p>We can form a Tuple with any two elements from the prime field, i.e., <span class="math notranslate nohighlight">\((a, b)\in\mathbb{F}_{p}^2\)</span>, and this Tuple also forms a field with <span class="math notranslate nohighlight">\(p^2\)</span> elements. We can verify this: <span class="math notranslate nohighlight">\(a+b\in\mathbb{F}_p\)</span>, so we define the addition of Tuples as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1, b_1) + (a_2, b_2) = (a_1 + a_2, b_1 + b_2)
+\]</div>
+<p>We can verify that <span class="math notranslate nohighlight">\(\mathbb{F}_{p}^2\)</span> forms a vector space, thus it is an additive group with the zero element being <span class="math notranslate nohighlight">\((0, 0)\)</span>. The next question is how to define multiplication. We want multiplication to be closed, i.e.:</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1, b_1)\cdot (a_2, b_2) = (c, d)
+\]</div>
+<p>The simplest approach would be to use Entry-wise Multiplication to define multiplication, i.e., <span class="math notranslate nohighlight">\((a_1, b_1)\cdot (a_2, b_2) = (a_1a_2, b_1b_2)\)</span>, with the multiplicative identity being <span class="math notranslate nohighlight">\((1, 1)\)</span>. This seems to make multiplication closed. However, this doesn’t ensure that every element has an inverse. For example, <span class="math notranslate nohighlight">\((1, 0)\)</span> multiplied by any Tuple can never result in <span class="math notranslate nohighlight">\((1, 1)\)</span>, because the second part of the Tuple will always be <span class="math notranslate nohighlight">\(0\)</span>. Therefore, this kind of multiplication cannot form a “field”.</p>
+<p>In finite field theory, the multiplication operation of Tuples is implemented through polynomial modular multiplication. That is, we view <span class="math notranslate nohighlight">\((a_1, b_1)\)</span> as the coefficients of a degree 1 polynomial, and similarly <span class="math notranslate nohighlight">\((a_2, b_2)\)</span> can be viewed as the coefficients of another degree 1 polynomial. By multiplying these two, we get a degree 2 polynomial:</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1 + b_1\cdot X) \cdot (a_2 + b_2\cdot X) = a_1a_2 + (a_1b_2 + a_2b_1)X + b_1b_2X^2
+\]</div>
+<p>Then we take the modulus of the resulting polynomial with an irreducible degree 2 polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>, obtaining a remainder polynomial. The coefficients of this remainder polynomial are <span class="math notranslate nohighlight">\((c, d)\)</span>. So we define the new Tuple multiplication as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+(a_1 + b_1\cdot X) \cdot (a_2 + b_2\cdot X) = c + d\cdot X \mod f(X)
+\]</div>
+<p>And we define <span class="math notranslate nohighlight">\((1, 0)\)</span> as the multiplicative identity. Here we emphasize that <span class="math notranslate nohighlight">\(f(X)\)</span> must be an irreducible polynomial. What would happen if <span class="math notranslate nohighlight">\(f(X)\)</span> were a reducible polynomial? For instance, if <span class="math notranslate nohighlight">\(f(X)=(u_1+u_2X)(v_1+v_2X)\)</span>, then the product of two non-zero elements <span class="math notranslate nohighlight">\((u_1, u_2)\)</span> and <span class="math notranslate nohighlight">\((v_1, v_2)\)</span> would equal <span class="math notranslate nohighlight">\((0, 0)\)</span>, breaking out of the multiplicative group. Strictly speaking, the appearance of Zero Divisors disrupts the structure of the multiplicative group, thus failing to form a “field”.</p>
+<p>The next question is whether there exists an irreducible degree 2 polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>. If <span class="math notranslate nohighlight">\(f(X)\)</span> doesn’t exist, then constructing a field <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> would be out of the question. For the prime field <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>, take any <span class="math notranslate nohighlight">\(w\in\mathbb{F}_p\)</span> that is not a square of any element, which in number theory belongs to the non-quadratic residue class, i.e., <span class="math notranslate nohighlight">\(w\in QNR(p)\)</span>. If <span class="math notranslate nohighlight">\(w\)</span> exists, then <span class="math notranslate nohighlight">\(f(X)=X^2-w\)</span> is an irreducible polynomial. Furthermore, how is the existence of <span class="math notranslate nohighlight">\(w\)</span> guaranteed? If <span class="math notranslate nohighlight">\(p\)</span> is an odd number, then <span class="math notranslate nohighlight">\(w\)</span> must exist. If <span class="math notranslate nohighlight">\(p=2\)</span>, although <span class="math notranslate nohighlight">\(w\)</span> doesn’t exist, we can specify <span class="math notranslate nohighlight">\(f(X)=X^2+X+1\in\mathbb{F}_2[X]\)</span> as an irreducible polynomial.</p>
+<p>We now denote the field formed by the set of Tuples <span class="math notranslate nohighlight">\(\mathbb{F}_{p}^2\)</span>, along with the defined addition and multiplication operations, as <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span>, which has <span class="math notranslate nohighlight">\(p^2\)</span> elements. According to finite field theory, we can expand the binary Tuple to an <span class="math notranslate nohighlight">\(n\)</span>-ary Tuple, thus constructing larger finite fields <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>.</p>
+<p>For an irreducible polynomial <span class="math notranslate nohighlight">\(f(X) = c_0 + c_1X + X^2\)</span> over <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>, it can always be factored in <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span>. <span class="math notranslate nohighlight">\(f(X) = (X-\alpha)(X-\alpha')\)</span>, where <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\alpha'\)</span> are conjugates of each other, and they both belong to <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> but not to <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>. According to the definition of extension fields, <span class="math notranslate nohighlight">\(\mathbb{F}_p(\alpha)\)</span> is a degree 2 algebraic extension, which is isomorphic to the finite field we constructed earlier through modular multiplication with an irreducible polynomial. Therefore, we can also use <span class="math notranslate nohighlight">\(a_1 + a_2\cdot\alpha\)</span> to represent any element in <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span>. Or further, we can view <span class="math notranslate nohighlight">\((1, \alpha)\)</span> as a Basis of the <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span> vector space, any <span class="math notranslate nohighlight">\(a\in \mathbb{F}_{p^2}\)</span> can be represented as a linear combination of the Basis:</p>
+<div class="math notranslate nohighlight">
+\[
+a = a_0 \cdot 1 + a_1 \cdot \alpha, \quad a_0, a_1\in\mathbb{F}_p
+\]</div>
+<p>This way, we can use the symbol <span class="math notranslate nohighlight">\(a_0 + a_1\cdot \alpha\)</span> to represent elements in <span class="math notranslate nohighlight">\(\mathbb{F}_{p^2}\)</span>, rather than the polynomial representation <span class="math notranslate nohighlight">\(a_0 + a_1\cdot X\)</span>. The “polynomial representation” of elements doesn’t specify which irreducible polynomial we used to construct the extension field, while using <span class="math notranslate nohighlight">\(\alpha\)</span>, the root of the irreducible polynomial, as a way to construct the extension field eliminates any ambiguity.</p>
+<p>Generalizing this concept to <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>, for any element <span class="math notranslate nohighlight">\(a\in\mathbb{F}_{p^n}\)</span>, it can be represented as:</p>
+<div class="math notranslate nohighlight">
+\[
+a = a_0 + a_1\cdot\alpha + a_2\cdot\alpha^2 + \cdots + a_{n-1}\cdot\alpha^{n-1}
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\alpha\)</span> is the root of the degree <span class="math notranslate nohighlight">\(n\)</span> irreducible polynomial <span class="math notranslate nohighlight">\(f(X)\)</span>. Therefore, <span class="math notranslate nohighlight">\((1, \alpha, \alpha^2, \cdots, \alpha^{n-1})\)</span> can be viewed as a Basis of <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>, and this Basis is called the Polynomial Basis of the finite field. Note that <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span> as an <span class="math notranslate nohighlight">\(n\)</span>-dimensional vector space has many different Bases. We will see later that the choice of Basis is a very important step, and an appropriate Basis can greatly optimize or simplify some representations or operations.</p>
+<blockquote>
+<div><p>TODO: Fp* multiplicative cyclic group</p>
+</div></blockquote>
+</section>
+<section id="binary-field">
+<h2>Binary Field<a class="headerlink" href="#binary-field" title="Link to this heading">#</a></h2>
+<p>For <span class="math notranslate nohighlight">\(\mathbb{F}_{2^n}\)</span>, we call it a binary field because its elements can all be expressed as vectors of length <span class="math notranslate nohighlight">\(n\)</span> composed of <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span>. <span class="math notranslate nohighlight">\(\mathbb{F}_{2^n}\)</span> can be constructed through two types of methods: one is through an irreducible polynomial of degree <span class="math notranslate nohighlight">\(n\)</span>; the other is by repeatedly using quadratic extensions, known as an Extension Tower. There are many paths for field extension, and for <span class="math notranslate nohighlight">\(2^n\)</span>, it has multiple factors of 2, so there exist multiple construction methods between these two methods. For example, for <span class="math notranslate nohighlight">\(\mathbb{F}_{2^8}\)</span>, we can first construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, then obtain <span class="math notranslate nohighlight">\(\mathbb{F}_{2^8}\)</span> through a quadratic extension, or we can first construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>, then construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^8}\)</span> through a quartic irreducible polynomial extension.</p>
+<p>Let’s warm up by constructing <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> using the quadratic extension method. We discussed earlier that <span class="math notranslate nohighlight">\(f(X)=X^2+X+1\)</span> is an irreducible polynomial in <span class="math notranslate nohighlight">\(\mathbb{F}_2[X]\)</span>. Suppose <span class="math notranslate nohighlight">\(\eta\)</span> is a root of <span class="math notranslate nohighlight">\(f(X)\)</span>, then <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> can be represented as <span class="math notranslate nohighlight">\(a_0 + b_0\cdot\eta\)</span>. Considering that <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> only has four elements, they can be listed below:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^2} = \{0, 1, \eta, \eta+1\}
+\]</div>
+<p>And <span class="math notranslate nohighlight">\(\eta\)</span> as a generator can produce the multiplicative group <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}^*=\langle \eta \rangle\)</span>, which has an Order of 3:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\eta^0 &amp;= 1 \\
+\eta^1 &amp;= \eta \\
+\eta^2 &amp;= \eta+1 \\
+\end{split}
+\end{split}\]</div>
+<p>We’ll demonstrate two construction methods for <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>. The first is to directly use a degree 4 irreducible polynomial over <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span>. In fact, there are 3 different degree 4 irreducible polynomials, so there are 3 different construction methods in total.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f_1(X) &amp;= X^4 + X + 1 \\
+f_2(X) &amp;= X^4 + X^3 + 1 \\
+f_3(X) &amp;= X^4 + X^3 + X^2 + X + 1 \\
+\end{split}
+\end{split}\]</div>
+<p>Since we only need to choose one irreducible polynomial, let’s choose <span class="math notranslate nohighlight">\(f_1(X)\)</span> to define <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^4} = \mathbb{F}_2[X]/\langle f_1(X)\rangle 
+\]</div>
+<p>Let’s denote the root of <span class="math notranslate nohighlight">\(f_1(X)\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> as <span class="math notranslate nohighlight">\(\theta\)</span>, then any element <span class="math notranslate nohighlight">\(a\in\mathbb{F}_{2^4}\)</span> can be uniquely represented as:</p>
+<div class="math notranslate nohighlight">
+\[
+a = a_0 + a_1\cdot\theta + a_2\cdot\theta^2 + a_3\cdot\theta^3
+\]</div>
+<p>To add here, <span class="math notranslate nohighlight">\(f_1(X)\)</span> is also a Primitive polynomial, and its root <span class="math notranslate nohighlight">\(\theta\)</span> is also a Primitive Element of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>. Note that not all irreducible polynomials are Primitive polynomials, for example, <span class="math notranslate nohighlight">\(f_3(X)\)</span> listed above is not a Primitive polynomial.</p>
+<p>Now we can list all the elements in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, each element corresponding to a 4-bit binary vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{ccccccc}
+0000 &amp; 0001 &amp; 0010 &amp; 0011 &amp; 0100 &amp; 0101 &amp; 0110 &amp; 0111 \\
+0 &amp; 1 &amp; \theta &amp; \theta+1 &amp; \theta^2 &amp; \theta^2+1 &amp; \theta^2+\theta &amp; \theta^2+\theta+1 \\
+\hline
+1000 &amp; 1001 &amp; 1010 &amp; 1011 &amp; 1100 &amp; 1101 &amp; 1110 &amp; 1111 \\
+\theta^3 &amp; \theta^3+1 &amp; \theta^3+\theta &amp; \theta^3+\theta+1 &amp; \theta^3+\theta^2 &amp; \theta^3+\theta^2+1 &amp; \theta^3+\theta^2+\theta &amp; \theta^3+\theta^2+\theta+1 \\
+\end{array}
+\end{split}\]</div>
+<p>For the addition of two elements in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, we only need to add their binary representations bit by bit, for example:</p>
+<div class="math notranslate nohighlight">
+\[
+(0101) + (1111) = (1010)
+\]</div>
+<p>This operation is actually the XOR bitwise exclusive OR operation. As for multiplication, for example <span class="math notranslate nohighlight">\(a\cdot\theta\)</span>, it corresponds to a shift operation on the binary:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(0101) &lt;&lt; 1 &amp;= (1010)\\
+(\theta^2 + 1)\cdot\theta &amp;= \theta^3 + \theta \\
+\end{split}
+\end{split}\]</div>
+<p>If we continue to multiply by <span class="math notranslate nohighlight">\(\theta\)</span>, a shift overflow situation will occur:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(\theta^3 + \theta)\cdot\theta &amp;= {\color{blue}\theta^4} + \theta^2 = \theta^2 + \theta + 1 \\
+(1010) &lt;&lt; 1  &amp;= (0100) + (0011) = (0111)\\
+\end{split}
+\end{split}\]</div>
+<p>For the overflow bit, it needs to be added with <span class="math notranslate nohighlight">\(0011\)</span>, which is determined by the definition of the irreducible polynomial <span class="math notranslate nohighlight">\(f_1(X)\)</span>, <span class="math notranslate nohighlight">\(\theta^4=\theta+1\)</span>. So once the high bit overflows during shifting, an XOR operation with <span class="math notranslate nohighlight">\(0011\)</span> needs to be performed. From this, we can see that the multiplication rules of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> actually depend on the choice of the irreducible polynomial. Therefore, how to choose an appropriate irreducible polynomial is also a key step in optimizing binary field multiplication.</p>
+</section>
+<section id="field-embedding">
+<h2>Field Embedding<a class="headerlink" href="#field-embedding" title="Link to this heading">#</a></h2>
+<p>If we want to construct a SNARK proof system based on binary fields, we would use smaller bit counts to represent smaller numbers, but in any case, in the challenge rounds of the protocol, the Verifier needs to give a random number in a relatively large extension field, in hopes of achieving sufficient cryptographic security strength. This requires us to encode witness information with polynomials in a small field, but perform evaluation operations on these polynomials in a larger field. Therefore, we need to find a way to “embed” the small field <span class="math notranslate nohighlight">\(K\)</span> into the large field <span class="math notranslate nohighlight">\(L\)</span>.</p>
+<p>The so-called embedding refers to mapping elements from one field <span class="math notranslate nohighlight">\(K\)</span> to another field <span class="math notranslate nohighlight">\(L\)</span>, denoted as <span class="math notranslate nohighlight">\(\phi: K\to L\)</span>. This mapping is Injective and this homomorphism mapping preserves the structure of addition and multiplication operations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\phi(a+b) &amp;= \phi(a) + \phi(b) \\
+\phi(a\cdot b) &amp;= \phi(a)\cdot\phi(b)
+\end{split}
+\end{split}\]</div>
+<p>That is, if <span class="math notranslate nohighlight">\(a\in K\)</span>, then <span class="math notranslate nohighlight">\(a\)</span> also has a unique representation in <span class="math notranslate nohighlight">\(L\)</span>. To maintain the structure of multiplication operations, we actually only need to find a Primitive Element <span class="math notranslate nohighlight">\(\alpha\)</span> in K corresponding to an element <span class="math notranslate nohighlight">\(\beta\)</span> in <span class="math notranslate nohighlight">\(L\)</span>, then this homomorphism mapping is uniquely determined, because any element in <span class="math notranslate nohighlight">\(K\)</span> can be represented as a power of <span class="math notranslate nohighlight">\(\alpha\)</span>. However, usually this embedding homomorphism mapping is not easy to find. Let’s take <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\subset\mathbb{F}_{2^4}\)</span> as an example to see how to find the mapping of the former embedded into the latter.</p>
+<p>Because <span class="math notranslate nohighlight">\(\eta\)</span> is a Primitive Element in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>, we only need to consider the representation of <span class="math notranslate nohighlight">\(\eta\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>.</p>
+<p>Let’s first look at the Primitive Element <span class="math notranslate nohighlight">\(\theta\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, is <span class="math notranslate nohighlight">\(\eta\mapsto\theta\)</span> an embedding mapping?</p>
+<div class="math notranslate nohighlight">
+\[
+\eta^2 = \eta+1 \quad \text{but} \quad \theta^2 \neq \theta+1
+\]</div>
+<p>Obviously, <span class="math notranslate nohighlight">\(\eta^2 \neq \theta^2\)</span>, so <span class="math notranslate nohighlight">\(\eta\mapsto\theta\)</span> is not an embedding mapping. Thinking about how irreducible polynomials determine the multiplication relationship between elements, and because <span class="math notranslate nohighlight">\(\eta\)</span> is a root of <span class="math notranslate nohighlight">\(X^2+X+1\)</span> while <span class="math notranslate nohighlight">\(\theta\)</span> is a root of <span class="math notranslate nohighlight">\(X^4+X+1\)</span>, the multiplication relationship between <span class="math notranslate nohighlight">\(\eta\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span> must be different. In <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, there also exist two roots of <span class="math notranslate nohighlight">\(X^2+X+1\)</span>, which are <span class="math notranslate nohighlight">\(\theta^2+\theta\)</span> and <span class="math notranslate nohighlight">\(\theta^2+\theta+1\)</span> respectively. Readers can verify the following equation:</p>
+<div class="math notranslate nohighlight">
+\[
+(\theta^2+\theta)^2 + (\theta^2+\theta) + 1 = \theta^4 + \theta^2 + \theta^2 + \theta + 1 = 0
+\]</div>
+<p>So, we define the embedding mapping:</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{split}
+\phi &amp;: \mathbb{F}_{2^2} \to \mathbb{F}_{2^4},\quad \eta \mapsto \theta^2+\theta
+\end{split}
+\]</div>
+<p>This means that the binary representation <span class="math notranslate nohighlight">\((10)\)</span> corresponds to <span class="math notranslate nohighlight">\((0110)\)</span> in <span class="math notranslate nohighlight">\(L=\mathbb{F}_{2^4}\)</span>; and the binary representation <span class="math notranslate nohighlight">\((11)\)</span> (which is <span class="math notranslate nohighlight">\(\eta+1\)</span>) corresponds to <span class="math notranslate nohighlight">\((\theta^2+\theta+1)\)</span> in <span class="math notranslate nohighlight">\(L\)</span>, i.e., <span class="math notranslate nohighlight">\((0111)\)</span>. Note here that we can also use <span class="math notranslate nohighlight">\(\phi': \eta \mapsto \theta^2+\theta+1\)</span> as another different embedding mapping. The underlying principle is that <span class="math notranslate nohighlight">\(\theta^2+\theta\)</span> and <span class="math notranslate nohighlight">\(\theta^2+\theta+1\)</span> are conjugates of each other, they are perfectly symmetric, so both of these mappings can serve as embedding mappings. Although they map to different elements, there is no significant difference from the overall structure.</p>
+<p>For any <span class="math notranslate nohighlight">\([L:K]=n\)</span>, when we embed <span class="math notranslate nohighlight">\(K\)</span> into <span class="math notranslate nohighlight">\(L\)</span>, a direct method is to find the roots of <span class="math notranslate nohighlight">\(f(X)\)</span> in <span class="math notranslate nohighlight">\(L\)</span>, although this calculation is not simple. Moreover, both embedding and de-embedding require additional calculations, which undoubtedly increases the complexity of the system.</p>
+<p>The recursive Extension Tower construction method mentioned in the Binius paper, by selecting appropriate irreducible polynomials and Bases, we can obtain very direct (called Zero-cost) embedding and de-embedding mappings.</p>
+</section>
+<section id="extension-tower">
+<h2>Extension Tower<a class="headerlink" href="#extension-tower" title="Link to this heading">#</a></h2>
+<p>We can construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> through two quadratic extensions. First, we choose a quadratic irreducible polynomial <span class="math notranslate nohighlight">\(f(X)=X^2+X+1\)</span>, then we can construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>, then based on <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> we find another quadratic irreducible polynomial to construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^2} = \mathbb{F}_2[X]/\langle X^2+X+1 \rangle \cong\mathbb{F}_2(\eta)
+\]</div>
+<p>Next, we need to find a quadratic irreducible polynomial in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}[X]\)</span>. First note that <span class="math notranslate nohighlight">\(X^2+X+1\)</span> can no longer be used, according to the definition of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>, it can already be factored. Consider <span class="math notranslate nohighlight">\(X^2+1\)</span>, it can also be factored <span class="math notranslate nohighlight">\((X+1)(X+1)\)</span>. In fact, all quadratic polynomials in <span class="math notranslate nohighlight">\(\mathbb{F}_2[X]\)</span> can be factored. A quadratic irreducible polynomial in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}[X]\)</span> must include a term with the new element <span class="math notranslate nohighlight">\(\eta\)</span> in its coefficients.</p>
+<p>For example, <span class="math notranslate nohighlight">\(X^2+X+\eta\)</span> is a quadratic irreducible polynomial over <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>. Then we can construct <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^4} = \mathbb{F}_{2^2}[X]/\langle X^2+X+\eta \rangle 
+\]</div>
+<p>Let’s denote the root of <span class="math notranslate nohighlight">\(X^2+X+\eta\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> as <span class="math notranslate nohighlight">\(\zeta\)</span>, then <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> can be represented as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_{2^4} = \cong \mathbb{F}_{2^2}(\zeta)  \cong \mathbb{F}_2(\eta)(\zeta) \cong \mathbb{F}_2(\eta, \zeta)
+\]</div>
+<img src="img/image-2.png" align=center width="40%">
+<p>Then all elements of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> can be represented using <span class="math notranslate nohighlight">\(\eta, \zeta\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{ccccccc}
+\hline
+0000 &amp; 0001 &amp; 0010 &amp; 0011 &amp; 0100 &amp; 0101 &amp; 0110 &amp; 0111 \\
+0 &amp; 1 &amp; \eta &amp; \eta+1 &amp; \zeta &amp; \zeta+1 &amp; \zeta+\eta &amp; \zeta+\eta+1 \\
+\hline
+1000 &amp; 1001 &amp; 1010 &amp; 1011 &amp; 1100 &amp; 1101 &amp; 1110 &amp; 1111 \\
+\zeta\eta &amp; \zeta\eta + 1 &amp; \zeta\eta + \eta &amp; \zeta\eta + \eta + 1 &amp; \zeta\eta + \zeta &amp; \zeta\eta + \zeta +1 &amp; \zeta\eta+\zeta+\eta &amp; \zeta\eta+\zeta+\eta+1 \\
+\hline
+\end{array}
+\end{split}\]</div>
+<p>At this point, each bit in the 4-bit binary corresponds to an element in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, <span class="math notranslate nohighlight">\((1000)\)</span> corresponds to <span class="math notranslate nohighlight">\(\zeta\eta\)</span>, <span class="math notranslate nohighlight">\((0100)\)</span> corresponds to <span class="math notranslate nohighlight">\(\zeta\)</span>, <span class="math notranslate nohighlight">\((0010)\)</span> corresponds to <span class="math notranslate nohighlight">\(\eta\)</span>, <span class="math notranslate nohighlight">\((0001)\)</span> corresponds to <span class="math notranslate nohighlight">\(1\)</span>. Therefore, we can use the following Basis to represent all elements in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{B} = (1,\ \eta,\ \zeta,\ \eta\zeta)
+\]</div>
+<p>Now, the binary representation of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> directly corresponds to the “lower two bits” of the binary representation of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>, for example:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+(1010) &amp;= (10) || (10) = \zeta\eta + \eta \\
+\end{split}
+\end{split}\]</div>
+<p>Therefore, we can directly pad zeros to the higher two bits of the binary representation of <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span> to get the corresponding element in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span>. Conversely, by removing the two high-order zeros, an element in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> directly maps back to an element in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>.</p>
+<img src="img/image-1.png" width="40%">
+<p>As shown in the figure above, <span class="math notranslate nohighlight">\((1011)\)</span> is the binary representation of <span class="math notranslate nohighlight">\(\zeta\eta+\eta+1\)</span>, its lower two bits <span class="math notranslate nohighlight">\((11)\)</span> directly correspond to <span class="math notranslate nohighlight">\((\eta+1)\)</span> in <span class="math notranslate nohighlight">\(\mathbb{F}_{2^2}\)</span>. This kind of embedding is a “natural embedding”, so the Binus paper calls it Zero-cost Embedding.</p>
+<p>However, <span class="math notranslate nohighlight">\(\mathbb{F}_{2^4}\)</span> is still a very small field, not enough. If we continue to perform quadratic extensions upwards, how can we find suitable irreducible polynomials? The solution is not unique. Let’s first look at a scheme given in the Binius paper [DP23] — Wiedemann Tower [Wie88].</p>
+</section>
+<section id="wiedemann-tower">
+<h2>Wiedemann Tower<a class="headerlink" href="#wiedemann-tower" title="Link to this heading">#</a></h2>
+<p>The Wiedemann Tower is a recursive extension tower based on <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span>. The bottom Base Field is denoted as <span class="math notranslate nohighlight">\(\mathcal{T}_0\)</span>, with elements only <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_0 = \mathbb{F}_2 \cong \{0,1\}
+\]</div>
+<p>Then we introduce an unknown <span class="math notranslate nohighlight">\(X_0\)</span>, constructing a univariate polynomial ring <span class="math notranslate nohighlight">\(\mathbb{F}_2[X_0]\)</span>. As discussed earlier, <span class="math notranslate nohighlight">\(X^2 + X + 1\)</span> is an irreducible polynomial over <span class="math notranslate nohighlight">\(\mathcal{T}_0\)</span>, so we can use it to construct <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_1 = \mathbb{F}_2[X_0]/\langle  X_0^2+X_0+1 \rangle = \{0, 1, X_0, X_0+1\} \cong \mathbb{F}_{2^2} \cong \mathbb{F}_2(\alpha_0)
+\]</div>
+<p>Next, we find a quadratic irreducible polynomial <span class="math notranslate nohighlight">\(X_1^2+\alpha_0\cdot X_1+1\)</span> in <span class="math notranslate nohighlight">\(\mathcal{T}_1[X_1]\)</span>, then we can construct <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_2 = \mathcal{T}_1[X_1]/\langle  X_1^2+ \alpha_0\cdot X_1+1\rangle \cong \mathbb{F}_{2^4} \cong \mathbb{F}_2(\alpha_0, \alpha_1)
+\]</div>
+<p>And so on, we can construct <span class="math notranslate nohighlight">\(\mathcal{T}_3, \mathcal{T}_4, \cdots, \mathcal{T}_n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_{i+1} = \mathcal{T}_i[X_i]/\langle  X_i^2+\alpha_{i-1}\cdot X_i+1\rangle \cong \mathbb{F}_{2^{2^i}} \cong \mathbb{F}_2(\alpha_0, \alpha_1, \ldots, \alpha_i),\quad i\geq 1
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\alpha_0, \alpha_1, \ldots, \alpha_{n-1}\)</span> are the roots of the successively introduced quadratic irreducible polynomials, such that:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{T}_{n} = \mathbb{F}_2(\alpha_0, \alpha_1, \ldots, \alpha_{n-1})
+\]</div>
+<p>And <span class="math notranslate nohighlight">\(|\mathcal{T}_{n}| = 2^{2^{n}}\)</span>. The relationship between these introduced roots satisfies the following equation:</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{i+1} + \alpha^{-1}_{i+1} = \alpha_i
+\]</div>
+<p>It’s not hard to verify that <span class="math notranslate nohighlight">\(\alpha_0+\alpha^{-1}_0=1\)</span>. And the polynomial <span class="math notranslate nohighlight">\(X_i^2+X_{i-1}X_i+1\)</span> in the multivariate polynomial ring <span class="math notranslate nohighlight">\(\mathcal{T}_0[X_0, X_1, \ldots, X_n]\)</span> has two roots <span class="math notranslate nohighlight">\(\alpha_i\)</span> and <span class="math notranslate nohighlight">\(\alpha^{-1}_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+(\alpha^{-1}_i)^2 + \alpha_{i-1}\alpha^{-1}_i + 1 = \alpha^{-1}_i + \alpha_{i-1} + \alpha_i = \alpha_{i-1} + \alpha_{i-1} = 0
+\]</div>
+<p>Moreover, <span class="math notranslate nohighlight">\(\alpha_i\)</span> and <span class="math notranslate nohighlight">\(\alpha_{i+1}\)</span> satisfy the following recursive relationship:</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{i+1} + \alpha^{-1}_{i+1} = \alpha_i
+\]</div>
+<p>This is because if we multiply both sides of the equation by <span class="math notranslate nohighlight">\(\alpha_{i+1}\)</span>, we get: <span class="math notranslate nohighlight">\(\alpha_{i+1}^2 + \alpha_i\alpha_{i+1} + 1 = 0\)</span>, which is exactly the irreducible polynomial we use for recursive quadratic extension construction.</p>
+<section id="multilinear-basis">
+<h3>Multilinear Basis<a class="headerlink" href="#multilinear-basis" title="Link to this heading">#</a></h3>
+<p>For <span class="math notranslate nohighlight">\(\mathcal{T}_{i+1}\)</span> over <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span>, it forms an <span class="math notranslate nohighlight">\(n+1\)</span> dimensional vector space over <span class="math notranslate nohighlight">\(\mathbb{F}_2\)</span>. We can use the roots of these irreducible polynomials to construct a Multilinear Basis:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathcal{B}_{i+1} &amp;= (1, \alpha_0)\otimes (1, \alpha_1) \otimes \cdots \otimes (1,\alpha_i)  \\
+&amp; = (1, \alpha_0, \alpha_1, \alpha_0\alpha_1, \alpha_2,\ \ldots,\ \alpha_0\alpha_1\cdots \alpha_i)
+\end{split}
+\end{split}\]</div>
+<p>This is consistent with what we discussed earlier, using <span class="math notranslate nohighlight">\((1, \eta, \zeta, \zeta\eta)\)</span> as the Basis for <span class="math notranslate nohighlight">\(\mathbb{F}_{2}(\eta, \zeta)\)</span>. We can quickly verify this. First, <span class="math notranslate nohighlight">\((1, \alpha_0)\)</span> is the Basis of <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span>, because every element of <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span> can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[
+a_0 + b_0\cdot \alpha_0,  \quad a_0, b_0\in\mathcal{T}_0
+\]</div>
+<p>After <span class="math notranslate nohighlight">\(\mathcal{T}_1\)</span> is extended to <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span> through <span class="math notranslate nohighlight">\(\alpha_1\)</span>, elements of <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span> can all be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[
+a_1 + b_1\cdot \alpha_1,  \quad a_1, b_1\in\mathcal{T}_1
+\]</div>
+<p>Substituting <span class="math notranslate nohighlight">\(a_1=a_0+b_0\cdot \alpha_0\)</span>, <span class="math notranslate nohighlight">\(b_1=a_0'+b_0'\cdot \alpha_1\)</span>, we have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a_1 + b_1\cdot \alpha_1 &amp;= (a_0+b_0\cdot \alpha_0) + (a'_0+b'_0\cdot \alpha_0)\cdot \alpha_1 \\
+ &amp;= a_0 + b_0\alpha_0 + a'_0\cdot\alpha_1+ b_0'\cdot \alpha_0\alpha_1
+\end{split}
+\end{split}\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\((1, \alpha_0, \alpha_1, \alpha_0\alpha_1)\)</span> forms the Basis of <span class="math notranslate nohighlight">\(\mathcal{T}_2\)</span>. By extension, <span class="math notranslate nohighlight">\((1, \alpha_0, \alpha_1, \alpha_0\alpha_1, \alpha_2, \alpha_0\alpha_2, \alpha_1\alpha_2, \alpha_0\alpha_1\alpha_2)\)</span> is the Basis of <span class="math notranslate nohighlight">\(\mathcal{T}_3\)</span>. Finally, <span class="math notranslate nohighlight">\(\mathcal{B}_{n}\)</span> is the Basis of <span class="math notranslate nohighlight">\(\mathcal{T}_{n}\)</span>.</p>
+</section>
+<section id="finding-primitive-element">
+<h3>Finding Primitive element<a class="headerlink" href="#finding-primitive-element" title="Link to this heading">#</a></h3>
+<p>We discussed earlier that <span class="math notranslate nohighlight">\(\alpha_i\)</span> and <span class="math notranslate nohighlight">\(\alpha^{-1}_{i}\)</span> are conjugate roots. By Galois theory,</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_{i}^{2^{2^n}} = \alpha^{-1}_{i} 
+\]</div>
+<p>Then all <span class="math notranslate nohighlight">\(\alpha_i\)</span> satisfy the following property:</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_i^{F_i} = 1
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(F_n\)</span> represents the Fermat Number, <span class="math notranslate nohighlight">\(F_n=2^{2^n}+1\)</span>. A famous theorem is that <span class="math notranslate nohighlight">\(\mathsf{gcd}(F_i, F_j) = 1,  i\neq j\)</span>, that is, any two different Fermat numbers are coprime, so</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{ord}(\alpha_0\alpha_1\cdots \alpha_i) = \mathsf{ord}(\alpha_0)\mathsf{ord}(\alpha_1)\cdots\mathsf{ord}(\alpha_i) 
+\]</div>
+<p>Therefore, if the Fermat number <span class="math notranslate nohighlight">\(F_i\)</span> is prime, then obviously <span class="math notranslate nohighlight">\(\mathsf{ord}(\alpha_i)=F_i\)</span>. Currently, we know that when <span class="math notranslate nohighlight">\(i\leq 4\)</span>, <span class="math notranslate nohighlight">\(F_i\)</span> are all prime, so</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{ord}(\alpha_0\cdot \alpha_1\cdot \cdots \cdot \alpha_i) &amp;= \mathsf{ord}(\alpha_0)\cdot \mathsf{ord}(\alpha_1)\cdot \cdots \cdot \mathsf{ord}(\alpha_n) \\
+&amp; = F_0\cdot F_1\cdot \cdots \cdot F_i = 2^{2^{i+1}} - 1 \\
+&amp; = |\mathcal{T}_{n+1}| -1
+\end{split}
+\end{split}\]</div>
+<p>If <span class="math notranslate nohighlight">\(\alpha_0\cdots \alpha_i, i\leq 4\)</span>, then according to the properties of finite fields, it is a Primitive Element of <span class="math notranslate nohighlight">\(\mathcal{T}_{n+1}\)</span>.</p>
+<p>Additionally, through computer program verification, for the cases of <span class="math notranslate nohighlight">\(5\leq i \leq 8\)</span>, the Order of <span class="math notranslate nohighlight">\(\alpha_i\)</span> is still equal to <span class="math notranslate nohighlight">\(F_i\)</span>. The <span class="math notranslate nohighlight">\(\alpha_0\cdots \alpha_8\)</span> is of the size of the finite field <span class="math notranslate nohighlight">\(\mathbb{F}_{2^{512}}\)</span> which can already meet the needs of proof systems like Binius. But mathematically, do all <span class="math notranslate nohighlight">\(\alpha_i\)</span> satisfy this property? This seems to still be an unsolved problem [Wie88].</p>
+</section>
+</section>
+<section id="multiplication-optimization">
+<h2>Multiplication Optimization<a class="headerlink" href="#multiplication-optimization" title="Link to this heading">#</a></h2>
+<p>Another significant advantage of adopting the Extension Tower is the optimization of multiplication operations.</p>
+<p>The first optimization is “Small-by-large Multiplication”, that is, the multiplication operation of two numbers <span class="math notranslate nohighlight">\(a\in\mathcal{T}_\iota\)</span> and <span class="math notranslate nohighlight">\(b\in\mathcal{T}_{\iota+\kappa}\)</span>. Since <span class="math notranslate nohighlight">\(b\)</span> can be decomposed into <span class="math notranslate nohighlight">\(2^\kappa\)</span> elements of <span class="math notranslate nohighlight">\(\mathcal{T}_\iota\)</span>, this multiplication operation is equivalent to <span class="math notranslate nohighlight">\(2^\kappa\)</span> multiplication operations on <span class="math notranslate nohighlight">\(\mathcal{T}_\iota\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+a \cdot (b_0, b_1, \cdots, b_{2^\kappa-1}) = (a\cdot b_0, a\cdot b_1, \cdots, a\cdot b_{\kappa-1})
+\]</div>
+<p>Even for the multiplication of two elements in the same field, there are still optimization techniques. Suppose <span class="math notranslate nohighlight">\(a, b\in\mathcal{T}_{i+1}\)</span>, then according to the definition of Tower construction, they can be represented as <span class="math notranslate nohighlight">\(a_0 + a_1\cdot\alpha_i\)</span> and <span class="math notranslate nohighlight">\(b_0 + b_1\cdot \alpha_i\)</span> respectively, then their multiplication can be derived as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a\cdot b  &amp; = (a_0 + a_1\cdot\alpha_i)\cdot (b_0 + b_1\cdot\alpha_i) \\
+ &amp;= a_0b_0 + (a_0b_1+a_1b_0)\cdot\alpha_i + a_1b_1\cdot\alpha_i^2 \\
+&amp; = a_0b_0 + (a_0b_1+a_1b_0)\cdot\alpha_i + a_1b_1\cdot(\alpha_{i-1}\alpha_i+1) \\
+&amp; = a_0b_0  + a_1b_1 + (a_0b_1 + a_1b_0 + a_1b_1\cdot\alpha_{i-1})\cdot\alpha_i \\
+&amp; = a_0b_0  + a_1b_1 + \big((a_0+a_1)(b_0+b_1) - a_0b_0 - a_1b_1) + a_1b_1\cdot\alpha_{i-1}\big)\cdot\alpha_i
+\end{split}
+\end{split}\]</div>
+<p>Note on the right side of the above equation, we only need to calculate three multiplications on <span class="math notranslate nohighlight">\(\mathcal{T}_{i}\)</span>, namely <span class="math notranslate nohighlight">\(A=a_0b_0\)</span>, <span class="math notranslate nohighlight">\(B=(a_0+a_1)(b_0+b_1)\)</span> and <span class="math notranslate nohighlight">\(C=a_1b_1\)</span>, then the above formula can be converted to:</p>
+<div class="math notranslate nohighlight">
+\[
+a\cdot b = (A + C) + (B-A-C+C\cdot \alpha_{i-1})\cdot\alpha_i 
+\]</div>
+<p>There’s still one <span class="math notranslate nohighlight">\(C\cdot \alpha_{i-1}\)</span> missing, which is a constant multiplication, because <span class="math notranslate nohighlight">\(\alpha_{i-1}\in\mathcal{T}_{i}\)</span> is a constant. This constant multiplication can be reduced to a constant multiplication operation on <span class="math notranslate nohighlight">\(\mathcal{T}_{i-1}\)</span>, as shown below:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+C\cdot \alpha_{i-1} &amp;= (c_0 + c_1\alpha_{i-1})\cdot \alpha_{i-1} \\
+&amp; = c_0\cdot \alpha_{i-1} + c_1\cdot \alpha_{i-1}^2 \\
+&amp; = c_0\cdot \alpha_{i-1} + c_1\cdot (\alpha_{i-2}\cdot \alpha_{i-1} + 1) \\
+&amp; = c_1 + (c_0 + {\color{blue}c_1\cdot \alpha_{i-2}})\cdot \alpha_{i-1}
+\end{split}
+\end{split}\]</div>
+<p>The blue part expression, <span class="math notranslate nohighlight">\({\color{blue}c_1\cdot \alpha_{i-2}}\)</span> is a constant multiplication operation on <span class="math notranslate nohighlight">\(\mathcal{T}_{i-2}\)</span> that needs to be calculated recursively. The entire recursive process only needs to perform several additions to complete.</p>
+<p>Looking back at the <span class="math notranslate nohighlight">\(a\cdot b\)</span> operation, we can also construct a Karatsuba-style recursive algorithm, where each layer of recursion only needs to complete three multiplication operations, one less than the four multiplication operations without optimization. Overall, the optimization effect will be very significant.</p>
+<p>Furthermore, the multiplication inverse operation on <span class="math notranslate nohighlight">\(\mathcal{T}_{i}\)</span> can also be greatly optimized [FP97]. Consider <span class="math notranslate nohighlight">\(a, b\in\mathcal{T}_{i+1}\)</span>, satisfying <span class="math notranslate nohighlight">\(a\cdot b=1\)</span>, expand the expressions of <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a\cdot b &amp;= (a_0 + a_1\cdot\alpha_i)\cdot (b_0 + b_1\cdot\alpha_i) \\
+&amp; = a_0b_0  + a_1b_1 + \big((a_0+a_1)(b_0+b_1) - a_0b_0 - a_1b_1) + a_1b_1\cdot\alpha_{i-1}\big)\cdot\alpha_i\\
+&amp;= 1\\
+\end{split}
+\end{split}\]</div>
+<p>We can calculate to get the expressions for <span class="math notranslate nohighlight">\(b_0, b_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+b_0 &amp;= \frac{a_0 + a_1\alpha_{i-1}}{a_0(a_0 + a_1\alpha_{i-1}) + a_1^2}  \\[2ex]
+b_1 &amp;= \frac{a_1}{a_0(a_0 + a_1\alpha_{i-1}) + a_1^2} \\
+\end{split}
+\end{split}\]</div>
+<p>So, the calculation of <span class="math notranslate nohighlight">\(b_0\)</span> and <span class="math notranslate nohighlight">\(b_1\)</span> includes: one inversion operation, three multiplications, two additions, one constant multiplication, and one squaring operation.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+d_0 &amp;= \alpha_{i-1}a_1\\
+d_1 &amp;= a_0 + d_0 \\
+d_2 &amp;= a_0 \cdot d_1 \\
+d_3 &amp;= a_1^2   \\
+d_4 &amp;= d_2 + d_3 \\
+d_5 &amp;= 1/d_4 \\
+b_0 &amp; = d_1\cdot d_5\\
+b_1 &amp; = a_1 \cdot d_5\\
+\end{split}
+\end{split}\]</div>
+<p>The inversion operation of <span class="math notranslate nohighlight">\(d_5\)</span> can be recursively calculated layer by layer along the Extension Tower. The main computational cost in the recursive process is three multiplication operations. There’s also the squaring operation of <span class="math notranslate nohighlight">\(d_3\)</span>, which can also be calculated recursively:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+a_1^2 &amp;= (e_0 + e_1\cdot\alpha_{i-1})^2 \\
+&amp; = e_0^2 + e_1^2\cdot\alpha_{i-1}^2 \\
+&amp; = e_0^2 + e_1^2\cdot(\alpha_{i-2}\alpha_{i-1} + 1) \\
+&amp; = (e_0^2 + e_1^2) + (e_1^2\alpha_{i-2})\cdot\alpha_{i-1}  \\
+\end{split}
+\end{split}\]</div>
+<p>For detailed recursive efficiency analysis, please refer to [FP97]. Overall, the computational complexity is comparable to the Karatsuba algorithm, thus greatly reducing the algorithmic complexity of inversion.</p>
+</section>
+<section id="artin-schreier-tower-conway-tower">
+<h2>Artin-Schreier Tower (Conway Tower)<a class="headerlink" href="#artin-schreier-tower-conway-tower" title="Link to this heading">#</a></h2>
+<p>There’s another method to construct Binary Towers, originating from a paper published by Amil Artin and Otto Schreier in 1927, which also appears in Conway’s book “On Numbers and Games”. For the historical origins and related theories, please refer to [CHS24].</p>
+<p>For any <span class="math notranslate nohighlight">\(\mathbb{F}_{p^n}\)</span>, we choose <span class="math notranslate nohighlight">\(h(X_{i+1}) = X_{i+1}^p - X_{i+1} - \alpha_0\alpha_1\cdots \alpha_i\)</span> as the irreducible polynomial for each layer of the Tower. And <span class="math notranslate nohighlight">\(\alpha_{i+1}\)</span> is the root of <span class="math notranslate nohighlight">\(h(X_{i+1})=0\)</span> on the previous layer of the Tower. This way we can get an Extension Tower:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{F}_2 \subset \mathbb{F}_{2^2}\cong\mathbb{F}_2(\alpha_0) \subset \mathbb{F}_{2^4}\cong\mathbb{F}_{2^2}(\alpha_1) \subset \mathbb{F}_{2^8}\cong\mathbb{F}_{2^4}(\alpha_2)
+\]</div>
+<p>Moreover, <span class="math notranslate nohighlight">\((1, \alpha_0)\otimes(1, \alpha_1)\otimes\cdots \otimes (1, \alpha_n)\)</span> forms a Basis for the vector space <span class="math notranslate nohighlight">\(\mathbb{F}_{2^{2^{i+1}}}\)</span>. According to our previous discussion, this set of Bases also supports Zero-cost subfield embedding. This type of Multilinear Basis is also known as Cantor Basis [Can89].</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[Wie88] Wiedemann, Doug. “An iterated quadratic extension of GF (2).” Fibonacci Quart 26.4 (1988): 290-295.</p></li>
+<li><p>[DP23] Diamond, Benjamin E., and Jim Posen. “Succinct arguments over towers of binary fields.” Cryptology ePrint Archive (2023).</p></li>
+<li><p>[DP24] Diamond, Benjamin E., and Jim Posen. “Polylogarithmic Proofs for Multilinears over Binary Towers.” Cryptology ePrint Archive (2024).</p></li>
+<li><p>[LN97] Lidl, Rudolf, and Harald Niederreiter. Finite fields. No. 20. Cambridge university press, 1997.</p></li>
+<li><p>[FP97] Fan, John L., and Christof Paar. “On efficient inversion in tower fields of characteristic two.” Proceedings of IEEE International Symposium on Information Theory. IEEE, 1997.</p></li>
+<li><p>[CHS24] Cagliero, Leandro, Allen Herman, and Fernando Szechtman. “Artin-Schreier towers of finite fields.” arXiv preprint arXiv:2405.10159 (2024).</p></li>
+<li><p>[Can89] David G. Cantor. On arithmetical algorithms over finite fields. J. Comb. Theory Ser. A, 50(2):285–300, March 1989.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri-binius"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-fields">Extension Fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-field">Binary Field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#field-embedding">Field Embedding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-tower">Extension Tower</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wiedemann-tower">Wiedemann Tower</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multilinear-basis">Multilinear Basis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-primitive-element">Finding Primitive element</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiplication-optimization">Multiplication Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artin-schreier-tower-conway-tower">Artin-Schreier Tower (Conway Tower)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

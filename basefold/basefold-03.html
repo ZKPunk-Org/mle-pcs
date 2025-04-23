@@ -1,0 +1,958 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Notes on Basefold (Part III): MLE Evaluation Argument &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-03';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-03.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-03.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Notes on Basefold (Part III): MLE Evaluation Argument</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-output-of-the-basefold-iopp-protocol">Final Output of the Basefold-IOPP Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leveraging-sumcheck">Leveraging Sumcheck</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-alternative-folding-method">An Alternative Folding Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp-protocol-based-on-the-evaluation-form">Basefold-IOPP Protocol Based on the Evaluation Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-evaluation-argument-protocol-based-on-the-evaluation-form">Basefold Evaluation Argument Protocol Based on the Evaluation Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="notes-on-basefold-part-iii-mle-evaluation-argument">
+<h1>Notes on Basefold (Part III): MLE Evaluation Argument<a class="headerlink" href="#notes-on-basefold-part-iii-mle-evaluation-argument" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>Assume we have an MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(\vec{X})\in\mathbb{F}[\vec{X}]^{\leq1}\)</span>, an evaluation point <span class="math notranslate nohighlight">\(\mathbf{u}\in\mathbb{F}^d\)</span>, and the result of the polynomial’s operation at the evaluation point <span class="math notranslate nohighlight">\(v=\tilde{f}(\mathbf{u})\)</span>. We aim to construct a Polynomial Evaluation Argument based on the Basefold-IOPP protocol.</p>
+<p>Based on FRI, we can utilize the DEEP Method to construct a PCS protocol, which verifies the existence of a Low Degree Polynomial <span class="math notranslate nohighlight">\(q(X) = (f(X)-f(u))/(X-u)\)</span>. However, the FRI protocol can only handle the case of Univariate Polynomials. For MLE Polynomials, we generally need to use the following extended polynomial remainder theorem to reduce it to a quotient polynomial existence problem:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,\ldots, X_{n-1}) - v = \sum_{i=0}^{n-1} (X_k-u_k) \cdot q_i(X_0,X_1,\ldots, X_{k-1})
+\]</div>
+<p>For example, Virgo adopts this scheme for the MLE PCS protocol. However, Basefold [ZCF23] presents a refreshing approach to implementing the MLE Evaluation Argument by combining the Basefold-IOPP protocol and the Sumcheck protocol. We can use the Sumcheck protocol’s summation and proof as the main framework of the protocol, then use Basefold-IOPP to ensure the Low degree of the MLE polynomial. Additionally, the evaluation of the MLE polynomial at random points generated after multiple rounds of folding in the Basefold-IOPP protocol compensates for the correctness proof of the evaluation required in the last round of the Sumcheck protocol.</p>
+<section id="final-output-of-the-basefold-iopp-protocol">
+<h2>Final Output of the Basefold-IOPP Protocol<a class="headerlink" href="#final-output-of-the-basefold-iopp-protocol" title="Link to this heading">#</a></h2>
+<p>For demonstration purposes, we use an MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> with <span class="math notranslate nohighlight">\(d=3\)</span>, defined as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{X}) = f_0 + f_1\cdot X_0 + f_2\cdot X_1 + f_3\cdot X_0X_1 + f_4\cdot X_2 + f_5\cdot X_0X_2 + f_6\cdot X_1X_2 + f_7\cdot X_0X_1X_2
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> is the coefficient vector of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, defined above as the Coefficients Form of the MLE polynomial.</p>
+<p>Let’s revisit the folding process of the Basefold-IOPP protocol. First, let <span class="math notranslate nohighlight">\(f^{(3)}(X_0, X_1, X_2)\)</span> correspond to the codeword after encoding <span class="math notranslate nohighlight">\(\tilde{f}\)</span> with <span class="math notranslate nohighlight">\(C_3\)</span>. In each folding round, the Verifier sends a random challenge <span class="math notranslate nohighlight">\(\alpha_i\)</span> to the Prover, who then generates <span class="math notranslate nohighlight">\(f^{(i)}\)</span> by folding <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span>, and sends the encoded codeword (as an Oracle) to the Verifier.</p>
+<p>After one folding round of the Basefold-IOPP protocol, the polynomial corresponding to the codeword obtained by both parties, <span class="math notranslate nohighlight">\(f^{(2)}(X_0,X_1)\)</span>, is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(2)}(X_0, X_1) &amp; = f^{(3)}(X_0, X_1, \alpha_2) \\
+&amp; = (f_0 + \alpha_2\cdot f_4) + (f_1+\alpha_2\cdot f_5)\cdot X_0 + (f_2+\alpha_2\cdot f_6)\cdot X_1 + (f_3+\alpha_2\cdot f_7)\cdot X_0X_1 \\
+\end{split}
+\end{split}\]</div>
+<p>After another folding round, the polynomial corresponding to the codeword, <span class="math notranslate nohighlight">\(f^{(1)}(X_0)\)</span>, is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(1)}(X_0) &amp; = f^{(2)}(X_0, \alpha_1) \\
+&amp; = (f_0 + \alpha_2\cdot f_4 + \alpha_1\cdot f_2 + \alpha_2\alpha_1\cdot f_6) + (f_1+\alpha_2\cdot f_5 + \alpha_1\cdot f_3 + \alpha_2\alpha_1\cdot f_7)\cdot X_0 
+\end{split}
+\end{split}\]</div>
+<p>Finally, the polynomial corresponding to the codeword, the <strong>constant polynomial</strong> <span class="math notranslate nohighlight">\(f^{(0)}\)</span>, is as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(0)} &amp; = f^{(1)}(\alpha_0) \\
+&amp; = (f_0 + \alpha_2\cdot f_4 + \alpha_1\cdot f_2 + \alpha_2\alpha_1\cdot f_6) + (f_1+\alpha_2\cdot f_5 + \alpha_1\cdot f_3 + \alpha_2\alpha_1\cdot f_7)\cdot \alpha_0 \\
+&amp; = f_0 + f_1\alpha_0 + f_2\alpha_1 + f_3\alpha_0\alpha_1 + f_4\alpha_2 + f_5\alpha_0\alpha_2 + f_6\alpha_1\alpha_2 + f_7\alpha_0\alpha_1\alpha_2 \\
+\end{split}
+\end{split}\]</div>
+<p>Upon closer examination, <span class="math notranslate nohighlight">\(f^{(0)}\)</span> is exactly the evaluation of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> at <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span>.</p>
+<p>Thus, in the final round of the Basefold-IOPP protocol, the Prover sends the folded constant polynomial to the Verifier. The Verifier then uses the Query-phase to verify the correctness of each folding step. Meanwhile, the Verifier also obtains the evaluation result <span class="math notranslate nohighlight">\(v = \tilde{f}(\vec{X})\)</span> at the random point <span class="math notranslate nohighlight">\(\vec{X} = (\alpha_0, \alpha_1, \alpha_2)\)</span>. From another perspective, the Basefold-IOPP protocol not only completes the Proximity proof but also provides an additional evaluation of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> at a random point. More precisely, this is a proof of a vector inner product:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle \mathbf{f},(1,\alpha_0)\otimes(1,\alpha_1)\otimes(1,\alpha_2) \rangle = v
+\]</div>
+<p>However, this MLE evaluation point is not a pre-negotiated public input but is instead composed of random challenges generated during the execution of the Basefold-IOPP protocol.</p>
+<p>In summary, in the final round of the IOPP protocol, the Prover folds to produce a constant polynomial, denoted as <span class="math notranslate nohighlight">\(f^{(0)}\)</span>, which is precisely <span class="math notranslate nohighlight">\(\tilde{f}\)</span> evaluated at the random point <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span>. What we need is to prove the correctness of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at a <strong>public point</strong>, such as <span class="math notranslate nohighlight">\((u_0, u_1, u_2)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, u_2) = f_0 + f_1\cdot u_0 + f_2\cdot u_1 + f_3\cdot u_0u_1 + f_4\cdot u_2 + f_5\cdot u_0u_2 + f_6\cdot u_1u_2 + f_7\cdot u_0u_1u_2
+\]</div>
+<p>The subsequent question becomes: How can we use the evaluation of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at a <strong>random point</strong> to prove the correctness of its evaluation at another <strong>public point</strong>?</p>
+</section>
+<section id="leveraging-sumcheck">
+<h2>Leveraging Sumcheck<a class="headerlink" href="#leveraging-sumcheck" title="Link to this heading">#</a></h2>
+<p>We can revisit <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2)\)</span> by utilizing the properties of MLE. According to the definition of MLE, we have the following equation:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{EQ}_1: \qquad \tilde{f}(X_0, X_1, X_2) = \sum_{\mathbf{b}\in\{0,1\}^3}\tilde{f}(b_0, b_1, b_2)\cdot \tilde{eq}_{(b_0, b_1, b_2)}(X_0, X_1, X_2)
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> is the Lagrange Polynomial of MLE, defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{eq}_{(b_0,b_1,\ldots,b_{n-1})}(X_0,X_1,\ldots, X_{n-1})\big) = \prod_{i=0}^{n-1}\big((1-b_i)(1-X_i) + b_i\cdot X_i\big)
+\]</div>
+<p>It is easily verified that when <span class="math notranslate nohighlight">\((X_0, X_1, X_2)=\mathbf{b}'\)</span>, <span class="math notranslate nohighlight">\(\mathbf{b}'\in\{0,1\}^3\)</span>, the left side of equation <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> equals <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{b}')\)</span>. Observing each summand <span class="math notranslate nohighlight">\(\tilde{eq}_{\mathbf{b}}(\mathbf{b}')\)</span>, only when the vectors <span class="math notranslate nohighlight">\(\mathbf{b}=\mathbf{b}'\)</span> are completely identical does <span class="math notranslate nohighlight">\(\tilde{eq}_{\mathbf{b}}(\mathbf{b}') = 1\)</span>; otherwise, they all equal <span class="math notranslate nohighlight">\(0\)</span>. Therefore, the right side of the equation reduces to <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{b}')\cdot \tilde{eq}_{\mathbf{b}}(\mathbf{b}') = \tilde{f}(\mathbf{b}')\)</span>, ensuring the equality holds.</p>
+<p>This means that both sides of equation <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> agree on their values over the 3-dimensional Boolean HyperCube. Based on the uniqueness property of MLE, we can conclude that <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> holds for any <span class="math notranslate nohighlight">\(\mathbf{X}\in F^3\)</span>.</p>
+<p>Although the above is fundamental knowledge of MLE, note that equation <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> introduces a new perspective: we can transform the evaluation problem of <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2)\)</span> into a Sumcheck problem:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, u_2) = v = \sum_{\mathbf{b}\in\{0,1\}^3}\tilde{f}(\mathbf{b})\cdot \tilde{eq}_{\mathbf{b}}(u_0, u_1, u_2)
+\]</div>
+<p>It is immediately apparent that we can use the Sumcheck protocol to perform a “sum proof” on the above equation. An important function of the Sumcheck protocol is to transform a “summation problem” into two MLE polynomial evaluation problems (specifically for <span class="math notranslate nohighlight">\(\tilde{f}\)</span> and <span class="math notranslate nohighlight">\(\tilde{eq}\)</span>) at a random point. However, in general, this approach is meaningless because, in the last round of Sumcheck, we need to prove the evaluation of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at a new point, leading to a circular proof situation: we originally prove the evaluation of a polynomial at one point, then use the Sumcheck protocol to transform this proof into an evaluation at another point. This makes the Sumcheck protocol process redundant and useless. Typically, the protocol would rely on another MLE Evaluation Argument protocol, where the Prover sends the final evaluation and its correctness proof, thereby concluding the Sumcheck protocol. But here, we cannot rely on another MLE PCS protocol because our goal is to construct an MLE Evaluation Argument protocol, not to depend on an existing MLE PCS.</p>
+<p>However, this problem is not difficult to solve because the previously introduced Basefold-IOPP protocol provides a byproduct: a proof of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>’s evaluation at a <strong>random point</strong>. If the Sumcheck protocol and the Basefold-IOPP protocol share random challenges, the value provided by Basefold-IOPP in the final step can compensate for the correctness proof of the evaluation required in the last round of Sumcheck. Another remaining issue is how to handle the evaluation proof of <span class="math notranslate nohighlight">\(\tilde{eq}\)</span>. This is simpler because <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> is a public polynomial, allowing the Verifier to compute it independently without requiring the Prover to send an evaluation proof. Moreover, computing the evaluation of <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> only has a complexity of <span class="math notranslate nohighlight">\(O(\log{N})\)</span>, which does not increase the Verifier’s burden or affect the Verifier’s succinctness. At this point, the Sumcheck protocol’s role is no longer redundant but becomes crucial: <strong>it transforms the problem of proving a polynomial’s evaluation at a public point into a proof of its evaluation at a random point</strong>.</p>
+<p>Next, we need to synchronize the execution of the Basefold-IOPP protocol and the Sumcheck protocol, allowing both protocols to share a set of random challenges. This way, in the final step of both protocols, we can complete the collaboration, thereby ultimately proving the correctness of <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2) = v\)</span>.</p>
+<p>Following this approach, we attempt to outline the protocol flow when <span class="math notranslate nohighlight">\(s=3\)</span>.</p>
+<p><strong>Public Inputs</strong></p>
+<ol class="arabic simple">
+<li><p>Commitment of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\pi_3=[\tilde{f}]=\mathsf{Enc}_3(\mathbf{f})\)</span></p></li>
+<li><p>Evaluation point <span class="math notranslate nohighlight">\(\mathbf{u}=(u_0, u_1, u_2)\)</span></p></li>
+<li><p>Operation value <span class="math notranslate nohighlight">\(v\)</span></p></li>
+</ol>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>Coefficient vector of MLE <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{f} = (f_0, f_1, f_2, f_3, f_4, f_5, f_6, f_7)\)</span></p></li>
+<li><p>Evaluation vector of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{a} = (a_0, a_1, a_2, a_3, a_4, a_5, a_6, a_7)\)</span></p></li>
+</ul>
+<p><strong>First Round:</strong> Prover sends the univariate polynomial <span class="math notranslate nohighlight">\(h^{(2)}(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+h^{(2)}(X) = \sum_{b_0,b_1\in\{0,1\}^2}f(b_0, b_1, X)\cdot \tilde{eq}\big((b_0, b_1, X), (u_0, u_1, u_2)\big)
+\]</div>
+<p>Since the right side is a degree 2 Univariate Polynomial, the Prover can compute the coefficients of <span class="math notranslate nohighlight">\(h^{(2)}(X)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(2)}_0 &amp;= \sum_{i=0}^{3}{a_i \cdot e_i} \\
+h^{(2)}_1 &amp;= \sum_{i=0}^{3}{a_{i+4} \cdot e_i + a_i\cdot e_{i+4}} \\
+h^{(2)}_2 &amp;= \sum_{i=0}^{3}{a_{i+4} \cdot e_{i+4}} \\
+\end{split}
+\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathbf{e}\)</span> is the evaluation vector of <span class="math notranslate nohighlight">\(\tilde{eq}(\mathbf{X}, \mathbf{u})\)</span>. It is easy to verify that <span class="math notranslate nohighlight">\(h^{(2)}(X)=h^{(2)}_0 + h^{(2)}_1\cdot X + h^{(2)}_2 \cdot X^2\)</span>.</p>
+<p><strong>Second Round:</strong> Verifier sends challenge <span class="math notranslate nohighlight">\(\alpha_2 \leftarrow \mathbb{F}_p\)</span></p>
+<p><strong>Third Round:</strong> Prover and Verifier simultaneously execute the Basefold-IOPP protocol and the Sumcheck protocol:</p>
+<ul class="simple">
+<li><p>Prover computes <span class="math notranslate nohighlight">\(\tilde{f}^{(2)}(X_1, X_2)=f(\alpha_0, X_1, X_2)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(2)}(X_0, X_1) = (f_0 + f_4\alpha_2) + (f_1 + f_5\alpha_2)\cdot X_0 + (f_2 + f_6\alpha_2)\cdot X_1 + (f_3 + f_7\alpha_2)\cdot X_0X_1
+\]</div>
+<ul class="simple">
+<li><p>Prover sends the folded vector encoding: <span class="math notranslate nohighlight">\(\pi_2 = \mathrm{Enc}_{2}[\tilde{f}^{(2)}]\)</span></p></li>
+<li><p>Prover computes <span class="math notranslate nohighlight">\(h^{(2)}(\alpha_2)\)</span> as the summation value for the next round of the Sumcheck protocol</p></li>
+<li><p>Prover computes and sends <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+h^{(1)}(X) = \sum_{b_0\in\{0,1\}}f(b_0, X, \alpha_2)\cdot \tilde{eq}((b_0, X, \alpha_2), (u_0, u_1, u_2))
+\]</div>
+<p>Since the right side is also a degree 2 Univariate Polynomial in <span class="math notranslate nohighlight">\(X\)</span>, the Prover can calculate the coefficients of <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span>: <span class="math notranslate nohighlight">\((h^{(1)}_0, h^{(1)}_1, h^{(1)}_2)\)</span>.</p>
+<p><strong>Fourth Round:</strong> Verifier sends challenge <span class="math notranslate nohighlight">\(\alpha_1\leftarrow \mathbb{F}_p\)</span></p>
+<p><strong>Fifth Round:</strong> Prover continues executing the Basefold-IOPP protocol and the Sumcheck protocol:</p>
+<ul class="simple">
+<li><p>Prover computes <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_2)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(1)}(X_2) =f(X_0, \alpha_1, \alpha_2) = (f_0 + f_4\alpha_2 + f_2\alpha_1 + f_6\alpha_1\alpha_2) + (f_1 + f_5\alpha_2 + f_3\alpha_1 + f_7\alpha_1\alpha_2)\cdot X_0
+\]</div>
+<ul class="simple">
+<li><p>Prover sends the folded vector encoding <span class="math notranslate nohighlight">\(\pi_1 = \mathrm{Enc}_{1}[\tilde{f}^{(1)}]\)</span></p></li>
+<li><p>Prover computes the summation value for the next round of the Sumcheck protocol: <span class="math notranslate nohighlight">\(h^{(1)}(\alpha_1)\)</span></p></li>
+<li><p>Prover computes and sends <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+h^{(0)}(X) = \sum_{b_0\in\{0,1\}}f(X, \alpha_1, \alpha_2)\cdot \tilde{eq}((b_0, \alpha_1, \alpha_2), (u_0, u_1, u_2))
+\]</div>
+<p>Assume the coefficients of <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span> are represented as <span class="math notranslate nohighlight">\((h^{(0)}_0, h^{(0)}_1, h^{(0)}_2)\)</span>.</p>
+<p><strong>Sixth Round:</strong> Verifier sends challenge <span class="math notranslate nohighlight">\(\alpha_0\leftarrow \mathbb{F}_p\)</span></p>
+<p><strong>Seventh Round:</strong> Prover continues executing the Basefold-IOPP protocol:</p>
+<ul class="simple">
+<li><p>Prover computes <span class="math notranslate nohighlight">\(\tilde{f}^{(0)}\)</span>, a <strong>constant polynomial</strong></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(0)} =f(\alpha_0, \alpha_1, \alpha_2) = f_0 + f_1\alpha_0 + f_2\alpha_1 + f_3\alpha_0\alpha_1 + f_4\alpha_2 + f_5\alpha_0\alpha_2 + f_6\alpha_1\alpha_2 + f_7\alpha_0\alpha_1\alpha_2
+\]</div>
+<ul class="simple">
+<li><p>Prover sends the folded vector encoding <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{Enc}_0[\tilde{f}^{(0)}]\)</span></p></li>
+</ul>
+<p><strong>Eighth Round:</strong> Verifier validates the following equations:</p>
+<ol class="arabic simple">
+<li><p>Verifier verifies several rounds of Basefold Queries, <span class="math notranslate nohighlight">\(Q=\{q_i\}\)</span></p></li>
+<li><p>Verifier checks the correctness of each folding step in Sumcheck:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(2)}(0) + h^{(2)}(1) &amp;\overset{?}{=} v \\
+h^{(1)}(0) + h^{(1)}(1) &amp;\overset{?}{=} h^{(2)}(\alpha_2) \\
+h^{(0)}(0) + h^{(0)}(1) &amp;\overset{?}{=} h^{(1)}(\alpha_1) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Verifier checks whether the final encoding <span class="math notranslate nohighlight">\(\pi_0\)</span> is correct</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\pi_0 \overset{?}{=} \mathsf{Enc}_0\left(\frac{h^{(0)}(\alpha_0)}{\tilde{eq}((\alpha_0,\alpha_1,\alpha_2), (u_0, u_1, u_2))}\right)
+\]</div>
+</section>
+<section id="an-alternative-folding-method">
+<h2>An Alternative Folding Method<a class="headerlink" href="#an-alternative-folding-method" title="Link to this heading">#</a></h2>
+<p>In the Basefold paper, the PCS protocol requires that the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span> be converted to the Coefficients Form beforehand, and then follow the protocol described in the previous section for the proof. However, in many Sumcheck-based SNARK systems, the Sumcheck protocol finally produces the Evaluation Form of the MLE polynomial, that is, the evaluation of the MLE polynomial on a Boolean HyperCube. Therefore, if we directly connect the SNARK protocol to Basefold-PCS, we would still need to convert the MLE polynomial from the Evaluation Form to the Coefficients Form. This conversion algorithm has a complexity of <span class="math notranslate nohighlight">\(O(N\log(N))\)</span>, where <span class="math notranslate nohighlight">\(N=2^d\)</span>, and <span class="math notranslate nohighlight">\(d\)</span> is the number of variables in the MLE polynomial. Below is the definition of the Evaluation Form of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{d-1}) = \sum_{\mathbf{b}\in\{0,1\}^d}a_{\mathbf{b}}\cdot eq_{\mathbf{b}}(X_0, X_1, \ldots, X_{d-1})
+\]</div>
+<p>As noted in the FRI-Binius paper, we do not need to convert the MLE polynomial from the Evaluation Form to the Coefficients Form. Instead, we can directly construct the PCS protocol in the Evaluation Form. In the previous section, the reason we needed the Coefficients Form of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span> was that the Basefold-IOPP protocol’s Commit method required the coefficients of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span>. If we follow the folding method of the Basefold-IOPP protocol described below, we can directly construct the PCS protocol in the Evaluation Form.</p>
+<p>Now, let’s consider the folding method of the Evaluation Form of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span>. First, expand the definition of the Evaluation Form of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(3)}(X_0, X_1, X_2) &amp; = \tilde{f}(X_0, X_1, X_2) \\
+&amp; = a_0\cdot eq_{(0,0,0)}(X_0, X_1, X_2) + a_1\cdot eq_{(1,0,0)}(X_0, X_1, X_2) + a_2\cdot eq_{(0,1,0)}(X_0, X_1, X_2) + a_3\cdot eq_{(1,1,0)}(X_0, X_1, X_2) \\
+&amp; + a_4\cdot eq_{(0,0,1)}(X_0, X_1, X_2) + a_5\cdot eq_{(1,0,1)}(X_0, X_1, X_2) + a_6\cdot eq_{(0,1,1)}(X_0, X_1, X_2) + a_7\cdot eq_{(1,1,1)}(X_0, X_1, X_2)
+\end{split}
+\end{split}\]</div>
+<p>We can fold the above Evaluation Form, ultimately obtaining the evaluation <span class="math notranslate nohighlight">\(\tilde{f}^{(3)}(\alpha_0, \alpha_1, \alpha_2)\)</span>. For example, we can fold the Evaluation Form of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha_2\)</span> to obtain:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(2)}(X_0, X_1) &amp; = \tilde{f}^{(3)}(X_0, X_1, \alpha_2) \\
+&amp; = a_0\cdot eq_{(0,0,0)}(X_0, X_1, \alpha_2) + a_1\cdot eq_{(1,0,0)}(X_0, X_1, \alpha_2) + a_2\cdot eq_{(0,1,0)}(X_0, X_1, \alpha_2) + a_3\cdot eq_{(1,1,0)}(X_0, X_1, \alpha_2) \\
+&amp; + a_4\cdot eq_{(0,0,1)}(X_0, X_1, \alpha_2) + a_5\cdot eq_{(1,0,1)}(X_0, X_1, \alpha_2) + a_6\cdot eq_{(0,1,1)}(X_0, X_1, \alpha_2) + a_7\cdot eq_{(1,1,1)}(X_0, X_1, \alpha_2)
+\end{split}
+\end{split}\]</div>
+<p>Next, we need to decompose <span class="math notranslate nohighlight">\(eq_{\mathbf{b}}(X_0, X_1\alpha_2)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+eq_{(b_0,b_1,b_2)}(X_0, X_1, \alpha_2) &amp; = eq_{(b_0, b_1)}(X_0, X_1)\cdot \Big((1-b_2)\cdot(1-\alpha_2) + b_2\cdot \alpha_2 \Big)\\
+\end{split}
+\end{split}\]</div>
+<p>When <span class="math notranslate nohighlight">\(b_2=0\)</span>, the right side simplifies to <span class="math notranslate nohighlight">\((1-\alpha_2)\cdot eq_{(b_0,b_1)}(X_0, X_1)\)</span>; when <span class="math notranslate nohighlight">\(b_2=1\)</span>, it simplifies to <span class="math notranslate nohighlight">\(\alpha_2\cdot eq_{(b_0,b_1)}(X_0, X_1)\)</span>. Then, continue simplifying <span class="math notranslate nohighlight">\(\tilde{f}^{(2)}(X_0, X_1)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(2)}(X_0, X_1) &amp; = ((1-\alpha_2)\cdot a_0+\alpha_2\cdot a_4)\cdot eq_{(0,0)}(X_0, X_1) 
++ ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) \cdot eq_{(0,1)}(X_0, X_1) \\
+&amp; + ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \cdot eq_{(1,0)}(X_0, X_1) + ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \cdot eq_{(1,1)}(X_0, X_1)
+\end{split}
+\end{split}\]</div>
+<p>This is equivalent to folding (linear combination) the vectors <span class="math notranslate nohighlight">\((a_0, a_1, a_2, a_3)\)</span> and <span class="math notranslate nohighlight">\((a_4, a_5, a_6, a_7)\)</span> with <span class="math notranslate nohighlight">\((1-\alpha_2, \alpha_2)\)</span>. Compared with the folding method in the Basefold-IOPP protocol, it uses <span class="math notranslate nohighlight">\((1, \alpha_2)\)</span> to fold (linear combination) the vectors <span class="math notranslate nohighlight">\((f_0, f_1, f_2, f_3)\)</span> and <span class="math notranslate nohighlight">\((f_4, f_5, f_6, f_7)\)</span>. If we continue to fold in the new way, we can eventually get the same folding result as the Basefold-IOPP protocol.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(1)}(X_0) &amp; = \tilde{f}^{(2)}(X_0, \alpha_1) \\
+&amp; = ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4)\cdot eq_{(0,0)}(X_0, \alpha_1) + ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) \cdot eq_{(1,0)}(X_0, \alpha_1) \\
+&amp; + ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \cdot eq_{(0,1)}(X_0, \alpha_1) + ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \cdot eq_{(1,1)}(X_0, \alpha_1) \\
+&amp; = ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4)\cdot (1-\alpha_1)\cdot eq_{(0)}(X_0) + ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) \cdot (1-\alpha_1)\cdot eq_{(1)}(X_0) \\
+&amp; + ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \cdot \alpha_1\cdot eq_{(0)}(X_0) + ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \cdot \alpha_1\cdot eq_{(1)}(X_0) \\
+&amp; = \Big((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4) + \alpha_1\cdot ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \Big)\cdot eq_{(0)}(X_0) \\
+&amp; + \Big((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) + \alpha_1\cdot ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \Big)\cdot eq_{(1)}(X_0) \\
+\end{split}
+\end{split}\]</div>
+<p>Continuing the folding process, we eventually obtain:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(0)} &amp; = \tilde{f}^{(1)}(\alpha_0) \\
+&amp; = \Big((1-\alpha_0)\cdot ((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4) + \alpha_1\cdot ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6)) \\
+&amp; \quad + \alpha_0\cdot ((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) + \alpha_1\cdot ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7)) \Big) \\
+&amp; = \tilde{f}^{(3)}(\alpha_0, \alpha_1, \alpha_2)
+\end{split}
+\end{split}\]</div>
+<p>Can we improve the folding method of the Basefold-IOPP protocol so that it can directly fold the Evaluation Form of the MLE polynomial?</p>
+</section>
+<section id="basefold-iopp-protocol-based-on-the-evaluation-form">
+<h2>Basefold-IOPP Protocol Based on the Evaluation Form<a class="headerlink" href="#basefold-iopp-protocol-based-on-the-evaluation-form" title="Link to this heading">#</a></h2>
+<p>Next, we attempt to outline the Basefold-IOPP protocol for the Evaluation Form of <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> when <span class="math notranslate nohighlight">\(d=3\)</span>. First, we rewrite the folding function from the previous article:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}^{*}_\alpha(y_0, y_1) &amp;= (1-\alpha)\cdot \frac{t_j\cdot y_1 - t'_j\cdot y_0}{t_j - t'_j} + \alpha\cdot \frac{y_0-y_1}{t_j - t'_j} \\
+\end{split}
+\end{split}\]</div>
+<p>From earlier discussions, we know that the folding function has the following homomorphic property: after folding, the codeword is equivalent to the original message being folded and then encoded, expressed as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_\alpha(\mathsf{Enc}_i(\mathbf{m}))=\mathsf{Enc}_i(\mathsf{fold}_\alpha(\mathbf{m}))
+\]</div>
+<p>Similarly, we can prove that the new folding function satisfies the above property. We can attempt to fold an element in the codeword <span class="math notranslate nohighlight">\(\pi_i\)</span> using the new folding function:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}^*_\alpha(\pi_{i}[j], \pi_{i}[n_{i-1}+j]) &amp; = \frac{1-\alpha}{t_j - t'_j}\cdot\Big(
+t_j\cdot (\mathbf{m}_l G_{i-1}[j] + t'_j\cdot \mathbf{m}_r G_{i-1}[j]) - t'_j\cdot(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j]) \Big)\\
+&amp; + \frac{\alpha}{t_j - t'_j}\cdot \Big(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j] - \mathbf{m}_l G_{i-1}[j] - t'_j\cdot \mathbf{m}_r G_{i-1}[j] \Big) \\
+&amp; = (1-\alpha)\cdot \mathbf{m}_l G_{i-1}[j] + \alpha\cdot \mathbf{m}_r G_{i-1}[j]
+\end{split}
+\end{split}\]</div>
+<p>The above derivation demonstrates that the new folding function also satisfies the homomorphic property concerning the encoding function:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}^*_\alpha(\mathsf{Enc}_i(\mathbf{m}))=\mathsf{Enc}_i(\mathsf{fold}^*_\alpha(\mathbf{m}))
+\]</div>
+<p>Additionally, we can prove that the new folding process does not affect the reliability of the Basefold-IOPP protocol, i.e., the Minimum Hamming Weight of the folded codeword remains above a lower bound.</p>
+<p>Thus, we have an important conclusion: whether we use <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha\)</span> or <span class="math notranslate nohighlight">\(\mathsf{fold}^*_\alpha\)</span>, both can be used to construct a Proximity-Proof protocol without significant differences.</p>
+<p>Next, we outline the Commit-phase protocol flow for better understanding:</p>
+<p><strong>Public Inputs</strong></p>
+<ul class="simple">
+<li><p>Codeword of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\pi_3=\mathsf{Enc}_3(\mathbf{a})=\mathbf{a}G_3\)</span></p></li>
+</ul>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>Evaluation vector of the MLE polynomial <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{a} = (a_0, a_1, a_2, a_3, a_4, a_5, a_6, a_7)\)</span></p></li>
+</ul>
+<p><strong>First Round:</strong> Verifier sends a random number <span class="math notranslate nohighlight">\(\alpha_2\)</span></p>
+<p><strong>Second Round:</strong> Prover computes <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{fold}^*_\alpha(\pi_3)\)</span> and sends it to the Verifier</p>
+<p>The process of computing <span class="math notranslate nohighlight">\(\pi_2\)</span> is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_2[j] = \mathsf{fold}^*_\alpha(\pi_3[j], \pi_3[j+4]), \quad j\in\{0, 1, 2, 3\}
+\]</div>
+<p>The computed <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{Enc}_2(f^{(2)})\)</span>, meaning that <span class="math notranslate nohighlight">\(\pi_2\)</span> is the codeword of <span class="math notranslate nohighlight">\(f^{(2)}\)</span>, where <span class="math notranslate nohighlight">\(f^{(2)}\)</span> is the folded result of <span class="math notranslate nohighlight">\(f\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(2)}(X_0, X_1) &amp;= ((1-\alpha_2)a_0 + \alpha_2a_4)\cdot eq_{(0,0)}(X_0, X_1)+ ((1-\alpha_2)a_1 + \alpha_2a_5)\cdot eq_{(1,0)}(X_0, X_1) \\
+&amp; + ((1-\alpha_2)a_2 + \alpha_2a_6)\cdot eq_{(0,1)}(X_0, X_1) + ((1-\alpha_2)a_3 + \alpha_2a_7)\cdot eq_{(1,1)}(X_0, X_1) \\
+&amp; = f(X_0, X_1, \alpha_2)
+\end{split}
+\end{split}\]</div>
+<p><strong>Third Round:</strong> Verifier sends a random number <span class="math notranslate nohighlight">\(\alpha_1\)</span></p>
+<p><strong>Fourth Round:</strong> Prover computes <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{fold}^*_\alpha(\pi_2)\)</span> and sends it to the Verifier</p>
+<p>The process of computing <span class="math notranslate nohighlight">\(\pi_1\)</span> is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_1[j] = \mathsf{fold}^*_\alpha(\pi_2[j], \pi_2[j+2]), \quad j\in\{0, 1\}
+\]</div>
+<p>The computed <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{Enc}_1(f^{(1)})\)</span>, where <span class="math notranslate nohighlight">\(f^{(1)}\)</span> is the folded result of <span class="math notranslate nohighlight">\(f^{(2)}\)</span> with respect to <span class="math notranslate nohighlight">\(\alpha_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(1)}(X_0)  &amp; = \Big((1-\alpha_1) ((1-\alpha_2)a_0 + \alpha_2a_4) + \alpha_1((1-\alpha_2)a_1 + \alpha_2a_5)\Big)\cdot eq_{(0)}(X_0) \\
+&amp; + \Big((1-\alpha_1)((1-\alpha_2)a_2 + \alpha_2a_6) + \alpha_1((1-\alpha_2)a_3 + \alpha_2a_7)\Big)\cdot eq_{(1)}(X_0) \\
+&amp; = f(X_0, \alpha_1, \alpha_2) \\
+\end{split}
+\end{split}\]</div>
+<p><strong>Fifth Round:</strong> Verifier sends a random number <span class="math notranslate nohighlight">\(\alpha_0\)</span></p>
+<p><strong>Sixth Round:</strong> Prover computes <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{fold}_\alpha(\pi_1)\)</span> and sends it to the Verifier</p>
+<p>The process of computing <span class="math notranslate nohighlight">\(\pi_0\)</span> is as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_0[j] = \mathsf{fold}^*_\alpha(\pi_1[j], \pi_1[j+1]), \quad j=0
+\]</div>
+<p>Similarly, <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{Enc}_0(f^{(0)})\)</span>, meaning <span class="math notranslate nohighlight">\(\pi_0\)</span> is the codeword of <span class="math notranslate nohighlight">\(f^{(0)}\)</span>, where <span class="math notranslate nohighlight">\(f^{(0)}\)</span> is the folded result of <span class="math notranslate nohighlight">\(f\)</span> with respect to <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)} = f(\alpha_0, \alpha_1, \alpha_2) 
+\]</div>
+<p>Then, we can improve the Evaluation Argument protocol.</p>
+</section>
+<section id="basefold-evaluation-argument-protocol-based-on-the-evaluation-form">
+<h2>Basefold Evaluation Argument Protocol Based on the Evaluation Form<a class="headerlink" href="#basefold-evaluation-argument-protocol-based-on-the-evaluation-form" title="Link to this heading">#</a></h2>
+<p><strong>Public Inputs</strong></p>
+<ol class="arabic simple">
+<li><p>Commitment of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\pi_3=\mathsf{Enc}_3(\mathbf{a})\)</span></p></li>
+<li><p>Evaluation point <span class="math notranslate nohighlight">\(\mathbf{u}\)</span></p></li>
+<li><p>Operation value <span class="math notranslate nohighlight">\(v=\tilde{f}(\mathbf{u})\)</span></p></li>
+</ol>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>Evaluation vector of MLE <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{a}=(a_0, a_1, \ldots, a_7)\)</span></p></li>
+</ul>
+<p>Such that</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, X_2) = \sum_{\mathbf{b}\in\{0,1\}^3}a_{\mathbf{b}}\cdot eq_{\mathbf{b}}(X_0, X_1, X_2)
+\]</div>
+<p><strong>First Round:</strong> Prover sends the evaluations of <span class="math notranslate nohighlight">\(h^{(2)}(X)\)</span> at points <span class="math notranslate nohighlight">\((0, 1, 2)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+h^{(2)}(X) = \sum_{b_1,b_2\in\{0,1\}^2}f(X, b_1, b_2)\cdot \tilde{eq}((X, b_1, b_2), \mathbf{u})
+\]</div>
+<p>Since the right side is a degree 2 Univariate Polynomial, the Prover can compute the evaluations of <span class="math notranslate nohighlight">\(h^{(2)}(X)\)</span> at <span class="math notranslate nohighlight">\(X=0, 1, 2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(2)}(0) &amp;= a_0\cdot e_0 + a_1\cdot e_1 + a_2\cdot e_2 + a_3\cdot e_3 \\
+h^{(2)}(1) &amp;= a_4\cdot e_4 + a_5\cdot e_5 + a_6\cdot e_6 + a_7\cdot e_7 \\
+h^{(2)}(2) &amp;= \sum_{i=0}^{3} (2\cdot a_{i+4} - a_i)\cdot (2\cdot e_{i+4} - e_i) \\
+\end{split}
+\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathbf{e}\)</span> is the evaluation vector of <span class="math notranslate nohighlight">\(\tilde{eq}(\mathbf{X}, \mathbf{u})\)</span>.</p>
+<p><strong>Second Round:</strong> Verifier sends challenge <span class="math notranslate nohighlight">\(\alpha_2 \leftarrow \mathbb{F}_p\)</span></p>
+<p><strong>Third Round:</strong> Prover simultaneously executes the Basefold-IOPP protocol and the Sumcheck protocol:</p>
+<ul class="simple">
+<li><p>Prover sends the folded vector encoding: <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{fold}^*_{\alpha_2}(\pi_3)\)</span></p></li>
+<li><p>Prover computes <span class="math notranslate nohighlight">\(h^{(2)}(\alpha_2)\)</span> as the summation value for the next round of the Sumcheck protocol</p></li>
+<li><p>Prover computes the evaluations vector of <span class="math notranslate nohighlight">\(f^{(2)}(X_0, X_1)\)</span>: <span class="math notranslate nohighlight">\(\mathbf{a}^{(2)} = \mathsf{fold}^{*}_{\alpha_2}(\mathbf{a})\)</span></p></li>
+<li><p>Prover computes and sends <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+h^{(1)}(X) = \sum_{b_0\in\{0,1\}}f(b_0, X, \alpha_2)\cdot \tilde{eq}((b_0, X, \alpha_2), (u_2, u_1, u_0))
+\]</div>
+<p>Since the right side is also a degree 2 Univariate Polynomial in <span class="math notranslate nohighlight">\(X\)</span>, the Prover can compute the evaluations of <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span> at <span class="math notranslate nohighlight">\(X=0,1,2\)</span>: <span class="math notranslate nohighlight">\((h^{(1)}(0), h^{(1)}(1), h^{(1)}(2))\)</span>.</p>
+<p><strong>Fourth Round:</strong> Verifier sends challenge <span class="math notranslate nohighlight">\(\alpha_1\leftarrow \mathbb{F}_p\)</span></p>
+<p><strong>Fifth Round:</strong> Prover continues executing the Basefold-IOPP protocol and the Sumcheck protocol:</p>
+<ul class="simple">
+<li><p>Prover sends the folded vector encoding <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{fold}^*_{\alpha_1}(\pi_2)\)</span></p></li>
+<li><p>Prover computes the summation value for the next round of the Sumcheck protocol: <span class="math notranslate nohighlight">\(h^{(1)}(\alpha_1)\)</span></p></li>
+<li><p>Prover computes the evaluations vector of <span class="math notranslate nohighlight">\(\mathbf{a}^{(1)}=\mathsf{fold}^*_{\alpha_1}(\mathbf{a}^{(2)})\)</span></p></li>
+<li><p>Prover computes and sends the evaluations of <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span> at <span class="math notranslate nohighlight">\(X=0, 1, 2\)</span>: <span class="math notranslate nohighlight">\((h^{(0)}(0), h^{(0)}(1), h^{(0)}(2))\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+h^{(0)}(X) = f(X_0, \alpha_1, \alpha_2)\cdot \tilde{eq}((X_0, \alpha_1, \alpha_2), (u_0, u_1, u_2))
+\]</div>
+<p><strong>Sixth Round:</strong> Verifier sends challenge <span class="math notranslate nohighlight">\(\alpha_0\leftarrow F\)</span></p>
+<p><strong>Seventh Round:</strong> Prover continues executing the Basefold-IOPP protocol:</p>
+<ul class="simple">
+<li><p>Prover sends the folded vector encoding <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{fold}^*_{\alpha_0}(\pi_1)\)</span></p></li>
+</ul>
+<p><strong>Eighth Round:</strong> Verifier validates the following equations:</p>
+<ol class="arabic simple">
+<li><p>Verifier sends several rounds of Query, <span class="math notranslate nohighlight">\(Q=\{q_i\}\)</span></p></li>
+<li><p>Verifier checks the correctness of each folding step in Sumcheck:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(2)}(0) + h^{(2)}(1) &amp;\overset{?}{=} v \\
+h^{(1)}(0) + h^{(1)}(1) &amp;\overset{?}{=} h^{(2)}(\alpha_2) \\
+h^{(0)}(0) + h^{(0)}(1) &amp;\overset{?}{=} h^{(1)}(\alpha_1) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Verifier checks whether the final encoding <span class="math notranslate nohighlight">\(\pi_0\)</span> is correct</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\pi_0 \overset{?}{=} \mathsf{enc}_0\left(\frac{h^{(0)}(\alpha_0)}{\tilde{eq}((\alpha_0,\alpha_1,\alpha_2), \mathbf{u})}\right)
+\]</div>
+<p>At this point, we have obtained a Basefold Evaluation Argument protocol based on the Evaluation Form. It can be directly connected to Sumcheck-based zkSNARKs or similar Jolt-style zkVMs.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>Jiaheng Zhang, Tiancheng Xie, Yupeng Zhang, and Dawn Song. “Transparent polynomial delegation and its applications to zero knowledge proof.” In <em>2020 IEEE Symposium on Security and Privacy (SP)</em>, pp. 859-876. IEEE, 2020.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-output-of-the-basefold-iopp-protocol">Final Output of the Basefold-IOPP Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leveraging-sumcheck">Leveraging Sumcheck</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-alternative-folding-method">An Alternative Folding Method</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp-protocol-based-on-the-evaluation-form">Basefold-IOPP Protocol Based on the Evaluation Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-evaluation-argument-protocol-based-on-the-evaluation-form">Basefold Evaluation Argument Protocol Based on the Evaluation Form</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Merkle Tree &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'mmcs/interpretions/src/merkle_tree';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fmmcs/interpretions/src/merkle_tree.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/mmcs/interpretions/src/merkle_tree.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Merkle Tree</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-knowledge">Pre-Knowledge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-merkle-tree">Structure of Merkle Tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-helper-methods">Some Helper Methods</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="merkle-tree">
+<h1>Merkle Tree<a class="headerlink" href="#merkle-tree" title="Link to this heading">#</a></h1>
+<p>Merkle tree is used in mmcs to commit a vector of matrices. It is a generalization of the Merkle Tree that allows more complex operations of building the tree.</p>
+<p><img alt="mmcs merkle tree" src="../../../_images/merkle_tree.png" /></p>
+<center>figure 1: merkle tree of mmcs</center><br>
+<p>As you can see in this example, the leaves are not in a single layer, but are instead distributed across multiple layers. Each layer can contain leaves that are half of the size of the layer below it, which equals to the number of hashes of this layer.</p>
+<section id="pre-knowledge">
+<h2>Pre-Knowledge<a class="headerlink" href="#pre-knowledge" title="Link to this heading">#</a></h2>
+<p>Before we talk about the structure of the merkle tree, we need to introduce ‘matrix’, which is a batch of polynomials that have same length.</p>
+<p>Matrix is the basic input structure for user to commit in mmcs, since there are more than one length of polynomials, we should devide different length of polynomials into different matrices.</p>
+<p><img alt="matrices" src="../../../_images/matrices.png" /></p>
+<center>figure 2: matrices</center><br>
+<p>Polynomials are vertically packed into a matrix, which means each column of the matrix is a polynomial.</p>
+</section>
+<section id="structure-of-merkle-tree">
+<h2>Structure of Merkle Tree<a class="headerlink" href="#structure-of-merkle-tree" title="Link to this heading">#</a></h2>
+<p>This is the structure of merkle tree:</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>/// A binary Merkle tree for packed data. It has leaves of type `F` and digests of type
+/// `[W; DIGEST_ELEMS]`.
+///
+/// This generally shouldn&#39;t be used directly. If you&#39;re using a Merkle tree as an MMCS,
+/// see `MerkleTreeMmcs`.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MerkleTree&lt;F, W, M, const DIGEST_ELEMS: usize&gt; {
+    pub(crate) leaves: Vec&lt;M&gt;,
+    // Enable serialization for this type whenever the underlying array type supports it (len 1-32).
+    #[serde(bound(serialize = &quot;[W; DIGEST_ELEMS]: Serialize&quot;))]
+    // Enable deserialization for this type whenever the underlying array type supports it (len 1-32).
+    #[serde(bound(deserialize = &quot;[W; DIGEST_ELEMS]: Deserialize&lt;&#39;de&gt;&quot;))]
+    pub(crate) digest_layers: Vec&lt;Vec&lt;[W; DIGEST_ELEMS]&gt;&gt;,
+    _phantom: PhantomData&lt;F&gt;,
+}
+</pre></div>
+</div>
+<p>After defining the structure of the merkle tree, we need to implement a constructor and a <code class="docutils literal notranslate"><span class="pre">root</span></code> method for it.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>impl&lt;F: Clone + Send + Sync, W: Clone, M: Matrix&lt;F&gt;, const DIGEST_ELEMS: usize&gt;
+    MerkleTree&lt;F, W, M, DIGEST_ELEMS&gt;
+{
+    // implement methods here
+}
+</pre></div>
+</div>
+<p>The constructor of the merkle tree follows the process described below.</p>
+<ol class="arabic simple">
+<li><p>找出所有高度最大的矩阵（这些矩阵的高度必须相等），将这些矩阵哈希，作为 merkle tree 最底层。</p></li>
+<li><p>首先，将 merkle tree 中最上层的结点两两合并哈希，得到一层长度减半的结点。然后判断：如果待哈希矩阵高度的 next_power_of_two 与当前层长度相同，则将这些矩阵与之前得到的结点两两合并哈希，得到的结果作为 merkle tree 当前层的结点；否则，将上一层合并哈希得到的结点作为当前层的结点。</p></li>
+<li><p>重复步骤 2，直到得到根节点。</p></li>
+</ol>
+<p>You can refer to figure 1 to understand the process.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>    /// Matrix heights need not be powers of two. However, if the heights of two given matrices
+    /// round up to the same power of two, they must be equal.
+    /// 
+    /// Neil: commit a vector of matrices to merkle tree
+    /// 
+    /// # Arguments
+    /// * `h` - Hash function for raw data.
+    /// * `c` - Hash function for compressing several hashes.
+    /// * `leaves` - A vector of matrices to be committed.
+    /// 
+    /// # Returns
+    /// A merkle tree.
+    #[instrument(name = &quot;build merkle tree&quot;, level = &quot;debug&quot;, skip_all,
+                 fields(dimensions = alloc::format!(&quot;{:?}&quot;, leaves.iter().map(|l| l.dimensions()).collect::&lt;Vec&lt;_&gt;&gt;())))]
+    pub fn new&lt;P, PW, H, C&gt;(h: &amp;H, c: &amp;C, leaves: Vec&lt;M&gt;) -&gt; Self
+    where
+        P: PackedValue&lt;Value = F&gt;,
+        PW: PackedValue&lt;Value = W&gt;,
+        H: CryptographicHasher&lt;F, [W; DIGEST_ELEMS]&gt;,
+        H: CryptographicHasher&lt;P, [PW; DIGEST_ELEMS]&gt;,
+        H: Sync,
+        C: PseudoCompressionFunction&lt;[W; DIGEST_ELEMS], 2&gt;,
+        C: PseudoCompressionFunction&lt;[PW; DIGEST_ELEMS], 2&gt;,
+        C: Sync,
+    {
+        // Neil: Step 0: security checks
+
+        // Neil: check if the input is empty
+        assert!(!leaves.is_empty(), &quot;No matrices given?&quot;);
+
+        // Neil: check if the packing width of the input matrices are the same
+        assert_eq!(P::WIDTH, PW::WIDTH, &quot;Packing widths must match&quot;);
+
+        // Neil: Step 1: sort the input matrices by their height in descending order, hash them and get the first digest layer
+
+        // Neil: sort the input matrices by their height in descending order
+        let mut leaves_largest_first = leaves
+            .iter()
+            .sorted_by_key(|l| Reverse(l.height()))
+            .peekable();
+
+        // check height property
+        assert!(
+            leaves_largest_first
+                .clone()
+                .map(|m| m.height())
+                .tuple_windows()
+                .all(|(curr, next)| curr == next
+                    || curr.next_power_of_two() != next.next_power_of_two()),
+            &quot;matrix heights that round up to the same power of two must be equal&quot;
+        );
+
+        // Neil: get the height of the tallest matrix
+        let max_height = leaves_largest_first.peek().unwrap().height();
+
+        // Neil: get all matrices that have the same height as the tallest matrix
+        let tallest_matrices = leaves_largest_first
+            .peeking_take_while(|m| m.height() == max_height)
+            .collect_vec();
+
+        // Neil: get the first digest layer
+        let mut digest_layers = vec![first_digest_layer::&lt;P, PW, H, M, DIGEST_ELEMS&gt;(
+            h,
+            tallest_matrices,
+        )];
+
+        // Neil: Step 2, 3: get the rest layers, loop until the last layer
+
+        // Neil: get the rest layers, loop until the last layer
+        loop {
+            let prev_layer = digest_layers.last().unwrap().as_slice();
+            if prev_layer.len() == 1 {
+                break;
+            }
+            let next_layer_len = prev_layer.len() / 2;
+
+            // The matrices that get injected at this layer.
+            let matrices_to_inject = leaves_largest_first
+                .peeking_take_while(|m| m.height().next_power_of_two() == next_layer_len)
+                .collect_vec();
+
+            // Neil: compress the previous layer and inject the matrices to the layer
+            let next_digests = compress_and_inject::&lt;P, PW, H, C, M, DIGEST_ELEMS&gt;(
+                prev_layer,
+                matrices_to_inject,
+                h,
+                c,
+            );
+            digest_layers.push(next_digests);
+        }
+
+        Self {
+            leaves,
+            digest_layers,
+            _phantom: PhantomData,
+        }
+    }
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">root</span></code> method is a simple method only returns the root of the merkle tree, which is precomputed in the <code class="docutils literal notranslate"><span class="pre">new</span></code> method.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>    /// Neil: return the root of the merkle tree
+    #[must_use]
+    pub fn root(&amp;self) -&gt; Hash&lt;F, W, DIGEST_ELEMS&gt;
+    where
+        W: Copy,
+    {
+        self.digest_layers.last().unwrap()[0].into()
+    }
+</pre></div>
+</div>
+</section>
+<section id="some-helper-methods">
+<h2>Some Helper Methods<a class="headerlink" href="#some-helper-methods" title="Link to this heading">#</a></h2>
+<p>There are also some functions which is not methods of the struct <code class="docutils literal notranslate"><span class="pre">MerkleTree</span></code>, but are used in the <code class="docutils literal notranslate"><span class="pre">new</span></code> method, which are <code class="docutils literal notranslate"><span class="pre">first_digest_layer</span></code> and <code class="docutils literal notranslate"><span class="pre">compress_and_inject</span></code>. Let’s take a look at them.</p>
+<p><code class="docutils literal notranslate"><span class="pre">first_digest_layer</span></code> works similarly as traditional merkle tree, however it deals with matrices rather than one vector.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>/// Neil: digest the first layer of the merkle tree
+/// 
+/// # Arguments
+/// * `h` - Hash function for raw data.
+/// * `tallest_matrices` - The matrices that have the same height as the tallest matrix.
+/// 
+/// # Returns
+/// A vector of digests.
+#[instrument(name = &quot;first digest layer&quot;, level = &quot;debug&quot;, skip_all)]
+fn first_digest_layer&lt;P, PW, H, M, const DIGEST_ELEMS: usize&gt;(
+    h: &amp;H,
+    tallest_matrices: Vec&lt;&amp;M&gt;,
+) -&gt; Vec&lt;[PW::Value; DIGEST_ELEMS]&gt;
+where
+    P: PackedValue,
+    PW: PackedValue,
+    H: CryptographicHasher&lt;P::Value, [PW::Value; DIGEST_ELEMS]&gt;,
+    H: CryptographicHasher&lt;P, [PW; DIGEST_ELEMS]&gt;,
+    H: Sync,
+    M: Matrix&lt;P::Value&gt;,
+{
+    let width = PW::WIDTH;
+    let max_height = tallest_matrices[0].height();
+    let max_height_padded = max_height.next_power_of_two();
+
+    let default_digest: [PW::Value; DIGEST_ELEMS] = [PW::Value::default(); DIGEST_ELEMS];
+    let mut digests = vec![default_digest; max_height_padded];
+
+    digests[0..max_height]
+        .par_chunks_exact_mut(width)
+        .enumerate()
+        .for_each(|(i, digests_chunk)| {
+            let first_row = i * width;
+            let packed_digest: [PW; DIGEST_ELEMS] = h.hash_iter(
+                tallest_matrices
+                    .iter()
+                    // Neil: retrieve first_row..(first_row + width) rows of matrices, pack them vertically
+                    .flat_map(|m| m.vertically_packed_row(first_row)),
+            );
+            // Neil: unpack the packed digest type and store it in the digests
+            for (dst, src) in digests_chunk.iter_mut().zip(unpack_array(packed_digest)) {
+                *dst = src;
+            }
+        });
+
+    // If our packing width did not divide max_height, fall back to single-threaded scalar code
+    // for the last bit.
+    #[allow(clippy::needless_range_loop)]
+    for i in (max_height / width * width)..max_height {
+        digests[i] = h.hash_iter(tallest_matrices.iter().flat_map(|m| m.row(i)));
+    }
+
+    // Everything has been initialized so we can safely cast.
+    digests
+}
+</pre></div>
+</div>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">vertically_packed_row</span></code> is a method of the struct <code class="docutils literal notranslate"><span class="pre">Matrix</span></code>, which is used in the <code class="docutils literal notranslate"><span class="pre">first_digest_layer</span></code> method.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>/// Pack together a collection of adjacent rows from the matrix.
+///
+/// Returns an iterator whose i&#39;th element is packing of the i&#39;th element of the
+/// rows r through r + P::WIDTH - 1. If we exceed the height of the matrix,
+/// wrap around and include initial rows.
+#[inline]
+fn vertically_packed_row&lt;P&gt;(&amp;self, r: usize) -&gt; impl Iterator&lt;Item = P&gt;
+where
+    T: Copy,
+    P: PackedValue&lt;Value = T&gt;,
+{
+    // Neil: get P::WIDTH rows starting from r
+    let rows = (0..(P::WIDTH))
+        .map(|c| self.row_slice((r + c) % self.height()))
+        .collect_vec();
+    // Neil: packed it vertically
+    (0..self.width()).map(move |c| P::from_fn(|i| rows[i][c]))
+}
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">compress_and_inject</span></code> method compress the previous layer and inject matrices which has height that equals to this layer. It processes as follows:</p>
+<ol class="arabic simple">
+<li><p>If there are matrices to inject, it will compress the previous layer and the matrices to inject, and store the result in the next layer.</p></li>
+<li><p>If there are no matrices to inject, it will compress the previous layer and store the result in the next layer.</p></li>
+</ol>
+<p>You can refer to figure 1 to understand the process.</p>
+<p>Compression will be processed in parallel at first, if there is data which is not processed in parallel, it will be processed in single thread.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>/// Compress `n` digests from the previous layer into `n/2` digests, while potentially mixing in
+/// some leaf data, if there are input matrices with (padded) height `n/2`.
+/// 
+/// Neil: compress the previous layer and inject matrices which has height that equals to this layer
+/// 
+/// # Arguments
+/// * `prev_layer` - The previous layer of the merkle tree.
+/// * `matrices_to_inject` - The matrices that has height that equals to this layer.
+/// * `h` - Hash function for raw data.
+/// * `c` - Hash function for compressing several hashes.
+/// 
+/// # Returns
+/// A vector of digests.
+fn compress_and_inject&lt;P, PW, H, C, M, const DIGEST_ELEMS: usize&gt;(
+    prev_layer: &amp;[[PW::Value; DIGEST_ELEMS]],
+    matrices_to_inject: Vec&lt;&amp;M&gt;,
+    h: &amp;H,
+    c: &amp;C,
+) -&gt; Vec&lt;[PW::Value; DIGEST_ELEMS]&gt;
+where
+    P: PackedValue,
+    PW: PackedValue,
+    H: CryptographicHasher&lt;P::Value, [PW::Value; DIGEST_ELEMS]&gt;,
+    H: CryptographicHasher&lt;P, [PW; DIGEST_ELEMS]&gt;,
+    H: Sync,
+    C: PseudoCompressionFunction&lt;[PW::Value; DIGEST_ELEMS], 2&gt;,
+    C: PseudoCompressionFunction&lt;[PW; DIGEST_ELEMS], 2&gt;,
+    C: Sync,
+    M: Matrix&lt;P::Value&gt;,
+{
+    // Neil: if there are no matrices to inject, compress the previous layer and return
+    if matrices_to_inject.is_empty() {
+        return compress::&lt;PW, C, DIGEST_ELEMS&gt;(prev_layer, c);
+    }
+
+    // Neil: get the width of the packed value
+    let width = PW::WIDTH;
+    // Neil: next_len is the height of matrices to inject
+    let next_len = matrices_to_inject[0].height();
+    // Neil: next_len_padded is the length of the next layer
+    let next_len_padded = prev_layer.len() / 2;
+
+    // Neil: notice that next_len is possiblely shorter than next_len_padded, which requires extra padding
+
+    // Neil: default_digest is the default value for extra padding
+    let default_digest: [PW::Value; DIGEST_ELEMS] = [PW::Value::default(); DIGEST_ELEMS];
+    let mut next_digests = vec![default_digest; next_len_padded];
+
+    // Neil: compress the previous layer and then compress the matrices to inject
+    next_digests[0..next_len]
+        .par_chunks_exact_mut(width)
+        .enumerate()
+        .for_each(|(i, digests_chunk)| {
+            // Neil: First step: compress the previous layer
+            let first_row = i * width;
+            let left = array::from_fn(|j| PW::from_fn(|k| prev_layer[2 * (first_row + k)][j]));
+            let right = array::from_fn(|j| PW::from_fn(|k| prev_layer[2 * (first_row + k) + 1][j]));
+            let mut packed_digest = c.compress([left, right]);
+
+            // Neil: Second step: compress the matrices to inject
+            let tallest_digest = h.hash_iter(
+                matrices_to_inject
+                    .iter()
+                    // Neil: retrieve first_row..(first_row + width) rows of matrices, pack them vertically
+                    .flat_map(|m| m.vertically_packed_row(first_row)),
+            );
+            packed_digest = c.compress([packed_digest, tallest_digest]);
+
+            // Neil: store the result in the next layer
+            for (dst, src) in digests_chunk.iter_mut().zip(unpack_array(packed_digest)) {
+                *dst = src;
+            }
+        });
+
+    // If our packing width did not divide next_len, fall back to single-threaded scalar code
+    // for the last bit.
+    for i in (next_len / width * width)..next_len {
+        let left = prev_layer[2 * i];
+        let right = prev_layer[2 * i + 1];
+        let digest = c.compress([left, right]);
+        let rows_digest = h.hash_iter(matrices_to_inject.iter().flat_map(|m| m.row(i)));
+        next_digests[i] = c.compress([digest, rows_digest]);
+    }
+
+    // At this point, we&#39;ve exceeded the height of the matrices to inject, so we continue the
+    // process above except with default_digest in place of an input digest.
+    for i in next_len..next_len_padded {
+        let left = prev_layer[2 * i];
+        let right = prev_layer[2 * i + 1];
+        let digest = c.compress([left, right]);
+        next_digests[i] = c.compress([digest, default_digest]);
+    }
+
+    next_digests
+}
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">compress</span></code> method which is mentioned several times in the <code class="docutils literal notranslate"><span class="pre">compress_and_inject</span></code> method is defined as follows:</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>/// Compress `n` digests from the previous layer into `n/2` digests.
+/// 
+/// Neil: compress two columns of digests into one column
+/// 
+/// # Arguments
+/// * `prev_layer` - Two columns of digests.
+/// * `c` - Hash function for compressing several hashes.
+/// 
+/// # Returns
+/// A vector of digests.
+fn compress&lt;P, C, const DIGEST_ELEMS: usize&gt;(
+    prev_layer: &amp;[[P::Value; DIGEST_ELEMS]],
+    c: &amp;C,
+) -&gt; Vec&lt;[P::Value; DIGEST_ELEMS]&gt;
+where
+    P: PackedValue,
+    C: PseudoCompressionFunction&lt;[P::Value; DIGEST_ELEMS], 2&gt;,
+    C: PseudoCompressionFunction&lt;[P; DIGEST_ELEMS], 2&gt;,
+    C: Sync,
+{
+    debug_assert!(prev_layer.len().is_power_of_two());
+    let width = P::WIDTH;
+    let next_len = prev_layer.len() / 2;
+
+    let default_digest: [P::Value; DIGEST_ELEMS] = [P::Value::default(); DIGEST_ELEMS];
+    let mut next_digests = vec![default_digest; next_len];
+
+    // Neil: compress two columns of digests in parallel
+    next_digests[0..next_len]
+        .par_chunks_exact_mut(width)
+        .enumerate()
+        .for_each(|(i, digests_chunk)| {
+            let first_row = i * width;
+            let left = array::from_fn(|j| P::from_fn(|k| prev_layer[2 * (first_row + k)][j]));
+            let right = array::from_fn(|j| P::from_fn(|k| prev_layer[2 * (first_row + k) + 1][j]));
+            let packed_digest = c.compress([left, right]);
+            for (dst, src) in digests_chunk.iter_mut().zip(unpack_array(packed_digest)) {
+                *dst = src;
+            }
+        });
+
+    // If our packing width did not divide next_len, fall back to single-threaded scalar code
+    // for the last bit.
+    for i in (next_len / width * width)..next_len {
+        let left = prev_layer[2 * i];
+        let right = prev_layer[2 * i + 1];
+        let digest = c.compress([left, right]);
+        next_digests[i] = digest;
+    }
+
+    // Everything has been initialized so we can safely cast.
+    next_digests
+}
+</pre></div>
+</div>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">unpack_array</span></code> is a method of the struct <code class="docutils literal notranslate"><span class="pre">Matrix</span></code>, which is used to convert a packed digest into a vector of digests.</p>
+<div class="highlight-rust,ignore notranslate"><div class="highlight"><pre><span></span>/// Converts a packed array `[P; N]` into its underlying `P::WIDTH` scalar arrays.
+#[inline]
+fn unpack_array&lt;P: PackedValue, const N: usize&gt;(
+    packed_digest: [P; N],
+) -&gt; impl Iterator&lt;Item = [P::Value; N]&gt; {
+    (0..P::WIDTH).map(move |j| packed_digest.map(|p| p.as_slice()[j]))
+}
+</pre></div>
+</div>
+<p>OK, that’s all the methods of the merkle tree.</p>
+<p>In the next section, we will talk about the <code class="docutils literal notranslate"><span class="pre">MerkleTreeMmcs</span></code> struct, which is the struct that implements the MMCS.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./mmcs/interpretions/src"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-knowledge">Pre-Knowledge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-merkle-tree">Structure of Merkle Tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-helper-methods">Some Helper Methods</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

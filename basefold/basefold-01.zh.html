@@ -1,0 +1,910 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Basefold 笔记：可折叠线性编码 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-01.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Basefold 笔记：IOPP" href="basefold-02.zh.html" />
+    <link rel="prev" title="Welcome to the land of PCS!" href="../intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-01.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-01.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Basefold 笔记：可折叠线性编码</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#foldable-linear-codes">什么是 Foldable linear codes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rs-code-foldable">RS code (foldable)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold">
+<h1>Basefold 笔记：可折叠线性编码<a class="headerlink" href="#basefold" title="Link to this heading">#</a></h1>
+<p>Basefold 可以看成是对 FRI 的扩展，从而能支持 Multi-linear Polynomial 的 Proximity Proofs 和 Evaluation Arguments。与 Libra-PCS, Hyrax-PCS，Virgo-PCS 相比，Basefold 不依赖 MLE Quotients Equation 来证明一个 MLE 在 <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> 点处的取值：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, X_2, \ldots, X_{n-1}) = \sum_{i_0=0}^{n-1}(X_i - u_i)\cdot q_i(X_0, X_1, X_2, \ldots, X_{i-1})
+\]</div>
+<p>Basefold 而是利用了 Sumcheck 协议，将 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> 在一个事先给定的点的取值归约为 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> 在一个随机点 <span class="math notranslate nohighlight">\(\vec{\alpha}\)</span> 点的取值。而后者则可以利用类似 FRI 的思想，利用 Verifier 给出的挑战向量 <span class="math notranslate nohighlight">\(\vec{\alpha}\)</span> 对 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> 进行递归折叠，一方面这样 Prover 可以证明 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{X})\)</span> 的 Degree 的上界（Proof of Proximity），同时，根据 MLE 的特征，Prover 还同时证明了 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{\alpha})\)</span> 的取值。这样，结合 Sumcheck 协议与 FRI 风格的折叠协议，我们就可以优雅地得到一个 MLE 的 Evaluation Argument。</p>
+<p>Basefold 的另一个重要洞见是如何在任意的有限域上使用 FRI 风格的 Proof of Proximity。我们知道， FRI 协议充分利用了有限域上的 Algebraic FFT 的结构并进行交互式的折叠，从而可以在保持编码的最小相对海明距离（Minimum Relative Hamming Distance）下界基本不变的情况下，把码字（Codeword）的长度以指数级的方式缩短，从而让 Verifier 可以轻松验证一个折叠后的短码字。但对于一般情况下难以构造 FFT 的有限域来说，我们无法直接使用 FRI 协议。</p>
+<p>Basefold 引入了 Random Foldable Codes 的概念。这是一种采用递归方式进行编码的框架，递归编码可以看成是递归折叠的逆向过程。在 Basefold 协议的 Commit 阶段，Prover 首先利用一个基础编码方案 <span class="math notranslate nohighlight">\(G_0\)</span> 对消息的各个分段分别编码，然后对这些码字进行两两编码（这个过程类似 FFT 运算中的蝴蝶操作），最后得到一个单码字。在 Commit-phase 阶段，Prover 和 Verifier 以交互的方式对承诺的单个码字进行对半折叠，然后承诺折半后的码字。我们可以证明这个折半后的码字的 Relative Hamming Distance 仍然大于一个明确的下界。然后双方继续进行折叠，直到折叠到长度与 <span class="math notranslate nohighlight">\(G_0\)</span> 编码的长度为止。这样双方就得到了一系列码字的承诺。注意到由于编码过程是按照递归的方式来编码，因此码字就拥有了类似 RS Code 编码的折叠能力。这样做的优势很明显，采用递归折叠的 FRI 协议要相比 Tensor Codes 一类协议来说，证明尺寸要显著更优。同时，Basefold 的技术可以应用在任意有限域（<span class="math notranslate nohighlight">\(|\mathbb{F}|&gt;2^{10}\)</span>）上，包括扩张域 <span class="math notranslate nohighlight">\(\mathbb{F}_{p^k}\)</span>。 当然，与 FRI 协议类似，Basefold 协议的承诺计算需要 <span class="math notranslate nohighlight">\(O(N\log(N))\)</span> 的时间复杂度，而在随后的证明过程中，Prover 的计算量则保持在 <span class="math notranslate nohighlight">\(O(N)\)</span>，如果采用 Merkle Tree 作为 Codeword 的承诺方案，那么证明尺寸的复杂度为 <span class="math notranslate nohighlight">\(O(\log^2(N))\)</span>。</p>
+<p>本文我们先了解下 Foldable Linear Codes 的概念。</p>
+<section id="foldable-linear-codes">
+<h2>什么是 Foldable linear codes<a class="headerlink" href="#foldable-linear-codes" title="Link to this heading">#</a></h2>
+<p>假设基于有限域 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> 的一个线性编码 <span class="math notranslate nohighlight">\(C_0: \mathbb{F}_p^{k_0}\to\mathbb{F}_p^{n_0}\)</span> ，其中消息长度为 <span class="math notranslate nohighlight">\(k_0\)</span> ，码字的长度为 <span class="math notranslate nohighlight">\(n_0\)</span> ，假设编码后的长度相比消息长度，放大了 <span class="math notranslate nohighlight">\(R\)</span> 倍，即 <span class="math notranslate nohighlight">\(1/R\)</span> 为传统概念的码率（Code Rate）。根据线性编码的定义，一定存在一个编码矩阵 <span class="math notranslate nohighlight">\(G_0: \mathbb{F}_p^{k_0\times n_0}\)</span> ，使得</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{m}{G_0} = \mathbf{c}
+\]</div>
+<p>那么，我们可以基于编码矩阵 <span class="math notranslate nohighlight">\({G_0}\)</span> 构造一个新的编码矩阵 <span class="math notranslate nohighlight">\({G_1}\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_1 = \begin{bmatrix}
+G_{0} &amp;  G_{0} \\
+G_{0}\cdot T_{0} &amp; G_{0}\cdot T'_{0}
+\end{bmatrix}
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(T_0\)</span> 与 <span class="math notranslate nohighlight">\(T'_0\)</span> 是两个对角矩阵，它们的对角元素为编码方案的参数，我们稍后会解释  <span class="math notranslate nohighlight">\(T_0\)</span> 与 <span class="math notranslate nohighlight">\(T'_0\)</span> 的参数选择。</p>
+<p>如果把 <span class="math notranslate nohighlight">\(G_1\)</span> 看成是另一个线性编码 <span class="math notranslate nohighlight">\(C_1\)</span> 的编码矩阵，那么 <span class="math notranslate nohighlight">\(C_1\)</span> 的参数为 <span class="math notranslate nohighlight">\([R, 2k_0, 2n_0]\)</span> 。也就是与 <span class="math notranslate nohighlight">\(C_0\)</span> 相比，<span class="math notranslate nohighlight">\(C_1\)</span> 的码率保持不变，但消息和码字的长度扩大为两倍。</p>
+<p>举个例子，如果假设 <span class="math notranslate nohighlight">\(\mathbf{m}=(m_0, m_1, m_2, m_3)\)</span>，基础编码方案 <span class="math notranslate nohighlight">\(C_0\)</span> 为一个简易的 Reptition Code，<span class="math notranslate nohighlight">\(k_0=2, n_0=4\)</span> 。这样 <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> 的消息长度正好满足 <span class="math notranslate nohighlight">\(G_1\)</span> 的要求，即 <span class="math notranslate nohighlight">\(k_1=2\cdot k_0 = 4\)</span>，编码后的长度为 <span class="math notranslate nohighlight">\(n_1 = 2\cdot n_0 = 8\)</span> 。</p>
+<p>基础编码 <span class="math notranslate nohighlight">\(C_0\)</span> 的编码矩阵 <span class="math notranslate nohighlight">\(G_0\)</span> 定义为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_0 = \begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 1\\
+\end{bmatrix}
+\end{split}\]</div>
+<p>假设系统参数 <span class="math notranslate nohighlight">\(T_0\)</span> 的对角元素为 <span class="math notranslate nohighlight">\((t_0, t_1, t_2, t_3)\)</span>，而 <span class="math notranslate nohighlight">\(T'_0\)</span> 的对角元素为 <span class="math notranslate nohighlight">\((t'_0, t'_1, t'_2, t'_3)\)</span>，我们按照上面的公式来构造出 <span class="math notranslate nohighlight">\(G_1\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_1 = \left[\begin{array}{cccc|cccc}
+1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1\\
+\hline
+t_0 &amp; 0 &amp; t_2 &amp; 0 &amp; t'_0 &amp; 0 &amp; t'_2 &amp; 0\\
+0 &amp; t_1 &amp; 0 &amp; t_3 &amp; 0 &amp; t'_1 &amp; 0 &amp; t'_3\\
+\end{array}\right]
+\end{split}\]</div>
+<p>直接代入 <span class="math notranslate nohighlight">\(\mathbf{m}\)</span>， 我们可以得到:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{m}G_1 = \begin{bmatrix}
+m_0 &amp; m_1 &amp; m_2 &amp; m_3
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1\\
+t_0 &amp; 0 &amp; t_2 &amp; 0 &amp; t'_0 &amp; 0 &amp; t'_2 &amp; 0\\
+0 &amp; t_1 &amp; 0 &amp; t_3 &amp; 0 &amp; t'_1 &amp; 0 &amp; t'_3\\
+\end{bmatrix} 
+\end{split}\]</div>
+<p>编码后的码字向量我们单独列出：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{cccc}
+m_0 + t_0m_2 &amp; m_1 + t_1m_3 &amp; m_0 + t_2m_2 &amp; m_1 + t_3m_3  \\
+m_0 + t'_0m_2 &amp; m_1 + t'_1m_3 &amp; m_0 + t'_2m_2 &amp; m_1 + t'_3m_3 
+\end{array}
+\end{split}\]</div>
+<p>直接用矩阵运算，我们不太能看清楚这个编码的结构。我们换一个思路，消息 <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> 可以拆分为左右等长的两部分，左边 <span class="math notranslate nohighlight">\(\mathbf{m}_l=(m_0, m_1)\)</span> 与 右边 <span class="math notranslate nohighlight">\(\mathbf{m}_r=(m_2, m_3)\)</span>，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{m}G_1 = (\mathbf{m}_l\parallel \mathbf{m}_r)G_1=
+\begin{bmatrix} 1 &amp; 1 \end{bmatrix} 
+\begin{bmatrix} \mathbf{m}_l &amp; 0 \\
+0 &amp; \mathbf{m}_r \end{bmatrix}
+\begin{bmatrix}
+G_{0} &amp;  G_{0} \\
+G_{0}\cdot T_{0} &amp; G_{0}\cdot T'_{0}
+\end{bmatrix}
+=
+\begin{bmatrix} 1 &amp; 1 \end{bmatrix} 
+\begin{bmatrix}
+\mathbf{m}_lG_0 &amp; \mathbf{m}_lG_0\\
+\mathbf{m}_rG_0T_0 &amp; \mathbf{m}_rG_0T'_0\\
+\end{bmatrix}
+\end{split}\]</div>
+<p>对于等式右边的 <span class="math notranslate nohighlight">\(2\times 2\)</span> 矩阵，我们先计算其左上角与右上角的两个相等的子矩阵，即用 <span class="math notranslate nohighlight">\(G_0\)</span> 对 <span class="math notranslate nohighlight">\(\mathbf{m}_l\)</span> 进行编码，得到：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{m}_lG_0 = 
+\begin{bmatrix}
+m_0 &amp; m_1 
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 1 \\
+\end{bmatrix}
+= 
+\begin{bmatrix}
+m_0 &amp; m_1 &amp; m_0 &amp; m_1 \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>还有左下角的子矩阵：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{m}_r(G_0T_0) = (\mathbf{m}_rG_0)T_0 =\begin{bmatrix}
+m_2 &amp; m_3
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp; 0 &amp; 1 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 1 \\
+\end{bmatrix} T_0 =  \begin{bmatrix}
+m_2 &amp; m_3 &amp; m_2 &amp; m_3
+\end{bmatrix}\begin{bmatrix}
+t_0 &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; t_1 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; t_2 &amp; 0\\
+0 &amp; 0 &amp; 0 &amp; t_3\\
+\end{bmatrix} = (t_0m_2, t_1m_3, t_2m_2, t_3m_3)
+\end{split}\]</div>
+<p>同理 <span class="math notranslate nohighlight">\(\mathbf{m}_r(G_0T'_0)\)</span> 的结果类似，只是 <span class="math notranslate nohighlight">\(t_i\)</span> 换成了 <span class="math notranslate nohighlight">\(t'_i\)</span> :</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{m}_r(G_0T'_0) = (t'_0m_2, t'_1m_3, t'_2m_2, t'_3m_3)
+\]</div>
+<p>不难验证，我们一样可以得到 <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> 在 <span class="math notranslate nohighlight">\(G_1\)</span> 编码后的结果。</p>
+<blockquote>
+<div><p>TODO: 补充验证的例子。</p>
+</div></blockquote>
+<p>我们可以简化这个计算过程如下等式：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{m}G_1 = \mathbf{m}_lG_0 +  (t_0, t_1, t_2, t_3) \circ\mathbf{m}_rG_0 \parallel  \mathbf{m}_lG_0 + (t'_0, t'_1, t'_2, t'_3) \circ \mathbf{m}_rG_0
+\]</div>
+<p>如果我们把 <span class="math notranslate nohighlight">\(k_0\)</span> 看成是系统参数（常数），那么上面等式的编码计算量为 <span class="math notranslate nohighlight">\(O(n_0)\)</span>，包括两次 <span class="math notranslate nohighlight">\(G_0\)</span> 编码与两次 <span class="math notranslate nohighlight">\(n_0\)</span> 长度的对位加法。另外这个等式看起来非常类似 （Multiplicative）FFT 算法中的蝴蝶操作：</p>
+<div class="math notranslate nohighlight">
+\[
+a' = a + t \cdot b, \quad b' = a - t \cdot b
+\]</div>
+<p>事实上如后文所示，这个 Foldable Code 编码过程正是 RS-Code 的一个泛化扩展（Generalization）。</p>
+<p>而我们可以继续递归地构造 <span class="math notranslate nohighlight">\(G_2, G_3, \ldots, G_d\)</span>，最终得到线性编码
+<span class="math notranslate nohighlight">\(C_d: \mathbb{F}_p^{k_0}\to\mathbb{F}_p^{n}\)</span> ，其中消息长度 <span class="math notranslate nohighlight">\(k=k_0\cdot 2^d\)</span>，编码长度 <span class="math notranslate nohighlight">\(n=c\cdot k_0\cdot 2^{d}\)</span>。码率为 <span class="math notranslate nohighlight">\(\rho=\frac{1}{R}\)</span>， 这里 <span class="math notranslate nohighlight">\(k_0\)</span> 为基础编码的消息长度，<span class="math notranslate nohighlight">\(n_0\)</span> 为基础编码长度，而基础编码的选择则非常灵活。</p>
+<p>我们沿用符号 <span class="math notranslate nohighlight">\(G_d\)</span> 表示 <span class="math notranslate nohighlight">\(C_d\)</span> 的编码矩阵（或称为生成矩阵） <span class="math notranslate nohighlight">\(G_d\in\mathbb{F}_p^{k\times n}\)</span>，那么对于 <span class="math notranslate nohighlight">\(i\in\{1,2,\ldots,d\}\)</span> ，我们有下面的递归关系：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_i = \begin{bmatrix}
+G_{i-1} &amp;  G_{i-1} \\
+G_{i-1}\cdot T_{i-1} &amp; G_{i-1}\cdot T'_{i-1}
+\end{bmatrix}
+\end{split}\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(T_{i-1}\)</span> 和 <span class="math notranslate nohighlight">\(T'_{i-1}\)</span> 是两个对角矩阵，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+T_{i-1} = \begin{bmatrix}
+t_{i-1, 0} &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; t_{i-1,1} &amp; \cdots &amp; 0 \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; \cdots &amp; t_{i-1, n_i-1}
+\end{bmatrix}, \quad
+T'_{i-1} = \begin{bmatrix}
+t'_{i-1,0} &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; t'_{i-1,1} &amp; \cdots &amp; 0 \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; \cdots &amp; t'_{i-1, n_i-1}
+\end{bmatrix}, 
+\end{split}\]</div>
+<p>并且他们在相同位置上的对角元素不能相等：</p>
+<div class="math notranslate nohighlight">
+\[
+\forall j \in [0, n_i-1], t_{i,j} \neq t'_{i, j}
+\]</div>
+<p>假如我们可以通过上面的递归等式求出 <span class="math notranslate nohighlight">\(G_d\)</span>，那么对于长度为 <span class="math notranslate nohighlight">\(k\)</span> 的消息 <span class="math notranslate nohighlight">\(\mathbf{m}_d\)</span> ，其编码过程可以直接计算如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{w}_d = \mathbf{m}_d G_d
+\]</div>
+<p>不过这样直接用生成矩阵 <span class="math notranslate nohighlight">\(G_d\)</span> 去编码的方式比较低效，其计算时间复杂度为 <span class="math notranslate nohighlight">\(O(k\cdot n)\)</span> 。而按照上面的推导，如果我们不直接利用 <span class="math notranslate nohighlight">\(G_d\)</span> 矩阵，而是采用递归的方式来对 <span class="math notranslate nohighlight">\(m_d\)</span> 进行编码。基本思路是，我们把 <span class="math notranslate nohighlight">\(m\)</span> 拆分成两部分 <span class="math notranslate nohighlight">\(m_{l}\)</span> 和 <span class="math notranslate nohighlight">\(m_{r}\)</span>，然后用 <span class="math notranslate nohighlight">\(G_{d-1}\)</span> 对 <span class="math notranslate nohighlight">\(m_{l}\)</span> 和 <span class="math notranslate nohighlight">\(m_{r}\)</span> 进行分别编码，然后再把编码后的 <span class="math notranslate nohighlight">\(C_l\)</span> 和 <span class="math notranslate nohighlight">\(C_r\)</span> 拼接起来。</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{w}_d = \Big(m_lG_{d-1} + \mathsf{diag}(T_d)\circ m_rG_{d-1} \Big)\parallel \Big( m_lG_{d-1} + \mathsf{diag}(T'_d)\circ m_rG_{d-1} \Big)
+\]</div>
+<p>这样采用 <span class="math notranslate nohighlight">\(G_d\)</span> 的编码过程就被转化为了采用 <span class="math notranslate nohighlight">\(G_{d-1}\)</span> 的两次编码过程。我们可以继续递归地计算编码 <span class="math notranslate nohighlight">\(m_lG_{d-1}\)</span> 和 <span class="math notranslate nohighlight">\(m_rG_{d-1}\)</span>，直到所拆分后的消息长度满足 <span class="math notranslate nohighlight">\(k_0\)</span> ，然后我们只要使用 <span class="math notranslate nohighlight">\(G_0\)</span> 生成矩阵来计算基础编码即可，其编码时间复杂度为 <span class="math notranslate nohighlight">\(O(k_0\cdot n_0)\)</span>。这样总共需要经过 <span class="math notranslate nohighlight">\(d\)</span> 轮递归，其总的计算量仅为 <span class="math notranslate nohighlight">\(O(n\log(n))\)</span> 。</p>
+</section>
+<section id="rs-code-foldable">
+<h2>RS code (foldable)<a class="headerlink" href="#rs-code-foldable" title="Link to this heading">#</a></h2>
+<p>协议 FRI 中采用的 RS code 满足上面的条件，因此 RS code 是可折叠的。</p>
+<p>我们先看看 RS code 中的生成矩阵：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; \cdots &amp; 1 \\
+1 &amp; \omega &amp; \omega^2 &amp; \cdots &amp; \omega^{n-1} \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \cdots &amp; \omega^{2(n-1)} \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+1 &amp; \omega^{k-1} &amp; \omega^{2(k-1)} &amp; \cdots &amp; \omega^{(n-1)(k-1)}
+\end{bmatrix}
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\omega\)</span> 是 <span class="math notranslate nohighlight">\(n\)</span> 次 Root of Unity，满足 <span class="math notranslate nohighlight">\(\omega^n=1\)</span>，其中 <span class="math notranslate nohighlight">\(n\)</span> 是码字长度，<span class="math notranslate nohighlight">\(k\)</span> 是消息长度。我们可以看到，上述矩阵是一个范德蒙矩阵。我们接下来解释，上面这个 RS code 的生成矩阵满足 Foldable Code 的定义。为了方便演示，我们假设 <span class="math notranslate nohighlight">\(k_0=1, n_0=1\)</span>，那么 <span class="math notranslate nohighlight">\(d=3, k_3=8, n_3=8\)</span>，<span class="math notranslate nohighlight">\(\omega^8=1\)</span>，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G^{(RS)} = \begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega &amp; \omega^2 &amp; \omega^3 &amp; \omega^4 &amp; \omega^5 &amp; \omega^6 &amp; \omega^7 \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 &amp; 1 &amp; \omega^{2} &amp; \omega^{4} &amp; \omega^{6} \\
+1 &amp; \omega^3 &amp; \omega^6 &amp; \omega^1 &amp; \omega^{4} &amp; \omega^{7} &amp; \omega^{2} &amp; \omega^{5} \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} &amp; 1 &amp; \omega^{4} &amp; 1 &amp; \omega^{4} \\
+1 &amp; \omega^5 &amp; \omega^{2} &amp; \omega^{7} &amp; \omega^{4} &amp; \omega &amp; \omega^{6} &amp; \omega^{3} \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} &amp; 1 &amp; \omega^{6} &amp; \omega^{4} &amp; \omega^{2} \\
+1 &amp; \omega^7 &amp; \omega^{6} &amp; \omega^{5} &amp; \omega^{4} &amp; \omega^{3} &amp; \omega^{2} &amp; \omega \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>首先，我们需要按照 Reversed Bit Order (RBO) 序对 <span class="math notranslate nohighlight">\(G^{RS}\)</span> 的各行进行重排。这里为何要进行 RBO 重排，这与 Multiplicative FFT 的结构有关，具体解释请参考另一篇文章。所谓的 RBO 序是指把索引的二进制表示倒序，然后把这个倒序的二进制数当作新的索引。那么 RBO 序列是 <span class="math notranslate nohighlight">\((0, 4, 2, 6, 1, 5, 3, 7)\)</span> 。这样我们可以把上面的范德蒙矩阵的各行按照 RBO 序重排，可以得到下面的矩阵，记为 <span class="math notranslate nohighlight">\(G_2\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_2 = \begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} &amp; 1 &amp; \omega^{4} &amp; 1 &amp; \omega^{4} \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 &amp; 1 &amp; \omega^{2} &amp; \omega^{4} &amp; \omega^{6} \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} &amp; 1 &amp; \omega^{6} &amp; \omega^{4} &amp; \omega^{2} \\
+1 &amp; \omega &amp; \omega^2 &amp; \omega^3 &amp; \omega^4 &amp; \omega^5 &amp; \omega^6 &amp; \omega^7 \\
+1 &amp; \omega^5 &amp; \omega^{2} &amp; \omega^{7} &amp; \omega^{4} &amp; \omega &amp; \omega^{6} &amp; \omega^{3} \\
+1 &amp; \omega^3 &amp; \omega^6 &amp; \omega^1 &amp; \omega^{4} &amp; \omega^{7} &amp; \omega^{2} &amp; \omega^{5} \\
+1 &amp; \omega^7 &amp; \omega^{6} &amp; \omega^{5} &amp; \omega^{4} &amp; \omega^{3} &amp; \omega^{2} &amp; \omega \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>观察重排后的矩阵，我们可以看出这个矩阵可以分解为 <span class="math notranslate nohighlight">\(G_1\)</span> 和 <span class="math notranslate nohighlight">\(T_1, T'_1\)</span> 的子矩阵运算：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_2 = 
+\begin{bmatrix}
+G_1 &amp; G_1 \\
+G_1T_1 &amp; G_1T'_1
+\end{bmatrix}
+=
+\left[
+\begin{array}{cccc|cccc}
+1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} &amp; 1 &amp; \omega^{4} &amp; 1 &amp; \omega^{4} \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 &amp; 1 &amp; \omega^{2} &amp; \omega^{4} &amp; \omega^{6} \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} &amp; 1 &amp; \omega^{6} &amp; \omega^{4} &amp; \omega^{2} \\
+\hline
+1 &amp; \omega &amp; \omega^2 &amp; \omega^3 &amp; \omega^4 &amp; \omega^5 &amp; \omega^6 &amp; \omega^7 \\
+1 &amp; \omega^5 &amp; \omega^{2} &amp; \omega^{7} &amp; \omega^{4} &amp; \omega &amp; \omega^{6} &amp; \omega^{3} \\
+1 &amp; \omega^3 &amp; \omega^6 &amp; \omega^1 &amp; \omega^{4} &amp; \omega^{7} &amp; \omega^{2} &amp; \omega^{5} \\
+1 &amp; \omega^7 &amp; \omega^{6} &amp; \omega^{5} &amp; \omega^{4} &amp; \omega^{3} &amp; \omega^{2} &amp; \omega \\
+\end{array}
+\right]
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(G_1\)</span> 为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_1 = \begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>可以验证，左下角子矩阵可以表示为 <span class="math notranslate nohighlight">\(G_1T_1\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_1T_1 = \begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} \\
+\end{bmatrix}
+\begin{bmatrix}
+1 &amp;  &amp;  &amp;  \\
+ &amp; \omega &amp;  &amp;  \\
+ &amp;  &amp; \omega^2 &amp;  \\
+ &amp;  &amp;  &amp; \omega^3 \\
+\end{bmatrix}
+= \begin{bmatrix}
+1 &amp; \omega &amp; \omega^2 &amp; \omega^3 \\
+1 &amp; \omega^5 &amp; \omega^{2} &amp; \omega^{7} \\
+1 &amp; \omega^3 &amp; \omega^6 &amp; \omega^1 \\
+1 &amp; \omega^7 &amp; \omega^{6} &amp; \omega^{5} \\
+\end{bmatrix}
+\end{split}\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(T_1\)</span> 矩阵正是一个对角矩阵，满足其对角线元素互不相等的要求。而右下角的子矩阵可以按如下分解：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+\omega^4 &amp; \omega^5 &amp; \omega^6 &amp; \omega^7 \\
+\omega^4 &amp; \omega &amp; \omega^{6} &amp; \omega^{3} \\
+\omega^4 &amp; \omega^7 &amp; \omega^2 &amp; \omega^5 \\
+\omega^4 &amp; \omega^3 &amp; \omega^{2} &amp; \omega^{1} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} \\
+\end{bmatrix}
+\begin{bmatrix}
+\omega^4 &amp; &amp; &amp; \\
+    &amp; \omega^5 &amp; &amp; \\
+    &amp; &amp; \omega^6 &amp; \\
+    &amp; &amp; &amp; \omega^7 \\
+\end{bmatrix}
+= G_1T'_1
+\end{split}\]</div>
+<p>而 <span class="math notranslate nohighlight">\(T'_1\)</span> 正好等于 <span class="math notranslate nohighlight">\((-1)T_1\)</span>，确保 <span class="math notranslate nohighlight">\(T'_1\)</span> 的元素与 <span class="math notranslate nohighlight">\(T_1\)</span> 的元素互不相等，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+T'_2 = \begin{bmatrix}
+\omega^4 &amp; &amp; &amp; \\
+    &amp; \omega^5 &amp; &amp; \\
+    &amp; &amp; \omega^6 &amp; \\
+    &amp; &amp; &amp; \omega^7 \\
+\end{bmatrix}
+= \begin{bmatrix}
+-1 &amp; &amp; &amp; \\
+    &amp; -\omega &amp; &amp; \\
+    &amp; &amp; -\omega^2 &amp; \\
+    &amp; &amp; &amp; -\omega^3 \\
+\end{bmatrix}
+= -T_2
+\end{split}\]</div>
+<p>接下来，我们可以继续递归分解 <span class="math notranslate nohighlight">\(G_1\)</span>：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_1 = \left[\begin{array}{cc|cc}
+1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^4 &amp; 1 &amp; \omega^{4} \\
+\hline
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 \\
+1 &amp; \omega^6 &amp; \omega^{4} &amp; \omega^{2} \\
+\end{array}\right]
+= \begin{bmatrix}
+G_0 &amp; G_0 \\
+G_0\cdot T_0 &amp; G_1\cdot T'_0
+\end{bmatrix}
+\end{split}\]</div>
+<p>可以看出，这里 <span class="math notranslate nohighlight">\(G_0, T_0, T'_0\)</span> 为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+G_0=\begin{bmatrix}
+1 &amp; 1 \\
+1 &amp; \omega^4 \\
+\end{bmatrix}, \quad
+T_0=\begin{bmatrix}
+1 &amp; \\
+ &amp; \omega^2 \\
+\end{bmatrix}, \quad
+T'_0=\begin{bmatrix}
+\omega^4 &amp; \\
+ &amp; \omega^6 \\
+\end{bmatrix} = -T_0
+\end{split}\]</div>
+<p>递归分解到最后，我们得到基础编码 <span class="math notranslate nohighlight">\(G_0\)</span>，其仍然是一个 RS-Code，记为 <span class="math notranslate nohighlight">\(RS[k_0=1, n_0=1]\)</span> 。这样我们就证明了 RS-Code 是一个可折叠编码，不过显然 RS-Code 对 <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> 有要求，需要其包含一个 Order 为 <span class="math notranslate nohighlight">\(2^s\)</span> 的乘法子群，其中 <span class="math notranslate nohighlight">\(s\)</span> 为正整数，并且保证 <span class="math notranslate nohighlight">\(s\)</span> 足够大，能容纳 <span class="math notranslate nohighlight">\(k_0\cdot 2^{n_d}\)</span> 的码字长度。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” In <em>Annual International Cryptology Conference</em>, pp. 138-169. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>Riad S. Wahby, Ioanna Tzialla, Abhi Shelat, Justin Thaler, and Michael Walfish. “Doubly-efficient zkSNARKs without trusted setup.” In <em>2018 IEEE Symposium on Security and Privacy (SP)</em>, pp. 926-943. IEEE, 2018.</p></li>
+<li><p>Tiancheng Xie, Jiaheng Zhang, Yupeng Zhang, Charalampos Papamanthou, and Dawn Song. “Libra: Succinct zero-knowledge proofs with optimal prover computation.” In <em>Advances in Cryptology–CRYPTO 2019: 39th Annual International Cryptology Conference, Santa Barbara, CA, USA, August 18–22, 2019, Proceedings, Part III 39</em>, pp. 733-764. Springer International Publishing, 2019.</p></li>
+<li><p>Jiaheng Zhang, Tiancheng Xie, Yupeng Zhang, and Dawn Song. “Transparent polynomial delegation and its applications to zero knowledge proof.” In <em>2020 IEEE Symposium on Security and Privacy (SP)</em>, pp. 859-876. IEEE, 2020.</p></li>
+<li><p>Charalampos Papamanthou, Elaine Shi, and Roberto Tamassia. “Signatures of correct computation.” In <em>Theory of Cryptography Conference</em>, pp. 222-242. Berlin, Heidelberg: Springer Berlin Heidelberg, 2013.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome to the land of PCS!</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="basefold-02.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Basefold 笔记：IOPP</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#foldable-linear-codes">什么是 Foldable linear codes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rs-code-foldable">RS code (foldable)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

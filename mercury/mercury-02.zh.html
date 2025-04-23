@@ -1,0 +1,1271 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mercury 笔记：对接 KZG &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'mercury/mercury-02.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Barrett Reduction" href="../reductions/barrett.zh.html" />
+    <link rel="prev" title="Mercury 笔记：实现常数证明尺寸" href="mercury-01.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../libra-pcs/libra-pcs.zh.html">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../virgo-pcs/virgo-pcs-01.zh.html">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-02.zh.html">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Mercury</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mercury-01.zh.html">Mercury 笔记：实现常数证明尺寸</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Mercury 笔记：对接 KZG</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reductions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reductions/barrett.zh.html">Barrett Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reductions/montgomery.zh.html">Montgomery Reduction</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fmercury/mercury-02.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/mercury/mercury-02.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Mercury 笔记：对接 KZG</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">内积证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">分解正确</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-bound">Degree bound</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">聚合多个多项式在多点的打开证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation">Evaluation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">公共输入</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round 5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-6">Round 6</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">证明表示</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mercury-kzg">
+<h1>Mercury 笔记：对接 KZG<a class="headerlink" href="#mercury-kzg" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>在上一篇文章中介绍了 mercury 协议能在保持 Prover 线性复杂度的同时达到常数证明尺寸的根本原因，同时说明了可以将一个多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在点 <span class="math notranslate nohighlight">\((\vec{u}_1, \vec{u}_2)\)</span> 处的取值为 <span class="math notranslate nohighlight">\(v\)</span> 的证明转换下面四项证明：</p>
+<p><img alt="" src="../_images/mercury-compose.svg" /></p>
+<p>本文将详细介绍 mercury 进行的这四个证明，并给出 mercury 对接一元多项式承诺 KZG 的完整协议描述。</p>
+<section id="id1">
+<h2>内积证明<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>先来看证明第 3 项 <span class="math notranslate nohighlight">\(\tilde{g}(\vec{u}_1) = h(\alpha)\)</span> 和第 4 项 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = v\)</span> ，这其实是要对两个内积进行证明。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\tilde{g}(\vec{u}_1)  &amp; = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(\alpha)  \\
+\end{align}
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(\vec{a}_1 = (\tilde{eq}(\mathsf{bits}(0),\vec{u}_1),\ldots, \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1)\)</span> ，<span class="math notranslate nohighlight">\(\vec{b}_1 = (f_0(\alpha),\ldots, f_{b-1}(\alpha))\)</span> ，则要证明 <span class="math notranslate nohighlight">\(\tilde{g}_1(\vec{u_1}) = \langle \vec{a}_1, \vec{b}_1\rangle\)</span> ，为两个向量的内积。</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{h}(\vec{u}_2) = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_2) \cdot h_i
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(h_i\)</span> 表示 <span class="math notranslate nohighlight">\(h(X)\)</span> 的系数，满足 <span class="math notranslate nohighlight">\(h(X) = \sum_{i = 0}^{b-1} h_i \cdot X^i\)</span> 。令 <span class="math notranslate nohighlight">\(\vec{a}_2 = (\tilde{eq}(\mathsf{bits}(0),\vec{u}_2),\ldots, \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_2)\)</span> ，<span class="math notranslate nohighlight">\(\vec{b}_1 = (h_0,\ldots, h_{b-1})\)</span> ，则要证明 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u_2}) = \langle \vec{a}_2, \vec{b}_2\rangle\)</span> ，为两个向量的内积。</p>
+<p>可以发现上述两个内积中，第一个向量 <span class="math notranslate nohighlight">\(\vec{a}_i\)</span> 的分量形式都为 <span class="math notranslate nohighlight">\(\tilde{eq}(\mathsf{bits}(j),\vec{u}_i)\)</span> ，第二个向量 <span class="math notranslate nohighlight">\(\vec{b}_i\)</span> 都是一个一元多项式的系数，<span class="math notranslate nohighlight">\(\vec{b}_1\)</span> 的分量是 <span class="math notranslate nohighlight">\(g(X)\)</span> 的系数，<span class="math notranslate nohighlight">\(\vec{b}_2\)</span> 的分量是 <span class="math notranslate nohighlight">\(h(X)\)</span> 的系数。类似地，我们可以令向量 <span class="math notranslate nohighlight">\(\vec{a}_i\)</span> 的分量也表示一个一元多项式的系数，令</p>
+<div class="math notranslate nohighlight">
+\[
+P_{u_1}(X) = \sum_{i = 0}^{b-1} \tilde{eq}(\mathsf{bits}(i),\vec{u}_1)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+P_{u_2}(X) = \sum_{i = 0}^{b-1} \tilde{eq}(\mathsf{bits}(i),\vec{u}_2)
+\]</div>
+<p>定义两个一元多项式的内积为它们的系数向量进行内积，为叙述简单，这里只考虑两个一元多项式的次数都相同的情况，则要证明的两个内积转换为下面的形式：</p>
+<div class="math notranslate nohighlight">
+\[
+\langle P_{u_1}, g\rangle = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(\alpha) = \tilde{g}(\vec{u}_1) = h(\alpha) \tag{1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\langle P_{u_2}, h\rangle = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_2) \cdot h_i = \tilde{h}(\vec{u}_2) = v\tag{2}
+\]</div>
+<p>下面先介绍在一般情况下，对于任意两个次数相同的多项式，如何来证明它们的内积，稍后再介绍如何将该方法用在证明 <span class="math notranslate nohighlight">\((1)\)</span> 式与 <span class="math notranslate nohighlight">\((2)\)</span> 式。</p>
+<p>一般地，对于两个次数小于 <span class="math notranslate nohighlight">\(n\)</span> 的多项式，</p>
+<div class="math notranslate nohighlight">
+\[
+a(X) = \sum_{i = 0}^{n - 1} a_i \cdot X^i
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+b(X) = \sum_{i = 0}^{n - 1} b_i \cdot X^i
+\]</div>
+<p>现在要证明内积</p>
+<div class="math notranslate nohighlight">
+\[
+\langle a, b \rangle = \sum_{i = 0}^{n - 1} a_i \cdot b_i = c
+\]</div>
+<p>内积证明可以采用多种方法，如 univariate sumcheck、grand sum 方法（这两种方法具体描述可参考 <a class="reference external" href="https://github.com/sec-bit/mle-pcs/blob/main/ph23/ph23-pcs-01.zh.md#3-%E8%AF%81%E6%98%8E-inner-product">ph23 博客文章</a>）。这里介绍 mercury 论文中给出的方法。</p>
+<p>通过 <span class="math notranslate nohighlight">\(a(X)\)</span> 与 <span class="math notranslate nohighlight">\(b(X)\)</span> 的表达式，可以发现</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+a(X) b(1/X) &amp; = (a_0 + a_1 X + \ldots + a_{n - 1} X^{n - 1})(b_0 + b_1 X^{-1} + \ldots + b_{n-1} X^{-(n - 1)}) \\
+&amp; = {\color{blue}{a_0b_0}} + {\color{orange}a_0\cdot (b_1 X^{-1} + \ldots + b_{n-1} X^{-( n - 1)})} \\
+&amp; \quad + {\color{red}a_1 b_0 \cdot X} + {\color{blue}a_1 b_1} + {\color{orange}a_1 (b_2 X^{-1} + \ldots + b_{n - 1}X^{-(n - 1) + 1})} \\
+&amp; \quad + {\color{red} a_2b_0 \cdot X^2 + a_2 b_1 X} + {\color{blue} a_2b_2} + {\color{orange} a_2 \cdot (b_3 X^{-1} + \ldots + b_{n - 1} X^{-(n - 1) + 2})} \\
+&amp; \quad + \ldots \\
+&amp; = {\color{red} X \cdot S_1(X)}  + {\color{blue} a_0b_0 + a_1 b_1 + \ldots + a_{n-1}b_{n-1}} + {\color{orange} 1/X \cdot S_2(1/X)}
+\end{aligned}
+\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(a(X)b(1/X)\)</span> 的常数项恰好就是内积 <span class="math notranslate nohighlight">\(\langle a, b \rangle\)</span> 。因此要证明 <span class="math notranslate nohighlight">\(\langle a, b \rangle = c\)</span> 就等价于证明存在 <span class="math notranslate nohighlight">\(S_1(X)\)</span> 和 <span class="math notranslate nohighlight">\(S_2(X)\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+a(X) b(1/X) = X \cdot S_1(X) + c + 1/X \cdot S_2(1/X) \tag{3}
+\]</div>
+<p>此时 Prover 发送关于 <span class="math notranslate nohighlight">\(S_1(X)\)</span> 和 <span class="math notranslate nohighlight">\(S_2(X)\)</span> 的承诺，Verifier 选取一个随机值 <span class="math notranslate nohighlight">\(\zeta\)</span> ，让 Prover 打开 <span class="math notranslate nohighlight">\(a(\zeta),b(1/\zeta), S_1(\zeta), S_2(1/\zeta)\)</span> ，并发送这些值对应的打开证明，Verifier 此时就可以用这些值来验证 <span class="math notranslate nohighlight">\((3)\)</span> 式是否成立，这样就完成了内积的证明，而且这个过程中 proof size 也是常数大小的。</p>
+<p><span class="math notranslate nohighlight">\((3)\)</span> 式这样的构造需要发送两个多项式的承诺，即 <span class="math notranslate nohighlight">\(S_1(X), S_2(X)\)</span> ，但可以观察到 <span class="math notranslate nohighlight">\(a(1/X)b(X)\)</span> 的常数项也是内积 <span class="math notranslate nohighlight">\(\langle a, b \rangle\)</span> ，这与 <span class="math notranslate nohighlight">\(a(X)b(1/X)\)</span> 是具有对称性的，将 <span class="math notranslate nohighlight">\((3)\)</span> 式中的 <span class="math notranslate nohighlight">\(X\)</span> 换成 <span class="math notranslate nohighlight">\(1/X\)</span> 就可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+a(1/X)b(X) = 1/X \cdot S_1(1/X) + c + X \cdot S_2(X) \tag{4}
+\]</div>
+<p>将 <span class="math notranslate nohighlight">\((3)\)</span> 式与 <span class="math notranslate nohighlight">\((4)\)</span> 式相加，得到</p>
+<div class="math notranslate nohighlight">
+\[
+a(X) b(1/X) + a(1/X)b(X) = X \cdot (S_1(X) + S_2(X)) + 2c + 1/X(S_1(1/X) + S_2(1/X)) 
+\]</div>
+<p>记 <span class="math notranslate nohighlight">\(S(X) := S_1(X) + S_2(X)\)</span> ，那么</p>
+<div class="math notranslate nohighlight">
+\[
+a(X) b(1/X) + a(1/X)b(X) = X \cdot S(X) + 2c + 1/X \cdot S(1/X) \tag{5}
+\]</div>
+<p>证明内积 <span class="math notranslate nohighlight">\(\langle a, b \rangle = c\)</span> 就可以等价于证明存在一个多项式 <span class="math notranslate nohighlight">\(S(X)\)</span> ，满足 <span class="math notranslate nohighlight">\((5)\)</span> 式。这样就将上面 <span class="math notranslate nohighlight">\((3)\)</span> 式的构造中要承诺两个多项式 <span class="math notranslate nohighlight">\(S_1(X)\)</span> 与 <span class="math notranslate nohighlight">\(S_2(X)\)</span> 优化为只需要承诺一个多项式 <span class="math notranslate nohighlight">\(S(X)\)</span> 了，这也就减少了证明的大小。</p>
+<p>若还有一组内积证明 <span class="math notranslate nohighlight">\(\langle a', b' \rangle = c'\)</span> ，其中 <span class="math notranslate nohighlight">\(a'(X) = \sum_{i = 0}^{n-1} a'_i \cdot X^i, b'(X) = \sum_{i = 0}^{n-1} b'_i \cdot X^i\)</span> 。可以用随机数将这两组内积证明聚合成一个证明。Verifier 可选取一个随机数 <span class="math notranslate nohighlight">\(\gamma \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> ，Prover 证明存在多项式 <span class="math notranslate nohighlight">\(S(X)\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+a(X) b(1/X) + a(1/X)b(X) + \gamma \cdot (a'(X) b'(1/X) + a'(1/X)b'(X))= X \cdot S(X) + 2(c + \gamma \cdot c') + 1/X \cdot S(1/X) 
+\]</div>
+<p>回到 mercury 协议本身，我们想证明的两个内积是</p>
+<div class="math notranslate nohighlight">
+\[
+\langle P_{u_1}, g\rangle = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(\alpha) = \tilde{g}(\vec{u}_1) = h(\alpha) \tag{6}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\langle P_{u_2}, h\rangle = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_2) \cdot h_i = \tilde{h}(\vec{u}_2) = v \tag{7}
+\]</div>
+<p>采用上面内积证明的方法，Verifier 发送一个随机数 <span class="math notranslate nohighlight">\(\gamma\)</span> ，可以将这两个内积证明 batch 成一个。证明存在多项式 <span class="math notranslate nohighlight">\(S(X)\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+g(X) P_{u_1}(1/X) &amp; + g(1/X) P_{u_1}(X) + \gamma \cdot (h(X) P_{u_2}(1/X) + h(1/X) P_{u_2}(X)) \\
+&amp; = 2(h(\alpha) + \gamma \cdot v) + X \cdot S(X) + (1/X) \cdot S(1/X)  
+\end{aligned} \tag{8}
+\end{split}\]</div>
+<p>Prover 先承诺 <span class="math notranslate nohighlight">\(g(X), h(X), S(X)\)</span> ，Verifier 随机选取一个打开点 <span class="math notranslate nohighlight">\(\zeta\)</span> ，Prover 发送值 <span class="math notranslate nohighlight">\(g(\zeta), g(1/\zeta), h(\zeta), h(1/\zeta), S(\zeta), S(1/\zeta)\)</span> 及对应的打开证明，由于 <span class="math notranslate nohighlight">\(\vec{u}_1\)</span> 和 <span class="math notranslate nohighlight">\(\vec{u}_2\)</span> 是公开的，因此 Verifier 可以自己算出 <span class="math notranslate nohighlight">\(P_{u_1}(X)\)</span> 和 <span class="math notranslate nohighlight">\(P_{u_2}(X)\)</span> ，从而自己计算出 <span class="math notranslate nohighlight">\(P_{u_1}(\zeta), P_{u_1}(1/\zeta)\)</span> 和 <span class="math notranslate nohighlight">\(P_{u_2}(\zeta), P_{u_2}(1/\zeta)\)</span> ，来验证 <span class="math notranslate nohighlight">\((3)\)</span> 式的正确性。</p>
+<p><img alt="" src="../_images/mercury-inner-product.svg" /></p>
+<p>现在已经明白了第 3 项和第 4 项的证明可以转换为两个内积证明，它们可以用 <span class="math notranslate nohighlight">\((3)\)</span> 式这样的方式 batch 在一起来进行证明，该证明只需要常数的证明大小。</p>
+</section>
+<section id="id2">
+<h2>分解正确<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>对于第 1 项的证明，</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f(X) = q(X) \cdot (X^b - \alpha) + g(X)\)</span></p></li>
+</ol>
+<p>可以直接对接一元多项式 KZG 承诺方案来进行证明。由于在证明第 3 项和第 4 项时，Prover 已经发送了 <span class="math notranslate nohighlight">\(g(\zeta)\)</span> 的值，因此可以在同一个随机点处来验证第 1 项的正确性。Prover 构造一个商多项式</p>
+<div class="math notranslate nohighlight">
+\[
+H(X) = \frac{f(X) - (\zeta^b - \alpha)q(X) - g(\zeta)}{X - \zeta}
+\]</div>
+<p>对该商多项式进行承诺 <span class="math notranslate nohighlight">\([H] = \mathsf{cm}(H)\)</span> ，发送给 Verifier 。由于 <span class="math notranslate nohighlight">\(f(\zeta) = (\zeta^b - \alpha) \cdot q(\zeta) - g(\zeta)\)</span> ，那么该商多项式是存在的，另一方面，该商多项式存在，也能说明第 1 项的构造正确。Verifier 在收到 <span class="math notranslate nohighlight">\(\mathsf{cm}(H)\)</span> 后，可以用 pairing 来进行验证</p>
+<div class="math notranslate nohighlight">
+\[
+e(\mathsf{cm}(f) - (\zeta^b - \alpha) \cdot [q] - g(\zeta) \cdot [1]_1 , [1]_2) \stackrel{?}{=} e(\mathsf{cm}(H), [x - \zeta]_2)
+\]</div>
+<p>总结下证明第一项的正确性，Prover 需要证明存在商多项式 <span class="math notranslate nohighlight">\(H(X)\)</span> ，Verfier 在随机点验证该商多项式的正确性。</p>
+<p><img alt="" src="../_images/mercury-decompose.svg" /></p>
+</section>
+<section id="degree-bound">
+<h2>Degree bound<a class="headerlink" href="#degree-bound" title="Link to this heading">#</a></h2>
+<p>对于第 2 项的证明，</p>
+<ol class="arabic simple" start="2">
+<li><p><span class="math notranslate nohighlight">\(\deg(g) &lt; b\)</span></p></li>
+</ol>
+<p>也可以利用 <span class="math notranslate nohighlight">\(g(1/X)\)</span> 函数，要证明 <span class="math notranslate nohighlight">\(\deg(g(X)) &lt; b\)</span> ，等价于证明</p>
+<div class="math notranslate nohighlight">
+\[
+D(X) = X^{b - 1} \cdot g(1/X) \tag{9}
+\]</div>
+<p>是一个多项式。假设 <span class="math notranslate nohighlight">\(\deg(g) = d\)</span> ，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+D(X) &amp; = X^{b-1} \cdot g(1/X) \\
+&amp; = X^{b - 1}(g_0  + g_1 \cdot X^{-1} + \ldots + g_{d} \cdot X^{-d}) \\
+&amp; = g_{d} \cdot X^{b - d - 1} + \ldots + g_1 \cdot X^{b - 2} + g_0 \cdot X^{b - 1}
+\end{aligned}
+\end{split}\]</div>
+<p>可以发现只有当 <span class="math notranslate nohighlight">\(d &lt; b\)</span> 时，第一项 <span class="math notranslate nohighlight">\(g_d \cdot X^{b-d-1}\)</span> 的次数 <span class="math notranslate nohighlight">\(b-d - 1 \ge 0\)</span> ，否则该项的次数为负数，不能构成一个多项式。假设 KZG Setup 阶段选取的随机数为 <span class="math notranslate nohighlight">\(\tau\)</span> ，srs 为</p>
+<div class="math notranslate nohighlight">
+\[
+\{[1], [\tau], \ldots, [\tau^{N-1}], [1]_2, [\tau]_2\}
+\]</div>
+<p>不包含 <span class="math notranslate nohighlight">\(\tau\)</span> 的负数次幂，那么只有当 <span class="math notranslate nohighlight">\(D(X)\)</span> 是一个多项式时，其才能正确的进行多项式承诺，这也就说明了 <span class="math notranslate nohighlight">\(g(X)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(b\)</span> 。Prover 先承诺多项式 <span class="math notranslate nohighlight">\(D(X)\)</span> ，发送 <span class="math notranslate nohighlight">\(\mathsf{cm}(D(X)) = [D]\)</span> 。为了验证 <span class="math notranslate nohighlight">\((9)\)</span> 式的正确性，Verifier 需要选取一个随机点，来打开 <span class="math notranslate nohighlight">\(D(X)\)</span> 与 <span class="math notranslate nohighlight">\(g(1/X)\)</span> 在随机点处的值，为了减少证明的大小，由于在内积证明中已经发送过 <span class="math notranslate nohighlight">\(g(1/\zeta)\)</span> 的值，这里进行 degree bound 证明时，依然可以选择在 <span class="math notranslate nohighlight">\(\zeta\)</span> 点进行打开。Prover 再发送 <span class="math notranslate nohighlight">\(D(\zeta)\)</span> 的值及对应的打开证明，Verifier 来验证</p>
+<div class="math notranslate nohighlight">
+\[
+D(\zeta) \stackrel{?}{=} \zeta^{b-1} \cdot g(1/\zeta)
+\]</div>
+<p>第 2 项的证明如下图所示。</p>
+<p><img alt="" src="../_images/mercury-degree-bound.svg" /></p>
+<p>至此我们已经知道前面提到的四项如何来证明。</p>
+<p><img alt="" src="../_images/mercury-prove.svg" /></p>
+</section>
+<section id="id3">
+<h2>聚合多个多项式在多点的打开证明<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>四项证明：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f(X) = q(X) \cdot (X^b - \alpha) + g(X)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\deg(g) &lt; b\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tilde{g}(\vec{u}_1) = h(\alpha)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = v\)</span></p></li>
+</ol>
+<p>回顾下在证明这四项的过程中，Prover 发送的多项式的值如下图所示。</p>
+<p><img alt="" src="../_images/mercury-send-value.svg" /></p>
+<p>Prover 发送的值有</p>
+<div class="math notranslate nohighlight">
+\[
+g(\zeta), g(1/\zeta), h(\alpha), h(\zeta), h(1/\zeta), S(\zeta), S(1/\zeta), D(\zeta)
+\]</div>
+<p>Prover 需要用 KZG10 来证明这些值发送的是正确的。对于一个值 <span class="math notranslate nohighlight">\(g(\zeta)\)</span> ，Prover 可以构造商多项式</p>
+<div class="math notranslate nohighlight">
+\[
+q_{g_\zeta} = \frac{g(X) - g(\zeta)}{X - \zeta}
+\]</div>
+<p>Prover 先承诺该商多项式 <span class="math notranslate nohighlight">\(\mathsf{cm}(q_{g_\zeta})\)</span> ，Verifier 可以通过一个椭圆曲线上的 pairing 操作来进行验证</p>
+<div class="math notranslate nohighlight">
+\[
+e(\mathsf{cm}(g) - g(\zeta) \cdot [1]_1 , [1]_2) \stackrel{?}{=} e(\mathsf{cm}(q_{g_\zeta}), [\tau - \zeta]_2)
+\]</div>
+<p>但这里有 <span class="math notranslate nohighlight">\(8\)</span> 个值需要证明正确，如果每一个值都像上面这样去证明，会导致证明尺寸的增加，同时也会增加 Verifier 的计算量。可以发现这里涉及 <span class="math notranslate nohighlight">\(4\)</span> 个不同的多项式，且每个多项式打开的点不完全一致，也不适合用多个多项式在同一个点打开的方案去证明。在 [BDFG20] Section 4 中给出了一种可以在不同的多项式打开多个不同的点的方案，证明的大小只需要 <span class="math notranslate nohighlight">\(2\)</span> 个椭圆曲线 <span class="math notranslate nohighlight">\(\mathbb{G}_1\)</span> 上的点，Verifier 也只需要计算两个椭圆曲线上的 pairing 操作，下面介绍下该方案。</p>
+<p>令集合 <span class="math notranslate nohighlight">\(S_1,S_2, S_3, S_4\)</span> 分别表示多项式 <span class="math notranslate nohighlight">\(g(X),h(X),S(X), D(X)\)</span> 要打开的点的集合，即</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+S_1 = \{\zeta, 1/\zeta\},  &amp; \qquad S_2 = \{\alpha, \zeta, 1/\zeta\} \\
+S_3 = \{\zeta, 1/\zeta\},  &amp; \qquad S_4 = \{\zeta\}
+\end{align}
+\end{split}\]</div>
+<p>构造集合 <span class="math notranslate nohighlight">\(T\)</span> ，其能包含 <span class="math notranslate nohighlight">\(S_i\)</span> 中所有的元素，令</p>
+<div class="math notranslate nohighlight">
+\[
+T = \{\zeta, 1/\zeta, \alpha\}
+\]</div>
+<p>则 <span class="math notranslate nohighlight">\(S_i \subset T \subset \mathbb{F}\)</span> 。</p>
+<p>以集合 <span class="math notranslate nohighlight">\(S_1\)</span> 和多项式 <span class="math notranslate nohighlight">\(g(X)\)</span> 为例，在集合 <span class="math notranslate nohighlight">\(S_1, T, T \setminus S_1\)</span> 上的消失多项式分别为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; Z_{S_1}(X) = (X - \zeta)(X - 1/\zeta) \\
+ &amp; Z_{T}(X) = (X - \zeta)(X - 1 /\zeta)(X -\alpha) \\
+ &amp; Z_{T \setminus S_{1}}(X) = X - \alpha 
+\end{align}
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(g^*(X)\)</span> 表示 <span class="math notranslate nohighlight">\((g(\zeta), g(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式，满足 <span class="math notranslate nohighlight">\(\deg(g^*) = 1\)</span> ，且</p>
+<div class="math notranslate nohighlight">
+\[
+g^*(\zeta) = g(\zeta), \qquad g^*(1/\zeta) = g(1/\zeta)
+\]</div>
+<p>那么可以发现消失多项式 <span class="math notranslate nohighlight">\(Z_{S_1}(X)\)</span> 能够整除多项式 <span class="math notranslate nohighlight">\(g(X) - g^*(X)\)</span> ，即存在商多项式</p>
+<div class="math notranslate nohighlight">
+\[
+q_g(X) = \frac{g(X) - g^*(X)}{Z_{S_1}(X)}
+\]</div>
+<p>由于</p>
+<div class="math notranslate nohighlight">
+\[
+Z_{S_1}(X) = \frac{Z_T(X)}{Z_{T \setminus S_1}(X)}
+\]</div>
+<p>则</p>
+<div class="math notranslate nohighlight">
+\[
+q_g(X) = \frac{Z_{T \setminus S_1}(X)(g(X) - g^*(X))}{Z_T(X)}
+\]</div>
+<p>这也就意味着 <span class="math notranslate nohighlight">\(Z_{S_1}(X)\)</span> 能够整除多项式 <span class="math notranslate nohighlight">\(g(X) - g^*(X)\)</span> 等价于 <span class="math notranslate nohighlight">\(Z_T(X)\)</span> 能够整除多项式 <span class="math notranslate nohighlight">\(Z_{T \setminus S_1}(X)(g(X) - g^*(X))\)</span> 。将 <span class="math notranslate nohighlight">\(Z_{S_1}(X)\)</span> 整除转换为 <span class="math notranslate nohighlight">\(Z_{T}(X)\)</span> 整除的好处就是，<span class="math notranslate nohighlight">\(Z_T(X)\)</span> 对其余的多项式 <span class="math notranslate nohighlight">\(h(X), S(X), D(X)\)</span> 来说都是同一个，这样就可以将这几个不同的多项式在不同的点打开聚合在一起进行证明。下面来看下具体的证明过程。</p>
+<ol class="arabic simple">
+<li><p>Verifier 发送随机数 <span class="math notranslate nohighlight">\(\beta \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算插值多项式</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((g(\zeta), g(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(h^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((h(\alpha), h(\zeta), h(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\alpha,\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(S^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((S(\zeta), S(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(D^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((D(\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta)\)</span> 上的插值多项式</p></li>
+</ul>
+</li>
+<li><p>Prover 计算多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ m(X)  &amp; = Z_{T \setminus S_1}(X)(g(X) - g^*(X)) + \beta \cdot Z_{T \setminus S_2}(X)(h(X) - h^*(X))  \\
+ &amp; \quad + \beta^2 \cdot Z_{T \setminus S_3}(X)(S(X) - S^*(X)) +  \beta^3 \cdot Z_{T \setminus S_4}(X)(D(X) - D^*(X))
+\end{align}
+\end{split}\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(q_m(X) = m(X) / Z_T(X)\)</span> 的承诺</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{q_{m}} = [q_m(\tau)]_1
+\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Verifier 发送随机打开点 <span class="math notranslate nohighlight">\(z \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算线性化多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+L(X) = m_z(X) - Z_T(z) \cdot q_{\mathsf{batch}}(X)
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ m_z(X)  &amp; = Z_{T \setminus S_1}(z)(g(X) - g^*(z)) + \beta \cdot Z_{T \setminus S_2}(z)(h(X) - h^*(z))  \\
+ &amp; \quad + \beta^2 \cdot Z_{T \setminus S_3}(z)(S(X) - S^*(z)) +  \beta^3 \cdot Z_{T \setminus S_4}(z)(D(X) - D^*(z))
+\end{align}
+\end{split}\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(L(z) = m_z(z) - Z_T(z) \cdot q_m(z) = 0\)</span> ，因此 <span class="math notranslate nohighlight">\((X - z)\)</span> 能够整除 <span class="math notranslate nohighlight">\(L(X)\)</span> 。</p>
+<ol class="arabic simple" start="7">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(L(X)/(X - z)\)</span> 的承诺</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{q_L} = \left[\frac{L(\tau)}{\tau - z}\right]_1
+\]</div>
+<ol class="arabic simple" start="8">
+<li><p>Verifier 计算插值多项式</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((g(\zeta), g(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(h^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((h(\alpha), h(\zeta), h(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\alpha,\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(S^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((S(\zeta), S(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(D^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((D(\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta)\)</span> 上的插值多项式</p></li>
+</ul>
+</li>
+<li><p>Verifier 计算插值多项式在 <span class="math notranslate nohighlight">\(z\)</span> 处的取值，计算 <span class="math notranslate nohighlight">\(g^*(z), h^*(z), S^*(z), D^*(z)\)</span></p></li>
+<li><p>Verifier 计算消失多项式在 <span class="math notranslate nohighlight">\(z\)</span> 处的取值，计算 <span class="math notranslate nohighlight">\(Z_T(z), Z_{T \setminus S_1}(z), Z_{T \setminus S_2}(z), Z_{T \setminus S_3}(z), Z_{T \setminus S_4}(z)\)</span></p></li>
+<li><p>Verifier 计算</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ F &amp; = Z_{T \setminus S_1}(z) \cdot C_g + \beta \cdot Z_{T \setminus S_2}(z) \cdot C_h + \beta^2 \cdot Z_{T \setminus S_3}(z) \cdot C_S  +  \beta^3 \cdot Z_{T \setminus S_4}(z) \cdot C_D \\
+ &amp; \quad - (Z_{T \setminus S_1}(z) \cdot g^*(z) + \beta \cdot Z_{T \setminus S_2}(z) \cdot h^*(z) + \beta^2 \cdot Z_{T \setminus S_3}(z) \cdot S^*(z)  +  \beta^3 \cdot Z_{T \setminus S_4}(z) \cdot D^*(z)) \cdot [1]_1 \\
+ &amp; \quad - Z_T(z) \cdot C_{q_m}
+\end{align}
+\end{split}\]</div>
+<ol class="arabic simple" start="12">
+<li><p>Verifier 验证</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e(F + z \cdot C_{q_L}, [1]_2) \stackrel{?}{=} e(C_{q_L}, [\tau]_2)
+\]</div>
+<p>至此，对接 KZG 承诺的所有证明部分都比较清楚了。</p>
+<p><img alt="" src="../_images/mercury-full.svg" /></p>
+<p>下面将这些部分都组合在一起，看看完整的 mercury 协议。</p>
+</section>
+<section id="id4">
+<h2>协议<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h3>
+<p>选取随机数 <span class="math notranslate nohighlight">\(\tau \in \mathbb{F}\)</span> ，生成 srs 参数</p>
+<div class="math notranslate nohighlight">
+\[
+\{[1], [\tau], \ldots, [\tau^{N-1}], [1]_2, [\tau]_2\}
+\]</div>
+</section>
+<section id="commit">
+<h3>Commit<a class="headerlink" href="#commit" title="Link to this heading">#</a></h3>
+<p>对于多元线性多项式</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,\ldots, X_{n-1}) = \sum_{i=0}^{2^n - 1} f_i \cdot \tilde{eq}(\mathsf{bits}(i),(X_0, X_1, \ldots, X_{n-1}))
+\]</div>
+<p>令 <span class="math notranslate nohighlight">\(N = 2^n\)</span> ，将其系数 <span class="math notranslate nohighlight">\(f_i\)</span> 分成 <span class="math notranslate nohighlight">\(b = \sqrt{N}\)</span> 组 <span class="math notranslate nohighlight">\((f_0,f_1, \ldots, f_{2^n - 1}) = (f_{0,0}, f_{0,1}, \ldots, f_{0,b-1}, \ldots, f_{b-1,0}, \ldots, f_{b-1,b-1})\)</span> 。与 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 对应的一元多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = \sum_{i = 0}^{b - 1} \sum_{j = 0}^{b - 1} f_{i,j} \cdot X^{i \cdot b + j}
+\]</div>
+<p>对多元多线性多项式的承诺即为对 <span class="math notranslate nohighlight">\(f(X)\)</span> 的承诺，</p>
+<div class="math notranslate nohighlight">
+\[
+C_f = \sum_{i = 0}^{b - 1} \sum_{j = 0}^{b - 1} f_{i,j} \cdot [\tau^{i \cdot b + j}]
+\]</div>
+</section>
+<section id="evaluation">
+<h3>Evaluation<a class="headerlink" href="#evaluation" title="Link to this heading">#</a></h3>
+<p>Prover 要向 Verifier 证明 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, \ldots , X_{n - 1})\)</span> 在一个公开点 <span class="math notranslate nohighlight">\(\vec{u} = (u_0, \ldots, u_{n-1})\)</span> 处的值为 <span class="math notranslate nohighlight">\(v\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{u}) = v
+\]</div>
+<section id="id5">
+<h4>公共输入<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_f\)</span></p></li>
+<li><p>求值点 <span class="math notranslate nohighlight">\(\vec{u}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在 <span class="math notranslate nohighlight">\(\vec{u}\)</span> 处的取值 <span class="math notranslate nohighlight">\(v\)</span></p></li>
+</ol>
+</section>
+<section id="witness">
+<h4>Witness<a class="headerlink" href="#witness" title="Link to this heading">#</a></h4>
+<p>多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的系数 <span class="math notranslate nohighlight">\((f_{0,0}, f_{0,1}, \ldots, f_{0,b-1}, \ldots, f_{b-1,0}, \ldots, f_{b-1,b-1})\)</span> 。</p>
+</section>
+<section id="round-1">
+<h4>Round 1<a class="headerlink" href="#round-1" title="Link to this heading">#</a></h4>
+<p>这一轮承诺部分求和函数 <span class="math notranslate nohighlight">\(h(X)\)</span> 。</p>
+<ol class="arabic simple">
+<li><p>将 <span class="math notranslate nohighlight">\(\vec{u}\)</span> 拆分成两个等长的向量，令 <span class="math notranslate nohighlight">\(n = 2t\)</span> ，则 <span class="math notranslate nohighlight">\(b = 2^t\)</span> ，那么</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\vec{u}_1 = (u_0, \ldots, u_{t - 1})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\vec{u}_2 = (u_t, \ldots, u_{n - 1})
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(h(X)\)</span> ，</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+h(X) = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(X) 
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; f_0(X) = f_{0,0} + f_{1,0}  X + \ldots + f_{b-1, 0} X^{b-1} \\
+ &amp; f_1(X) = f_{0,1} + f_{1,1}  X + \ldots + f_{b-1, 1} X^{b-1} \\
+ &amp; \qquad \qquad \qquad \qquad \ldots \\
+ &amp; f_{b-1}(X) = f_{0,b-1} + f_{1,b-1}  X + \ldots + f_{b-1, b-1} X^{b-1}
+\end{align}
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(h(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_h = [h(\tau)]_1\)</span></p></li>
+</ol>
+</section>
+<section id="round-2">
+<h4>Round 2<a class="headerlink" href="#round-2" title="Link to this heading">#</a></h4>
+<p>这一轮承诺“折叠”多项式 <span class="math notranslate nohighlight">\(g(X)\)</span>。</p>
+<ol class="arabic simple">
+<li><p>Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算多项式 <span class="math notranslate nohighlight">\(g(X)\)</span> 与 <span class="math notranslate nohighlight">\(q(X)\)</span> ，满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+f(X) = q(X) \cdot (X^b - \alpha) + g(X)
+\]</div>
+<p>并且 <span class="math notranslate nohighlight">\(\deg(g) &lt; b\)</span> 。其中</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = \sum_{i = 0}^{b - 1} f_i(\alpha) \cdot X^i
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(g(X)\)</span> 与 <span class="math notranslate nohighlight">\(q(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_g = [g(\tau)]_1, C_q = [q(\tau)]_1\)</span></p></li>
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(h(\alpha)\)</span></p></li>
+</ol>
+</section>
+<section id="round-3">
+<h4>Round 3<a class="headerlink" href="#round-3" title="Link to this heading">#</a></h4>
+<p>这一轮发送两个内积证明以及 <span class="math notranslate nohighlight">\(g(X)\)</span> 的 degree bound 证明。</p>
+<ol class="arabic simple">
+<li><p>Verifier 发送随机数 <span class="math notranslate nohighlight">\(\gamma \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(S(X)\)</span> ，满足</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+g(X) P_{u_1}(1/X) &amp; + g(1/X) P_{u_1}(X) + \gamma \cdot (h(X) P_{u_2}(1/X) + h(1/X) P_{u_2}(X)) \\
+&amp; = 2(h(\alpha) + \gamma \cdot v) + X \cdot S(X) + (1/X) \cdot S(1/X)  
+\end{aligned}
+\end{split}\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[
+P_{u_1}(X) = \sum_{i = 0}^{b-1} \tilde{eq}(\mathsf{bits}(i),\vec{u}_1)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+P_{u_2}(X) = \sum_{i = 0}^{b-1} \tilde{eq}(\mathsf{bits}(i),\vec{u}_2)
+\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Prover 发送 <span class="math notranslate nohighlight">\(S(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_S = [S(\tau)]_1\)</span></p></li>
+<li><p>Prover 计算多项式 <span class="math notranslate nohighlight">\(D(X)\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+D(X) = X^{b - 1} g(1/X)
+\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Prover 发送 <span class="math notranslate nohighlight">\(D(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_D = [D(\tau)]_1\)</span></p></li>
+</ol>
+</section>
+<section id="round-4">
+<h4>Round 4<a class="headerlink" href="#round-4" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 发送随机数 <span class="math notranslate nohighlight">\(\zeta \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(g(\zeta), g(1/\zeta), h(\zeta), h(1/\zeta), S(\zeta), S(1/\zeta), D(\zeta)\)</span></p></li>
+<li><p>Prover 计算商多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+H(X) = \frac{f(X) - (\zeta^b - \alpha)q(X) - g(\zeta)}{X - \zeta}
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Prover 计算并发送商多项式 <span class="math notranslate nohighlight">\(H(X)\)</span> 的承诺 <span class="math notranslate nohighlight">\(C_H = [H(\tau)]_1\)</span></p></li>
+</ol>
+</section>
+<section id="round-5">
+<h4>Round 5<a class="headerlink" href="#round-5" title="Link to this heading">#</a></h4>
+<p>这一轮发送聚合 <span class="math notranslate nohighlight">\(g(X), h(X), S(X), D(X)\)</span> 在多个点打开的证明。</p>
+<ol class="arabic simple">
+<li><p>Verifier 发送随机数 <span class="math notranslate nohighlight">\(\beta \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算插值多项式</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((g(\zeta), g(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(h^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((h(\alpha), h(\zeta), h(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\alpha,\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(S^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((S(\zeta), S(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(D^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((D(\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta)\)</span> 上的插值多项式</p></li>
+</ul>
+</li>
+<li><p>Prover 计算多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ m(X)  &amp; = Z_{T \setminus S_1}(X)(g(X) - g^*(X)) + \beta \cdot Z_{T \setminus S_2}(X)(h(X) - h^*(X))  \\
+ &amp; \quad + \beta^2 \cdot Z_{T \setminus S_3}(X)(S(X) - S^*(X)) +  \beta^3 \cdot Z_{T \setminus S_4}(X)(D(X) - D^*(X))
+\end{align}
+\end{split}\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+S_1 = \{\zeta, 1/\zeta\},  &amp; \qquad S_2 = \{\alpha, \zeta, 1/\zeta\} \\
+S_3 = \{\zeta, 1/\zeta\},  &amp; \qquad S_4 = \{\zeta\}
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+T = \{\zeta, 1/\zeta, \alpha\}
+\]</div>
+<p><span class="math notranslate nohighlight">\(Z_T(X), Z_{T \setminus S_1}(X), Z_{T \setminus S_2}(X), Z_{T \setminus S_3}(X), Z_{T \setminus S_4}(X)\)</span> 分别是对应集合 <span class="math notranslate nohighlight">\(T, T \setminus S_1, T \setminus S_2, T \setminus S_3, T \setminus S_4\)</span> 上的消失多项式。</p>
+<ol class="arabic simple" start="4">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(q_m(X) = m(X) / Z_T(X)\)</span> 的承诺</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{q_{m}} = [q_m(\tau)]_1
+\]</div>
+</section>
+<section id="round-6">
+<h4>Round 6<a class="headerlink" href="#round-6" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 发送随机打开点 <span class="math notranslate nohighlight">\(z \stackrel{\$}{\leftarrow} \mathbb{F}\)</span></p></li>
+<li><p>Prover 计算线性化多项式</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+L(X) = m_z(X) - Z_T(z) \cdot q_{\mathsf{batch}}(X)
+\]</div>
+<p>其中</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ m_z(X)  &amp; = Z_{T \setminus S_1}(z)(g(X) - g^*(z)) + \beta \cdot Z_{T \setminus S_2}(z)(h(X) - h^*(z))  \\
+ &amp; \quad + \beta^2 \cdot Z_{T \setminus S_3}(z)(S(X) - S^*(z)) +  \beta^3 \cdot Z_{T \setminus S_4}(z)(D(X) - D^*(z))
+\end{align}
+\end{split}\]</div>
+<p>那么 <span class="math notranslate nohighlight">\(L(z) = m_z(z) - Z_T(z) \cdot q_m(z) = 0\)</span> ，因此 <span class="math notranslate nohighlight">\((X - z)\)</span> 能够整除 <span class="math notranslate nohighlight">\(L(X)\)</span> 。</p>
+<ol class="arabic simple" start="3">
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(L(X)/(X - z)\)</span> 的承诺</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+C_{q_L} = \left[\frac{L(\tau)}{\tau - z}\right]_1
+\]</div>
+</section>
+<section id="id6">
+<h4>证明表示<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<p>Prover 发送的证明为</p>
+<div class="math notranslate nohighlight">
+\[
+\pi = (C_h, C_g, C_q, C_S, C_D, C_H, C_{q_m},C_{q_L},g(\zeta), g(1/\zeta), h(\zeta), h(1/\zeta), h(\alpha), S(\zeta), S(1/\zeta), D(\zeta))
+\]</div>
+<p>证明的大小为 <span class="math notranslate nohighlight">\(8 ~ \mathbb{G}_1 + 8~ \mathbb{F}\)</span> 。</p>
+</section>
+<section id="verification">
+<h4>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Verifier 计算 <span class="math notranslate nohighlight">\(P_{u_1}(\zeta) , P_{u_1}(1/\zeta), P_{u_2}(\zeta) , P_{u_2}(1/\zeta)\)</span> ，Verifier 可以通过下面的方式在 <span class="math notranslate nohighlight">\(O(\log N)\)</span> 时间计算这些值</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+P_{u_1} (X) = \prod_{i = 0}^{t - 1} (u_i X^{2^{i}} + 1 - u_i)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+P_{u_2} (X) = \prod_{i = t}^{n - 1} (u_i X^{2^{i}} + 1 - u_i)
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Verifier 验证两个内积证明</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+g(\zeta) P_{u_1}(1/\zeta) &amp; + g(1/\zeta) P_{u_1}(\zeta) + \gamma \cdot (h(\zeta) P_{u_2}(1/\zeta) + h(1/\zeta) P_{u_2}(\zeta)) \\
+&amp; \stackrel{?}{=} 2(h(\alpha) + \gamma \cdot v) + \zeta \cdot S(\zeta) + (1/\zeta) \cdot S(1/\zeta)  
+\end{aligned}
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Verifier 验证 <span class="math notranslate nohighlight">\(g(X)\)</span> 的次数是否小于 <span class="math notranslate nohighlight">\(b\)</span></p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+D(\zeta) \stackrel{?}{=} \zeta^{b - 1} g(1/\zeta)
+\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Verifier 验证  <span class="math notranslate nohighlight">\(g(X)\)</span> 的构造是否正确</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e(C_f - (\zeta^b - \alpha) \cdot C_q - g(\zeta) \cdot [1]_1, [1]_2) \stackrel{?}{=} e(C_H, [\tau - \zeta]_2)
+\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Verifier 计算插值多项式</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((g(\zeta), g(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(h^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((h(\alpha), h(\zeta), h(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\alpha,\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(S^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((S(\zeta), S(1/\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta, 1/\zeta)\)</span> 上的插值多项式</p></li>
+<li><p><span class="math notranslate nohighlight">\(D^*(X)\)</span> 为 <span class="math notranslate nohighlight">\((D(\zeta))\)</span> 在 <span class="math notranslate nohighlight">\((\zeta)\)</span> 上的插值多项式</p></li>
+</ul>
+</li>
+<li><p>Verifier 计算插值多项式在 <span class="math notranslate nohighlight">\(z\)</span> 处的取值，计算 <span class="math notranslate nohighlight">\(g^*(z), h^*(z), S^*(z), D^*(z)\)</span></p></li>
+<li><p>Verifier 计算消失多项式在 <span class="math notranslate nohighlight">\(z\)</span> 处的取值，计算 <span class="math notranslate nohighlight">\(Z_T(z), Z_{T \setminus S_1}(z), Z_{T \setminus S_2}(z), Z_{T \setminus S_3}(z), Z_{T \setminus S_4}(z)\)</span></p></li>
+<li><p>Verifier 计算</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ F &amp; = Z_{T \setminus S_1}(z) \cdot C_g + \beta \cdot Z_{T \setminus S_2}(z) \cdot C_h + \beta^2 \cdot Z_{T \setminus S_3}(z) \cdot C_S  +  \beta^3 \cdot Z_{T \setminus S_4}(z) \cdot C_D \\
+ &amp; \quad - (Z_{T \setminus S_1}(z) \cdot g^*(z) + \beta \cdot Z_{T \setminus S_2}(z) \cdot h^*(z) + \beta^2 \cdot Z_{T \setminus S_3}(z) \cdot S^*(z)  +  \beta^3 \cdot Z_{T \setminus S_4}(z) \cdot D^*(z)) \cdot [1]_1 \\
+ &amp; \quad - Z_T(z) \cdot C_{q_m}
+\end{align}
+\end{split}\]</div>
+<ol class="arabic simple" start="9">
+<li><p>Verifier 验证</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+e(F + z \cdot C_{q_L}, [1]_2) \stackrel{?}{=} e(C_{q_L}, [\tau]_2)
+\]</div>
+</section>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[EG25] Eagen, Liam, and Ariel Gabizon. “MERCURY: A multilinear Polynomial Commitment Scheme with constant proof size and no prover FFTs.” Cryptology ePrint Archive (2025). <a class="reference external" href="https://eprint.iacr.org/2025/385">https://eprint.iacr.org/2025/385</a></p></li>
+<li><p>[BDFG20] Boneh, Dan, Justin Drake, Ben Fisch, and Ariel Gabizon. “Efficient polynomial commitment schemes for multiple points and polynomials.” <em>Cryptology ePrint Archive</em> (2020). <a class="reference external" href="https://eprint.iacr.org/2020/081">https://eprint.iacr.org/2020/081</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./mercury"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mercury-01.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Mercury 笔记：实现常数证明尺寸</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../reductions/barrett.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Barrett Reduction</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">内积证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">分解正确</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degree-bound">Degree bound</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">聚合多个多项式在多点的打开证明</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit">Commit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation">Evaluation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">公共输入</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#witness">Witness</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-1">Round 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-2">Round 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-3">Round 3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-4">Round 4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-5">Round 5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#round-6">Round 6</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">证明表示</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

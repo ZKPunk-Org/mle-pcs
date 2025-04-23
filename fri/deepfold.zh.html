@@ -1,0 +1,1064 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DeepFold 笔记：协议概览 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/deepfold.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notes on FRI-Binius (Part I): Binary Towers" href="../fri-binius/binius-01.zh.html" />
+    <link rel="prev" title="WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification" href="whir.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/deepfold.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/deepfold.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>DeepFold 笔记：协议概览</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep">DEEP 方法：从唯一解码到列表解码</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">确保 DEEP 方法求值的正确性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">DeepFold 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepfold-sumcheck">DeepFold 与 sumcheck 的联系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="deepfold">
+<h1>DeepFold 笔记：协议概览<a class="headerlink" href="#deepfold" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>本篇文章主要介绍 DeepFold 协议 [GLHQTZ24] 的主要思想。DeepFold 协议是一个针对多元线性多项式的承诺方案(polynomial commitment scheme, PCS) ，其结合了 DEEP-FRI [BGKS20] 和 BaseFold [ZCF24] 的思想。BaseFold 协议 [ZCF24] 也是一个针对多元线性多项式的 PCS，其结合了 FRI 协议和 sumcheck 协议，不过在其原始论文中，其限制在 unique decoding 下，如果能将其优化到在 list decoding 下，那么在达到相同的安全参数 <span class="math notranslate nohighlight">\(\lambda\)</span> 下， verifier 进行 query 的数量就能够变得更少，这样也能减少 verifier 的计算量和证明的大小。DeepFold 协议就采取了 DEEP-FRI 中的 DEEP 方法来实现这一点。不过在 [H24] 中，Haböck 证明了针对 Reed-Solomon 编码的 BaseFold 协议在 list decoding 下的安全性。另一方面，STIR 协议 [ACFY24a] 相比 DEEP-FRI 协议有更少的 query 数量，结合 STIR 协议和 BaseFold 协议得到的 WHIR 协议 [ACFY24b] ，相比 DeepFold 协议能实现更少的 query 数量，不过目前还没有严格证明其在 list decoding 下的安全性。</p>
+<section id="deep">
+<h2>DEEP 方法：从唯一解码到列表解码<a class="headerlink" href="#deep" title="Link to this heading">#</a></h2>
+<p>首先，回顾下 BaseFold 协议。以一个三元(设 <span class="math notranslate nohighlight">\(\mu = 3\)</span> )线性多项式为例，设</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_1, X_2, X_3) = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + a_4 X_3 + a_5 X_1X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3
+\]</div>
+<p>其对应的单变量多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = a_0 + a_1 X + a_2 X^2 + a_3 X^3 + a_4 X^4 + a_5 X^5 + a_6 X^6 + a_7 X^7
+\]</div>
+<p><span class="math notranslate nohighlight">\(f\)</span>  与 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在 [GLHQTZ24] 论文中被称为互为 <em>twin polynomials</em> ，它们共享相同的系数 <span class="math notranslate nohighlight">\(\vec{a} = (a_0, a_1, \cdots, a_7)\)</span> 。假设查询的点为 <span class="math notranslate nohighlight">\(\vec{z} = \{z_1, z_2, z_3\}\)</span> ，prover 要承诺 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在该点的值为 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{z})\)</span> 。BaseFold 协议先将承诺的值 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{z})\)</span> 转换为在一个 hypercube <span class="math notranslate nohighlight">\(\{0,1\}^3\)</span> 上的求和形式，即</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{z}) = \sum_{\vec{b} \in \{0,1\}^3} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, \vec{z}) \tag{1}
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\tilde{eq}(\vec{b}, \vec{z}) = \prod_{i = 1}^3((1 - \vec{b}[i])(1 - \vec{z}[i]) + \vec{b}[i] \cdot \vec{z}[i])\)</span> 。要证明 <span class="math notranslate nohighlight">\((1)\)</span> 式正确，可以用 sumcheck 协议，不过在 sumcheck 协议的最后一步会要求得到 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在一个随机点的值 <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span> 。该点的值可以通过对 <span class="math notranslate nohighlight">\(f\)</span> 进行 FRI 协议得到。对于诚实的 prover，可以用 Merkle 树来承诺一个向量 <span class="math notranslate nohighlight">\(\vec{v} = f^{(0)}(X)|_{L_0} \in \mathrm{RS}[\mathbb{F}, L_0, \rho]\)</span> ，其中 <span class="math notranslate nohighlight">\(f^{(0)}(X) = f(X)\)</span> ，码率 <span class="math notranslate nohighlight">\(\rho = 2^{3} / |L_0|\)</span> ，求值 domain  <span class="math notranslate nohighlight">\(L_{i + 1} = \{x^2: x \in L_i\}\)</span> 。将 <span class="math notranslate nohighlight">\(f^{(0)}(X)\)</span> 表示成偶数项和奇数项多项式</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(0)}(X) &amp; = f_E^{(1)}(X^2) + X \cdot f_O^{(1)}(X^2) \\
+    &amp; = (a_0 + a_2 X^2 + a_4 X^4 + a_6 X^6) + X \cdot (a_1 + a_3 X^2 + a_5 X^4 + a_7 X^6)
+\end{aligned}
+\end{split}\]</div>
+<p>再用和 sumcheck 同样的随机数 <span class="math notranslate nohighlight">\(r_1 \in \mathbb{F}\)</span> 对 <span class="math notranslate nohighlight">\(f_E^{(1)}\)</span> 和 <span class="math notranslate nohighlight">\(f_O^{(1)}\)</span> 进行折叠得到新的多项式 <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(1)}(X) &amp; = f_E^{(1)}(X) + r_1 \cdot f_O^{(1)}(X) \\
+    &amp; = (a_0 + a_2 X + a_4 X^2 + a_6 X^3) + r_1 \cdot (a_1 + a_3 X + a_5 X^2 + a_7 X^3)
+\end{aligned}
+\end{split}\]</div>
+<p>可以发现 <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span> 对应的多元线性多项式就为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \tilde{f}(r_1, X_2, X_3) &amp; = a_0 + a_1 r_1 + a_2 X_2 + a_3 \cdot r_1 X_2 + a_4 X_3 + a_5 \cdot  r_1X_3 + a_6 X_2 X_3 + a_7 \cdot r_1 X_2 X_3 \\
+    &amp; = (a_0 + a_2 X_2 + a_4 X_3 + a_6 X_2X_3) + r_1 \cdot (a_1 + a_3 X_2 + a_5 X_3 + a_7 X_2X_3)
+\end{aligned}
+\end{split}\]</div>
+<p>prover 发送 Merkle 承诺 <span class="math notranslate nohighlight">\(\vec{v}^{(1)} = f^{(1)}|_{L_1}\)</span> 给 verifier 。一般地，继续上述步骤，将 <span class="math notranslate nohighlight">\(f^{(i - 1)}(X)\)</span> 分为奇偶项，</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i - 1)}(X) = f_E^{(i)}(X^2) + X \cdot f_O^{(i)}(X^2) \tag{2}
+\]</div>
+<p>然后用随机数 <span class="math notranslate nohighlight">\(r_i\)</span> 进行折叠，</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(X) = f_E^{(i)}(X) + r_i \cdot f_O^{(i)}(X) \tag{3}
+\]</div>
+<p>prover 发送 Merkle 承诺 <span class="math notranslate nohighlight">\(\vec{v}^{(i)} = f^{(i)}|_{L_i}\)</span> 给 verifier 。在 FRI 协议的最后一步，就可以得到 <span class="math notranslate nohighlight">\(f^{(3)}(X) = \tilde{f}(r_1, r_2, r_3)\)</span> 是一个常数，刚好就是 sumcheck 最后一步想得到的值，这样同步进行 sumcheck 协议与 FRI 协议就完成了多元线性多项式的承诺，这也就是 BaseFold 协议的思想。</p>
+<p>可以发现，在 BaseFold 协议中，FRI 协议的作用除了其协议本身的作用，即确保 <span class="math notranslate nohighlight">\(\vec{v}\)</span> 距离对应的 RS 编码空间 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, L_0, \rho]\)</span> 有 <span class="math notranslate nohighlight">\(\Delta\)</span> 那么近之外，还担任着提供 <span class="math notranslate nohighlight">\(f^{(3)}\)</span> 的值，来确保 <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span> 的正确性。在 [GLHQTZ24] 中提到，原始的 FRI 协议只要求提供的向量 <span class="math notranslate nohighlight">\(\vec{v}\)</span> 距离某些 RS 码比较近，但在第 <span class="math notranslate nohighlight">\(i\)</span> 轮中，并没有特别要求 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 应该距离哪些码比较近。如果是在唯一解码下，在第 <span class="math notranslate nohighlight">\(i\)</span> 轮最多有一个码 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 距离对应的 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 比较近。如果是列表解码，就意味着可以有多个码 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 距离 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 比较近，作恶的 prover 可以选择 <span class="math notranslate nohighlight">\(f^{(i)^{'}}\)</span> 来进行协议，也能通过后续的检查，在最后一轮得到的就是 <span class="math notranslate nohighlight">\(f^{(3)^{'}}\)</span> ，提供的就不是一个正确的值。</p>
+<p><img alt="" src="../_images/deepfold-list-decoding.svg" /></p>
+<p>因此现在需要一个方法来确保在列表解码下保证 <span class="math notranslate nohighlight">\(f^{(\mu)} = f^{(3)}\)</span> 的正确性，也就是在第 <span class="math notranslate nohighlight">\(i\)</span> 轮，要确保距离 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 有 <span class="math notranslate nohighlight">\(\Delta\)</span> 近的只能是 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> ，<span class="math notranslate nohighlight">\(f^{(i)}\)</span> 对应的才是正确的多元多项式 <span class="math notranslate nohighlight">\(\tilde{f}(r_1, \ldots, r_i, X_{i + 1}, \ldots, X_{\mu})\)</span> 。DeepFold 协议使用了 DEEP-FRI 协议 [BGKS20] 中的 DEEP (Domain Extending for Eliminating Pretenders) 技巧来解决这个问题。在第 <span class="math notranslate nohighlight">\(i\)</span> 轮，从 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中选取随机数 <span class="math notranslate nohighlight">\(\alpha_i\)</span>，而不是在 <span class="math notranslate nohighlight">\(L_i\)</span> 中选取。若 prover 向 verifier 发送两个值 <span class="math notranslate nohighlight">\(f^{(i - 1)}(\pm \alpha_i)\)</span> ，那么 verifier 可以自己计算出 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 的值。由于</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}_E(X^2) = \frac{f^{(i - 1)}(X) + f^{(i - 1)}(- X)}{2}, \quad f^{(i)}_O(X^2) = \frac{f^{(i - 1)}(X) - f^{(i - 1)}(- X)}{2X}
+\]</div>
+<p>因此</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(i)}(X^2) &amp; = f^{(i)}_E(X^2) + r_i \cdot f^{(i)}_O(X^2) \\
+    &amp; = \frac{f^{(i - 1)}(X) + f^{(i - 1)}(- X)}{2} + r_i \cdot \frac{f^{(i - 1)}(X) - f^{(i - 1)}(- X)}{2X}
+\end{aligned}
+\end{split}\]</div>
+<p>代入 <span class="math notranslate nohighlight">\(X = \alpha_i\)</span> 就可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(\alpha_i^2) = \frac{f^{(i - 1)}(\alpha_i) + f^{(i - 1)}(- \alpha_i)}{2} + r_i \cdot \frac{f^{(i - 1)}(\alpha_i) - f^{(i - 1)}(- \alpha_i)}{2 \cdot \alpha_i}
+\]</div>
+<p>verifier 能根据上式计算出 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 的值。由于 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 是从整个 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中选取的随机数，那么在列表解码下，以极大的概率，不会在 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta\)</span> 范围内选到有两个不同的多项式 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 满足在 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 处的值相等，这样就通过 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 的选取限制了列表解码选到的只能是唯一的多项式 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 了。</p>
+<p>这里解释下为什么以极大概率只能有唯一的多项式 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 满足在 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 处的值相等。假设有两个不同的多项式 <span class="math notranslate nohighlight">\(f_1^{(i)}\)</span> 与 <span class="math notranslate nohighlight">\(f_2^{(i)}\)</span> 都在一个随机点 <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span> 处的值相同，即 <span class="math notranslate nohighlight">\(f_1^{(i)}(\alpha) = f_2^{(i)}(\alpha)\)</span> ，同时它们都在 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta\)</span> 范围内，设 <span class="math notranslate nohighlight">\(|\vec{v}^{(i)}| = n\)</span> ， <span class="math notranslate nohighlight">\(\Delta = 1 - \rho - \varepsilon\)</span> ，<span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta\)</span> 范围内的码字不超过 <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> 个码字，那么根据 [BGKS20] 中的猜想知 <span class="math notranslate nohighlight">\(|\mathcal{L}| \le \mathrm{poly}(n)\)</span> 。由于 <span class="math notranslate nohighlight">\(f_1^{(i)}(\alpha) = f_2^{(i)}(\alpha)\)</span> ，那么多项式 <span class="math notranslate nohighlight">\(f_1^{(i)} - f_2^{(i)}\)</span> 在 <span class="math notranslate nohighlight">\(\alpha\)</span> 处的值为 <span class="math notranslate nohighlight">\(0\)</span> ，而 <span class="math notranslate nohighlight">\(f_1^{(i)}\)</span> 和 <span class="math notranslate nohighlight">\(f_2^{(i)}\)</span> 的多项式次数不会超过 <span class="math notranslate nohighlight">\(n\)</span> ，因此 <span class="math notranslate nohighlight">\(f_1^{(i)} - f_2^{(i)}\)</span> 的次数也不会超过 <span class="math notranslate nohighlight">\(n\)</span> ，在 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 中最多有 <span class="math notranslate nohighlight">\(n\)</span> 个零点。由于 <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span> ，因此这样的 <span class="math notranslate nohighlight">\(f_1^{(i)} - f_2^{(i)}\)</span> 在 <span class="math notranslate nohighlight">\(\alpha\)</span> 点为 <span class="math notranslate nohighlight">\(0\)</span> 的概率不会超过 <span class="math notranslate nohighlight">\(n / |\mathbb{F}|\)</span> 。在 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta\)</span> 范围内选取不同的 <span class="math notranslate nohighlight">\(f_1^{(i)}\)</span> 与 <span class="math notranslate nohighlight">\(f_2^{(i)}\)</span> 的取法有 <span class="math notranslate nohighlight">\(\binom{|\mathcal{L}|}{2}\)</span> 种，因此整体的概率不会超过 <span class="math notranslate nohighlight">\(n \cdot \binom{|\mathcal{L}|}{2} / |\mathbb{F}|\)</span> ，<span class="math notranslate nohighlight">\(|\mathbb{F}|\)</span> 足够的大，这个概率就非常小。因此对于 <span class="math notranslate nohighlight">\(\alpha_i^2\)</span> 也是一样的，以极大概率只有一个多项式 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 满足在 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 处的值相等。</p>
+<p>现在通过 DEEP 的技巧就能将列表解码转换成唯一解码了，解决了列表解码下可能出现 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta\)</span> 范围内有多个多项式，而 prover 可以选取不同的多项式导致 <span class="math notranslate nohighlight">\(f^{(\mu)}\)</span> 不一致的问题。现在剩下一个问题是要让 verifier 在每一轮验证 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 值的正确性。</p>
+</section>
+<section id="id1">
+<h2>确保 DEEP 方法求值的正确性<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>[GLHQTZ24] 论文中提到了在 DEEP-FRI 论文 [BGKS20] 中可以使用 quotient 方法来验证 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 的正确性。根据折叠关系 <span class="math notranslate nohighlight">\((3)\)</span> 式，</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(X) = f_E^{(i)}(X) + r_i \cdot f_O^{(i)}(X)
+\]</div>
+<p>可以构造出新的形式，即</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(X) = \frac{(f_E^{(i)}(X) + r_i \cdot f_O^{(i)}(X)) - (f_E^{(i)}(\alpha_i^2) + r_i \cdot f_O^{(i)}(\alpha_i^2))}{X - \alpha_i^2} \tag{4}
+\]</div>
+<p>如果 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 是正确的，那么上面新构造的 <span class="math notranslate nohighlight">\(f^{(i)}(X)\)</span> 就是一个多项式，这样就将验证 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 正确性的问题转换成了关于 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 的 IOPP 问题。不过，该方法并不适用在现在多元线性多项式的 PCS 方案中，原因是通过 <span class="math notranslate nohighlight">\((4)\)</span> 式的方式虽然能确保每一轮 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 的正确性，但是协议进行到最后得到的 <span class="math notranslate nohighlight">\(f^{(\mu)}\)</span> 并不与 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{r})\)</span> 相等。</p>
+<p>DeepFold 协议中给出了一个新的方法来确保在这些点处 <span class="math notranslate nohighlight">\(\{\alpha_i\}\)</span> 的正确性。下面还是以 <span class="math notranslate nohighlight">\(\mu = 3\)</span> 的情况来说明该方法。假设现在 verifier 在第 <span class="math notranslate nohighlight">\(i = 1\)</span> 轮选取了随机数 <span class="math notranslate nohighlight">\(\alpha_1 \leftarrow \$ \mathbb{F}\)</span> ，现在 verifier 想要确保 <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> 的正确性。首先 verifier 可以向 prover 查询 <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1)\)</span> 的值，代入 <span class="math notranslate nohighlight">\(f(X)\)</span> 的表达式可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(0)}(\pm \alpha_1) &amp; = a_0 + a_1 \cdot (\pm \alpha_1) + a_2 \cdot (\pm \alpha_1)^2 + a_3 \cdot (\pm \alpha_1)^3 \\
+    &amp; \quad + a_4 \cdot (\pm \alpha_1)^4 + a_5 \cdot (\pm \alpha_1)^5 + a_6 \cdot (\pm \alpha_1)^6 + a_7 \cdot (\pm \alpha_1)^7 \\
+    &amp; = a_0 + a_1 \cdot (\pm \alpha_1) + a_2 \cdot \alpha_1^2 + a_3 \cdot (\pm \alpha_1)\cdot \alpha_1^2 \\
+    &amp; \quad + a_4 \cdot \alpha_1^4 + a_5 \cdot (\pm \alpha_1) \cdot \alpha_1^4 + a_6 \cdot \alpha_1^2 \cdot \alpha_1^4 + a_7 \cdot (\pm \alpha_1) \cdot \alpha_1^2 \cdot \alpha_1^4
+\end{aligned}
+\end{split}\]</div>
+<p>其正好对应多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_1, X_2, X_3)\)</span> 在点 <span class="math notranslate nohighlight">\((\pm \alpha_1, \alpha_1^2, \alpha_1^4)\)</span> 处的值，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \tilde{f}(\pm \alpha_1, \alpha_1^2, \alpha_1^4)  &amp; = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + a_4 X_3 + a_5 X_1X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3 \\
+    &amp; = a_0 + a_1 \cdot (\pm \alpha_1) + a_2 \cdot \alpha_1^2 + a_3 \cdot (\pm \alpha_1)\cdot \alpha_1^2 \\
+    &amp; \quad + a_4 \cdot \alpha_1^4 + a_5 \cdot (\pm \alpha_1) \cdot \alpha_1^4 + a_6 \cdot \alpha_1^2 \cdot \alpha_1^4 + a_7 \cdot (\pm \alpha_1) \cdot \alpha_1^2 \cdot \alpha_1^4
+\end{aligned}
+\end{split}\]</div>
+<p>因此 <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1) = \tilde{f}(\pm \alpha_1, \alpha_1^2, \alpha_1^4)\)</span> 。verifier 拿到 <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1)\)</span> 后可以自己计算出 <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> ，即通过下面这个式子进行计算</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(\alpha_i^2) = \frac{f^{(i - 1)}(\alpha_i) + f^{(i - 1)}(- \alpha_i)}{2} + r_i \cdot \frac{f^{(i - 1)}(\alpha_i) - f^{(i - 1)}(- \alpha_i)}{2 \cdot \alpha_i} \tag{5}
+\]</div>
+<p>与上面推导 <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1)\)</span> 类似，此时得到的 <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> 与对应的多元线性多项式的关系应该为：</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(\alpha_1^2) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4) 
+\]</div>
+<p>现在为了确保 <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> 的正确性，verifier 可以向 prover 查询 <span class="math notranslate nohighlight">\(f^{(1)}(-\alpha_1^2)\)</span> ，verifier 通过 <span class="math notranslate nohighlight">\((5)\)</span> 式能自己计算出 <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_1^4)\)</span> ，此时</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(2)}(\alpha_1^4) = \tilde{f}(r_1, r_2, \alpha_1^4) 
+\]</div>
+<p>现在就将 <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> 的正确性转换为了证明 <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_1^4)\)</span> 的正确性。同样地，verifier 向 prover 查询 <span class="math notranslate nohighlight">\(f^{(2)}(-\alpha_1^4)\)</span> ，verifier 能计算出 <span class="math notranslate nohighlight">\(f^{(3)}(\alpha_1^8)\)</span> ，此时其应该等于</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(3)}(\alpha_1^8) = \tilde{f}(r_1, r_2, r_3) 
+\]</div>
+<p>这样 <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_1^4)\)</span> 的正确性最后转换为 <span class="math notranslate nohighlight">\(f^{(3)}(\alpha_1^8)\)</span> 值的正确性，而其应该等于 <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span> ，这恰好是在 FRI 的最后一步会得到的值。</p>
+<p><img alt="" src="../_images/deepfold-correctness.svg" /></p>
+<p>通过上述过程也能发现，如果 <span class="math notranslate nohighlight">\(i \neq 1\)</span> ，一般地，在第 <span class="math notranslate nohighlight">\(i\)</span> 轮提供的 <span class="math notranslate nohighlight">\(f^{(i-1)}(\pm \alpha_i)\)</span> 的值的正确性，转换为验证 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 的正确性，通过 prover 额外发送 <span class="math notranslate nohighlight">\(f^{(i)}(-\alpha_i^2)\)</span> ，转换为验证 <span class="math notranslate nohighlight">\(f^{(i + 1)}(\alpha_i^4)\)</span> ，直到最后都转换为验证 <span class="math notranslate nohighlight">\(f^{(\mu)} = \tilde{f}(r_1, r_2, \ldots, r_{\mu})\)</span> 的正确性，这正好是 FRI 协议所提供的。</p>
+</section>
+<section id="id2">
+<h2>DeepFold 协议<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>总结下上面 DEEP 方法的介绍，为了能避免在 list decoding 下，作恶的 prover 可能选取在 <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> 的 <span class="math notranslate nohighlight">\(\Delta\)</span> 范围内错误的多项式 <span class="math notranslate nohighlight">\(f^{(i)'}\)</span> 来通过验证， verifier 在每一轮中都在 <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> 的范围内选取 <span class="math notranslate nohighlight">\(\alpha_i\)</span> ，迫使 prover 只能提供唯一的多项式 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> ，使其在 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 处的值是正确的。为了验证 <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> 处值的正确性，通过 prover 提供 <span class="math notranslate nohighlight">\(f^{(i)}(-\alpha_i^2)\)</span> ，verifier 自行计算 <span class="math notranslate nohighlight">\(f^{(i + 1)}(\alpha_i^4)\)</span> ，直到最后转换为验证 <span class="math notranslate nohighlight">\(f^{(\mu)} = \tilde{f}(r_1, \ldots, r_{\mu})\)</span> 的正确性。下面以三元线性多项式的 PCS 为例，完整走一遍 DeepFold 协议 [GLHQTZ24]，尽管协议流程步骤比较多，但核心思想还是上面提到的两点。</p>
+<p>在对 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 进行承诺阶段，prover 发送给 verifier 的多项式承诺为 <span class="math notranslate nohighlight">\(\mathcal{C} = \langle rt_0, \alpha, c \rangle\)</span> 。</p>
+<ol class="arabic simple">
+<li><p>prover 计算 <span class="math notranslate nohighlight">\(\vec{v} = f^{(0)}|_{L_0}\)</span> ，并用 Merkle 树承诺该向量，也就是将 <span class="math notranslate nohighlight">\(\mathsf{MT.Commit}(\vec{v}) \rightarrow rt_0\)</span> 发送给 verifier。</p></li>
+<li><p>verifier 发送一个随机点 <span class="math notranslate nohighlight">\(\alpha \stackrel{\$}{\leftarrow}\mathbb{F}\)</span> 。</p></li>
+<li><p>prover 计算 <span class="math notranslate nohighlight">\(c := f^{(0)}(\alpha)\)</span> 并将 <span class="math notranslate nohighlight">\(c\)</span> 发送给 verifier 。</p></li>
+</ol>
+<p>prover 想向 verifier 证明的是: 在查询点 <span class="math notranslate nohighlight">\(\vec{z} = \{z_1, z_2, z_3\}\)</span> 处 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span> 。同时 verifier 有 prover 在多项式承诺阶段接收到的 <span class="math notranslate nohighlight">\(\mathcal{C} = \langle rt_0, \alpha, c \rangle\)</span> 。prover 和 verifier 进行如下的协议流程：</p>
+<p><strong>第 1 步</strong>：令 <span class="math notranslate nohighlight">\(A_0:= \{\vec{z}, \vec{\alpha}\}\)</span> ， 其中 <span class="math notranslate nohighlight">\(\vec{\alpha} = (\alpha, \alpha^2, \alpha^4)\)</span> 。</p>
+<p><strong>第 2 步</strong>： 对每一轮 <span class="math notranslate nohighlight">\(i \in [3]\)</span> ，进行如下步骤:</p>
+<p><strong>2.1 当 <span class="math notranslate nohighlight">\(i = 1\)</span> 时</strong></p>
+<p>a. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(\alpha_1 \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> 。令 <span class="math notranslate nohighlight">\(A_0 := \{A_0, \vec{\alpha_1}\} = \{\vec{z}, \vec{\alpha}, \vec{\alpha_1}\}\)</span> ，其中 <span class="math notranslate nohighlight">\(\vec{\alpha_1} = (\alpha_1, \alpha_1^2, \alpha_1^4)\)</span> 。</p>
+<blockquote>
+<div><p>这一步发送的 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 就是使用 DEEP 方法的在 <span class="math notranslate nohighlight">\(L_0\)</span> 之外的随机数，用于限定 prover 只能发送唯一的多项式 <span class="math notranslate nohighlight">\(f^{(1)}\)</span> 。向量 <span class="math notranslate nohighlight">\(\vec{\alpha_1} = (\alpha_1, \alpha_1^2, \alpha_1^4)\)</span> 就是为了后续不断验证 <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4)\)</span> 的正确性。</p>
+</div></blockquote>
+<p>b. 令 <span class="math notranslate nohighlight">\(A_1 := \emptyset\)</span> ，对每一个 <span class="math notranslate nohighlight">\(\vec{\omega} \in A_0 = \{\vec{z}, \vec{\alpha}, \vec{\alpha_1}\}\)</span> ，prover 向 verifier 发送多项式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{\vec{z}_{[2:]}} = g_{(z_2, z_3)} := \tilde{f}(X, z_2, z_3) \\
+    &amp; g_{\vec{\alpha}_{[2:]}} =g_{(\alpha^2, \alpha^4)} := \tilde{f}(X, \alpha^2, \alpha^4) \\
+    &amp; g_{\vec{\alpha_1}_{[2:]}} =g_{(\alpha_1^2, \alpha_1^4)} := \tilde{f}(X, \alpha_1^2, \alpha_1^4)
+\end{aligned}
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(A_1 := \{A_1, \vec{w}_{[2:]}\} = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4)\}\)</span> 。</p>
+<blockquote>
+<div><p>这一步中的 <span class="math notranslate nohighlight">\(g(X)\)</span> 多项式就是类似 sumcheck 协议中为了证明求和正确，构造的一元多项式。</p>
+</div></blockquote>
+<p>c. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(r_1 \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> .
+d. prover 计算折叠后的多项式 <span class="math notranslate nohighlight">\(f^{(1)}(X) = f_E^{(1)}(X) + r_1 \cdot f_O^{(1)}(X)\)</span> ，其中 <span class="math notranslate nohighlight">\(f_E^{(1)}(X)\)</span> 与 <span class="math notranslate nohighlight">\(f_O^{(1)}(X)\)</span> 应该满足</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)}(X) = f_E^{(1)}(X^2) + X \cdot f_O^{(1)}(X^2)
+\]</div>
+<blockquote>
+<div><p>满足这个等式的含义是确保 <span class="math notranslate nohighlight">\(f_E^{(1)}(X^2)\)</span> 和 <span class="math notranslate nohighlight">\(f_O^{(1)}(X^2)\)</span> 是 <span class="math notranslate nohighlight">\(f^{(0)}(X)\)</span> 的偶项和奇项函数。</p>
+</div></blockquote>
+<p>e. 令 <span class="math notranslate nohighlight">\(\vec{v}^{(1)} = f^{(1)}|_{L_1}\)</span> ，prover 向 verifier 发送关于向量 <span class="math notranslate nohighlight">\(\vec{v}^{(1)}\)</span> 的 Merkle 树承诺，即 <span class="math notranslate nohighlight">\(\mathsf{MT.Commit}(\vec{v}^{(1)}) \rightarrow rt_1\)</span> 。</p>
+<p><strong>2.2 当 <span class="math notranslate nohighlight">\(i = 2\)</span> 时</strong></p>
+<p>a. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(\alpha_2 \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> 。令 <span class="math notranslate nohighlight">\(A_1 := \{A_1, \vec{\alpha_2}\} = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4), (\alpha_2, \alpha_2^2)\}\)</span> ，其中 <span class="math notranslate nohighlight">\(\vec{\alpha_2} = (\alpha_2, \alpha_2^2)\)</span> 。</p>
+<blockquote>
+<div><p>注意这里 <span class="math notranslate nohighlight">\(A_1\)</span> 中的每个向量的长度此时都变为了 <span class="math notranslate nohighlight">\(2\)</span> 。这里选取的 <span class="math notranslate nohighlight">\(\alpha_2\)</span> 是为了在第 <span class="math notranslate nohighlight">\(2\)</span> 轮时使用 DEEP 方法，限制 prover 只能发送唯一的多项式 <span class="math notranslate nohighlight">\(f^{(2)}(X)\)</span> ，并确保多项式 <span class="math notranslate nohighlight">\(f^{(2)}(X)\)</span> 在点 <span class="math notranslate nohighlight">\(\alpha_2^2\)</span> 满足 <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_2^2) = \tilde{f}(r_1, r_2, \alpha_2^2)\)</span> 。</p>
+</div></blockquote>
+<p>b. 令 <span class="math notranslate nohighlight">\(A_2 := \emptyset\)</span> ，对每一个 <span class="math notranslate nohighlight">\(\vec{\omega} \in A_1 = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4), (\alpha_2, \alpha_2^2)\}\)</span> ，prover 向 verifier 发送多项式：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{\vec{z}_{[2:]}} = g_{(z_3)} := \tilde{f}(r_1, X, z_3) \\
+    &amp; g_{\vec{\alpha}_{[2:]}} =g_{(\alpha^4)} := \tilde{f}(r_1, X, \alpha^4) \\
+    &amp; g_{\vec{\alpha_1}_{[2:]}} =g_{(\alpha_1^4)} := \tilde{f}(r_1, X, \alpha_1^4) \\
+    &amp; g_{\vec{\alpha_2}_{[2:]}} =g_{(\alpha_2^2)} := \tilde{f}(r_1, X, \alpha_2^2)
+\end{aligned}
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(A_2 := \{A_2, \vec{w}_{[2:]}\} = \{(z_3), (\alpha^4), (\alpha_1^4), (\alpha_2^2)\}\)</span> 。</p>
+<p>c. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(r_2 \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> .
+d. prover 计算折叠后的多项式 <span class="math notranslate nohighlight">\(f^{(2)}(X) = f_E^{(2)}(X) + r_2 \cdot f_O^{(2)}(X)\)</span> ，其中 <span class="math notranslate nohighlight">\(f_E^{(2)}(X)\)</span> 与 <span class="math notranslate nohighlight">\(f_O^{(2)}(X)\)</span> 应该满足</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(X) = f_E^{(2)}(X^2) + X \cdot f_O^{(2)}(X^2)
+\]</div>
+<p>e. 令 <span class="math notranslate nohighlight">\(\vec{v}^{(2)} = f^{(2)}|_{L_2}\)</span> ，prover 向 verifier 发送关于向量 <span class="math notranslate nohighlight">\(\vec{v}^{(2)}\)</span> 的 Merkle 树承诺，即 <span class="math notranslate nohighlight">\(\mathsf{MT.Commit}(\vec{v}^{(2)}) \rightarrow rt_2\)</span> 。</p>
+<p><strong>2.3 当 <span class="math notranslate nohighlight">\(i = 3\)</span> 时</strong></p>
+<p>a. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(\alpha_3 \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> 。令 <span class="math notranslate nohighlight">\(A_2 := \{A_2, \vec{\alpha_3}\} = \{(z_3), (\alpha^4), (\alpha_1^4), (\alpha_2^2), (\alpha_3)\}\)</span> ，其中 <span class="math notranslate nohighlight">\(\vec{\alpha_3} = (\alpha_3)\)</span> 。</p>
+<p>b. prover 向 verifier 发送线性函数</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) := \tilde{f}(r_1, r_2, X)
+\]</div>
+<blockquote>
+<div><p>现在是最后一轮，直接发送函数 <span class="math notranslate nohighlight">\(g(X)\)</span> 。</p>
+</div></blockquote>
+<p>c. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(r_3 \stackrel{\$}{\leftarrow} \mathbb{F}\)</span> .
+d. prover 计算折叠后的多项式 <span class="math notranslate nohighlight">\(f^{(3)}(X) = f_E^{(3)}(X) + r_3 \cdot f_O^{(3)}(X)\)</span> ，其中 <span class="math notranslate nohighlight">\(f_E^{(3)}(X)\)</span> 与 <span class="math notranslate nohighlight">\(f_O^{(3)}(X)\)</span> 应该满足</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(2)}(X) = f_E^{(3)}(X^2) + X \cdot f_O^{(3)}(X^2)
+\]</div>
+<p>e. 令 <span class="math notranslate nohighlight">\(\vec{v}^{(3)} = f^{(3)}|_{L_3}\)</span> ，prover 向 verifier 发送 <span class="math notranslate nohighlight">\(f^{(3)} \in \mathbb{F}\)</span> 。</p>
+<blockquote>
+<div><p>进行到最后一轮时，FRI 最后会折叠成一个常数多项式，因此这里直接发送一个值 <span class="math notranslate nohighlight">\(f^{(3)}\)</span> 。</p>
+</div></blockquote>
+<blockquote>
+<div><p>接下来的步骤是 verifier 进行验证检查的过程。</p>
+</div></blockquote>
+<p><strong>第 3 步</strong>： verifier 检查</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{\vec{z}_{[2:]}}(z_1)  = y \\
+    &amp; g_{\vec{\alpha}_{[2:]}}(\alpha) = c \\
+    &amp; g(r_{3}) = f^{(3)}
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>根据 <span class="math notranslate nohighlight">\(i = 1\)</span> 和 <span class="math notranslate nohighlight">\(i = 3\)</span> 时 <span class="math notranslate nohighlight">\(g(X)\)</span> 函数的构造，对于诚实的 prover ，上面三个等式是成立的，因为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; \begin{aligned}
+&gt;     &amp; g_{\vec{z}_{[2:]}}(z_1) = \tilde{f}(z_1, z_2, z_3) = y\\
+&gt;     &amp; g_{\vec{\alpha}_{[2:]}}(\alpha) = \tilde{f}(\alpha, \alpha^2, \alpha^4) = c\\
+&gt;     &amp; g(r_3) = \tilde{f}(r_1, r_2, r_3) = f^{(3)}
+&gt; \end{aligned}
+&gt; \end{split}\]</div>
+</div></blockquote>
+<p>接着，对每一轮，verifier 还要进行如下检查。</p>
+<p><strong>3.1 当 <span class="math notranslate nohighlight">\(i = 1\)</span> 时</strong></p>
+<p>a. 对每一个 <span class="math notranslate nohighlight">\(\vec{w} \in A_0 = \{\vec{z}, \vec{\alpha}, \vec{\alpha_1}\}\)</span> ，检查 <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_0) = g_{\vec{w}_{[2:]}}(w_1)\)</span> ，即检查</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{(z_1, z_2, z_3)}(r_0) = g_{(z_2, z_3)}(z_1) \\
+    &amp; g_{(\alpha, \alpha^2, \alpha^4)}(r_0) = g_{(\alpha^2, \alpha^4)}(\alpha) \\
+    &amp; g_{(\alpha_1, \alpha_1^2, \alpha_1^4)}(r_0) = g_{(\alpha_1^2, \alpha_1^4)}(\alpha_1)
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>🐞<strong>fix</strong>
+我认为原论文中的第 3 步中</p>
+<blockquote>
+<div><p>For each round <span class="math notranslate nohighlight">\(i\)</span>, where <span class="math notranslate nohighlight">\(i \in [\mu]\)</span> ,
+a. For each <span class="math notranslate nohighlight">\(\vec{w} \in A_{i - 1}\)</span>, if <span class="math notranslate nohighlight">\(i &lt; \mu\)</span>, <span class="math notranslate nohighlight">\(\mathcal{V}\)</span> checks  <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_i) = g_{\vec{w}_{[2:]}}(w_1)\)</span> ; otherwise, <span class="math notranslate nohighlight">\(\mathcal{V}\)</span> checks <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_i) = g(w_1)\)</span> .</p>
+</div></blockquote>
+<p>应该改为，当 <span class="math notranslate nohighlight">\(i &lt; \mu\)</span> 时，verifier 检查 <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_{i - 1}) = g_{\vec{w}_{[2:]}}(w_1)\)</span>，否则检查 <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_{i - 1}) = g(w_1)\)</span> 。 原因是例如当 <span class="math notranslate nohighlight">\(i = 2\)</span> 时，<span class="math notranslate nohighlight">\(g_{\vec{w}}(r_1) = g_{\vec{w}_{[2:]}}(w_1)\)</span> 代入之前 prover 发送的函数构造不成立。</p>
+</div></blockquote>
+<blockquote>
+<div><p>其实上面最后一个式子是不需要检查的，即 <span class="math notranslate nohighlight">\(g_{(\alpha_1, \alpha_1^2, \alpha_1^4)}(r_0) = g_{(\alpha_1^2, \alpha_1^4)}(\alpha_1)\)</span> 。可以验证上面几个式子是正确的，因为代入第 <span class="math notranslate nohighlight">\(1\)</span> 轮 <span class="math notranslate nohighlight">\(g(X)\)</span> 的式子可以得到
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    &amp; g_{(z_1, z_2, z_3)}(r_0) = \tilde{f}(z_1, z_2, z_3) = y &amp; g_{(z_2, z_3)}(z_1) = \tilde{f}(z_1, z_2, z_3)\\
+    &amp; g_{(\alpha, \alpha^2, \alpha^4)}(r_0) = \tilde{f}(\alpha, \alpha^2, \alpha^4) = c &amp; g_{(\alpha^2, \alpha^4)}(\alpha) = \tilde{f}(\alpha, \alpha^2, \alpha^4)
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<p><strong>3.2 当 <span class="math notranslate nohighlight">\(i = 2\)</span> 时</strong></p>
+<p>a. 对每一个 <span class="math notranslate nohighlight">\(\vec{w} \in A_1 = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4), (\alpha_2, \alpha_2^2)\}\)</span> ，检查 <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_1) = g_{\vec{w}_{[2:]}}(w_1)\)</span> ，即检查</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{(z_2, z_3)}(r_1) = g_{(z_3)}(z_2) \\
+    &amp; g_{(\alpha^2, \alpha^4)}(r_1) = g_{(\alpha^4)}(\alpha^2) \\
+    &amp; g_{(\alpha_1^2, \alpha_1^4)}(r_1) = g_{(\alpha_1^4)}(\alpha_1^2) \\
+    &amp; g_{(\alpha_2, \alpha_2^2)}(r_1) = g_{(\alpha_2^2)}(\alpha_2)
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>最后一个式子并不需要检查 <span class="math notranslate nohighlight">\(g_{(\alpha_2, \alpha_2^2)}(r_1) = g_{(\alpha_2^2)}(\alpha_2)\)</span> 。 可以验证上面几个式子是成立的，因为代入第 <span class="math notranslate nohighlight">\(1,2\)</span> 轮 <span class="math notranslate nohighlight">\(g(X)\)</span> 的式子可以得到
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    &amp; g_{(z_2, z_3)}(r_1) = \tilde{f}(r_1, z_2, z_3) &amp;  g_{(z_3)}(z_2) = \tilde{f}(r_1, z_2, z_3)\\
+    &amp; g_{(\alpha^2, \alpha^4)}(r_1) = \tilde{f}(r_1, \alpha^2, \alpha^4) &amp; g_{(\alpha^4)}(\alpha^2) = \tilde{f}(r_1, \alpha^2, \alpha^4)\\
+    &amp; g_{(\alpha_1^2, \alpha_1^4)}(r_1) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4) &amp; g_{(\alpha_1^4)}(\alpha_1^2) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4) 
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<p><strong>3.2 当 <span class="math notranslate nohighlight">\(i = 3\)</span> 时</strong></p>
+<p>a. 对每一个 <span class="math notranslate nohighlight">\(\vec{w} \in A_2 = \{(z_3), (\alpha^4), (\alpha_1^4), (\alpha_2^2), (\alpha_3)\}\)</span> ，检查 <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_2) = g(w_1)\)</span> ，即检查</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{(z_3)}(r_2) = g(z_3) \\
+    &amp; g_{(\alpha^4)}(r_2) = g(\alpha^4) \\
+    &amp; g_{(\alpha_1^4)}(r_2) = g(\alpha_1^4) \\
+    &amp; g_{(\alpha_2^2)}(r_2) = g(\alpha_2^2) \\
+     &amp; g_{(\alpha_3)}(r_2) = g(\alpha_3) 
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>同样地，上面最后一个式子不需要进行检查，即检查 <span class="math notranslate nohighlight">\(g_{(\alpha_3)}(r_2) = g(\alpha_3)\)</span>  。可以验证上面 <span class="math notranslate nohighlight">\(4\)</span> 个式子是成立的，因为代入第 <span class="math notranslate nohighlight">\(2,3\)</span> 轮 <span class="math notranslate nohighlight">\(g(X)\)</span> 的式子可以得到
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    &amp; g_{(z_3)}(r_2) = \tilde{f}(r_1, r_2, z_3) &amp;  g(z_3) = \tilde{f}(r_1, r_2, z_3)\\
+    &amp; g_{(\alpha^4)}(r_2) = \tilde{f}(r_1, r_2, \alpha^4) &amp; g(\alpha^4) = \tilde{f}(r_1, r_2, \alpha^4)\\
+    &amp; g_{(\alpha_1^4)}(r_2) = \tilde{f}(r_1, r_2, \alpha_1^4) &amp; g(\alpha_1^4) = \tilde{f}(r_1, r_2, \alpha_1^4) \\
+    &amp; g_{(\alpha_2^2)}(r_2) = \tilde{f}(r_1, r_2, \alpha_2^2)  &amp; g(\alpha_2^2) = \tilde{f}(r_1, r_2, \alpha_2^2)
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<p><strong>第 4 步</strong>：重复查询 <span class="math notranslate nohighlight">\(s\)</span> 次：
+a. verifier 向 prover 发送 <span class="math notranslate nohighlight">\(\beta_0 \stackrel{\$}{\leftarrow} L_0\)</span> 。对于 <span class="math notranslate nohighlight">\(i \in [3]\)</span> ，定义 <span class="math notranslate nohighlight">\(\beta_i := \beta_{i - 1}^2\)</span> 。
+b. 对于每一个 <span class="math notranslate nohighlight">\(i \in [3]\)</span> ，prover 用 <span class="math notranslate nohighlight">\(\mathsf{MT.Open}\)</span> 打开 <span class="math notranslate nohighlight">\(f^{(i - 1)}(\beta_{i - 1})\)</span> 以及 <span class="math notranslate nohighlight">\(f^{(i - 1)}(-\beta_{i - 1})\)</span> 。
+c. verifier 检查 prover 发送的结果是否正确，调用 <span class="math notranslate nohighlight">\(\mathsf{MT.Verify}\)</span> 。
+d. 对于每一个 <span class="math notranslate nohighlight">\(i \in [3]\)</span>，verifier 需要检查下面三个点是否在一条直线上:</p>
+<div class="math notranslate nohighlight">
+\[
+\left(\beta_{i - 1}, f^{(i - 1)}(\beta_{i - 1})\right), \quad \left(-\beta_{i - 1}, f^{(i - 1)}(-\beta_{i - 1})\right), \quad \left(r_i, f^{(i)}(\beta_{i})\right)
+\]</div>
+<blockquote>
+<div><p>这一步 verifier 就是在进行 FRI 折叠的查询，随机检查折叠是否正确，重复查询 <span class="math notranslate nohighlight">\(s\)</span> 次。</p>
+</div></blockquote>
+<p><strong>第 5 步</strong>：如果上面所有的检查都通过，那么 verifier 输出 <span class="math notranslate nohighlight">\(1\)</span> ，表示接受；否则输出 <span class="math notranslate nohighlight">\(0\)</span> ，表示拒绝。</p>
+</section>
+<section id="deepfold-sumcheck">
+<h2>DeepFold 与 sumcheck 的联系<a class="headerlink" href="#deepfold-sumcheck" title="Link to this heading">#</a></h2>
+<p>由于 DEEP-FRI 的引入，DeepFold 整个协议在每一轮中都需要多引入证明多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在一个点处的值正确，依然以 <span class="math notranslate nohighlight">\(n = 3\)</span> 为例，如下图所示，Prover 需要证明值为图中绿色的部分。</p>
+<p><img alt="" src="../_images/deepfold-deep.svg" /></p>
+<p>这些值的证明隐式地调用了 sumcheck 协议，直到都进行到 sumcheck 最后一步，需要获得 <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span> 的值来结束 sumcheck 协议，而这个值由 FRI 协议的最后一步来提供。</p>
+<p>下面以证明 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span> 为例来说明在 DeepFold 协议中类似 sumcheck 的证明过程。这个过程和 Basefold 中调用的 sumcheck 协议有一些区别，如下图所示。</p>
+<p><img alt="" src="../_images/deepfold-sumcheck.svg" /></p>
+<p>可以发现两个协议在构造一元多项式的方式上有所不同，同时 Verifier 检查的式子也有所不同。Basefold 协议中的 sumcheck 协议比较好理解，因为它的求和的形式比较明显。先将 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3)\)</span> 转换为在 boolean hypercube <span class="math notranslate nohighlight">\(\{0,1\}^3\)</span> 上求和，即</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(z_1, z_2, z_3) = \sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}} \sum_{b_1= \{0,1\}} \tilde{f}(b_1, b_2, b_3) \cdot \tilde{eq}((b_1,b_2,b_3), (z_1, z_2, z_3))
+\]</div>
+<p>证明 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span>  就转换为证明</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}} \sum_{b_1= \{0,1\}} \tilde{f}(b_1, b_2, b_3) \cdot \tilde{eq}((b_1,b_2,b_3), (z_1, z_2, z_3)) = y \tag{6}
+\]</div>
+<p>上式是对 <span class="math notranslate nohighlight">\(8\)</span> 个数进行求和的形式，先将 <span class="math notranslate nohighlight">\(8\)</span> 个数求和问题转换为两个 <span class="math notranslate nohighlight">\(4\)</span> 个数求和问题，分解成两个小问题，接着再用随机数 <span class="math notranslate nohighlight">\(r_1\)</span> 将这两个 <span class="math notranslate nohighlight">\(4\)</span> 个数的求和问题转换为一个 <span class="math notranslate nohighlight">\(4\)</span> 个数求和问题，这个过程为：</p>
+<ol class="arabic simple">
+<li><p>split: 求和分解</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; \sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}} \sum_{b_1= \{0,1\}} \tilde{f}(b_1, b_2, b_3) \cdot \tilde{eq}((b_1,b_2,b_3), (z_1, z_2, z_3))  \\
+  =  &amp; \sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(0, b_2, b_3) \cdot \tilde{eq}((0,b_2,b_3), (z_1, z_2, z_3)) \\
+ &amp; + \sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(1, b_2, b_3) \cdot \tilde{eq}((1,b_2,b_3), (z_1, z_2, z_3)) \\  \\
+ := &amp; g_1(0) + g_1(1)
+\end{align}
+\end{split}\]</div>
+<p>因此证明</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}} \sum_{b_1= \{0,1\}} \tilde{f}(b_1, b_2, b_3) \cdot \tilde{eq}((b_1,b_2,b_3), (z_1, z_2, z_3)) = y
+\]</div>
+<p>可以转换为证明</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(0, b_2, b_3) \cdot \tilde{eq}((0,b_2,b_3), (z_1, z_2, z_3)) = g_1(0) \\
+\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(1, b_2, b_3) \cdot \tilde{eq}((1,b_2,b_3), (z_1, z_2, z_3)) = g_1(1)
+\end{align}
+\end{split}\]</div>
+<p>以及证明 split 是正确的，即证明</p>
+<div class="math notranslate nohighlight">
+\[
+g_1(0) + g_1(1) = y
+\]</div>
+<p>总结下将原来的求和问题进行 split 后需要证明 3 项：</p>
+<p>(1) split 分解正确：<span class="math notranslate nohighlight">\(g_1(0) + g_1(1) = y\)</span></p>
+<p>(2) 第一部分求和正确：<span class="math notranslate nohighlight">\(\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(0, b_2, b_3) \cdot \tilde{eq}((0,b_2,b_3), (z_1, z_2, z_3)) = g_1(0)\)</span></p>
+<p>(3) 第二部分求和正确：<span class="math notranslate nohighlight">\(\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(1, b_2, b_3) \cdot \tilde{eq}((1,b_2,b_3), (z_1, z_2, z_3)) = g_1(1)\)</span></p>
+<p>可以发现分解之后，证明 (2) 和 (3) 都相比证明原来的问题 <span class="math notranslate nohighlight">\((6)\)</span> 式规模减半，而且它们都有相同的形式。如果分别再证明 (2) 和 (3) 并不比直接证明 <span class="math notranslate nohighlight">\((6)\)</span> 式更优，若能将 (2) 和 (3) 合并，证明一个规模减半的求和问题就能比直接证明 <span class="math notranslate nohighlight">\((6)\)</span> 式更优了。如何做到这一点呢？好在可以向 Verifer 要一个随机数 <span class="math notranslate nohighlight">\(r_1\)</span> ，将 (2) 和 (3) fold 成一个规模减半的问题。</p>
+<ol class="arabic simple" start="2">
+<li><p>fold：通过随机数将证明 (2) 和 (3) 转换为证明</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(r_1, b_2, b_3) \cdot \tilde{eq}((r_1,b_2,b_3), (z_1, z_2, z_3)) = g_1(r_1) \tag{7}
+\]</div>
+<p>上式相比证明 <span class="math notranslate nohighlight">\((6)\)</span> 式，问题的规模减半了，原来要证明 8 个数求和等于某一个值，现在只需要证明 4 个数求和等于某一个值，而且 <span class="math notranslate nohighlight">\((6)\)</span> 式和 <span class="math notranslate nohighlight">\((7)\)</span> 式证明的求和形式也是一样的。</p>
+<p>至此总结下证明 <span class="math notranslate nohighlight">\((6)\)</span> 式就转换为证明：</p>
+<ol class="arabic simple">
+<li><p>split 正确：<span class="math notranslate nohighlight">\(g_1(0) + g_1(1) = y\)</span></p></li>
+<li><p>规模减半的子问题：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\sum_{b_3 = \{0,1\}}\sum_{b_2= \{0,1\}}  \tilde{f}(r_1, b_2, b_3) \cdot \tilde{eq}((r_1,b_2,b_3), (z_1, z_2, z_3)) = g_1(r_1) 
+\]</div>
+<p>下面就可以对上式继续用 split 以及 fold 的过程，不断将问题的规模减小到一个 Verfier 更容易验证的问题。因此 sumcheck 协议的整个过程可以用这种 split-and-fold 的视角来重新看待，整个流程如下图所示。</p>
+<p><img alt="" src="../_images/deepfold-sumcheck-split-fold.svg" /></p>
+<p>DeepFold 中的 sumcheck 协议，同样也是这种 split-and-fold 的思想来证明 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span> ，不过，其分解的方式与 Basefold 中的 sumcheck 协议有所不同。设</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_1, X_2, X_3) = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + a_4 X_3 + a_5 X_1X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3
+\]</div>
+<p>则上面的求和式可以变为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\tilde{f}(X_1, X_2, X_3)  &amp; = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + a_4 X_3 + a_5 X_1X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3 \\
+ &amp; = (a_0 + a_2 X_2 + a_4 X_3 + a_6 X_2X_3) + X_1 \cdot (a_1X_1 + a_3 X_2 + a_5  X_3 + a_7 X_2 X_3) \\
+&amp; : = \tilde{f}_{even}(X_2, X_3) + X_1 \cdot \tilde{f}_{odd}(X_2, X_3)
+\end{align} \tag{8}
+\end{split}\]</div>
+<p>由于</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(z_1, z_2, z_3) = a_0 + a_1 z_1 + a_2 z_2 + a_3 z_1 z_2 + a_4 z_3 + a_5 z_1z_3 + a_6 z_2 z_3 + a_7 z_1 z_2 z_3
+\]</div>
+<p>那么证明 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span> 就是证明</p>
+<div class="math notranslate nohighlight">
+\[
+a_0 + a_1 z_1 + a_2 z_2 + a_3 z_1 z_2 + a_4 z_3 + a_5 z_1z_3 + a_6 z_2 z_3 + a_7 z_1 z_2 z_3 = y \tag{9}
+\]</div>
+<ol class="arabic simple">
+<li><p>split ：对上面的求和式按照 <span class="math notranslate nohighlight">\((8)\)</span> 式进行分解</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; a_0 + a_1 z_1 + a_2 z_2 + a_3 z_1 z_2 + a_4 z_3 + a_5 z_1z_3 + a_6 z_2 z_3 + a_7 z_1 z_2 z_3  \\
+ = &amp; (a_0 + a_2 z_2 + a_4 z_3 + a_6 z_2z_3) + z_1 \cdot (a_1  + a_3 z_2 + a_5 z_3 + a_7 z_2 z_3)  \\
+=  &amp; \tilde{f}_{even}(z_2, z_3) + z_1 \cdot \tilde{f}_{odd}(z_2, z_3)
+\end{align}
+\end{split}\]</div>
+<p>这样分解之后，证明 <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span> 就转换为证明</p>
+<p>(1) split 分解正确：<span class="math notranslate nohighlight">\(\tilde{f}_{even}(z_2, z_3) + z_1 \cdot \tilde{f}_{odd}(z_2, z_3) = y\)</span></p>
+<p>(2) 第一部分求和正确：<span class="math notranslate nohighlight">\(a_0 + a_2 z_2 + a_4 z_3 + a_6 z_2z_3 = \tilde{f}_{even}(z_2, z_3)\)</span></p>
+<p>(3) 第二部分求和正确：<span class="math notranslate nohighlight">\(a_1  + a_3 z_2 + a_5 z_3 + a_7 z_2 z_3 = \tilde{f}_{odd}(z_2, z_3)\)</span></p>
+<ol class="arabic simple" start="2">
+<li><p>fold：用随机数 <span class="math notranslate nohighlight">\(r_1\)</span> 将证明 (2) 和 (3) 转换为证明</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+(a_0 + r_1 a_1) + (a_2 + r_1 a_3) z_2 + (a_4 + r_1 a_5) z_3 + (a_6 + r_1 a_7) z_2z_3 = \tilde{f}_{even}(z_2, z_3) + r_1 \cdot \tilde{f}_{odd}(z_2, z_3)
+\]</div>
+<p>若令 <span class="math notranslate nohighlight">\(y' = \tilde{f}_{even}(z_2, z_3) + r_1 \cdot \tilde{f}_{odd}(z_2, z_3)\)</span> 以及</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+a_0' = a_0 + r_1 a_1 \quad a_1' = a_2 + r_1 a_3 \quad a_2' = a_4 + r_1 a_5 \quad a_3' = a_6 + r_1 a_7
+\end{align}
+\]</div>
+<p>可以看到证明的问题规模减半，即证明</p>
+<div class="math notranslate nohighlight">
+\[
+a_0' + a_1' z_2 + a_2' z_3 + a_3' z_2z_3 = y'
+\]</div>
+<p>并且该求和形式与 <span class="math notranslate nohighlight">\((9)\)</span> 式有相同形式。</p>
+<p>至此总结下证明 <span class="math notranslate nohighlight">\((9)\)</span> 式转换为证明</p>
+<ol class="arabic simple">
+<li><p>split 证明：<span class="math notranslate nohighlight">\(\tilde{f}_{even}(z_2, z_3) + z_1 \cdot \tilde{f}_{odd}(z_2, z_3) = y\)</span></p></li>
+<li><p>规模减半的子问题：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+(a_0 + r_1 a_1) + (a_2 + r_1 a_3) z_2 + (a_4 + r_1 a_5) z_3 + (a_6 + r_1 a_7) z_2z_3 = \tilde{f}_{even}(z_2, z_3) + r_1 \cdot \tilde{f}_{odd}(z_2, z_3)
+\]</div>
+<p>通过 <span class="math notranslate nohighlight">\(\tilde{f}(X_1, X_2, X_3)\)</span> 的表示形式可以对上面的式子进行化简。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; \tilde{f}_{even}(z_2, z_3) + r_1 \cdot \tilde{f}_{odd}(z_2, z_3)  \\
+ = &amp; (a_0 + a_2 z_2 + a_4 z_3 + a_6 z_2z_3) + r_1 \cdot (a_1  + a_3 z_2 + a_5 z_3 + a_7 z_2 z_3)  \\
+=  &amp; a_0 + a_1 r_1 + a_2 z_2 + a_3 r_1 z_2 + a_4 z_3 + a_5 r_1z_3 + a_6 z_2 z_3 + a_7 r_1 z_2 z_3 \\
+=  &amp; \tilde{f}(r_1, z_2, z_3)
+\end{align}
+\end{split}\]</div>
+<p>令 <span class="math notranslate nohighlight">\(g_1(X) = \tilde{f}(X, z_2, z_3)\)</span> ，则 <span class="math notranslate nohighlight">\(\tilde{f}_{even}(z_2, z_3) + r_1 \cdot \tilde{f}_{odd}(z_2, z_3) = g_1(r_1)\)</span> ，并且可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align} 
+ &amp; \tilde{f}_{even}(z_2, z_3) = g_1(0) \\
+ &amp; \tilde{f}_{odd}(z_2, z_3) = g_1(1) - g_1(0) \\
+ &amp; \tilde{f}_{even}(z_2, z_3) + z_1 \cdot \tilde{f}_{odd}(z_2, z_3) = g_1(0) + z_1(g_1(1) - g_1(0)) = g_1(z_1)
+\end{align}
+\end{split}\]</div>
+<p>那么这个证明可以写为</p>
+<ol class="arabic simple">
+<li><p>split 证明：<span class="math notranslate nohighlight">\(g_1(0) + z_1(g_1(1) - g_1(0)) = y\)</span></p></li>
+<li><p>规模减半的子问题：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+(a_0 + r_1 a_1) + (a_2 + r_1 a_3) z_2 + (a_4 + r_1 a_5) z_3 + (a_6 + r_1 a_7) z_2z_3 = g_1(r_1)
+\]</div>
+<p>接着用同样的方式对上式用 split-and-fold 。DeepFold 协议中的 sumcheck 流程如下图所示。</p>
+<p><img alt="" src="../_images/deepfold-split-fold-deepfold.svg" /></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[GLHQTZ24] Yanpei Guo, Xuanming Liu, Kexi Huang, Wenjie Qu, Tianyang Tao, and Jiaheng Zhang. “DeepFold: Efficient Multilinear Polynomial Commitment from Reed-Solomon Code and Its Application to Zero-knowledge Proofs.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[ACFY24a] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[ACFY24b] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[ZCF24] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. “DEEP-FRI: sampling outside the box improves soundness.” <em>arXiv preprint arXiv:1903.12243</em> (2019).</p></li>
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="whir.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../fri-binius/binius-01.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notes on FRI-Binius (Part I): Binary Towers</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep">DEEP 方法：从唯一解码到列表解码</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">确保 DEEP 方法求值的正确性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">DeepFold 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepfold-sumcheck">DeepFold 与 sumcheck 的联系</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

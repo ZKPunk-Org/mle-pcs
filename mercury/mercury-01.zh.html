@@ -1,0 +1,905 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mercury 笔记：实现常数证明尺寸 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'mercury/mercury-01.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mercury 笔记：对接 KZG" href="mercury-02.zh.html" />
+    <link rel="prev" title="Select SageMath Kernel First" href="../zeromorph/zeromorph_mapping_tutorial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Gemini</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-1.zh.html">Gemini-PCS (Part I)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/Gemini-PCS-2.zh.html">Gemini-PCS (Part II)</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../gemini/hyperkzg-pcs-01.zh.html">HyperKZG</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">KZG</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg_hiding.zh.html">理解 Hiding KZG10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kzg10/kzg%20notes/kzg-extractability-based-on-rom.zh.html">KZG Extractability based on ROM</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyrax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hyrax-pcs/hyrax-01.zh.html">Notes on Hyrax-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Libra</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../libra-pcs/libra-pcs.zh.html">Libra-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Virgo</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../virgo-pcs/virgo-pcs-01.zh.html">Notes on Virgo-PCS</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PH23</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-01.zh.html">缺失的协议 PH23-PCS（一）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-02.zh.html">缺失的协议 PH23-PCS（二）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-zk.zh.html">缺失的协议 PH23-PCS（三）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-01.zh.html">缺失的协议 PH23-PCS（四）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ph23/ph23-pcs-fri-02.zh.html">缺失的协议 PH23-PCS（五）</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Mercury</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Mercury 笔记：实现常数证明尺寸</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mercury-02.zh.html">Mercury 笔记：对接 KZG</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reductions</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reductions/barrett.zh.html">Barrett Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reductions/montgomery.zh.html">Montgomery Reduction</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fmercury/mercury-01.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/mercury/mercury-01.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Mercury 笔记：实现常数证明尺寸</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">多元线性多项式的表示</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">拆分</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">从多元线性多项式到一元多项式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">实现常数证明尺寸</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mercury">
+<h1>Mercury 笔记：实现常数证明尺寸<a class="headerlink" href="#mercury" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>Mercury [EG25] 是一个基于 KZG10 的多元线性多项式承诺方案，即 Prover 向 Verifier 证明一个 <span class="math notranslate nohighlight">\(n\)</span> 元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0,X_1,\ldots,X_{n-1})\)</span> 在某一个公开点 <span class="math notranslate nohighlight">\(\vec{u} = (u_0,u_1,\ldots,u_{n-1})\)</span> 处的取值为 <span class="math notranslate nohighlight">\(v\)</span> 。设 <span class="math notranslate nohighlight">\(N = 2^n\)</span> ，那么 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的大小就为 <span class="math notranslate nohighlight">\(N\)</span> 。对比同样基于 KZG10 的 ph23 [PH23]、zeromorph [BCHO23]、gemini [KT23]方案，mercury 能在不牺牲 Prover 线性 <span class="math notranslate nohighlight">\(O(N)\)</span> 的有限域运算的情况下，达到常数的证明尺寸，而非对数级别的 <span class="math notranslate nohighlight">\(O(\log N)\)</span>。同期的研究工作 SamaritanPCS [GPS25] 也达到了这样的性能。这两个协议在思想上有类似的地方，它们都在基于 pairing 的多元线性多项式承诺方案的研究中取得了显著的突破。本系列文章将详细介绍 mercury 是如何做到这一点的。</p>
+<p>mercury 能做到常数证明尺寸的核心在于其洞见了一元多项式分解与多元线性多项式求值之间的关系，能将一个一元多项式在一个随机点处的求值转换为一个多元线性多项式在一个点处的求值，该求值可以转换为常数证明尺寸的内积证明，而一元多项式的分解证明也只需要常数的证明尺寸。</p>
+<p>mercury 协议的整体思路与 Hyrax [WTSTW16] 协议有一些类似，先将 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在 boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B} = \{0,1\}^n\)</span> 上的 <span class="math notranslate nohighlight">\(N\)</span> 个值排成一个 <span class="math notranslate nohighlight">\(\sqrt{N} \times \sqrt{N}\)</span> 的矩阵，先将这个矩阵一次按列「拍扁」。设 <span class="math notranslate nohighlight">\(b = \sqrt{N}, t = \log b\)</span> ，「拍扁」的动作相当于先代入 <span class="math notranslate nohighlight">\(\vec{u}\)</span> 中前半部分值求和，即先计算 <span class="math notranslate nohighlight">\(\tilde{h}(X_t, \ldots, X_{n - 1}):=\tilde{f}(u_0, \ldots, u_{t - 1}, X_t, \ldots, X_{n - 1})\)</span> ，接着再计算 <span class="math notranslate nohighlight">\(\tilde{h}(u_t, \ldots, u_{n - 1}) = \tilde{f}(u_0, \ldots, u_{t - 1}, u_t, \ldots, u_{n - 1})\)</span> ，证明其等于 <span class="math notranslate nohighlight">\(v\)</span> 。这样分成两部分求和有一个好处，可以将计算的规模从原来的 <span class="math notranslate nohighlight">\(N\)</span> 长变为 <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> 长，Prover 有一些计算复杂度原来是 <span class="math notranslate nohighlight">\(N \log N\)</span> ，现在计算的规模变小后，计算复杂度最多达到 <span class="math notranslate nohighlight">\(\sqrt{N} \log \sqrt{N} = O(N)\)</span> ，这也是 mercury 能保持 Prover 线性 <span class="math notranslate nohighlight">\(O(N)\)</span> 复杂度的一个重要原因。</p>
+<section id="id1">
+<h2>多元线性多项式的表示<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>对于一个多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1,\ldots, X_{n-1})\)</span> ，用其在 boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B}_n = \{0,1\}^n\)</span> 的取值进行表示，</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,\ldots, X_{n-1}) = \sum_{i=0}^{2^n - 1} f_i \cdot \tilde{eq}(\mathsf{bits}(i),(X_0, X_1, \ldots, X_{n-1}))
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\mathsf{bits}(i) = (i_0, i_1, \ldots, i_{n-1})\)</span> 是 <span class="math notranslate nohighlight">\(i\)</span> 的二进制表示，<span class="math notranslate nohighlight">\(i_0\)</span> 表示最低位，满足 <span class="math notranslate nohighlight">\(i = \sum_{j = 0}^{n - 1}i_j \cdot 2^j\)</span> 。<span class="math notranslate nohighlight">\(\tilde{eq}(\mathsf{bits}(i),(X_0, X_1, \ldots, X_{n-1}))\)</span> 可以看作是在 <span class="math notranslate nohighlight">\(\mathbf{B} = \{0,1\}^n\)</span> 上的 Lagrange 插值函数，其具体表达式为</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{eq}(\mathsf{bits}(i),(X_0, X_1, \ldots, X_{n-1})) = \prod_{j = 0}^{n-1} ((1- i_j)(1- X_j) + i_j \cdot X_j)
+\]</div>
+<p>当 <span class="math notranslate nohighlight">\((X_0, X_1, \ldots, X_{n-1}) \in \mathbf{B}_n\)</span> 时，若 <span class="math notranslate nohighlight">\(\mathsf{bits}(i) = (X_0, X_1, \ldots, X_{n-1})\)</span> ，那么这两个向量的各个分量都是相等的，因此 <span class="math notranslate nohighlight">\((1- i_j)(1- X_j) + i_j \cdot X_j = 1\)</span> ，最后 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数的计算结果也为 <span class="math notranslate nohighlight">\(1\)</span> 。当 <span class="math notranslate nohighlight">\(\mathsf{bits}(i) \neq (X_0, X_1, \ldots, X_{n-1})\)</span> 时，<span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数的计算结果为 <span class="math notranslate nohighlight">\(0\)</span> 。</p>
+<p>由于 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数实际上是 <span class="math notranslate nohighlight">\(n\)</span> 项连乘，乘积具有结合律，因此是可以对 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数进行分解。设 <span class="math notranslate nohighlight">\(n = 2 \cdot t, b = 2^t = \sqrt{N}\)</span> 。将向量 <span class="math notranslate nohighlight">\(\mathsf{bits}(i)\)</span> 分成等长的两部分，<span class="math notranslate nohighlight">\(\mathsf{bits}(i) = ((i_0,\ldots,i_{t-1}), (i_t,\ldots,i_{n-1}))\)</span> ，同样将  <span class="math notranslate nohighlight">\((X_0, X_1, \ldots, X_{n-1})\)</span> 也分成两部分，<span class="math notranslate nohighlight">\((X_0, X_1, \ldots, X_{n-1}) = ((X_0, \ldots, X_{t-1}), (X_t, \ldots, X_{n-1})) := (\vec{X}_1, \vec{X}_2)\)</span> ，那么</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\tilde{eq}(\mathsf{bits}(i),(X_0, X_1, \ldots, X_{n-1})) &amp; = \prod_{j = 0}^{n-1} ((1- i_j)(1- X_j) + i_j \cdot X_j) \\
+ &amp; = \left(\prod_{j = 0}^{t-1} ((1- i_j)(1- X_j) + i_j \cdot X_j) \right)  \cdot \left(\prod_{j = t}^{n-1} ((1- i_j)(1- X_j) + i_j \cdot X_j) \right)  \\
+ &amp; = \tilde{eq}((i_0,\ldots,i_{t-1}),\vec{X}_1) \cdot \tilde{eq}((i_t,\ldots,i_{n-1}),\vec{X}_2)
+\end{align}
+\end{split}\]</div>
+<p>正因为 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数具有这样的拆分性质，因此我们可以更加方便的将 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的求值也进行拆分。</p>
+</section>
+<section id="id2">
+<h2>拆分<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>现在要证明 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在点 <span class="math notranslate nohighlight">\(\vec{u} = (u_0, u_1, \ldots, u_{n-1})\)</span> 处的值为 <span class="math notranslate nohighlight">\(v\)</span> ，即证明</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0,u_1,\ldots, u_{n-1}) = \sum_{i=0}^{2^n - 1} f_i \cdot \tilde{eq}(\mathsf{bits}(i),(u_0, u_1, \ldots, u_{n-1})) = v \tag{1}
+\]</div>
+<p>这里涉及到 <span class="math notranslate nohighlight">\(N\)</span> 个项的求和，将其分为两个部分进行计算证明。</p>
+<p>将变量 <span class="math notranslate nohighlight">\(\vec{u} = (\vec{u}_1, \vec{u}_2)\)</span> 拆分成两个等长的向量，<span class="math notranslate nohighlight">\(\vec{u}_1 = (u_0,\ldots,u_{t-1}), \vec{u_2} = (u_t,\ldots,u_{n - 1})\)</span> 。另外将 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在 <span class="math notranslate nohighlight">\(\mathbf{B}_n\)</span> 上的取值 <span class="math notranslate nohighlight">\((f_0,f_1, \ldots, f_{2^n - 1})\)</span> 划分成 <span class="math notranslate nohighlight">\(b\)</span> 组，用两个下脚标进行表示</p>
+<div class="math notranslate nohighlight">
+\[
+(f_0,f_1, \ldots, f_{2^n - 1}) = (f_{0,0}, f_{0,1}, \ldots, f_{0,b-1}, \ldots, f_{b-1,0}, \ldots, f_{b-1,b-1})
+\]</div>
+<p>用矩阵排列下表示为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+M_f = \begin{bmatrix}
+ f_{0,0} &amp;  f_{0,1}   &amp; \cdots  &amp; f_{0,b-1} \\
+ f_{1,0} &amp;  f_{1,1}   &amp; \cdots  &amp; f_{1,b-1} \\
+ \vdots &amp;  \vdots   &amp; \  &amp; \vdots  \\
+f_{b-1,0} &amp;  f_{b-1,1}   &amp; \cdots  &amp; f_{b-1,b-1}
+\end{bmatrix}
+\end{split}\]</div>
+<p>那么根据前面介绍的 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数可以进行分解，可以得到</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\tilde{f}(\vec{u}_1, \vec{u}_2)  &amp; = \sum_{i=0}^{2^n - 1} f_i \cdot \tilde{eq}(\mathsf{bits}(i),(\vec{u}_1, \vec{u}_2)) \\
+ &amp; = \sum_{i=0}^{2^t - 1} \sum_{j=0}^{2^t - 1} f_{i,j} \cdot \tilde{eq}((\mathsf{bits}(j),\mathsf{bits}(i)),(\vec{u}_1, \vec{u}_2))\\
+ &amp; = \sum_{i=0}^{2^t - 1} \sum_{j=0}^{2^t - 1} f_{i,j} \cdot \tilde{eq}(\mathsf{bits}(j),\vec{u}_1) \cdot \tilde{eq}(\mathsf{bits}(i),\vec{u}_2)  \\
+ &amp; = \sum_{i=0}^{2^t - 1} \left(\tilde{eq}(\mathsf{bits}(i),\vec{u}_2)  \cdot\left(\sum_{j=0}^{2^t - 1} f_{i,j} \cdot \tilde{eq}(\mathsf{bits}(j),\vec{u}_1) \right) \right)
+\end{align}
+\end{split}\]</div>
+<p>上面的形式用矩阵表示更为直观，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; \tilde{f}(\vec{u}_1, \vec{u}_2)  \\
+&amp; =\begin{bmatrix}
+\tilde{eq}(\mathsf{bits}(0), \vec{u}_2)  &amp; \tilde{eq}(\mathsf{bits}(1), \vec{u}_2)  &amp; \cdots  &amp; \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_2) 
+\end{bmatrix}
+\begin{bmatrix}
+ f_{0,0} &amp;  f_{0,1}   &amp; \cdots  &amp; f_{0,b-1} \\
+ f_{1,0} &amp;  f_{1,1}   &amp; \cdots  &amp; f_{1,b-1} \\
+ \vdots &amp;  \vdots   &amp; \  &amp; \vdots  \\
+f_{b-1,0} &amp;  f_{b-1,1}   &amp; \cdots  &amp; f_{b-1,b-1}
+\end{bmatrix} 
+\begin{bmatrix}
+\tilde{eq}(\mathsf{bits}(0), \vec{u}_1)   \\
+ \tilde{eq}(\mathsf{bits}(1), \vec{u}_1)   \\
+\cdots   \\
+\tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1) 
+\end{bmatrix} \\
+&amp; \stackrel{\triangle}{=}  \vec{v}_2^{\intercal} \cdot (M_f \cdot \vec{v}_1)
+\end{align}
+\end{split}\]</div>
+<p>以 <span class="math notranslate nohighlight">\(n = 2\)</span> 为例，分解过程如下图所示：</p>
+<p><img alt="" src="../_images/mercury-decomposing.svg" /></p>
+<p>要证明 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{u}_1, \vec{u}_2)  = v\)</span> ，可以分成两部分：</p>
+<ol class="arabic simple">
+<li><p>证明 <span class="math notranslate nohighlight">\(M_f \cdot \vec{v}_1 = \vec{b}\)</span> ，对应于先计算一个多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{X}_2) := \tilde{f}(\vec{u}_1, \vec{X}_2)\)</span></p></li>
+<li><p>证明 <span class="math notranslate nohighlight">\(\vec{v}_2^{\intercal} \cdot \vec{b} = v\)</span> ，对应于计算 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = \tilde{f}(\vec{u}_1, \vec{u_2})\)</span> ，证明其结果为 <span class="math notranslate nohighlight">\(v\)</span> 。</p></li>
+</ol>
+<p>至此我们已经将 <span class="math notranslate nohighlight">\((1)\)</span> 中 <span class="math notranslate nohighlight">\(N\)</span> 项的求和转换成了两个计算步骤，先代入 <span class="math notranslate nohighlight">\(\vec{u}_1\)</span> 进行部分求和，再代入 <span class="math notranslate nohighlight">\(\vec{u_2}\)</span> 得到最终的求和结果 <span class="math notranslate nohighlight">\(v\)</span> 。下面先引入多元线性多项式到一元多项式的转换，再借助于一元多项式的承诺方案 KZG10 来进行证明。</p>
+</section>
+<section id="id3">
+<h2>从多元线性多项式到一元多项式<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>对于多元线性多项式</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,\ldots, X_{n-1}) = \sum_{i=0}^{2^n - 1} f_i \cdot \tilde{eq}(\mathsf{bits}(i),(X_0, X_1, \ldots, X_{n-1}))
+\]</div>
+<p>将其在 boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B}_n\)</span> 上的取值 <span class="math notranslate nohighlight">\(f_i\)</span> 直接作为一元多项式的系数，得到其对应的一元多项式为</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = \sum_{i = 0}^{2^n - 1} f_i \cdot X^i
+\]</div>
+<p>对于任意的一个多元线性多项式，都按照这种方式对应到一元多项式，即将多元线性多项式在 boolean hypercube 上的取值直接作为一元多项式的系数。</p>
+<p>依然以 <span class="math notranslate nohighlight">\(n = 2\)</span> 为例，多元线性多项式到一元多项式的转换，可以理解为只是变换了不同的基，多元线性多项式的基为 Lagrange 基，<span class="math notranslate nohighlight">\((\tilde{eq}(\mathsf{bits}(0), \vec{X}), \tilde{eq}(\mathsf{bits}(1), \vec{X}), \tilde{eq}(\mathsf{bits}(2), \vec{X}), \tilde{eq}(\mathsf{bits}(3), \vec{X}))\)</span> ，而一元多项式的基为 <span class="math notranslate nohighlight">\((1, X, X^2, X^3)\)</span> 。</p>
+<p><img alt="" src="../_images/mercury-multi-to-univariate.svg" /></p>
+<p>对于前面提到的 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{X}_2) = \tilde{f}(\vec{u}_1, \vec{X}_2)\)</span> ，其用矩阵表示为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+&amp; \tilde{h}(\vec{X}_2) = \tilde{f}(\vec{u}_1, \vec{X}_2)  \\
+&amp; =\begin{bmatrix}
+\tilde{eq}(\mathsf{bits}(0), \vec{X}_2)  &amp; \tilde{eq}(\mathsf{bits}(1), \vec{X}_2)  &amp; \cdots  &amp; \tilde{eq}(\mathsf{bits}(b-1), \vec{X}_2) 
+\end{bmatrix}
+\begin{bmatrix}
+ f_{0,0} &amp;  f_{0,1}   &amp; \cdots  &amp; f_{0,b-1} \\
+ f_{1,0} &amp;  f_{1,1}   &amp; \cdots  &amp; f_{1,b-1} \\
+ \vdots &amp;  \vdots   &amp; \  &amp; \vdots  \\
+f_{b-1,0} &amp;  f_{b-1,1}   &amp; \cdots  &amp; f_{b-1,b-1}
+\end{bmatrix} 
+\begin{bmatrix}
+\tilde{eq}(\mathsf{bits}(0), \vec{u}_1)   \\
+ \tilde{eq}(\mathsf{bits}(1), \vec{u}_1)   \\
+\cdots   \\
+\tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1) 
+\end{bmatrix} \\
+&amp; = \begin{bmatrix}
+\tilde{eq}(\mathsf{bits}(0), \vec{X}_2)  &amp; \tilde{eq}(\mathsf{bits}(1), \vec{X}_2)  &amp; \cdots  &amp; \tilde{eq}(\mathsf{bits}(b-1), \vec{X}_2) 
+\end{bmatrix}
+\begin{bmatrix}
+ f_{0,0} \cdot \tilde{eq}(\mathsf{bits}(0), \vec{u}_1) + f_{0,1} \cdot \tilde{eq}(\mathsf{bits}(1), \vec{u}_1) + \ldots +  f_{0,b-1} \cdot \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1)\\
+ f_{1,0} \cdot \tilde{eq}(\mathsf{bits}(0), \vec{u}_1) + f_{1,1} \cdot \tilde{eq}(\mathsf{bits}(1), \vec{u}_1) + \ldots +  f_{1,b-1} \cdot \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1) \\
+ \vdots   \\
+f_{b-1,0} \cdot \tilde{eq}(\mathsf{bits}(0), \vec{u}_1) + f_{b-1,1} \cdot \tilde{eq}(\mathsf{bits}(1), \vec{u}_1) + \ldots +  f_{b-1,b-1} \cdot \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1)
+\end{bmatrix}  
+\end{align}
+\end{split}\]</div>
+<p>可以发现右边列向量的每一项其实就是 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{X}_2)\)</span> 在 boolean hypercube <span class="math notranslate nohighlight">\(\mathbf{B}_t = \{0,1\}^t\)</span> 上的取值，对应到一元多项式 <span class="math notranslate nohighlight">\(h(X)\)</span> ，右边列向量的第 <span class="math notranslate nohighlight">\(i\)</span> 行就是 <span class="math notranslate nohighlight">\(h(X)\)</span> 中 <span class="math notranslate nohighlight">\(X^i\)</span> 项前面的系数。</p>
+<div class="math notranslate nohighlight">
+\[
+h(X) = \sum_{i = 0}^{b - 1} \left(\left( \sum_{j = 0}^{b - 1} f_{i,j} \cdot \tilde{eq}(\mathsf{bits}(j), \vec{u}_1)\right) \cdot X^i \right)
+\]</div>
+<p>可以发现 <span class="math notranslate nohighlight">\(h(X)\)</span> 中每一项的系数 <span class="math notranslate nohighlight">\(\sum_{j = 0}^{b - 1} f_{i,j} \cdot \tilde{eq}(\mathsf{bits}(j), \vec{u}_1)\)</span> 也是一个数乘以 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 的形式，其实我们还可以将 <span class="math notranslate nohighlight">\(f_{i,j}\)</span> 作为一元多项式的系数，将 <span class="math notranslate nohighlight">\(M_f\)</span> 矩阵的每一列作为一个一元多项式对应的系数，表示为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; f_0(X) = f_{0,0} + f_{1,0}  X + \ldots + f_{b-1, 0} X^{b-1} \\
+ &amp; f_1(X) = f_{0,1} + f_{1,1}  X + \ldots + f_{b-1, 1} X^{b-1} \\
+ &amp; \qquad \qquad \qquad \qquad \ldots \\
+ &amp; f_{b-1}(X) = f_{0,b-1} + f_{1,b-1}  X + \ldots + f_{b-1, b-1} X^{b-1}
+\end{align}
+\end{split}\]</div>
+<p>将 <span class="math notranslate nohighlight">\(M_f\)</span> 的每一列作为一元多项式的系数的好处是，<span class="math notranslate nohighlight">\(M_f\)</span> 矩阵的第 <span class="math notranslate nohighlight">\(i\)</span> 行的元素对应的正好是 <span class="math notranslate nohighlight">\(X^i\)</span> 的系数，例如矩阵 <span class="math notranslate nohighlight">\(M_f\)</span> 的第 <span class="math notranslate nohighlight">\(1\)</span> 行，其元素为 <span class="math notranslate nohighlight">\((f_{1,0}, f_{1,1}, \ldots, f_{1,b-1})\)</span> ，其分别是 <span class="math notranslate nohighlight">\(f_0(X), f_1(X), \ldots, f_{b-1}(X)\)</span> 中 <span class="math notranslate nohighlight">\(X^1\)</span> 前面的系数。</p>
+<p><span class="math notranslate nohighlight">\(f_i(X)\)</span> 其实也可以看作是对 <span class="math notranslate nohighlight">\(f(X)\)</span> 的一个分解，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+f(X)  &amp; = \sum_{i = 0}^{2^n - 1} f_i \cdot X^i = \sum_{i = 0}^{b - 1} \sum_{j = 0}^{b - 1} f_{i,j} \cdot X^{i \cdot b + j} \\
+ &amp; = \sum_{i = 0}^{b - 1} \sum_{j = 0}^{b - 1} f_{i,j} \cdot (X^{b})^i \cdot X^{j}  \\
+&amp; = \sum_{j = 0}^{b - 1} \sum_{i = 0}^{b - 1} f_{i,j} \cdot (X^{b})^i \cdot X^{j} \\
+&amp; = \sum_{j = 0}^{b - 1} f_j(X^b) \cdot X^j \\
+&amp; = \sum_{i = 0}^{b - 1} f_i(X^b) \cdot X^i
+\end{align}
+\end{split}\]</div>
+<p>即将 <span class="math notranslate nohighlight">\(f(X)\)</span> 分解成 <span class="math notranslate nohighlight">\(b\)</span> 个多项式求和，</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = f_0(X^b) + X \cdot f_1(X^b) + \ldots + X^{b-1} \cdot f_{b-1}(X^b) \tag{2}
+\]</div>
+<p>其实这里对一元多项式的分解与上一小节讲到的对多元多项式求值 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{u}_1,\vec{u}_2)\)</span> 的分解是一致的，多元线性多项式利用了 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 函数的可拆分性，一元多项式中对 <span class="math notranslate nohighlight">\(X^i\)</span> 也可以进行拆分分解。以 <span class="math notranslate nohighlight">\(n = 2\)</span> 为例，对两者进行对比，如下图所示。</p>
+<p><img alt="" src="../_images/mercury-decomposing-univariate.svg" /></p>
+<p>此时 <span class="math notranslate nohighlight">\(h(X)\)</span> 就可以表示为</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+h(X)  &amp; = \sum_{i = 0}^{b - 1} \left(\left( \sum_{j = 0}^{b - 1} f_{i,j} \cdot \tilde{eq}(\mathsf{bits}(j), \vec{u}_1)\right) \cdot X^i \right) \\
+ &amp; = \sum_{j = 0}^{b - 1} \left(\left( \sum_{i = 0}^{b - 1} f_{i,j} \cdot X^i \right) \cdot \tilde{eq}(\mathsf{bits}(j), \vec{u}_1) \right) \\
+ &amp; = \sum_{j = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(j), \vec{u}_1) \cdot f_j(X) \\
+&amp; = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(X)
+\end{align}
+\end{split}\]</div>
+<p>以 <span class="math notranslate nohighlight">\(n = 2\)</span> 为例，下图表示了 <span class="math notranslate nohighlight">\(h(X)\)</span> 的分解过程。</p>
+<p><img alt="" src="../_images/mercury-h.svg" /></p>
+<p>那么 <span class="math notranslate nohighlight">\(h(X)= \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(X)\)</span> 对应的多元线性多项式就是 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{X}) = \tilde{f}(\vec{u}_1, \vec{X})\)</span> 。这就相当于一次性替换了 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 中的前 <span class="math notranslate nohighlight">\(t\)</span> 个变量。那么我们承诺与 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{u}_1, \vec{X})\)</span> 对应的一元多项式 <span class="math notranslate nohighlight">\(\mathsf{cm}(h(X))\)</span> ，再证明 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = v\)</span> 就完成了证明。也就是对应前一小节所说的证明分为两个部分：</p>
+<ol class="arabic simple">
+<li><p>证明 <span class="math notranslate nohighlight">\(M_f \cdot \vec{v}_1 = \vec{b}\)</span> ，对应于先计算一个多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{X}_2) := \tilde{f}(\vec{u}_1, \vec{X}_2)\)</span></p></li>
+<li><p>证明 <span class="math notranslate nohighlight">\(\vec{v}_2^{\intercal} \cdot \vec{b} = v\)</span> ，对应于计算 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = \tilde{f}(\vec{u}_1, \vec{u_2})\)</span> ，证明其结果为 <span class="math notranslate nohighlight">\(v\)</span> 。</p></li>
+</ol>
+<p>第 2 部分其实是证明两个向量的内积，可以转换为内积的证明。</p>
+<p>这样就完成证明了吗？那么怎么实现常数大小的 proof size 呢？这里面其实有一个关键的地方需要证明，那就是 Verifier 要去相信 <span class="math notranslate nohighlight">\(h(X)\)</span> 的构造是正确的，也就是</p>
+<div class="math notranslate nohighlight">
+\[
+h(X)= \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(X) \tag{3}
+\]</div>
+<p>Prover 需要向 Verifier 证明其确实是按照这种方式构造的，而不是任意发送的一个多项式。要证明 <span class="math notranslate nohighlight">\((3)\)</span> 式构造正确，那么 Verifier 可以随机发起一个挑战值 <span class="math notranslate nohighlight">\(r\)</span> ，Prover 要证明</p>
+<div class="math notranslate nohighlight">
+\[
+h(r^b)= \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(r^b) \tag{4}
+\]</div>
+<p><span class="math notranslate nohighlight">\(f_i(r^b)\)</span> 是和 <span class="math notranslate nohighlight">\(f\)</span> 的值相关的，根据 <span class="math notranslate nohighlight">\(f(X)\)</span> 的分解式 <span class="math notranslate nohighlight">\((2)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = f_0(X^b) + X \cdot f_1(X^b) + \ldots + X^{b-1} \cdot f_{b-1}(X^b) ,
+\]</div>
+<p>令 <span class="math notranslate nohighlight">\(\omega^b = 1\)</span> ，可知</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+ &amp; f(r) = f_0(r^b) + r \cdot f_1(r^b) + \ldots + r^{b-1} \cdot f_{b-1}(r^b) \\
+ &amp; f(\omega r) = f_0(r^b) + \omega r \cdot f_1(r^b) + \ldots + (\omega r)^{b-1} \cdot f_{b-1}(r^b)  \\
+ &amp; \ldots \\
+ &amp; f(\omega^{b-1} r) = f_0(r^b) + \omega^{b-1} r \cdot f_1(r^b) + \ldots + (\omega^{b-1} r)^{b-1} \cdot f_{b-1}(r^b)
+\end{align}
+\end{split}\]</div>
+<p>上面相当于是一个有 <span class="math notranslate nohighlight">\(b\)</span> 个未知数 <span class="math notranslate nohighlight">\(f_i(r^b)\)</span> ，以及有 <span class="math notranslate nohighlight">\(b\)</span> 个方程的线性方程组，求解该线性方程组，就可以用 <span class="math notranslate nohighlight">\(\{f(r), f(\omega r), \ldots, f(\omega^{b - 1} r) \}\)</span> 这些值计算得到 <span class="math notranslate nohighlight">\(f_i(r^b)\)</span> 的值。Prover 可以发送 <span class="math notranslate nohighlight">\(h(r^b)\)</span> 以及 <span class="math notranslate nohighlight">\(\{f(r), f(\omega r), \ldots, f(\omega^{b - 1} r) \}\)</span> 这些值及对应的打开证明，让 Verifier 自己计算出 <span class="math notranslate nohighlight">\(f_i(r^b)\)</span> 的值，进而验证 <span class="math notranslate nohighlight">\((4)\)</span> 式是否成立。这种方案的问题是发送的证明大小肯定是 <span class="math notranslate nohighlight">\(O(b)\)</span> 级别的，而不是常数。</p>
+<p>有没有什么方法既可以实现常数大小的证明，又能证明 <span class="math notranslate nohighlight">\((4)\)</span> 式的正确性呢？mercury 巧妙的将证明 <span class="math notranslate nohighlight">\((4)\)</span> 式中一个在一元多项式的取值 <span class="math notranslate nohighlight">\(h(r^b)\)</span> 转换为了证明在一个多元线性多项式处的取值。</p>
+</section>
+<section id="id4">
+<h2>实现常数证明尺寸<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>Prover 的目标是用常数证明尺寸来证明</p>
+<div class="math notranslate nohighlight">
+\[
+h(r^b)= \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(r^b) \tag{4}
+\]</div>
+<p>不妨设 <span class="math notranslate nohighlight">\(\alpha = r^b\)</span> 。</p>
+<p>令 <span class="math notranslate nohighlight">\(g(X)  = f(X) \mod{X^b - \alpha}\)</span> ，记商多项式为 <span class="math notranslate nohighlight">\(q(X)\)</span> ，那么有</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = q(X) \cdot (X^b - \alpha) + g(X) \tag{5}
+\]</div>
+<p>在上式中代入 <span class="math notranslate nohighlight">\(X^b = \alpha\)</span> 的条件，可以得到</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) = f(X) = \sum_{i = 0}^{b - 1} f_i(X^b) \cdot X^i = \sum_{i = 0}^{b - 1} f_i(\alpha) \cdot X^i
+\]</div>
+<p>可以看到 <span class="math notranslate nohighlight">\(g(X)\)</span> 的系数为 <span class="math notranslate nohighlight">\(f_i(\alpha)\)</span> ，与 <span class="math notranslate nohighlight">\(g(X)\)</span> 对应的多元线性多项式就应该为</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{g}(X_0, \ldots , X_{b-1}) = \sum_{i = 0}^{b - 1} f_i(\alpha) \cdot \tilde{eq}(\mathsf{bits}(i), (X_0, \ldots , X_{b-1}))
+\]</div>
+<p>那么 <span class="math notranslate nohighlight">\((4)\)</span> 式也就转换为</p>
+<div class="math notranslate nohighlight">
+\[
+h(\alpha)= \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(\alpha) = \tilde{g}(\vec{u}_1) 
+\]</div>
+<p>此时要证明 <span class="math notranslate nohighlight">\((4)\)</span> 式正确，就转换成了证明</p>
+<div class="math notranslate nohighlight">
+\[
+h(\alpha) = \tilde{g}(\vec{u}_1) \tag{6}
+\]</div>
+<p>以 <span class="math notranslate nohighlight">\(n = 2\)</span> 为例，转换证明的过程如下图所示。</p>
+<p><img alt="" src="../_images/mercury-h-alpha.svg" /></p>
+<p>这样就将在一个一元多项式 <span class="math notranslate nohighlight">\(h(\alpha)\)</span> 处的值转换为了在一个多元线性多项式在某一个点处的值 <span class="math notranslate nohighlight">\(\tilde{g}(\vec{u}_1)\)</span> 。这时我们就需要再证明与 <span class="math notranslate nohighlight">\(\tilde{g}\)</span> 对应的 <span class="math notranslate nohighlight">\(g(X)\)</span> 的构造是正确的，也就是 <span class="math notranslate nohighlight">\((5)\)</span> 式成立，Prover 可以承诺 <span class="math notranslate nohighlight">\(q(X)\)</span> 和 <span class="math notranslate nohighlight">\(g(X)\)</span> ，Verifier 再选取一个随机点 <span class="math notranslate nohighlight">\(\zeta\)</span> ，来验证 <span class="math notranslate nohighlight">\((5)\)</span> 式成立，这只需要常数的证明大小，这就是 mercury 协议能实现常数证明大小的核心。</p>
+<p>另外，为了防止 Prover 作弊，我们还需要限制 <span class="math notranslate nohighlight">\(\deg(g) &lt; b\)</span> 。</p>
+<p>至此，就将上一小节提到的两个证明：</p>
+<ol class="arabic simple">
+<li><p>证明 <span class="math notranslate nohighlight">\(M_f \cdot \vec{v}_1 = \vec{b}\)</span> ，对应于先计算一个多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{X}_2) := \tilde{f}(\vec{u}_1, \vec{X}_2)\)</span></p></li>
+<li><p>证明 <span class="math notranslate nohighlight">\(\vec{v}_2^{\intercal} \cdot \vec{b} = v\)</span> ，对应于计算 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = \tilde{f}(\vec{u}_1, \vec{u_2})\)</span> ，证明其结果为 <span class="math notranslate nohighlight">\(v\)</span> 。</p></li>
+</ol>
+<p>转换为下面四个证明：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f(X) = q(X) \cdot (X^b - \alpha) + g(X)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\deg(g) &lt; b\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tilde{g}(\vec{u}_1) = h(\alpha)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2) = v\)</span></p></li>
+</ol>
+<p>第一项的证明，Prover 可以先发送 <span class="math notranslate nohighlight">\(q(X)\)</span> 和 <span class="math notranslate nohighlight">\(g(X)\)</span> 的承诺，Verifier 发送一个随机点 <span class="math notranslate nohighlight">\(\zeta\)</span> ，让 Prover 在该随机点打开，发送 <span class="math notranslate nohighlight">\(q(\zeta), g(\zeta)\)</span> ，Prover 只要证明商多项式</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{f(X) - q(\zeta) \cdot (\zeta^b - \alpha) + g(\zeta)}{X - \zeta}
+\]</div>
+<p>存在，就证明了第 <span class="math notranslate nohighlight">\(1\)</span> 项中的式子是成立的，这一项的证明只需要常数的证明大小。</p>
+<p>对于第二项，是 degree bound 的证明，也可以由常数的证明大小实现。</p>
+<p>对于第三项和第四项，都是证明有 <span class="math notranslate nohighlight">\(b\)</span> 个变量的多元线性多项式在某个点的打开值，这可以转换为内积证明，例如对于多元线性多项式 <span class="math notranslate nohighlight">\(\tilde{g}\)</span> ，</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+\tilde{g}(\vec{u}_1)  &amp; = \sum_{i = 0}^{b - 1} \tilde{eq}(\mathsf{bits}(i), \vec{u}_1) \cdot f_i(\alpha)  \\
+\end{align}
+\end{split}\]</div>
+<p>上面其实计算的是向量 <span class="math notranslate nohighlight">\(\vec{a}_1 = (\tilde{eq}(\mathsf{bits}(0),\vec{u}_1),\ldots, \tilde{eq}(\mathsf{bits}(b-1), \vec{u}_1)\)</span> 和 <span class="math notranslate nohighlight">\(\vec{b}_1 = (f_0(\alpha),\ldots, f_{b-1}(\alpha))\)</span> 的内积。对于 <span class="math notranslate nohighlight">\(\tilde{h}(\vec{u}_2)\)</span> 也是类似的，这样第三项和第四项就能转换为两个内积证明，而这两个内积证明又能用随机数聚合成一个证明，也能达到常数的证明大小。</p>
+<p>因此，mercury 的这四部分证明都是常数的证明大小，同时由于证明第三项和第四项的多元线性多项式的长度为 <span class="math notranslate nohighlight">\(b\)</span> ，就算有些计算 Prover 需要 <span class="math notranslate nohighlight">\(O(b \log b)\)</span> 的复杂度，这也是不超过 <span class="math notranslate nohighlight">\(O(N)\)</span> 的复杂度，依然能够保持 Prover 线性的计算复杂度。</p>
+<p>本文介绍了 mercury 能在保持 Prover 线性复杂度下实现常数证明尺寸的原因，在下一篇文章中将详细介绍 mercury 是如何证明这四项的。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[EG25] Eagen, Liam, and Ariel Gabizon. “MERCURY: A multilinear Polynomial Commitment Scheme with constant proof size and no prover FFTs.” Cryptology ePrint Archive (2025). <a class="reference external" href="https://eprint.iacr.org/2025/385">https://eprint.iacr.org/2025/385</a></p></li>
+<li><p>[GPS25] Ganesh, Chaya, Sikhar Patranabis, and Nitin Singh. “Samaritan: Linear-time Prover SNARK from New Multilinear Polynomial Commitments.” <em>Cryptology ePrint Archive</em> (2025). <a class="reference external" href="https://eprint.iacr.org/2025/419">https://eprint.iacr.org/2025/419</a></p></li>
+<li><p>[PH23] Papini, Shahar, and Ulrich Haböck. “Improving logarithmic derivative lookups using GKR.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/1284">https://eprint.iacr.org/2023/1284</a></p></li>
+<li><p>[BCHO23] Bootle, Jonathan, Alessandro Chiesa, Yuncong Hu, and Michele Orru. “Gemini: Elastic SNARKs for diverse environments.” In <em>Annual International Conference on the Theory and Applications of Cryptographic Techniques</em>, pp. 427-457. Cham: Springer International Publishing, 2022. <a class="reference external" href="https://eprint.iacr.org/2022/420">https://eprint.iacr.org/2022/420</a></p></li>
+<li><p>[KT23] Kohrita, Tohru, and Patrick Towa. “Zeromorph: Zero-knowledge multilinear-evaluation proofs from homomorphic univariate commitments.” Cryptology ePrint Archive (2023). <a class="reference external" href="https://eprint.iacr.org/2023/917">https://eprint.iacr.org/2023/917</a></p></li>
+<li><p>[WTSTW16] Riad S. Wahby, Ioanna Tzialla, abhi shelat, Justin Thaler, and Michael Walfish. “Doubly-efficient zkSNARKs without trusted setup.”  In 2018 IEEE Symposium on Security and Privacy (SP), pp. 926-943. IEEE, 2018.  <a class="reference external" href="https://eprint.iacr.org/2016/263">https://eprint.iacr.org/2016/263</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./mercury"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../zeromorph/zeromorph_mapping_tutorial.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Select SageMath Kernel First</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="mercury-02.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Mercury 笔记：对接 KZG</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">多元线性多项式的表示</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">拆分</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">从多元线性多项式到一元多项式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">实现常数证明尺寸</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

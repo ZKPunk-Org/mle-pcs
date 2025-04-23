@@ -1,0 +1,1808 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Circle Group &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'src/circle';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fsrc/circle.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/src/circle.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Circle Group</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Circle Group</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#jump-over-the-circle">Jump over the circle</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-position-coset">Standard Position Coset</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#squaring-map">Squaring map</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#circle-fft">Circle FFT</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#circle-fri">Circle FRI</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="circle-group">
+<h1>Circle Group<a class="headerlink" href="#circle-group" title="Link to this heading">#</a></h1>
+<p>Before we start building circle FFT, let’s first build the circle group, which will be used as the domain of circle fft.</p>
+<p>We choose a basic field GF(31), which has a order of 31. And then we extend it to a 2-degree extension field GF(<span class="math notranslate nohighlight">\(31^2\)</span>), to get a multiplicative subgroup of order 32.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F31</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+<span class="n">R31</span><span class="o">.&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">F31</span><span class="p">[]</span>
+<span class="n">R31</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Univariate Polynomial Ring in X over Finite Field of size 31
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we extend F31 to a 2-degree extension field GF(<span class="math notranslate nohighlight">\(31^2\)</span>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C31</span><span class="o">.&lt;</span><span class="n">i</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">F31</span><span class="o">.</span><span class="n">extension</span><span class="p">(</span><span class="n">X</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">C31</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Field in i of size 31^2
+</pre></div>
+</div>
+</div>
+</div>
+<p>We want to find a group element of order 32, so we take the generator of GF(<span class="math notranslate nohighlight">\(31^2\)</span>) and get 30th power of it.</p>
+<p><strong>Fact</strong>: For any prime field <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span>, where <span class="math notranslate nohighlight">\(p=2^n - 1\)</span>, the 2-degree extension over <span class="math notranslate nohighlight">\(\mathbb{F}_p\)</span> is
+<span class="math notranslate nohighlight">\(K=\mathbb{F}_{p^2}\)</span>, then <span class="math notranslate nohighlight">\(K\)</span> has a multiplicative subgroup with order <span class="math notranslate nohighlight">\(2^n\)</span>.</p>
+<p>Proof:</p>
+<div class="math notranslate nohighlight">
+\[
+p^2 - 1 = (2^n - 1) * (2^n - 1) - 1 = 2^{2n} - 2^{n+1} = 2^n(2^n - 2)
+\]</div>
+<p>In our case, F31.order() - 1 is <span class="math notranslate nohighlight">\(2^n - 2\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">C31</span><span class="o">.</span><span class="n">multiplicative_generator</span><span class="p">()</span><span class="o">^</span><span class="p">(</span><span class="n">F31</span><span class="o">.</span><span class="n">order</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">g</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11*i + 29
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define a function to calculate the order of an element in the circle group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">group_ord</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">order</span><span class="p">()):</span>
+        <span class="c1"># An order of an element is defined by how much power we need to raise the element to get the identity element</span>
+        <span class="k">if</span> <span class="n">elem</span><span class="o">**</span><span class="n">i</span> <span class="o">==</span> <span class="n">K</span><span class="o">.</span><span class="n">one</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="s2">&quot;False&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check that g is of order 32.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group_ord</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define the group multiplication, which is similar to complex number multiplication.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">group_mul</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">g1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">g2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define the group inverse, which is also the J mapping in the paper.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">group_inv</span><span class="p">(</span><span class="n">g1</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">g1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define show function to print group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">GG</span><span class="p">):</span> 
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">GG</span><span class="p">)):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">GG</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">t1</span> <span class="o">&gt;</span> <span class="n">F31</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="ow">and</span> <span class="n">t1</span> <span class="o">&lt;=</span> <span class="n">F31</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+            <span class="n">t1_str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">31</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t1_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;i=</span><span class="si">{}</span><span class="s2">, log=</span><span class="si">{}</span><span class="s2">, ord=</span><span class="si">{}</span><span class="s2">, (</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">log_gen</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="n">group_ord</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1_str</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define log_gen function to calculate the power of an element in the circle group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">log_gen</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">order</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">gen</span><span class="o">^</span><span class="n">i</span> <span class="o">==</span> <span class="n">t</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="s2">&quot;Fail&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="jump-over-the-circle">
+<h1>Jump over the circle<a class="headerlink" href="#jump-over-the-circle" title="Link to this heading">#</a></h1>
+<p>Here we define the generator for <code class="docutils literal notranslate"><span class="pre">Circle</span> <span class="pre">Group</span></code> as chosen by Vitalik <a class="reference external" href="https://vitalik.eth.limo/general/2024/07/23/circlestarks.html">https://vitalik.eth.limo/general/2024/07/23/circlestarks.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># optional</span>
+<span class="n">g</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">5</span><span class="o">*</span><span class="n">i</span>
+<span class="n">group_ord</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we generate G5, which is a normal multiplicative group of order <span class="math notranslate nohighlight">\(2^5\)</span>.</p>
+<p>G5’s elements must be on the circle <span class="math notranslate nohighlight">\(x^2 + y^2 = 1\)</span>, due to:</p>
+<div class="math notranslate nohighlight">
+\[
+a^{p + 1} = 1, a = x + y * i
+\]</div>
+<div class="math notranslate nohighlight">
+\[  
+a * a ^ p = (x + y * i) * (x - y * i) = x^2 + y^2 = 1
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(a^p\)</span> is a Frobenius map, <span class="math notranslate nohighlight">\(a^p\)</span> equals to the conjugate of <span class="math notranslate nohighlight">\(a\)</span>, which is <span class="math notranslate nohighlight">\(x - y * i\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G5</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">^</span><span class="mi">5</span><span class="p">)]</span>
+<span class="c1"># check that G5&#39;s elements are on the circle x^2 + y^2 = 1</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G5</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">t</span>
+    <span class="k">assert</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">^</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="n">G5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1,
+ 5*i + 10,
+ 7*i + 13,
+ 11*i + 2,
+ 27*i + 27,
+ 2*i + 11,
+ 13*i + 7,
+ 10*i + 5,
+ i,
+ 10*i + 26,
+ 13*i + 24,
+ 2*i + 20,
+ 27*i + 4,
+ 11*i + 29,
+ 7*i + 18,
+ 5*i + 21,
+ 30,
+ 26*i + 21,
+ 24*i + 18,
+ 20*i + 29,
+ 4*i + 4,
+ 29*i + 20,
+ 18*i + 24,
+ 21*i + 26,
+ 30*i,
+ 21*i + 5,
+ 18*i + 7,
+ 29*i + 11,
+ 4*i + 27,
+ 20*i + 2,
+ 24*i + 13,
+ 26*i + 10]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Print information of G5’s elements.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">g</span><span class="o">^</span><span class="n">j</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;i=</span><span class="si">{}</span><span class="s2">, log=</span><span class="si">{}</span><span class="s2">, ord=</span><span class="si">{}</span><span class="s2">, (</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">log_gen</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="n">group_ord</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=32, ord=1, (1,0)
+i=1, log=1, ord=32, (10,5)
+i=2, log=2, ord=16, (13,7)
+i=3, log=3, ord=32, (2,11)
+i=4, log=4, ord=8, (27,27)
+i=5, log=5, ord=32, (11,2)
+i=6, log=6, ord=16, (7,13)
+i=7, log=7, ord=32, (5,10)
+i=8, log=8, ord=4, (0,1)
+i=9, log=9, ord=32, (26,10)
+i=10, log=10, ord=16, (24,13)
+i=11, log=11, ord=32, (20,2)
+i=12, log=12, ord=8, (4,27)
+i=13, log=13, ord=32, (29,11)
+i=14, log=14, ord=16, (18,7)
+i=15, log=15, ord=32, (21,5)
+i=16, log=16, ord=2, (30,0)
+i=17, log=17, ord=32, (21,26)
+i=18, log=18, ord=16, (18,24)
+i=19, log=19, ord=32, (29,20)
+i=20, log=20, ord=8, (4,4)
+i=21, log=21, ord=32, (20,29)
+i=22, log=22, ord=16, (24,18)
+i=23, log=23, ord=32, (26,21)
+i=24, log=24, ord=4, (0,30)
+i=25, log=25, ord=32, (5,21)
+i=26, log=26, ord=16, (7,18)
+i=27, log=27, ord=32, (11,29)
+i=28, log=28, ord=8, (27,4)
+i=29, log=29, ord=32, (2,20)
+i=30, log=30, ord=16, (13,24)
+i=31, log=31, ord=32, (10,26)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check elements’ operation on G5.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">G5</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">G5</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">G5</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">G5</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">G5</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="n">G5</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">group_mul</span><span class="p">(</span><span class="n">G5</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">G5</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">G5</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">group_inv</span><span class="p">(</span><span class="n">G5</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span>  <span class="n">G5</span><span class="p">[</span><span class="mi">31</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">G5</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">group_inv</span><span class="p">(</span><span class="n">G5</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Generate G4 from G5 by squaring each element.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G4</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">^</span><span class="mi">2</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G5</span><span class="p">[:</span><span class="mi">16</span><span class="p">]]</span>
+<span class="n">G4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1,
+ 7*i + 13,
+ 27*i + 27,
+ 13*i + 7,
+ i,
+ 13*i + 24,
+ 27*i + 4,
+ 7*i + 18,
+ 30,
+ 24*i + 18,
+ 4*i + 4,
+ 18*i + 24,
+ 30*i,
+ 18*i + 7,
+ 4*i + 27,
+ 24*i + 13]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Generate G3 from G4 by squaring each element.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G3</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">^</span><span class="mi">2</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G4</span><span class="p">[:</span><span class="mi">8</span><span class="p">]]</span>
+<span class="n">G3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1, 27*i + 27, i, 27*i + 4, 30, 4*i + 4, 30*i, 4*i + 27]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="standard-position-coset">
+<h1>Standard Position Coset<a class="headerlink" href="#standard-position-coset" title="Link to this heading">#</a></h1>
+<p>Let <span class="math notranslate nohighlight">\(Q\)</span> be the generator of <span class="math notranslate nohighlight">\(G_{n+1}\)</span>, <span class="math notranslate nohighlight">\(D\)</span> is a <code class="docutils literal notranslate"><span class="pre">standard</span> <span class="pre">position</span> <span class="pre">coset</span></code> of size <span class="math notranslate nohighlight">\(2^n\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+D = Q\cdot G_n
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(ord(Q)=2^{n+1}\)</span>.</p>
+<p>And <span class="math notranslate nohighlight">\(D\)</span> is also a <code class="docutils literal notranslate"><span class="pre">twin-coset</span></code> of size <span class="math notranslate nohighlight">\(2^n\)</span> defined with <span class="math notranslate nohighlight">\(G_{n-1}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+D = Q\cdot G_{n-1} \uplus Q^{-1}\cdot G_{n-1}
+\]</div>
+<p>The rotation <span class="math notranslate nohighlight">\(Q^2\)</span> is exactly the generator of <span class="math notranslate nohighlight">\(G_n\)</span>.</p>
+<p>Here we construct a series of cosets, including standard position cosets and twin cosets, where we can randomly find a coset for circle fft.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a coset or G4 from a rotation Q, ord(Q) = 32</span>
+<span class="c1">#</span>
+<span class="c1"># Let Q = g (generator of G, whose order is 32)</span>
+
+<span class="n">D_standard_coset_4</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G4</span><span class="p">];</span> <span class="n">show</span><span class="p">(</span><span class="n">D_standard_coset_4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=1, ord=32, (10,5)
+i=1, log=3, ord=32, (2,11)
+i=2, log=5, ord=32, (11,2)
+i=3, log=7, ord=32, (5,10)
+i=4, log=9, ord=32, (26,10)
+i=5, log=11, ord=32, (20,2)
+i=6, log=13, ord=32, (29,11)
+i=7, log=15, ord=32, (21,5)
+i=8, log=17, ord=32, (21,-5)
+i=9, log=19, ord=32, (29,-11)
+i=10, log=21, ord=32, (20,-2)
+i=11, log=23, ord=32, (26,-10)
+i=12, log=25, ord=32, (5,-10)
+i=13, log=27, ord=32, (11,-2)
+i=14, log=29, ord=32, (2,-11)
+i=15, log=31, ord=32, (10,-5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># D_twin_coset_4 is equal to D_standard_coset_4 in the set-theoretic sense, with different order</span>
+
+<span class="n">D_twin_coset_4</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">group_inv</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">];</span> <span class="n">show</span><span class="p">(</span><span class="n">D_standard_coset_4</span><span class="p">)</span>
+
+<span class="c1"># `log` specifies the order of an element in the circle</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=1, ord=32, (10,5)
+i=1, log=3, ord=32, (2,11)
+i=2, log=5, ord=32, (11,2)
+i=3, log=7, ord=32, (5,10)
+i=4, log=9, ord=32, (26,10)
+i=5, log=11, ord=32, (20,2)
+i=6, log=13, ord=32, (29,11)
+i=7, log=15, ord=32, (21,5)
+i=8, log=17, ord=32, (21,-5)
+i=9, log=19, ord=32, (29,-11)
+i=10, log=21, ord=32, (20,-2)
+i=11, log=23, ord=32, (26,-10)
+i=12, log=25, ord=32, (5,-10)
+i=13, log=27, ord=32, (11,-2)
+i=14, log=29, ord=32, (2,-11)
+i=15, log=31, ord=32, (10,-5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is also a twin-coset of size 16</span>
+
+<span class="n">D_twin_coset_4_1</span> <span class="o">=</span> <span class="p">[</span><span class="n">G5</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">group_inv</span><span class="p">(</span><span class="n">G5</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">];</span> <span class="n">show</span><span class="p">(</span><span class="n">D_twin_coset_4_1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=3, ord=32, (2,11)
+i=1, log=7, ord=32, (5,10)
+i=2, log=11, ord=32, (20,2)
+i=3, log=15, ord=32, (21,5)
+i=4, log=19, ord=32, (29,-11)
+i=5, log=23, ord=32, (26,-10)
+i=6, log=27, ord=32, (11,-2)
+i=7, log=31, ord=32, (10,-5)
+i=8, log=29, ord=32, (2,-11)
+i=9, log=1, ord=32, (10,5)
+i=10, log=5, ord=32, (11,2)
+i=11, log=9, ord=32, (26,10)
+i=12, log=13, ord=32, (29,11)
+i=13, log=17, ord=32, (21,-5)
+i=14, log=21, ord=32, (20,-2)
+i=15, log=25, ord=32, (5,-10)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Again</span>
+
+<span class="n">D_twin_coset_4_2</span> <span class="o">=</span> <span class="p">[</span><span class="n">G5</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">group_inv</span><span class="p">(</span><span class="n">G5</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">];</span> <span class="n">show</span><span class="p">(</span><span class="n">D_twin_coset_4_2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=5, ord=32, (11,2)
+i=1, log=9, ord=32, (26,10)
+i=2, log=13, ord=32, (29,11)
+i=3, log=17, ord=32, (21,-5)
+i=4, log=21, ord=32, (20,-2)
+i=5, log=25, ord=32, (5,-10)
+i=6, log=29, ord=32, (2,-11)
+i=7, log=1, ord=32, (10,5)
+i=8, log=27, ord=32, (11,-2)
+i=9, log=31, ord=32, (10,-5)
+i=10, log=3, ord=32, (2,11)
+i=11, log=7, ord=32, (5,10)
+i=12, log=11, ord=32, (20,2)
+i=13, log=15, ord=32, (21,5)
+i=14, log=19, ord=32, (29,-11)
+i=15, log=23, ord=32, (26,-10)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fact:</span>
+<span class="c1">#   g^2 is the generator of G4</span>
+<span class="c1">#   g * G4 is the standard position coset</span>
+
+<span class="n">G4</span> <span class="o">==</span> <span class="p">[(</span><span class="n">g</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a coset or G3 from a rotation Q, ord(Q) = 16</span>
+<span class="c1">#</span>
+<span class="c1"># Let Q = g^2 (g is the generator of G5, whose order is 32)</span>
+
+<span class="n">D_standard_coset_3</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="o">^</span><span class="mi">2</span> <span class="o">*</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">G3</span><span class="p">];</span> <span class="n">show</span><span class="p">(</span><span class="n">D_standard_coset_3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=2, ord=16, (13,7)
+i=1, log=6, ord=16, (7,13)
+i=2, log=10, ord=16, (24,13)
+i=3, log=14, ord=16, (18,7)
+i=4, log=18, ord=16, (18,-7)
+i=5, log=22, ord=16, (24,-13)
+i=6, log=26, ord=16, (7,-13)
+i=7, log=30, ord=16, (13,-7)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="squaring-map">
+<h1>Squaring map<a class="headerlink" href="#squaring-map" title="Link to this heading">#</a></h1>
+<p><strong>Lemma</strong>: For any twin-coset <span class="math notranslate nohighlight">\(D\)</span> of size <span class="math notranslate nohighlight">\(N=2^n\)</span>, the image of <span class="math notranslate nohighlight">\(\pi(D)\)</span> must be a twin-coset of size <span class="math notranslate nohighlight">\(2^{n-1}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+D = Q\cdot G_{n-1} \uplus Q^{-1}\cdot G_{n-1}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\pi(D) = \pi(Q)\cdot G_{n-2} \uplus \pi(Q)^{-1}\cdot G_{n-2}
+\]</div>
+<p><strong>Fact</strong>: If <span class="math notranslate nohighlight">\(D\)</span> is a standard position coset, so is <span class="math notranslate nohighlight">\(\pi(D)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sq</span><span class="p">(</span><span class="n">D</span><span class="p">):</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">D</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">^</span><span class="mi">2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">:</span>
+            <span class="c1"># x&#39; == 2 * x^2 - 1</span>
+            <span class="n">rs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="o">^</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">rs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is exactly the same coset we generated from G4 before</span>
+
+<span class="n">D_standard_coset_3</span> <span class="o">=</span> <span class="n">sq</span><span class="p">(</span><span class="n">D_standard_coset_4</span><span class="p">);</span> <span class="n">show</span><span class="p">(</span><span class="n">D_standard_coset_3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=0, log=2, ord=16, (13,7)
+i=1, log=6, ord=16, (7,13)
+i=2, log=10, ord=16, (24,13)
+i=3, log=14, ord=16, (18,7)
+i=4, log=18, ord=16, (18,-7)
+i=5, log=22, ord=16, (24,-13)
+i=6, log=26, ord=16, (7,-13)
+i=7, log=30, ord=16, (13,-7)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="circle-fft">
+<h1>Circle FFT<a class="headerlink" href="#circle-fft" title="Link to this heading">#</a></h1>
+<p>To apply circle fft, let’s generate a random polynomial’s evaluation based on D_twin_coset_4_1 (or any other twin coset you prefer).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">D_twin_coset_4_1</span><span class="p">:</span>
+    <span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">C31</span><span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+
+<span class="n">f</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{11*i + 2: 29,
+ 10*i + 5: 30,
+ 2*i + 20: 10,
+ 5*i + 21: 5,
+ 20*i + 29: 8,
+ 21*i + 26: 21,
+ 29*i + 11: 16,
+ 26*i + 10: 18,
+ 20*i + 2: 30,
+ 5*i + 10: 2,
+ 2*i + 11: 23,
+ 10*i + 26: 5,
+ 11*i + 29: 22,
+ 26*i + 21: 9,
+ 29*i + 20: 28,
+ 21*i + 5: 16}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define the <code class="docutils literal notranslate"><span class="pre">pi</span></code> mapping applying to point’s x coordinate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pi</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="c1"># x^2 - y^2 == 2 * x^2 - 1 (x^2 + y^2 = 1)</span>
+    <span class="k">return</span> <span class="n">C31</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">t</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the first step of ifft, we try to eliminate y coordinate to simplifier our computations in later steps.</p>
+<p>We extract y from the polynomial by dividing polynomial in to 2 parts, f0 and f1, which correspond to the equation f[t] == f0[x] + y * f1[x].</p>
+<p>t is a group element, x and y are the x and y coordinate of t respectively.</p>
+<p>So that f0 and f1 are only functions of x coordinate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ifft_first_step</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">f0</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">t</span>
+
+        <span class="n">f0</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">group_inv</span><span class="p">(</span><span class="n">t</span><span class="p">)])</span> <span class="o">/</span> <span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">f1</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">group_inv</span><span class="p">(</span><span class="n">t</span><span class="p">)])</span> <span class="o">/</span> <span class="p">(</span><span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Check that f is divided into 2 parts correctly</span>
+        <span class="k">assert</span> <span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">==</span> <span class="n">f0</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">f1</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+        <span class="c1"># print(&quot;{}: {} = {} + {} * {}&quot;.format(t, f[t], f0[x], f1[x], y))</span>
+
+    <span class="k">return</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In normal steps, we deal with the polynomial exactly the same as the classical polynomial ifft, deeming the polynomial as a univariate polynomial, except that x is applied by the <code class="docutils literal notranslate"><span class="pre">pi</span></code> mapping.</p>
+<p>Basically, we divide the polynomial into 2 parts, <span class="math notranslate nohighlight">\(f_0\)</span> and <span class="math notranslate nohighlight">\(f_1\)</span>, which correspond to the equation:</p>
+<div class="math notranslate nohighlight">
+\[
+f[x] = f_0[x] + x * f_1[x]
+\]</div>
+<p>Thus</p>
+<div class="math notranslate nohighlight">
+\[
+f_0[x] = \frac{f[x] + f[-x]}{2}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+f_1[x] = \frac{f[x] - f[-x]}{2x}
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ifft_normal_step</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="n">f0</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;f should be on coset&quot;</span>
+        <span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="n">x</span><span class="p">])</span> <span class="o">/</span> <span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">f1</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="n">x</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># Check that f is divided into 2 parts correctly</span>
+        <span class="k">assert</span> <span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">f1</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">ifft_normal_step</span><span class="p">(</span><span class="n">f0</span><span class="p">)</span> <span class="o">+</span> <span class="n">ifft_normal_step</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we have ifft_first_step and ifft_normal_step, we can define the ifft function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ifft</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">ifft_first_step</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">f0</span> <span class="o">=</span> <span class="n">ifft_normal_step</span><span class="p">(</span><span class="n">f0</span><span class="p">)</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">ifft_normal_step</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">f0</span> <span class="o">+</span> <span class="n">f1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Apply ifft to our random polynomial and see what we get.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">ifft</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">coeffs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[17, 30, 17, 3, 4, 15, 16, 20, 1, 6, 24, 2, 12, 20, 9, 30]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we try to define the fft function.</p>
+<p>Before that, we define <code class="docutils literal notranslate"><span class="pre">pie_group</span></code> function to generate next domain of a domain, which is equivalent to <code class="docutils literal notranslate"><span class="pre">sq</span></code> function in the x dimension (you can check that by focusing on the x coordinate in <code class="docutils literal notranslate"><span class="pre">sq</span></code> operation).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pie_group</span><span class="p">(</span><span class="n">D</span><span class="p">):</span>
+    <span class="n">D_new</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">D</span><span class="p">:</span>
+        <span class="n">x_new</span> <span class="o">=</span> <span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x_new</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">D_new</span><span class="p">:</span>
+            <span class="n">D_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
+
+    <span class="c1"># Check that the new domain is exactly half size of the old domain</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">D_new</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(D_new) * 2 != len(D), </span><span class="si">{}</span><span class="s2"> * 2 != </span><span class="si">{}</span><span class="s2">, D_new=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">D_new</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">D_new</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">D_new</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Define the first step of fft, which contains the same logic as ifft_first_step.</p>
+<p>The basis of coefficients is like:</p>
+<div class="math notranslate nohighlight">
+\[
+1, v_1(x), v_2(x), v_1(x)v_2(x), y, yv_1(x), yv_2(x), yv_1(x)v_2(x) \quad (N = 8) \tag{1}
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+v_1(x) = x, v_2(x) = 2x^2-1, v_3(x) = 2(2x^2-1)^2-1, ...
+\]</div>
+<p>So to divide the polynomial into 2 parts, we just need to divide the coefficients into 2 parts, it’s basis are also divided into 2 parts as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+1, v_1(x), v_2(x), v_1(x)v_2(x) \tag{2}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+y, yv_1(x), yv_2(x), yv_1(x)v_2(x) \tag{3}
+\]</div>
+<p>Notice that basis (2) is bit reversed order compared to normal basis, and basis (3) is like basis (2) but multiplied by y.</p>
+<p>To eliminate y in normal steps’ computation, we just consider basis of the second part of coefficients (which is actually basis (3)) as same as basis (2), and supply the y at the end of fft.</p>
+<p>First, we define the first step of fft.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fft_first_step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+    <span class="c1"># Check that the polynomial and the domain have the same length</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="c1"># divide the polynomial into 2 parts</span>
+    <span class="n">len_f</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">f0</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">len_f</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">len_f</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+
+    <span class="c1"># halve the domain by simply removing the y coordinate</span>
+    <span class="n">D_new</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">D</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">D_new</span><span class="p">:</span>
+            <span class="n">D_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Check that the new domain is exactly half size of the old domain</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">D_new</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(D_new) * 2 != len(D), </span><span class="si">{}</span><span class="s2"> * 2 != </span><span class="si">{}</span><span class="s2">, D_new=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">D_new</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">D_new</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">D_new</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In normal steps, we deal with the polynomial exactly the same as the classical polynomial fft, deeming the polynomial as a univariate polynomial, except that <span class="math notranslate nohighlight">\(x\)</span> is applied by the <code class="docutils literal notranslate"><span class="pre">pi</span></code> mapping.</p>
+<p>Divide the polynomial into 2 parts, <span class="math notranslate nohighlight">\(f_0\)</span> and <span class="math notranslate nohighlight">\(f_1\)</span>, which correspond to the equation:</p>
+<div class="math notranslate nohighlight">
+\[
+f[x] = f_0[x] + x * f_1[x]
+\]</div>
+<p>Merge <span class="math notranslate nohighlight">\(f_0\)</span> and <span class="math notranslate nohighlight">\(f_1\)</span> using <span class="math notranslate nohighlight">\(x\)</span> from the domain, which corresponds to the equation above too.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fft_normal_step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+    
+    <span class="n">next_domain</span> <span class="o">=</span> <span class="n">pie_group</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+
+    <span class="c1"># Check that the new domain is exactly half size of the old domain</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_domain</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(next_domain) * 2 != len(D), </span><span class="si">{}</span><span class="s2"> * 2 != </span><span class="si">{}</span><span class="s2">, next_domain=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">next_domain</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">next_domain</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    <span class="c1"># Check that the polynomial and the domain have the same length</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="n">f0</span> <span class="o">=</span> <span class="n">fft_normal_step</span><span class="p">(</span><span class="n">f</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">next_domain</span><span class="p">)</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">fft_normal_step</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">:],</span> <span class="n">next_domain</span><span class="p">)</span>
+
+    <span class="n">f_new</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">D</span><span class="p">:</span>
+        <span class="n">f_new</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">+</span> <span class="n">f1</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">*</span> <span class="n">x</span>
+
+    <span class="c1"># Check that f is divided into 2 parts correctly</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">D</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">==</span> <span class="p">(</span><span class="n">f_new</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">f_new</span><span class="p">[</span><span class="o">-</span><span class="n">x</span><span class="p">])</span> <span class="o">/</span> <span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;f0[pi(x)] = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+            <span class="k">assert</span> <span class="n">f1</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">==</span> <span class="p">(</span><span class="n">f_new</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">-</span> <span class="n">f_new</span><span class="p">[</span><span class="o">-</span><span class="n">x</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">),</span> <span class="s2">&quot;f1[pi(x)] = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f1</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="o">==</span> <span class="n">f_new</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="s2">&quot;f0[pi(x)] = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f0</span><span class="p">[</span><span class="n">pi</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
+
+    <span class="c1"># Check that the polynomial and the domain have the same length</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_new</span><span class="p">),</span> <span class="s2">&quot;len(f) != len(f_new), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f=</span><span class="si">{}</span><span class="s2">, f_new=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_new</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">f_new</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="c1"># Check that ifft and fft are correct inverse operations</span>
+    <span class="k">assert</span> <span class="n">ifft_normal_step</span><span class="p">(</span><span class="n">f_new</span><span class="p">)</span> <span class="o">==</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;ifft(f_new) != f, </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ifft_normal_step</span><span class="p">(</span><span class="n">f_new</span><span class="p">),</span> <span class="n">f</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">f_new</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have fft_first_step and fft_normal_step, we can define the fft function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fft</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+
+    <span class="c1"># Check that the polynomial and the domain have the same length</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="n">D_copy</span> <span class="o">=</span> <span class="n">D</span><span class="p">[:]</span>
+    <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">fft_first_step</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="c1"># Check that the polynomial and the domain have the same length</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f0</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f0) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f0=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f0</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f0</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f1) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f1=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f1</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="n">f0</span> <span class="o">=</span> <span class="n">fft_normal_step</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">fft_normal_step</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># supply y to the polynomial</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">D_copy</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">f0</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">+</span> <span class="n">f1</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span>
+
+    <span class="k">return</span> <span class="n">f</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check that ifft and fft are correct inverse operations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_prime</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">D_twin_coset_4_1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f_prime</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">t</span> <span class="o">==</span> <span class="n">s</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f[</span><span class="si">{}</span><span class="s2">]=</span><span class="si">{}</span><span class="s2">, f_prime[</span><span class="si">{}</span><span class="s2">]=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">t</span><span class="p">,</span> <span class="n">f_prime</span><span class="p">[</span><span class="n">t</span><span class="p">]))</span>
+    <span class="k">assert</span> <span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">==</span> <span class="n">f_prime</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="s2">&quot;f[</span><span class="si">{}</span><span class="s2">] != f_prime[</span><span class="si">{}</span><span class="s2">], </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">f</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">f_prime</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f[11*i + 2]=29, f_prime[11*i + 2]=29
+f[10*i + 5]=30, f_prime[10*i + 5]=30
+f[2*i + 20]=10, f_prime[2*i + 20]=10
+f[5*i + 21]=5, f_prime[5*i + 21]=5
+f[20*i + 29]=8, f_prime[20*i + 29]=8
+f[21*i + 26]=21, f_prime[21*i + 26]=21
+f[29*i + 11]=16, f_prime[29*i + 11]=16
+f[26*i + 10]=18, f_prime[26*i + 10]=18
+f[20*i + 2]=30, f_prime[20*i + 2]=30
+f[5*i + 10]=2, f_prime[5*i + 10]=2
+f[2*i + 11]=23, f_prime[2*i + 11]=23
+f[10*i + 26]=5, f_prime[10*i + 26]=5
+f[11*i + 29]=22, f_prime[11*i + 29]=22
+f[26*i + 21]=9, f_prime[26*i + 21]=9
+f[29*i + 20]=28, f_prime[29*i + 20]=28
+f[21*i + 5]=16, f_prime[21*i + 5]=16
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="circle-fri">
+<h1>Circle FRI<a class="headerlink" href="#circle-fri" title="Link to this heading">#</a></h1>
+<p>Basis:</p>
+<div class="math notranslate nohighlight">
+\[
+1, v_1(x), v_2(x), v_1(x)v_2(x), y, yv_1(x), yv_2(x), yv_1(x)v_2(x) \quad (N = 8)
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inputs:</span>
+<span class="c1">#   f is the polynomial to be folded</span>
+<span class="c1">#   D is the domain of f</span>
+<span class="c1">#   r is the random number for random linear combination</span>
+<span class="c1"># Outputs:</span>
+<span class="c1">#   The first return value is the folded polynomial</span>
+<span class="c1">#   The second return value is the new domain</span>
+<span class="k">def</span> <span class="nf">fold</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="c1"># divide</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="c1"># left is the first half of f, of x from 1 to g^(N/2)</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># right is the second half of f, of x from g^(N-1) to g^(N/2), which corresponds to minus x in left</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="s2">&quot;len(left) != len(right), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, left=</span><span class="si">{}</span><span class="s2">, right=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">D</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="c1"># f == f0 + x * f1</span>
+        <span class="n">f0</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+        <span class="c1"># f[:N//2] stores the folded polynomial</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] = </span><span class="si">{</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> = (</span><span class="si">{</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)/2 + </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2"> * (</span><span class="si">{</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)/(2 * </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f0</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">f1</span>
+        <span class="c1"># if debug: print(f&quot;{f[i]} = ({left[i]} + {right[i]})/2 + {r} * ({left[i]} - {right[i]})/(2 * {x})&quot;)</span>
+        <span class="c1"># reuse f[N//2:] to store new domain</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="c1"># return the folded polynomial and the new domain</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">log_2</span>
+<span class="kn">from</span> <span class="nn">merlin.merlin_transcript</span> <span class="kn">import</span> <span class="n">MerlinTranscript</span>
+<span class="kn">from</span> <span class="nn">merkle</span> <span class="kn">import</span> <span class="n">MerkleTree</span>
+
+<span class="k">def</span> <span class="nf">fri</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">query_num</span><span class="p">,</span> <span class="n">transcript</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="s2">&quot;len(f) != len(D), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, f=</span><span class="si">{}</span><span class="s2">, D=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">MerlinTranscript</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f=</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">, D=</span><span class="si">{</span><span class="n">D</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># first tree</span>
+    <span class="n">first_tree</span> <span class="o">=</span> <span class="n">MerkleTree</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">first_oracle</span> <span class="o">=</span> <span class="n">f</span>
+
+    <span class="c1"># first random number</span>
+    <span class="n">transcript</span><span class="o">.</span><span class="n">append_message</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;first_tree&#39;</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">first_tree</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">challenge_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>
+
+    <span class="c1"># first step (J mapping)</span>
+    <span class="c1"># for f in natural order, we just divide f into 2 parts from the middle</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;N must be even, N=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="n">left</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="s2">&quot;len(left) != len(right), </span><span class="si">{}</span><span class="s2"> != </span><span class="si">{}</span><span class="s2">, left=</span><span class="si">{}</span><span class="s2">, right=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">D</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="n">f0</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">C31</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f0</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">f1</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] = </span><span class="si">{</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> = (</span><span class="si">{</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)/2 + </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2"> * (</span><span class="si">{</span><span class="n">left</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">)/(2 * </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f=</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">D</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">D</span><span class="p">[:</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">]]</span>
+
+    <span class="c1"># fold</span>
+    <span class="n">trees</span> <span class="o">=</span> <span class="p">[</span><span class="n">MerkleTree</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span>
+    <span class="n">oracles</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[:]]</span>
+    <span class="c1"># log_2(degree) - 1 because we have already done the first step</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">log_2</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># random number</span>
+        <span class="n">transcript</span><span class="o">.</span><span class="n">append_message</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">trees</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">challenge_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">fold</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">debug</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f=</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">, D=</span><span class="si">{</span><span class="n">D</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># merkle tree</span>
+        <span class="n">trees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MerkleTree</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+        <span class="n">oracles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">[:])</span>
+
+    <span class="c1"># query paths</span>
+    <span class="n">max_size</span> <span class="o">=</span> <span class="n">N</span>
+    <span class="n">get_q</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">transcript</span><span class="p">:</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">challenge_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">max_size</span>
+    <span class="n">queries</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_q</span><span class="p">(</span><span class="n">transcript</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">query_num</span><span class="p">)]</span>
+
+    <span class="n">query_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+        <span class="n">max_size</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="n">cur_path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">max_size</span> <span class="o">-</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x0</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;max_size=</span><span class="si">{</span><span class="n">max_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;q=</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, x1=</span><span class="si">{</span><span class="n">x1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">cur_path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">first_oracle</span><span class="p">[</span><span class="n">x0</span><span class="p">],</span> <span class="n">first_oracle</span><span class="p">[</span><span class="n">x1</span><span class="p">]))</span>
+        <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">x0</span>
+        <span class="n">max_size</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">oracle</span> <span class="ow">in</span> <span class="n">oracles</span><span class="p">:</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">q</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">max_size</span> <span class="o">-</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">:</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x0</span>
+
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;q=</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, x1=</span><span class="si">{</span><span class="n">x1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="n">cur_path</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">oracle</span><span class="p">[</span><span class="n">x0</span><span class="p">],</span> <span class="n">oracle</span><span class="p">[</span><span class="n">x1</span><span class="p">]))</span>
+            <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">x0</span>
+            <span class="n">max_size</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+
+        <span class="n">query_paths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cur_path</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+    <span class="c1"># merkle paths</span>
+    <span class="n">merkle_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">query_paths</span><span class="p">:</span>
+        <span class="n">cur_query_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;i = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, idx = </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">, first_oracle[idx] = </span><span class="si">{</span><span class="n">first_oracle</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">cur_query_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">first_tree</span><span class="o">.</span><span class="n">get_authentication_path</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cur_tree</span> <span class="o">=</span> <span class="n">trees</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;i = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, idx = </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">, oracles[i-1][idx] = </span><span class="si">{</span><span class="n">oracles</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">cur_query_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_tree</span><span class="o">.</span><span class="n">get_authentication_path</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+        <span class="n">merkle_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_query_paths</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;query_paths&#39;</span><span class="p">:</span> <span class="n">query_paths</span><span class="p">,</span>
+        <span class="s1">&#39;merkle_paths&#39;</span><span class="p">:</span> <span class="n">merkle_paths</span><span class="p">,</span>
+        <span class="s1">&#39;first_tree&#39;</span><span class="p">:</span> <span class="n">first_tree</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+        <span class="s1">&#39;intermediate_trees&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">],</span>
+        <span class="s1">&#39;degree_bound&#39;</span><span class="p">:</span> <span class="n">degree</span><span class="p">,</span>
+        <span class="s1">&#39;final_value&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">merkle</span> <span class="kn">import</span> <span class="n">verify_decommitment</span>
+
+<span class="k">def</span> <span class="nf">defri</span><span class="p">(</span><span class="n">fri_proof</span><span class="p">,</span> <span class="n">degree_bound</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">query_num</span><span class="p">,</span> <span class="n">transcript</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="k">assert</span> <span class="n">degree_bound</span> <span class="o">&gt;=</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;degree_bound&#39;</span><span class="p">]</span>
+    <span class="n">degree_bound</span> <span class="o">=</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;degree_bound&#39;</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">MerlinTranscript</span><span class="p">)</span>
+
+    <span class="n">first_tree</span> <span class="o">=</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;first_tree&#39;</span><span class="p">]</span>
+    <span class="n">intermediate_trees</span> <span class="o">=</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;intermediate_trees&#39;</span><span class="p">]</span>
+
+    <span class="n">transcript</span><span class="o">.</span><span class="n">append_message</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;first_tree&#39;</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">first_tree</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">challenge_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>
+
+    <span class="n">fold_challenges</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">log_2</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">degree_bound</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">transcript</span><span class="o">.</span><span class="n">append_message</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">intermediate_trees</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">challenge_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>
+        <span class="n">fold_challenges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="n">get_q</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">transcript</span><span class="p">:</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">challenge_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">degree_bound</span>
+    <span class="n">queries</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_q</span><span class="p">(</span><span class="n">transcript</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">query_num</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="p">(</span><span class="n">cur_path</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="n">mps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;query_paths&#39;</span><span class="p">],</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;merkle_paths&#39;</span><span class="p">]):</span>
+        <span class="n">num_vars</span> <span class="o">=</span> <span class="n">degree_bound</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mps</span><span class="p">):</span>
+
+            <span class="k">assert</span> <span class="n">num_vars</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;num_vars must be positive, num_vars=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_vars</span><span class="p">)</span>
+
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">q</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">num_vars</span> <span class="o">-</span> <span class="n">q</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">:</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x0</span>
+            
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_vars=</span><span class="si">{</span><span class="n">num_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;q=</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, x1=</span><span class="si">{</span><span class="n">x1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">code_left</span><span class="p">,</span> <span class="n">code_right</span> <span class="o">=</span> <span class="n">F31</span><span class="p">(</span><span class="n">cur_path</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">F31</span><span class="p">(</span><span class="n">cur_path</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">table</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;i = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, table=</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">alpha</span> <span class="o">=</span> <span class="n">fold_challenges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">f_code_folded</span> <span class="o">=</span> <span class="n">cur_path</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span> <span class="k">if</span> <span class="n">x0</span> <span class="o">&lt;</span> <span class="n">num_vars</span> <span class="o">/</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">f_code_folded</span> <span class="o">==</span> <span class="p">(</span><span class="n">code_left</span> <span class="o">+</span> <span class="n">code_right</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">code_left</span> <span class="o">-</span> <span class="n">code_right</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">table</span><span class="p">[</span><span class="n">x0</span><span class="p">]),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">f_code_folded</span><span class="si">}</span><span class="s2"> != (</span><span class="si">{</span><span class="n">code_left</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">code_right</span><span class="si">}</span><span class="s2">)/2 + </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2"> * (</span><span class="si">{</span><span class="n">code_left</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">code_right</span><span class="si">}</span><span class="s2">)/(2*</span><span class="si">{</span><span class="n">table</span><span class="p">[</span><span class="n">x0</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;final_value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">code_left</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;final_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">code_left</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">verify_decommitment</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">code_left</span><span class="p">,</span> <span class="n">mp</span><span class="p">,</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;first_tree&#39;</span><span class="p">]),</span> <span class="sa">f</span><span class="s2">&quot;verify_decommitment(x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, code_left=</span><span class="si">{</span><span class="n">code_left</span><span class="si">}</span><span class="s2">, mp=</span><span class="si">{</span><span class="n">mp</span><span class="si">}</span><span class="s2">, fri_proof[&#39;first_tree&#39;]=</span><span class="si">{</span><span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;first_tree&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">verify_decommitment</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">code_left</span><span class="p">,</span> <span class="n">mp</span><span class="p">,</span> <span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;intermediate_trees&#39;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]),</span> <span class="sa">f</span><span class="s2">&quot;verify_decommitment(x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, code_left=</span><span class="si">{</span><span class="n">code_left</span><span class="si">}</span><span class="s2">, mp=</span><span class="si">{</span><span class="n">mp</span><span class="si">}</span><span class="s2">, fri_proof[&#39;intermediate_trees&#39;][i - 1]=</span><span class="si">{</span><span class="n">fri_proof</span><span class="p">[</span><span class="s1">&#39;intermediate_trees&#39;</span><span class="p">][</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+            <span class="n">num_vars</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">x0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">D_standard_coset_4</span><span class="p">))]</span>
+<span class="n">query_num</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">fri_proof</span> <span class="o">=</span> <span class="n">fri</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">D_standard_coset_4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">D_standard_coset_4</span><span class="p">),</span> <span class="n">query_num</span><span class="p">,</span> <span class="n">MerlinTranscript</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;FRI&#39;</span><span class="p">),</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------- fri ----------------&quot;</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">domain</span> <span class="o">=</span> <span class="n">D_standard_coset_4</span><span class="p">[:]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">log_2</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">T</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">])</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">sq</span><span class="p">(</span><span class="n">domain</span><span class="p">)[:</span><span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">T</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">y</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">])</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">defri</span><span class="p">(</span><span class="n">fri_proof</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">D_standard_coset_4</span><span class="p">),</span> <span class="n">T</span><span class="p">,</span> <span class="n">query_num</span><span class="p">,</span> <span class="n">MerlinTranscript</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;FRI&#39;</span><span class="p">),</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>f=[24, 1, 6, 10, 3, 8, 29, 27, 25, 23, 3, 3, 13, 10, 24, 8], D=[5*i + 10, 11*i + 2, 2*i + 11, 10*i + 5, 10*i + 26, 2*i + 20, 11*i + 29, 5*i + 21, 26*i + 21, 20*i + 29, 29*i + 20, 21*i + 26, 21*i + 5, 29*i + 11, 20*i + 2, 26*i + 10]
+f[0] = 1 = (24 + 8)/2 + 2944556307 * (24 - 8)/(2 * 5)
+f[1] = 26 = (1 + 24)/2 + 2944556307 * (1 - 24)/(2 * 11)
+f[2] = 29 = (6 + 10)/2 + 2944556307 * (6 - 10)/(2 * 2)
+f[3] = 10 = (10 + 13)/2 + 2944556307 * (10 - 13)/(2 * 10)
+f[4] = 3 = (3 + 3)/2 + 2944556307 * (3 - 3)/(2 * 10)
+f[5] = 18 = (8 + 3)/2 + 2944556307 * (8 - 3)/(2 * 2)
+f[6] = 9 = (29 + 23)/2 + 2944556307 * (29 - 23)/(2 * 11)
+f[7] = 28 = (27 + 25)/2 + 2944556307 * (27 - 25)/(2 * 5)
+f=[1, 26, 29, 10, 3, 18, 9, 28]
+f[0] = 1 = (1 + 28)/2 + 144160416 * (1 - 28)/(2 * 10)
+f[1] = 26 = (26 + 9)/2 + 144160416 * (26 - 9)/(2 * 2)
+f[2] = 29 = (29 + 18)/2 + 144160416 * (29 - 18)/(2 * 11)
+f[3] = 10 = (10 + 3)/2 + 144160416 * (10 - 3)/(2 * 5)
+f=[30, 2, 8, 22], D=[13, 7, 24, 18]
+f[0] = 30 = (30 + 22)/2 + 3212835317 * (30 - 22)/(2 * 13)
+f[1] = 2 = (2 + 8)/2 + 3212835317 * (2 - 8)/(2 * 7)
+f=[23, 28], D=[27, 4]
+f[0] = 23 = (23 + 28)/2 + 133754179 * (23 - 28)/(2 * 27)
+f=[1], D=[0]
+max_size=16
+q=2
+x0=2, x1=13
+q=2
+x0=2, x1=5
+q=2
+x0=1, x1=2
+q=1
+x0=0, x1=1
+q=0
+x0=0, x1=0
+max_size=16
+q=0
+x0=0, x1=15
+q=0
+x0=0, x1=7
+q=0
+x0=0, x1=3
+q=0
+x0=0, x1=1
+q=0
+x0=0, x1=0
+max_size=16
+q=7
+x0=7, x1=8
+q=7
+x0=0, x1=7
+q=0
+x0=0, x1=3
+q=0
+x0=0, x1=1
+q=0
+x0=0, x1=0
+max_size=16
+q=10
+x0=5, x1=10
+q=5
+x0=2, x1=5
+q=2
+x0=1, x1=2
+q=1
+x0=0, x1=1
+q=0
+x0=0, x1=0
+i = 0, idx = 2, first_oracle[idx] = 6
+i = 1, idx = 2, oracles[i-1][idx] = 29
+i = 2, idx = 1, oracles[i-1][idx] = 2
+i = 3, idx = 0, oracles[i-1][idx] = 23
+i = 4, idx = 0, oracles[i-1][idx] = 1
+i = 0, idx = 0, first_oracle[idx] = 24
+i = 1, idx = 0, oracles[i-1][idx] = 1
+i = 2, idx = 0, oracles[i-1][idx] = 30
+i = 3, idx = 0, oracles[i-1][idx] = 23
+i = 4, idx = 0, oracles[i-1][idx] = 1
+i = 0, idx = 7, first_oracle[idx] = 27
+i = 1, idx = 0, oracles[i-1][idx] = 1
+i = 2, idx = 0, oracles[i-1][idx] = 30
+i = 3, idx = 0, oracles[i-1][idx] = 23
+i = 4, idx = 0, oracles[i-1][idx] = 1
+i = 0, idx = 5, first_oracle[idx] = 8
+i = 1, idx = 2, oracles[i-1][idx] = 29
+i = 2, idx = 1, oracles[i-1][idx] = 2
+i = 3, idx = 0, oracles[i-1][idx] = 23
+i = 4, idx = 0, oracles[i-1][idx] = 1
+---------------- fri ----------------
+num_vars=16
+q=2
+x0=2, x1=13
+i = 0, table=[5, 11, 2, 10, 10, 2, 11, 5, 26, 20, 29, 21, 21, 29, 20, 26]
+num_vars=8
+q=2
+x0=2, x1=5
+i = 1, table=[10, 2, 11, 5, 26, 20, 29, 21]
+num_vars=4
+q=2
+x0=1, x1=2
+i = 2, table=[13, 7, 24, 18]
+num_vars=2
+q=1
+x0=0, x1=1
+i = 3, table=[27, 4]
+num_vars=1
+q=0
+x0=0, x1=0
+i = 4, table=[0]
+num_vars=16
+q=0
+x0=0, x1=15
+i = 0, table=[5, 11, 2, 10, 10, 2, 11, 5, 26, 20, 29, 21, 21, 29, 20, 26]
+num_vars=8
+q=0
+x0=0, x1=7
+i = 1, table=[10, 2, 11, 5, 26, 20, 29, 21]
+num_vars=4
+q=0
+x0=0, x1=3
+i = 2, table=[13, 7, 24, 18]
+num_vars=2
+q=0
+x0=0, x1=1
+i = 3, table=[27, 4]
+num_vars=1
+q=0
+x0=0, x1=0
+i = 4, table=[0]
+num_vars=16
+q=7
+x0=7, x1=8
+i = 0, table=[5, 11, 2, 10, 10, 2, 11, 5, 26, 20, 29, 21, 21, 29, 20, 26]
+num_vars=8
+q=7
+x0=0, x1=7
+i = 1, table=[10, 2, 11, 5, 26, 20, 29, 21]
+num_vars=4
+q=0
+x0=0, x1=3
+i = 2, table=[13, 7, 24, 18]
+num_vars=2
+q=0
+x0=0, x1=1
+i = 3, table=[27, 4]
+num_vars=1
+q=0
+x0=0, x1=0
+i = 4, table=[0]
+num_vars=16
+q=10
+x0=5, x1=10
+i = 0, table=[5, 11, 2, 10, 10, 2, 11, 5, 26, 20, 29, 21, 21, 29, 20, 26]
+num_vars=8
+q=5
+x0=2, x1=5
+i = 1, table=[10, 2, 11, 5, 26, 20, 29, 21]
+num_vars=4
+q=2
+x0=1, x1=2
+i = 2, table=[13, 7, 24, 18]
+num_vars=2
+q=1
+x0=0, x1=1
+i = 3, table=[27, 4]
+num_vars=1
+q=0
+x0=0, x1=0
+i = 4, table=[0]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "SageMath-9.8"
+        },
+        kernelOptions: {
+            name: "SageMath-9.8",
+            path: "./src"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'SageMath-9.8'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Circle Group</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#jump-over-the-circle">Jump over the circle</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-position-coset">Standard Position Coset</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#squaring-map">Squaring map</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#circle-fft">Circle FFT</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#circle-fri">Circle FRI</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

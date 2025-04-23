@@ -1,0 +1,873 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Note on WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/whir';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/whir.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/whir.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Note on WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-univariate-polynomials-to-multivariate-linear-polynomials">From Univariate Polynomials to Multivariate Linear Polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#crs-constrained-reed-solomon-codes">CRS: Constrained Reed-Solomon codes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-iteration-of-whir">One Iteration of WHIR</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-between-whir-and-basefold">Connection between WHIR and BaseFold</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-between-whir-and-stir">Connection between WHIR and STIR</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutual-correlated-agreement">Mutual correlated agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="note-on-whir-reed-solomon-proximity-testing-with-super-fast-verification">
+<h1>Note on WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification<a class="headerlink" href="#note-on-whir-reed-solomon-proximity-testing-with-super-fast-verification" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>This article mainly introduces the WHIR (Weights Help Improving Rate) protocol [ACFY24b]. Like the FRI [BBHR18], STIR [ACFY24a], and BaseFold [ZCF24] protocols, WHIR is also an IOPP protocol, but it has a smaller query complexity and a faster verification time. The paper [ACFY24b] mentions that WHIR’s verifier typically runs in hundreds of microseconds (1 microsecond = <span class="math notranslate nohighlight">\(10^{-6}\)</span> seconds), while other protocols’ verifiers take a few milliseconds (1 millisecond = <span class="math notranslate nohighlight">\(10^{-3}\)</span> seconds). Additionally, WHIR is an IOPP protocol for <em>constrained Reed-Solomon codes</em> (CRS), which allows WHIR to support queries for both multivariate linear polynomials and univariate polynomials, which is why WHIR can be compared simultaneously with BaseFold, FRI, and STIR [ACFY24b]. Overall, WHIR combines the ideas of BaseFold and STIR, enabling the WHIR protocol to support multivariate linear polynomials without sacrificing Prover efficiency and argument size, while also having a smaller query complexity.</p>
+<section id="from-univariate-polynomials-to-multivariate-linear-polynomials">
+<h2>From Univariate Polynomials to Multivariate Linear Polynomials<a class="headerlink" href="#from-univariate-polynomials-to-multivariate-linear-polynomials" title="Link to this heading">#</a></h2>
+<p>For a finite field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L} \subseteq \mathbb{F}\)</span>, and Reed-Solomon encoding of degree <span class="math notranslate nohighlight">\(d \in \mathbb{N}\)</span>, it represents the set of evaluations of all univariate polynomials over <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> with degree strictly less than <span class="math notranslate nohighlight">\(d\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>, denoted as <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span>. Assuming <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> is a multiplicative coset of <span class="math notranslate nohighlight">\(\mathbb{F}^*\)</span>, and its order is a power of 2 (called “smooth” <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>), and also assuming the degree <span class="math notranslate nohighlight">\(d = 2^m\)</span> is in the form of a power of 2, then we can view the univariate polynomial as a multivariate linear polynomial with <span class="math notranslate nohighlight">\(m\)</span> variables. (From [ACFY24b, 1.1 Constrained Reed-Solomon codes])</p>
+<p>Let’s first give a simple example with <span class="math notranslate nohighlight">\(d = 2^3\)</span>, let</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = a_0 + a_1 x + a_2 x^2 + a_3 x^3 + a_4 x^4 + a_5 x^5 + a_6 x^6 + a_7 x^7 
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(X_1 = x, X_2 = x^2 , X_3 = x^4\)</span>, then <span class="math notranslate nohighlight">\(f(x)\)</span> can be represented as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f(x) &amp; = a_0 + a_1 x + a_2 x^2 + a_3 x^3 + a_4 x^4 + a_5 x^5 + a_6 x^6 + a_7 x^7 \\
+    &amp; = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1X_2 + a_4 X_3 + a_5 X_1 X_2 + a_6 X_1 X_3 + a_7 X_1 X_2 X_3
+\end{aligned}
+\end{split}\]</div>
+<p>Denote the new multivariate linear polynomial as</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{f}(X_1, X_2, X_3) = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1X_2 + a_4 X_3 + a_5 X_1 X_2 + a_6 X_1 X_3 + a_7 X_1 X_2 X_3
+\]</div>
+<p>In this way, <span class="math notranslate nohighlight">\(f(x)\)</span> can be viewed as a univariate polynomial, or as a multivariate linear polynomial after variable substitution <span class="math notranslate nohighlight">\(X_1 = x, X_2 = x^2 , X_3 = x^4\)</span>.</p>
+<p>For univariate polynomials in the RS code <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, \mathcal{L}, d]\)</span>, it’s similar, they can be viewed from the perspective of multivariate linear polynomials, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \mathrm{RS}[\mathbb{F}, \mathcal{L}, d] &amp; := \{f: \mathcal{L} \rightarrow \mathbb{F}: \exists \hat{g} \in \mathbb{F}^{&lt; 2^m}[X] \text{ s.t. } \forall x \in \mathcal{L}, f(x) = \hat{g}(x)\} \\
+    &amp; = \{f: \mathcal{L} \rightarrow \mathbb{F}: \exists \hat{f} \in \mathbb{F}^{&lt; 2}[X_1, \ldots, X_m] \text{ s.t. } \forall x \in \mathcal{L}, f(x) = \hat{f}(x^{2^0}, x^{2^1},\ldots, x^{2^{m-1}})\}
+\end{aligned}
+\end{split}\]</div>
+<p>In the above equation, <span class="math notranslate nohighlight">\(\hat{g}(x)\)</span> is the univariate polynomial, while <span class="math notranslate nohighlight">\(\hat{f}(X_1, \ldots, X_m)\)</span> is the multivariate linear polynomial with <span class="math notranslate nohighlight">\(m\)</span> variables. The idea used here appears in BaseFold. (From [ACFY24b, 1.1 Constrained Reed-Solomon codes])</p>
+<p>Furthermore, consistent with the FRI protocol, folding a univariate polynomial with a random number <span class="math notranslate nohighlight">\(\alpha_1\)</span> can be equivalently viewed as substituting <span class="math notranslate nohighlight">\(\alpha_1\)</span> for one of the variables in the multivariate linear polynomial.</p>
+<p>For example, for the above <span class="math notranslate nohighlight">\(f(x) = a_0 + a_1 x + a_2 x^2 + a_3 x^3 + a_4 x^4 + a_5 x^5 + a_6 x^6 + a_7 x^7\)</span>, first fold with <span class="math notranslate nohighlight">\(\alpha_1\)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f(x) &amp; = a_0 + a_2 x^2 + a_4 x^4 + a_6 x^6 + x (a_1 + a_3 x^2 + a_5 x^4 + a_7 x^6) \\
+    &amp; := f_1(x^2) + x f_2(x^2)
+\end{aligned}
+\end{split}\]</div>
+<p>The folded polynomial is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(1)}(x) &amp; = f_1(x) + \alpha_1 f_2(x) \\
+    &amp; = a_0 + a_2 x + a_4 x^2 + a_6 x^3 + \alpha_1 (a_1 + a_3 x + a_5 x^2 + a_7 x^3) \\
+    &amp; = a_0 + a_2 X_1 + a_4 X_2 + a_6 X_1X_2 + \alpha_1 (a_1 + a_3 X_1 + a_5 X_2 + a_7 X_1X_2)
+\end{aligned}
+\end{split}\]</div>
+<p>This is equivalent to directly substituting values and replacing variables in the original multivariate polynomial <span class="math notranslate nohighlight">\(\hat{f}(X_1,X_2,X_3)\)</span>, specifically:</p>
+<ol class="arabic simple">
+<li><p>First, substitute <span class="math notranslate nohighlight">\(X_1\)</span> with <span class="math notranslate nohighlight">\(\alpha_1\)</span>, we get</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \hat{f}(\alpha_1,X_2,X_3) &amp; = a_0 + a_1 \cdot \alpha_1 + a_2 X_2 + a_3 \cdot  \alpha_1 X_2 + a_4 X_3 + a_5 \cdot \alpha_1 X_2 + a_6 X_2 X_3 + a_7 \cdot \alpha_1 X_2 X_3 \\
+    &amp; = a_0 + a_2 X_2 + a_4 X_3 + a_6 X_2 X_3 + \alpha_1 (a_1 + a_3 X_2 + a_5 X_2 + a_7 X_2 X_3) 
+\end{aligned}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Let the new variables <span class="math notranslate nohighlight">\(X_1 = X_2\)</span>, and <span class="math notranslate nohighlight">\(X_2 = X_3\)</span>, we get the folded polynomial as</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \hat{f}^{(1)}(X_1, X_2) &amp; = a_0 + a_2 X_1 + a_4 X_2 + a_6 X_1 X_2 + \alpha_1 (a_1 + a_3 X_1 + a_5 X_2 + a_7 X_1 X_2) \\
+    &amp; = f^{(1)}(x)
+\end{aligned}
+\end{split}\]</div>
+<p>We can see that the polynomials obtained by the two folding methods are equivalent, except that <span class="math notranslate nohighlight">\(f^{(1)}(x)\)</span> is in the form of a univariate polynomial, while <span class="math notranslate nohighlight">\(\hat{f}^{(1)}(X_1, X_2)\)</span> is in the form of a multivariate linear polynomial.</p>
+<p>If we want to perform a 4-fold on the original polynomial <span class="math notranslate nohighlight">\(f(x)\)</span>, from the perspective of univariate polynomials, we can perform a 2-fold on the polynomial <span class="math notranslate nohighlight">\(f^{(1)}(x)\)</span> after the 2-fold, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(1)}(x) &amp; = a_0 + a_2 x + a_4 x^2 + a_6 x^3 + \alpha_1 (a_1 + a_3 x + a_5 x^2 + a_7 x^3) \\
+    &amp; = (a_0 + \alpha_1 a_1) + (a_2 + \alpha_1 a_3) \cdot x + (a_4 + \alpha_1 a_5) \cdot x^2 + (a_6 + \alpha_1 a_7) \cdot x^3 \\
+    &amp; = ((a_0 + \alpha_1 a_1) + (a_4 + \alpha_1 a_5) \cdot x^2) + x \cdot ((a_2 + \alpha_1 a_3) + (a_6 + \alpha_1 a_7) \cdot x^2) \\
+    &amp; := f_1^{(1)}(x^2) + x f_2^{(1)}(x^2)
+\end{aligned}
+\end{split}\]</div>
+<p>Folding with a random number <span class="math notranslate nohighlight">\(\alpha_2\)</span>, we get the folded polynomial as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(2)}(x) &amp; = f_1^{(1)}(x) + \alpha_2 f_2^{(1)}(x) \\
+    &amp; = ((a_0 + \alpha_1 a_1) + (a_4 + \alpha_1 a_5)  x) + \alpha_2 ((a_2 + \alpha_1 a_3) + (a_6 + \alpha_1 a_7) x) \\
+    &amp; = ((a_0 + \alpha_1 a_1) + (a_4 + \alpha_1 a_5) X_1) + \alpha_2 ((a_2 + \alpha_1 a_3) + (a_6 + \alpha_1 a_7)  X_1)
+\end{aligned}
+\end{split}\]</div>
+<p>From the perspective of multivariate linear polynomials, we can perform a 2-fold on the multivariate linear polynomial <span class="math notranslate nohighlight">\(\hat{f}^{(1)}(X_1, X_2)\)</span> after the 2-fold, i.e.,</p>
+<ol class="arabic simple">
+<li><p>Substitute <span class="math notranslate nohighlight">\(X_1\)</span> with <span class="math notranslate nohighlight">\(\alpha_2\)</span>, we get</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \hat{f}^{(1)}(\alpha_2, X_2) &amp; = a_0 + a_2 \alpha_2 + a_4 X_2 + a_6 \alpha_2 X_2 + \alpha_1 (a_1 + a_3 \alpha_2 + a_5 X_2 + a_7 \alpha_2 X_2) \\
+    &amp; = ((a_0 + \alpha_1 a_1) + (a_4 + \alpha_1 a_5) X_2) + \alpha_2 ((a_2 + \alpha_1 a_3) + (a_6 + \alpha_1 a_7)  X_2)
+\end{aligned}
+\end{split}\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Let the new variable <span class="math notranslate nohighlight">\(X_1 = X_2\)</span>, we get the folded polynomial as</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{f}^{(2)}(X_1) = ((a_0 + \alpha_1 a_1) + (a_4 + \alpha_1 a_5) X_1) + \alpha_2 ((a_2 + \alpha_1 a_3) + (a_6 + \alpha_1 a_7)  X_1)
+\]</div>
+<p>We can find that for multiple folds, folding using univariate polynomials and directly folding using multivariate linear polynomials are equivalent. The process of folding a multivariate linear polynomial with random numbers <span class="math notranslate nohighlight">\((\alpha_1, \alpha_2)\)</span> is just the process of direct variable substitution, i.e., we get <span class="math notranslate nohighlight">\(\hat{f}^{(2)}(X_1) = \hat{f}(\alpha_1, \alpha_2, X_1)\)</span>.</p>
+<p>Below we introduce the definition of the folding function given in the paper [ACFY24b], which is consistent with the folding method in the FRI protocol.</p>
+<p><strong>Definition 1</strong> [ACFY24b, Definition 4.14] Let <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> be a function, <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span>. Define <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, \alpha): \mathcal{L}^2 \rightarrow \mathbb{F}\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\forall x \in \mathcal{L}^2, \; \mathrm{Fold}(f, \alpha)(x^2) = \frac{f(x) + f(-x)}{2} + \alpha \cdot \frac{f(x) - f(-x)}{2 \cdot x}
+\]</div>
+<p>To calculate <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, \alpha)(x^2)\)</span>, it’s sufficient to query the values of <span class="math notranslate nohighlight">\(f\)</span> at <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(-x\)</span>.</p>
+<p>For <span class="math notranslate nohighlight">\(k \le m\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} = (\alpha_1, \alpha_2, \ldots, \alpha_k) \in \mathbb{F}^k\)</span>, define <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, \boldsymbol{\alpha}) : \mathcal{L}^{(2^k)} \rightarrow \mathbb{F}\)</span>, denote <span class="math notranslate nohighlight">\(\mathrm{Fold}(f, \boldsymbol{\alpha}) := f_k\)</span>, recursively define: <span class="math notranslate nohighlight">\(f_0 := f\)</span> and <span class="math notranslate nohighlight">\(f_i := \mathrm{Fold}(f_{i-1}, \alpha_i)\)</span>.</p>
+<p>The following proposition tells us that folding a Reed-Solomon code on any set of points still results in a Reed-Solomon code. ([ACFY24b])</p>
+<p><strong>Proposition 1</strong> [ACFY24b, Claim 4.15] Let <span class="math notranslate nohighlight">\(f: \mathcal{L} \rightarrow \mathbb{F}\)</span> be a function, <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} \in \mathbb{F}^k\)</span> represent folding random numbers, let <span class="math notranslate nohighlight">\(g:= \mathrm{Fold}(f, \boldsymbol{\alpha})\)</span>. If <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, m]\)</span> and <span class="math notranslate nohighlight">\(k \le m\)</span>, then <span class="math notranslate nohighlight">\(g \in \mathrm{RS}[\mathbb{F}, \mathcal{L}^{(2^k)}, m-k]\)</span>, and the multilinear extension of <span class="math notranslate nohighlight">\(g\)</span> is <span class="math notranslate nohighlight">\(\hat{g}(X_k, \ldots, X_m) := \hat{f}(\boldsymbol{\alpha}, X_k, \ldots, X_m)\)</span>, where <span class="math notranslate nohighlight">\(\hat{f}\)</span> is the multilinear extension of <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p>The <span class="math notranslate nohighlight">\(\hat{g}(X_k, \ldots, X_m) := \hat{f}(\boldsymbol{\alpha}, X_k, \ldots, X_m)\)</span> given in the proposition is consistent with the folding of the univariate polynomial <span class="math notranslate nohighlight">\(f\)</span> and the direct folding of the multivariate linear polynomial <span class="math notranslate nohighlight">\(\hat{f}\)</span> with random numbers mentioned above. From the perspective of multivariate linear polynomials, it is just direct variable substitution with random numbers <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span>, i.e., <span class="math notranslate nohighlight">\(\hat{f}(\boldsymbol{\alpha}, X_k, \ldots, X_m)\)</span>.</p>
+<p>Recalling the FRI protocol, it continuously folds the univariate polynomial <span class="math notranslate nohighlight">\(f\)</span> with random numbers <span class="math notranslate nohighlight">\((\alpha_1, \ldots, \alpha_m)\)</span> until finally obtaining a constant polynomial. From the perspective of multivariate linear polynomials, we would eventually get <span class="math notranslate nohighlight">\(\hat{f}(\alpha_1, \ldots, \alpha_m)\)</span> as a constant. Connecting to the Sumcheck protocol, the last step also requires obtaining the value of a multivariate polynomial at a certain random point, and the verifier needs to obtain this value for verification. This step is usually implemented using an oracle. Now the FRI protocol can also provide the value of <span class="math notranslate nohighlight">\(\hat{f}(\alpha_1, \ldots, \alpha_m)\)</span> at a random point at the end. If the Sumcheck protocol and the FRI protocol choose the same random point <span class="math notranslate nohighlight">\((\alpha_1, \ldots, \alpha_m)\)</span>, then the FRI protocol can directly provide the value needed for the last step of the Sumcheck protocol when it reaches the end. Combining the FRI protocol and the Sumcheck protocol in this way is the idea of the BaseFold protocol [ZCF24].</p>
+</section>
+<section id="crs-constrained-reed-solomon-codes">
+<h2>CRS: Constrained Reed-Solomon codes<a class="headerlink" href="#crs-constrained-reed-solomon-codes" title="Link to this heading">#</a></h2>
+<p>Below is the definition of constrained Reed-Solomon codes given in the WHIR paper [ACFY24b]. It is a subset of Reed-Solomon codes, but with an additional constraint similar to Sumcheck.</p>
+<p><strong>Definition 2</strong> [ACFY24b, Definition 1] For a field <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, smooth evaluation domain <span class="math notranslate nohighlight">\(\mathcal{L} \subseteq \mathbb{F}\)</span>, number of variables <span class="math notranslate nohighlight">\(m \in \mathbb{N}\)</span>, weight polynomial <span class="math notranslate nohighlight">\(\hat{w} \in \mathbb{F}[Z, X_1, \ldots, X_m]\)</span>, and target <span class="math notranslate nohighlight">\(\sigma \in \mathbb{F}\)</span>, the <strong>constrained Reed-Solomon code</strong> is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma] := \left\{ f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, m]: \sum_{\mathbf{b} \in \{0,1\}^m} \hat{w}(\hat{f}(\mathbf{b}), \mathbf{b}) = \sigma \right\}.
+\]</div>
+<p>From the definition, we can see that CRS (constrained Reed-Solomon code) is first a RS code, i.e., <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, m]\)</span> in the definition, but on top of this, it needs to satisfy a summation constraint similar to Sumcheck <span class="math notranslate nohighlight">\(\sum_{\mathbf{b} \in \{0,1\}^m} \hat{w}(\hat{f}(\mathbf{b}), \mathbf{b}) = \sigma\)</span>.</p>
+<p>The paper [ACFY24b] mentions that the weight polynomial <span class="math notranslate nohighlight">\(\hat{w}\)</span> in the definition can be defined by oneself and has wide applications. The paper gives such an example: an evaluation constraint <span class="math notranslate nohighlight">\(\hat{f}(\mathbf{z}) = \sigma\)</span>, which constrains the value of the multivariate polynomial <span class="math notranslate nohighlight">\(\hat{f}\)</span> at point <span class="math notranslate nohighlight">\(\mathbf{z} \in \mathbb{F}^m\)</span> to be the target value <span class="math notranslate nohighlight">\(\sigma\)</span>. First, perform a multilinear extension on <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}, \mathcal{L}, m]\)</span> to get</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{f}(\mathbf{X}) = \sum_{\mathbf{b} \in \{0,1\}^m} f(\mathbf{b}) \cdot \mathrm{eq}(\mathbf{b}, \mathbf{X})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{eq}(\mathbf{b}, \mathbf{X}) = \prod_{i=1}^m (b_i X_i + (1 - b_i) \cdot (1 - X_i))\)</span>. Therefore, when <span class="math notranslate nohighlight">\(\mathbf{b},\mathbf{X} \in \{0,1\}^m\)</span>, if <span class="math notranslate nohighlight">\(\mathbf{b} = \mathbf{X}\)</span>, then <span class="math notranslate nohighlight">\(\mathrm{eq}(\mathbf{b}, \mathbf{X}) = 1\)</span>, if <span class="math notranslate nohighlight">\(\mathbf{b} \neq \mathbf{X}\)</span>, then <span class="math notranslate nohighlight">\(\mathrm{eq}(\mathbf{b}, \mathbf{X}) = 0\)</span>. Thus</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{f}(\mathbf{z}) = \sum_{\mathbf{b} \in \{0,1\}^m} f(\mathbf{b}) \cdot \mathrm{eq}(\mathbf{b}, \mathbf{z}) = \sum_{\mathbf{b} \in \{0,1\}^m} \hat{w}(\hat{f}(\mathbf{b}), \mathbf{b})
+\]</div>
+<p>The weight polynomial <span class="math notranslate nohighlight">\(\hat{w}(Z, \mathbf{X})\)</span> can be defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}(Z, \mathbf{X}) = Z \cdot \mathrm{eq}(\mathbf{X}, \mathbf{z}).
+\]</div>
+<p>In this way, an evaluation constraint can be represented using the weight polynomial. Based on this, the corresponding PCS can be constructed (from [ACFY24b, 1.1 Hash-based PCS from CRS codes]), in two cases:</p>
+<ol class="arabic simple">
+<li><p>Constrain the value of the multivariate linear polynomial <span class="math notranslate nohighlight">\(\hat{f}\)</span> at <span class="math notranslate nohighlight">\(\mathbf{z} \in \mathbb{F}^m\)</span> to be <span class="math notranslate nohighlight">\(\sigma\)</span>, let the weight polynomial be
+$<span class="math notranslate nohighlight">\(
+     \hat{w}(Z, \mathbf{X}) = Z \cdot \mathrm{eq}(\mathbf{X}, \mathbf{z}).
+ \)</span>$</p></li>
+<li><p>Constrain the value of a univariate polynomial <span class="math notranslate nohighlight">\(f\)</span> at <span class="math notranslate nohighlight">\(z \in \mathbb{F}\)</span> to be <span class="math notranslate nohighlight">\(\sigma\)</span>, convert this case to the case of multivariate linear polynomials, consider the evaluation point as <span class="math notranslate nohighlight">\(\mathbf{z} = (z^{2^0}, \ldots, z^{2^{m-1}})\)</span>, then the weight polynomial is
+$<span class="math notranslate nohighlight">\(
+     \hat{w}(Z, X) = Z \cdot \mathrm{eq}(\mathbf{X}, (z^{2^0}, \ldots, z^{2^{m-1}})).
+ \)</span>$</p></li>
+</ol>
+</section>
+<section id="one-iteration-of-whir">
+<h2>One Iteration of WHIR<a class="headerlink" href="#one-iteration-of-whir" title="Link to this heading">#</a></h2>
+<p>As mentioned earlier, BaseFold combined the Sumcheck and FRI protocols, while the WHIR protocol combines the ideas of BaseFold and STIR, replacing the FRI protocol in BaseFold with the STIR protocol. Compared to the FRI protocol, the STIR protocol has a smaller query complexity. The core idea of the STIR protocol is to reduce the rate of each iteration, increasing the redundancy in the messages sent by the Prover, thereby reducing the Verifier’s query complexity.</p>
+<p>Let’s delve into one iteration of the WHIR protocol (from [ACFYb, 2.1.3 WHIR protocol]) to see how WHIR specifically combines BaseFold and the STIR protocol. After one iteration, the problem of testing the proximity of <span class="math notranslate nohighlight">\(f \in \mathcal{C} := \mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]\)</span> is transformed into testing <span class="math notranslate nohighlight">\(f' \in \mathcal{C}' := \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']\)</span>.</p>
+<p><img alt="" src="../_images/whir.svg" /></p>
+<ol class="arabic">
+<li><p>Sumcheck rounds. Prover and Verifier interact for <span class="math notranslate nohighlight">\(k\)</span> rounds of Sumcheck for the constraint in <span class="math notranslate nohighlight">\(\mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+    \sum_{\mathbf{b} \in \{0,1\}^m} \hat{w}(\hat{f}(\mathbf{b}), \mathbf{b}) = \sigma
+    \]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{f}\)</span> is the multivariate linear polynomial corresponding to <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p>a. Prover sends a univariate polynomial <span class="math notranslate nohighlight">\(\hat{h}_1(X) := \sum_{\mathbf{b} \in \{0,1\}^{m-1}} \hat{w}(\hat{f}(X, \mathbf{b}), X, \mathbf{b})\)</span> to Verifier, Verifier checks <span class="math notranslate nohighlight">\(\hat{h}_1(0) + \hat{h}_1(1) = \sigma\)</span>, selects a random number <span class="math notranslate nohighlight">\(\alpha_1 \leftarrow \mathbb{F}\)</span> and sends it, the sumcheck claim becomes <span class="math notranslate nohighlight">\(\hat{h}_1(\alpha_1) := \sum_{\mathbf{b} \in \{0,1\}^{m-1}} \hat{w}(\hat{f}(\alpha_1, \mathbf{b}), \alpha_1, \mathbf{b})\)</span>.
+b. For the <span class="math notranslate nohighlight">\(i\)</span>-th round, <span class="math notranslate nohighlight">\(i\)</span> from <span class="math notranslate nohighlight">\(2\)</span> to <span class="math notranslate nohighlight">\(k\)</span>, Prover sends a univariate polynomial</p>
+<div class="math notranslate nohighlight">
+\[
+    \hat{h}_i(X) := \sum_{\mathbf{b} \in \{0,1\}^{m-i}} \hat{w}(\hat{f}(\alpha_1, \ldots, \alpha_{i - 1}, X, \mathbf{b}), \alpha_1, \ldots, \alpha_{i - 1}, X, \mathbf{b})
+    \]</div>
+<p>Verifier checks <span class="math notranslate nohighlight">\(\hat{h}_{i}(0) + \hat{h}_{i}(1) = \hat{h}_{i-1}(\alpha_{i-1})\)</span>, selects a random number <span class="math notranslate nohighlight">\(\alpha_i \leftarrow \mathbb{F}\)</span>, the sumcheck claim becomes</p>
+<div class="math notranslate nohighlight">
+\[
+    \sum_{\mathbf{b} \in \{0,1\}^{m-i}} \hat{w}(\hat{f}(\alpha_1, \ldots, \alpha_{i - 1}, \alpha_i, \mathbf{b}), \alpha_1, \ldots, \alpha_{i - 1}, \alpha_i, \mathbf{b}) = \hat{h}_i(\alpha_i)
+    \]</div>
+<p>Therefore, after the above <span class="math notranslate nohighlight">\(k\)</span> rounds of sumcheck, prover has sent polynomials <span class="math notranslate nohighlight">\((\hat{h}_1, \ldots, \hat{h}_k)\)</span>, verifier has selected random numbers <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} = (\alpha_1, \ldots, \alpha_k) \in \mathbb{F}^k\)</span>. The initial claim becomes the following statement</p>
+<div class="math notranslate nohighlight">
+\[
+    \sum_{\mathbf{b} \in \{0,1\}^{m-k}} \hat{w}(\hat{f}(\boldsymbol{\alpha}, \mathbf{b}), \boldsymbol{\alpha}, \mathbf{b}) = \hat{h}_k(\alpha_k)
+    \]</div>
+</li>
+<li><p>Send folded function. Prover sends function <span class="math notranslate nohighlight">\(g: \mathcal{L}^{(2)} \rightarrow \mathbb{F}\)</span>. In the case of an honest Prover, <span class="math notranslate nohighlight">\(\hat{g} \equiv \hat{f}(\boldsymbol{\alpha}, \cdot)\)</span>, <span class="math notranslate nohighlight">\(g\)</span> is defined as the evaluation of <span class="math notranslate nohighlight">\(\hat{g}\)</span> on domain <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span>.</p>
+<p>This means first folding <span class="math notranslate nohighlight">\(\hat{f}\)</span> <span class="math notranslate nohighlight">\(2^k\)</span> times with random numbers <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> to get <span class="math notranslate nohighlight">\(\hat{g} = \hat{f}(\boldsymbol{\alpha}, \cdot)\)</span>, at this point <span class="math notranslate nohighlight">\(\hat{g} : \mathcal{L}^{(2^k)} \rightarrow \mathbb{F}\)</span>, with its domain range as <span class="math notranslate nohighlight">\(\mathcal{L}^{(2^k)}\)</span>. Since <span class="math notranslate nohighlight">\(\hat{g}\)</span> is essentially a polynomial, we can change the domain of its variables to <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span>, the function <span class="math notranslate nohighlight">\(g\)</span> is consistent with the evaluation of <span class="math notranslate nohighlight">\(\hat{g}\)</span> on <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span>.</p>
+</li>
+<li><p>Out-of-domain sample. Verifier selects a random number <span class="math notranslate nohighlight">\(z_0 \leftarrow \mathbb{F}\)</span> and sends it to Prover. Let <span class="math notranslate nohighlight">\(\boldsymbol{z}_0 := (z_0^{2^0}, \ldots, z_0^{2^{m-k - 1}})\)</span>.</p></li>
+<li><p>Out-of-domain answers. Prover sends <span class="math notranslate nohighlight">\(y_0 \in \mathbb{F}\)</span>. In the honest case, <span class="math notranslate nohighlight">\(y_0 := \hat{g}(\boldsymbol{z}_0)\)</span>.</p></li>
+<li><p>Shift queries and combination randomness. For Verifier, for each <span class="math notranslate nohighlight">\(i \in [t]\)</span>, select random numbers <span class="math notranslate nohighlight">\(z_i \leftarrow \mathcal{L}^{(2^k)}\)</span> and send, obtain <span class="math notranslate nohighlight">\(y_i := \mathrm{Fold}(f, \boldsymbol{\alpha})(z_i)\)</span> by querying <span class="math notranslate nohighlight">\(f\)</span>. Let <span class="math notranslate nohighlight">\(\boldsymbol{z}_i := (z_i^{2^0}, \ldots, z_i^{2^{m- k - 1}})\)</span>. Verifier also selects a random number <span class="math notranslate nohighlight">\(\gamma \leftarrow \mathbb{F}\)</span> and sends.</p></li>
+<li><p>Recursive claim. Prover and Verifier define new weight polynomial and target value:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}'(Z, \boldsymbol{X}) := \hat{w}(Z, \boldsymbol{\alpha}, \boldsymbol{X}) + Z \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{X})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\sigma' := \hat{h}_k(\alpha_k) + \sum_{i = 0}^t \gamma^{i+1} \cdot y_i,
+\]</div>
+<p>Then, recursively test <span class="math notranslate nohighlight">\(g \in \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']\)</span>.</p>
+<p>First, let’s explain that the constraint in <span class="math notranslate nohighlight">\(g \in \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']\)</span> is correct, i.e., prove</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} \hat{w}'(g(\boldsymbol{b}), \boldsymbol{b}) = \sigma'
+\]</div>
+<p>Substituting <span class="math notranslate nohighlight">\(\hat{w}'\)</span> and <span class="math notranslate nohighlight">\(\sigma'\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} \hat{w}(g(\boldsymbol{b}), \boldsymbol{\alpha}, \boldsymbol{b}) + \sum_{\boldsymbol{b} \in \{0,1\}^{m-k}}  g(\boldsymbol{b}) \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{b}) = \hat{h}_k(\alpha_k) + \sum_{i = 0}^t \gamma^{i+1} \cdot y_i
+\]</div>
+<p>We prove this in two parts:</p>
+<ol class="arabic simple">
+<li><p>Prove
+$<span class="math notranslate nohighlight">\(
+\sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} \hat{w}(g(\boldsymbol{b}), \boldsymbol{\alpha}, \boldsymbol{b}) = \hat{h}_k(\alpha_k)
+\)</span>$</p></li>
+</ol>
+<p>From step 2 of the protocol, we know <span class="math notranslate nohighlight">\(g(\boldsymbol{b}) = \hat{f}(\boldsymbol{\alpha}, \boldsymbol{b})\)</span>, therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} \hat{w}(g(\boldsymbol{b}), \boldsymbol{\alpha}, \boldsymbol{b}) &amp; = \sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} \hat{w}(\hat{f}(\boldsymbol{\alpha}, \boldsymbol{b}), \boldsymbol{\alpha}, \boldsymbol{b}) \\
+    &amp; = \hat{h}_k(\alpha_k)
+\end{aligned}
+\end{split}\]</div>
+<p>The last equation is obtained from the final claim of the sumcheck in step 1 of the protocol.</p>
+<ol class="arabic simple" start="2">
+<li><p>Prove</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\boldsymbol{b} \in \{0,1\}^{m-k}}  g(\boldsymbol{b}) \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{b}) = \sum_{i = 0}^t \gamma^{i+1} \cdot y_i
+\]</div>
+<p>Proof:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \sum_{\boldsymbol{b} \in \{0,1\}^{m-k}}  g(\boldsymbol{b}) \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{b}) &amp; =  \sum_{i = 0}^t \gamma^{i+1} \cdot \sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} g(\boldsymbol{b}) \cdot  \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{b}) \\
+    &amp; = \sum_{i = 0}^t \gamma^{i+1} \cdot g(\boldsymbol{z}_i) \\
+    &amp; = \sum_{i = 0}^t \gamma^{i+1} \cdot y_i
+\end{aligned}
+\end{split}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\sum_{\boldsymbol{b} \in \{0,1\}^{m-k}} g(\boldsymbol{b}) \cdot  \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{b}) = g(\boldsymbol{z}_i)\)</span> is precisely what we mentioned earlier about using the weight polynomial <span class="math notranslate nohighlight">\(\hat{w}(Z, \mathbf{X}) = Z \cdot \mathrm{eq}(\mathbf{X}, \mathbf{z})\)</span> to constrain the value of a multivariate linear polynomial at a certain point.</p>
+<p>This also explains that the constraint definition in <span class="math notranslate nohighlight">\(g \in \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']\)</span> is correct.</p>
+<p>The definition of the new weight polynomial <span class="math notranslate nohighlight">\(\hat{w}'\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{w}'(Z, \boldsymbol{X}) := \hat{w}(Z, \boldsymbol{\alpha}, \boldsymbol{X}) + Z \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{X})
+\]</div>
+<p>It consists of two parts:</p>
+<ol class="arabic simple">
+<li><p>The first part <span class="math notranslate nohighlight">\(\hat{w}(Z, \boldsymbol{\alpha}, \boldsymbol{X})\)</span> constrains the correctness of <span class="math notranslate nohighlight">\(k\)</span> rounds of sumcheck in step 1 of the protocol.</p></li>
+<li><p>The second part <span class="math notranslate nohighlight">\(Z \cdot \sum_{i = 0}^t \gamma^{i+1} \cdot \mathrm{eq}(\boldsymbol{z}_i, \boldsymbol{X})\)</span> constrains that the values of <span class="math notranslate nohighlight">\(g\)</span> at <span class="math notranslate nohighlight">\(\boldsymbol{z}_i\)</span> are correct, and uses random number <span class="math notranslate nohighlight">\(\gamma\)</span> to linearly combine these <span class="math notranslate nohighlight">\(t + 1\)</span> constraints.
+a. The constraint <span class="math notranslate nohighlight">\(g(\boldsymbol{z}_0) = y_0\)</span> is actually verifying the correctness of out-of-domain answers.
+b. For <span class="math notranslate nohighlight">\(i \in [t]\)</span>, the constraint <span class="math notranslate nohighlight">\(g(\boldsymbol{z}_i) = y_i\)</span> is requiring the correctness of shift queries.</p></li>
+</ol>
+<p>This also shows the flexibility of the weight polynomial definition, which can implement multiple constraints at once.</p>
+<section id="connection-between-whir-and-basefold">
+<h3>Connection between WHIR and BaseFold<a class="headerlink" href="#connection-between-whir-and-basefold" title="Link to this heading">#</a></h3>
+<p>WHIR adopts the idea of BaseFold, and the definition of CRS itself introduces a constraint similar to sumcheck. In step 1 of the protocol, it first performs <span class="math notranslate nohighlight">\(k\)</span> rounds of sumcheck, where the random numbers <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} = (\alpha_1, \ldots, \alpha_k)\)</span> selected for sumcheck are completely consistent with the random numbers used for folding <span class="math notranslate nohighlight">\(\hat{f}\)</span> later, i.e., in step 2 of the protocol <span class="math notranslate nohighlight">\(\hat{g} = \hat{f}(\boldsymbol{\alpha}, \cdot)\)</span>, where <span class="math notranslate nohighlight">\(\hat{f}\)</span> is folded <span class="math notranslate nohighlight">\(2^k\)</span> times.</p>
+</section>
+<section id="connection-between-whir-and-stir">
+<h3>Connection between WHIR and STIR<a class="headerlink" href="#connection-between-whir-and-stir" title="Link to this heading">#</a></h3>
+<p>After using sumcheck in step 1 of the protocol, the subsequent steps 2-5 are similar to the STIR protocol. The following figure shows one iteration of the STIR protocol.</p>
+<p><img alt="" src="../_images/whir-stir-iteration.svg" /></p>
+<p>The core idea of the STIR protocol is to reduce the rate in each iteration. Specifically, in the next iteration, the folded polynomial <span class="math notranslate nohighlight">\(\hat{g}\)</span> is not evaluated on <span class="math notranslate nohighlight">\(\mathcal{L}^{(2^k)}\)</span>, but instead chooses to evaluate on a domain <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span> that is only half the size of the original domain <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>. This corresponds to step 2 of the WHIR protocol. The benefit of doing this is that it greatly increases the redundancy of the sent messages, reducing the query complexity of the verifier.</p>
+<p>For <span class="math notranslate nohighlight">\(f \in \mathcal{C} := \mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]\)</span>, its rate is <span class="math notranslate nohighlight">\(\rho = \frac{2^m}{|\mathcal{L}|}\)</span>, and after one WHIR iteration <span class="math notranslate nohighlight">\(f' \in \mathcal{C}' := \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']\)</span>, its rate is</p>
+<div class="math notranslate nohighlight">
+\[
+\rho' = \frac{2^{m - k}}{|\mathcal{L}^{(2)}|} = \frac{2^{m - k}}{\frac{|\mathcal{L}|}{2}} = \frac{2^{m - k + 1}}{|\mathcal{L}|} = 2^{1 - k} \cdot \rho = \left(\frac{1}{2}\right)^{k - 1} \cdot \rho
+\]</div>
+<p>When <span class="math notranslate nohighlight">\(k \ge 2\)</span>, we can see that <span class="math notranslate nohighlight">\(\rho'\)</span> will be smaller than <span class="math notranslate nohighlight">\(\rho\)</span>, the rate decreases.</p>
+</section>
+</section>
+<section id="mutual-correlated-agreement">
+<h2>Mutual correlated agreement<a class="headerlink" href="#mutual-correlated-agreement" title="Link to this heading">#</a></h2>
+<p>The correlated agreement theorem given in the [BCIKS20] paper is a key theorem for proving the security of FRI and STIR protocols, which ensures that the process of folding the original function with random numbers in the FRI protocol or STIR protocol is secure. In the security analysis of WHIR, a new concept of mutual correlated agreement is introduced, which has a stronger conclusion than correlated agreement.</p>
+<p>[ACFYb, 1.2 Mutual correlated agreement] gives the related definitions of correlated agreement and mutual correlated agreement. A code <span class="math notranslate nohighlight">\(\mathcal{C} := \text{RS}[\mathbb{F}, \mathcal{L}, m]\)</span> has <span class="math notranslate nohighlight">\((\delta, \varepsilon)\)</span>-correlated agreement means: for every <span class="math notranslate nohighlight">\(f_1, \ldots, f_\ell\)</span>, under the uniform selection of <span class="math notranslate nohighlight">\(\alpha \leftarrow \mathbb{F}\)</span>, with probability <span class="math notranslate nohighlight">\(1 - \varepsilon\)</span>: if there exists a set <span class="math notranslate nohighlight">\(S \subseteq \mathcal{L}\)</span>, where <span class="math notranslate nohighlight">\(|S| \geq (1 - \delta) \cdot |\mathcal{L}|\)</span>, <span class="math notranslate nohighlight">\(f^*_\alpha := \sum_{i=1}^\ell \alpha^{i-1} \cdot f_i\)</span> is consistent with <span class="math notranslate nohighlight">\(\mathcal{C}\)</span> on <span class="math notranslate nohighlight">\(S\)</span>, then there exists a set <span class="math notranslate nohighlight">\(T \subseteq \mathcal{L}\)</span>, where <span class="math notranslate nohighlight">\(|T| \geq (1 - \delta) \cdot |\mathcal{L}|\)</span>, each <span class="math notranslate nohighlight">\(f_i\)</span> is consistent with <span class="math notranslate nohighlight">\(\mathcal{C}\)</span> on <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<p>In the above definition, describing a function <span class="math notranslate nohighlight">\(f\)</span> as “consistent” with a code <span class="math notranslate nohighlight">\(\mathcal{C}\)</span> on a set <span class="math notranslate nohighlight">\(S\)</span> means that there exists a codeword <span class="math notranslate nohighlight">\(u \in \mathcal{C}\)</span> in the encoding space such that for any <span class="math notranslate nohighlight">\(x \in S\)</span>, <span class="math notranslate nohighlight">\(f(x) = u(x)\)</span>.</p>
+<p>The definition of correlated agreement is shown in the following figure (refer to the video <a class="reference external" href="https://www.youtube.com/watch?v=iPKzmxLDdII&amp;amp;ab_channel=ZeroKnowledge">ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a>).</p>
+<p><img alt="" src="../_images/whir-correlated-agreement.svg" /></p>
+<p>The [BCIKS20] paper shows that a Reed-Solomon code with rate <span class="math notranslate nohighlight">\(\rho\)</span> has <span class="math notranslate nohighlight">\((\delta, \varepsilon)\)</span>-correlated agreement, where <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span>, <span class="math notranslate nohighlight">\(\varepsilon := \frac{\text{poly}(2^m, 1/\rho)}{|\mathbb{F}|}\)</span>. In other words, if <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{\alpha \in \mathbb{F}} \left[ \Delta(f^*_\alpha, \mathcal{C}) \le \delta \right] &gt; \varepsilon = \frac{\text{poly}(2^m, 1/\rho)}{|\mathbb{F}|} 
+\]</div>
+<p>then, there exist sets <span class="math notranslate nohighlight">\(T \subseteq \mathcal{L}\)</span>, and codes <span class="math notranslate nohighlight">\(c_0, \ldots, c_l \in \mathcal{C}\)</span> such that</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|T| \geq (1 - \delta) \cdot |\mathcal{L}|\)</span></p></li>
+<li><p>Each <span class="math notranslate nohighlight">\(f_i\)</span> is consistent with <span class="math notranslate nohighlight">\(c_i\)</span> on <span class="math notranslate nohighlight">\(T\)</span></p></li>
+</ol>
+<p>It can be found that the definition of <span class="math notranslate nohighlight">\((\delta, \varepsilon)\)</span>-correlated agreement does not require the sets <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(T\)</span> to be the same set, while in WHIR, a concept stronger than correlated agreement is introduced, called <em>mutual correlated agreement</em>, which requires the sets <span class="math notranslate nohighlight">\(S\)</span> and <span class="math notranslate nohighlight">\(T\)</span> to be the same set. As shown in the following figure (refer to the video <a class="reference external" href="https://www.youtube.com/watch?v=iPKzmxLDdII&amp;amp;ab_channel=ZeroKnowledge">ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a>):</p>
+<p><img alt="" src="../_images/whir-mutual-correlated-agreement.svg" /></p>
+<p>The WHIR paper gives the following conjecture about mutual correlated agreement.</p>
+<p><strong>Conjecture 1</strong> [ACFY24b, Conjecture 1] (informal). For every Reed-Solomon code <span class="math notranslate nohighlight">\(\mathcal{C} = \text{RS}[\mathbb{F}, \mathcal{L}, m]\)</span>, if it has <span class="math notranslate nohighlight">\((\delta, \varepsilon)\)</span>-correlated agreement, where <span class="math notranslate nohighlight">\(\varepsilon = \frac{\text{poly}(2^m, 1/\rho)}{|\mathbb{F}|}\)</span>, then it has <span class="math notranslate nohighlight">\((\delta, \varepsilon')\)</span>-mutual correlated agreement, where <span class="math notranslate nohighlight">\(\varepsilon' = \frac{\text{poly}(2^m, 1/\rho)}{|\mathbb{F}|}\)</span>.</p>
+<p>The WHIR paper proves that in the case of unique decoding, i.e., when <span class="math notranslate nohighlight">\(\delta \in (0, \frac{1 - \rho}{2})\)</span>, Conjecture 1 holds with <span class="math notranslate nohighlight">\(\varepsilon' = \varepsilon\)</span>. This also connects correlated agreement with mutual correlated agreement.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>The WHIR protocol combines the ideas of BaseFold and STIR. First, for univariate polynomials in RS encoding, they can be viewed as equivalent multivariate linear polynomials through variable substitution, and the folding of univariate polynomials is also equivalent to folding the corresponding multivariate linear polynomials. This allows WHIR to support both univariate polynomials and multivariate linear polynomials.</p>
+<p>Secondly, a new CRS encoding definition is given, adding a constraint similar to sumcheck on the basis of RS encoding, which is a constraint similar to sumcheck on the weight polynomial <span class="math notranslate nohighlight">\(\hat{w}\)</span>. The flexibility of the weight polynomial definition allows multiple constraints to be required at once in the protocol, including constraining the correctness of sumcheck, the correctness of out-of-domain answers, and the correctness of shift queries.</p>
+<p>Then, by delving into one iteration of the WHIR protocol, we can see its connection with BaseFold and STIR protocols. The key here is still to build a bridge between univariate polynomials and multivariate linear polynomials, allowing free switching between the univariate function <span class="math notranslate nohighlight">\(f\)</span> and the multivariate linear polynomial <span class="math notranslate nohighlight">\(\hat{f}\)</span>. Through the introduction of CRS, the goal of the protocol is increased to verify the correctness of a constraint similar to sumcheck,</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{\mathbf{b} \in \{0,1\}^m} \hat{w}(\hat{f}(\mathbf{b}), \mathbf{b}) = \sigma
+\]</div>
+<p>Therefore, combining the idea of BaseFold, first perform <span class="math notranslate nohighlight">\(k\)</span> rounds of sumcheck, replacing <span class="math notranslate nohighlight">\(k\)</span> variables in the multivariate linear polynomial <span class="math notranslate nohighlight">\(\hat{f}\)</span> with the random numbers <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> from the sumcheck protocol. The folding of <span class="math notranslate nohighlight">\(\hat{f}\)</span> still uses the same random numbers <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span>. Combining the idea of STIR, to reduce the rate, the folded function is evaluated on a larger domain <span class="math notranslate nohighlight">\(\mathcal{L}^{(2)}\)</span>. The subsequent steps of out-of-domain sample and shift queries in the WHIR protocol are similar to the STIR protocol.</p>
+<p>Finally, we introduced the mutual correlated agreement conclusion used in the security proof of the WHIR protocol, which is stronger than the correlated agreement conclusion.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ACFY24a] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[ACFY24b] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[BBHR18] Eli Ben-Sasson, Iddo Bentov, Yinon Horesh, and Michael Riabzev. “Fast Reed–Solomon Interactive Oracle Proofs of Proximity”. In: <em>Proceedings of the 45th International Colloquium on Automata, Languages and Programming (ICALP)</em>, 2018.</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[ZCF24] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>Blog: <a class="reference external" href="https://gfenzi.io/papers/whir/">WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification</a></p></li>
+<li><p>video: <a class="reference external" href="https://www.youtube.com/watch?v=iPKzmxLDdII&amp;amp;ab_channel=ZeroKnowledge">ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-univariate-polynomials-to-multivariate-linear-polynomials">From Univariate Polynomials to Multivariate Linear Polynomials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#crs-constrained-reed-solomon-codes">CRS: Constrained Reed-Solomon codes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-iteration-of-whir">One Iteration of WHIR</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-between-whir-and-basefold">Connection between WHIR and BaseFold</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-between-whir-and-stir">Connection between WHIR and STIR</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutual-correlated-agreement">Mutual correlated agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

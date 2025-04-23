@@ -1,0 +1,963 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Basefold 笔记： MLE 求值证明 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'basefold/basefold-03.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Basefold 笔记：Random Foldable Codes" href="basefold-04.zh.html" />
+    <link rel="prev" title="Basefold 笔记：IOPP" href="basefold-02.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri/BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri/deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbasefold/basefold-03.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/basefold/basefold-03.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Basefold 笔记： MLE 求值证明</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp">Basefold-IOPP 协议的最后输出</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sumcheck">借力 Sumcheck</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">另一种折叠方式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-form-basefold-iopp">基于 Evaluation Form 的 Basefold-IOPP 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-form-basefold-evaluation-argument">Evaluation Form 的 Basefold Evaluation Argument 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basefold-mle">
+<h1>Basefold 笔记： MLE 求值证明<a class="headerlink" href="#basefold-mle" title="Link to this heading">#</a></h1>
+<p>假设我们有一个 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{X})\in\mathbb{F}[\vec{X}]^{\leq1}\)</span>，一个求值点 <span class="math notranslate nohighlight">\(\mathbf{u}\in\mathbb{F}^d\)</span>，以及多项式在求值点的运算结果 <span class="math notranslate nohighlight">\(v=\tilde{f}(\mathbf{u})\)</span> 。我们想基于 Basefold-IOPP 协议来构造一个 Polynomial Evaluation Argument。</p>
+<p>基于 FRI ，我们可以利用 DEEP Method 来构造一个 PCS 协议，即验证 Low Degree Polynomial <span class="math notranslate nohighlight">\(q(X) = (f(X)-f(u))/(X-u)\)</span> 的存在性。但是 FRI 协议只能处理 Univariate Polynomial 的情况。而对于 MLE Polynomial，我们一般情况下需要利用下面的扩展的多项式余数定理来将其归约成商多项式存在性问题：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0,X_1,\ldots, X_{n-1}) - v = \sum_{i=0}^{n-1} (X_k-u_k) \cdot q_i(X_0,X_1,\ldots, X_{k-1})
+\]</div>
+<p>比如 Virgo 就是采用了这种方案的 MLE PCS 协议。然而 Basefold [ZCF23] 则给出了一个耳目一新的思路来实现 MLE 的 Evaluation Argument：结合 Basefold-IOPP 协议和 Sumcheck 协议。我们可以利用 Sumcheck 协议的求和证明来作为协议的主框架，然后利用 Basefold-IOPP 来确保 MLE 多项式的 Low degree，同时利用 Basefold-IOPP 协议在多轮折叠后所产生的 MLE 多项式在随机点的求值，来弥补 Sumcheck 协议最后一轮所需要的求值的正确性证明。</p>
+<section id="basefold-iopp">
+<h2>Basefold-IOPP 协议的最后输出<a class="headerlink" href="#basefold-iopp" title="Link to this heading">#</a></h2>
+<p>为了方便演示，我们采用 <span class="math notranslate nohighlight">\(d=3\)</span> 的 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> 来演示，它的定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{X}) = f_0 + f_1\cdot X_0 + f_2\cdot X_1 + f_3\cdot X_0X_1 + f_4\cdot X_2 + f_5\cdot X_0X_2 + f_6\cdot X_1X_2 + f_7\cdot X_0X_1X_2
+\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> 为 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的系数向量，上面定义为 MLE 多项式的 Coefficients Form。</p>
+<p>我们回顾一下 Basefold-IOPP 协议的折叠过程，首先令 <span class="math notranslate nohighlight">\(f^{(3)}(X_0, X_1, X_2)\)</span> 对应于 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 经过 <span class="math notranslate nohighlight">\(C_3\)</span> 编码后的 codeword。对于每一轮折叠，Verifier 都会发送一个随机挑战数 <span class="math notranslate nohighlight">\(\alpha_i\)</span> 给 Prover，然后 Prover 会根据 <span class="math notranslate nohighlight">\(f^{(i+1)}\)</span> 折叠产生 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> ，然后将其编码 codeword（的 Oracle）发送给 Verifier。</p>
+<p>当 Basefold-IOPP 协议运行一次折叠后，协议双方得到的 codeword 所对应的多项式 <span class="math notranslate nohighlight">\(f^{(2)}(X_0,X_1)\)</span> 为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(2)}(X_0, X_1) &amp; = f^{(3)}(X_0, X_1, \alpha_2) \\
+&amp; = (f_0 + \alpha_2\cdot f_4) + (f_1+\alpha_2\cdot f_5)\cdot X_0 + (f_2+\alpha_2\cdot f_6)\cdot X_1 + (f_3+\alpha_2\cdot f_7)\cdot X_0X_1 \\
+\end{split}
+\end{split}\]</div>
+<p>再一轮折叠后，codeword 所对应的多项式 <span class="math notranslate nohighlight">\(f^{(1)}(X_0)\)</span> 为：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(1)}(X_0) &amp; = f^{(2)}(X_0, \alpha_1) \\
+&amp; = (f_0 + \alpha_2\cdot f_4 + \alpha_1\cdot f_2 + \alpha_2\alpha_1\cdot f_6) + (f_1+\alpha_2\cdot f_5 + \alpha_1\cdot f_3 + \alpha_2\alpha_1\cdot f_7)\cdot X_0 
+\end{split}
+\end{split}\]</div>
+<p>最后，codeword 所对应的「常数多项式」 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 如下：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(0)} &amp; = f^{(1)}(\alpha_0) \\
+&amp; = (f_0 + \alpha_2\cdot f_4 + \alpha_1\cdot f_2 + \alpha_2\alpha_1\cdot f_6) + (f_1+\alpha_2\cdot f_5 + \alpha_1\cdot f_3 + \alpha_2\alpha_1\cdot f_7)\cdot \alpha_0 \\
+&amp; = f_0 + f_1\alpha_0 + f_2\alpha_1 + f_3\alpha_0\alpha_1 + f_4\alpha_2 + f_5\alpha_0\alpha_2 + f_6\alpha_1\alpha_2 + f_7\alpha_0\alpha_1\alpha_2 \\
+\end{split}
+\end{split}\]</div>
+<p>仔细观察下，<span class="math notranslate nohighlight">\(f^{(0)}\)</span> 恰好是 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> 在 <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span> 处的求值。</p>
+<p>于是， Prover 在 Basefold-IOPP 协议的最后一轮将折叠产生的常数多项式发送给 Verifier，然后 Verifier 通过 Query-phase 来证明一步步的折叠过程是正确无误的，与此同时，Verifier 还得到了 <span class="math notranslate nohighlight">\(\tilde{f}(\vec{X})\)</span> 在 <span class="math notranslate nohighlight">\(\vec{X}=(\alpha_0, \alpha_1, \alpha_2)\)</span> 处的求值结果 <span class="math notranslate nohighlight">\(v\)</span> 。换个角度来看，Basefold-IOPP 协议在完成 Proximity 证明的同时，还额外还提供了 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> 在一个随机点的求值。或者严格点说，这是一个向量内积的证明：</p>
+<div class="math notranslate nohighlight">
+\[
+\langle \mathbf{f},(1,\alpha_0)\otimes(1,\alpha_1)\otimes(1,\alpha_2) \rangle = v
+\]</div>
+<p>只不过，这个 MLE 求值点并不是提前协商好的公共输入，而是在 Basefold-IOPP 协议运行过程中产生的随机挑战数构成的求值点。</p>
+<p>总结下，在 IOPP 协议的最后一轮，Prover 折叠产生了一个常数多项式，记为 <span class="math notranslate nohighlight">\(f^{(0)}\)</span>，它恰好是 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在随机点 <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span> 处的求值，而我们需要的是证明 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在一个「公开点」的取值的正确性，比如说 <span class="math notranslate nohighlight">\((u_0, u_1, u_2)\)</span> 点处的取值。</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, u_2) = f_0 + f_1\cdot u_0 + f_2\cdot u_1 + f_3\cdot u_0u_1 + f_4\cdot u_2 + f_5\cdot u_0u_2 + f_6\cdot u_1u_2 + f_7\cdot u_0u_1u_2
+\]</div>
+<p>那么接下来的问题就转换成了：我们如何利用 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在一个「随机点」的求值，来证明 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在另一个「公开点」的求值的正确性？</p>
+</section>
+<section id="sumcheck">
+<h2>借力 Sumcheck<a class="headerlink" href="#sumcheck" title="Link to this heading">#</a></h2>
+<p>我们可以利用 MLE 的性质来重新审视 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2)\)</span> 。 根据 MLE 的定义，我们可以有下面的等式：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{EQ}_1: \qquad \tilde{f}(X_0, X_1, X_2) = \sum_{\mathbf{b}\in\{0,1\}^3}\tilde{f}(b_0, b_1, b_2)\cdot \tilde{eq}_{(b_0, b_1, b_2)}(X_0, X_1, X_2)
+\]</div>
+<p>这里的 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 是 MLE 的 Lagrange Polynomials，它的定义如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{eq}_{(b_0,b_1,\ldots,b_{n-1})}(X_0,X_1,\ldots, X_{n-1})\big) = \prod_{i=0}^{n-1}\big((1-b_i)(1-X_i) + b_i\cdot X_i\big)
+\]</div>
+<p>容易验证，当 <span class="math notranslate nohighlight">\((X_0, X_1, X_2)=\mathbf{b}', \mathbf{b}'\in\{0,1\}^3\)</span> 时，上面 <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> 等式左边为 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{b}')\)</span>， 观察等式右边求和项中的每一个 <span class="math notranslate nohighlight">\(\tilde{eq}_{\mathbf{b}}(\mathbf{b}')\)</span> 。只有当两个向量 <span class="math notranslate nohighlight">\(\mathbf{b}=\mathbf{b}'\)</span> 完全相等时，这个 <span class="math notranslate nohighlight">\(\tilde{eq}_{\mathbf{b}}(\mathbf{b}')\)</span> 为 <span class="math notranslate nohighlight">\(1\)</span>，其余的都为 <span class="math notranslate nohighlight">\(0\)</span>，因此等式的右边的求和项中只剩下了 <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{b}')\cdot \tilde{eq}_{\mathbf{b}}(\mathbf{b}') = \tilde{f}(\mathbf{b}')\)</span> ，由此等式左右两边相等。</p>
+<p>这意味着等式 <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> 的左右两边的两个 MLE 多项式在 3 维 Boolean HyperCube 上的取值都相同，根据 MLE 的唯一性性质，我们可以得知，<span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> 对于任意的 <span class="math notranslate nohighlight">\(\mathbf{X}\in F^3\)</span> 都成立。</p>
+<p>虽然以上内容是 MLE 的基本常识，但请留意等式 <span class="math notranslate nohighlight">\(\mathsf{EQ}_1\)</span> 带来了新的视角：我们可以把 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2)\)</span> 的求值问题转化成一个 Sumcheck 问题：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(u_0, u_1, u_2) = v = \sum_{\mathbf{b}\in\{0,1\}^3}\tilde{f}(\mathbf{b})\cdot \tilde{eq}_{\mathbf{b}}(u_0, u_1, u_2)
+\]</div>
+<p>于是立即可以想到，我们可以用 Sumcheck 协议对上面的等式进行「求和证明」。而 Sumcheck 协议的一个重要功能是把一个「求和问题」继续转化为两个 MLE 多项式（分别是 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 与 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span>）在一个随机点的求值问题。不过一般情况下，这么做是没有意义的，这是因为我们会在 Sumcheck 的最后一轮，然后需要证明 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在一个新的点上的取值，这会出现循环证明的情况：我们本来证明一个多项式在一个点处的取值，然后通过上面的 Sumcheck 协议，把这个求值证明转化为了多项式在另一个点处的取值，这其中的 Sumcheck 协议过程显得多余且无用。通常情况下，协议需要再依赖一个 MLE Evaluation Argument 协议，Prover 发送最后的求值以及求值的正确性证明，从而最终结束 Sumcheck 协议。但在这里，我们并不能再依赖另一个 MLE PCS 协议，因为我们的目标本是构造一个 MLE Evaluation Argument 协议，而不是求助于另一个已有的 MLE PCS。</p>
+<p>不过这个问题并不难解决，因为我们前面介绍的 Basefold-IOPP 协议可以提供一个副产品：<span class="math notranslate nohighlight">\(\tilde{f}\)</span> 在「随机点」上的求值证明，如果 Sumcheck 协议和 Basefold-IOPP 协议共用随机数，那么 Basefold-IOPP 最后提供的值恰好可以弥补 Sumcheck 协议最后一轮所需要的「随机点」求值的正确性证明。然后还有一个剩下的问题是 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 的求值证明如何解决？这个问题更简单，因为 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 是一个公开的多项式，因此 Verifier 可以自行计算，无需让 Prover 发送求值证明，并且 <span class="math notranslate nohighlight">\(\tilde{eq}\)</span> 的求值计算仅有 <span class="math notranslate nohighlight">\(O(\log{N})\)</span> 的复杂度，并不会增加 Verifier 的负担，也不影响 Verifier 的简洁性（Succinctness）。这时，Sumcheck 协议的角色不再是多余，而是非常关键：<strong>它把多项式在一个公开点的求值证明问题转化为了多项式在一个随机点的求值证明</strong>。</p>
+<p>而我们接下来需要做的是，把 Basefold-IOPP 协议和 Sumcheck 协议一起同步执行，然后让这两个协议共用一组随机挑战数，这样就能在两个协议的最后一步，完成协同，从而最终证明 <span class="math notranslate nohighlight">\(\tilde{f}(u_0, u_1, u_2) = v\)</span> 的正确性。</p>
+<p>按这个思路，我们接下来尝试走一下 <span class="math notranslate nohighlight">\(s=3\)</span> 时协议流程。</p>
+<p><strong>公共输入</strong></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的 Commitment <span class="math notranslate nohighlight">\(\pi_3=[\tilde{f}]=\mathsf{Enc}_3(\mathbf{f})\)</span></p></li>
+<li><p>求值点 <span class="math notranslate nohighlight">\(\mathbf{u}=(u_0, u_1, u_2)\)</span></p></li>
+<li><p>运算值 <span class="math notranslate nohighlight">\(v\)</span></p></li>
+</ol>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>MLE  <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的系数向量 <span class="math notranslate nohighlight">\(\mathbf{f} = (f_0, f_1, f_2, f_3, f_4, f_5, f_6, f_7)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的求值向量  <span class="math notranslate nohighlight">\(\mathbf{a} = (a_0, a_1, a_2, a_3, a_4, a_5, a_6, a_7)\)</span></p></li>
+</ul>
+<p>第一轮：Prover 发送 Univariate 多项式 <span class="math notranslate nohighlight">\(h^{(2)}(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+h^{(2)}(X) = \sum_{b_0,b_1\in\{0,1\}^2}f(b_0, b_1, X)\cdot \tilde{eq}\big((b_0, b_1, X), (u_0, u_1, u_2)\big)
+\]</div>
+<p>由于等式右边是一个次数为 2 的 Univariate 多项式，因此 Prover 可以计算 <span class="math notranslate nohighlight">\(h^{(2)}(X)\)</span> 的系数：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(2)}_0 &amp;= \sum_{i=0}^{3}{a_i \cdot e_i} \\
+h^{(2)}_1 &amp;= \sum_{i=0}^{3}{a_{i+4} \cdot e_i + a_i\cdot e_{i+4}} \\
+h^{(2)}_2 &amp;= \sum_{i=0}^{3}{a_{i+4} \cdot e_{i+4}} \\
+\end{split}
+\end{split}\]</div>
+<p>这里 <span class="math notranslate nohighlight">\(\mathbf{e}\)</span> 为 <span class="math notranslate nohighlight">\(\tilde{eq}(\mathbf{X}, \mathbf{u})\)</span> 的 Evaluation向量。 容易验证 <span class="math notranslate nohighlight">\(h^{(2)}(X)=h^{(2)}_0 + h^{(2)}_1\cdot X + h^{(2)}_2 \cdot X^2\)</span> 。</p>
+<p>第二轮：Verifier 发送挑战数 <span class="math notranslate nohighlight">\(\alpha_2 \leftarrow \mathbb{F}_p\)</span></p>
+<p>第三轮：Prover 与 Verifier同时进行 Basefold-IOPP 协议和 Sumcheck 协议：</p>
+<ul class="simple">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(\tilde{f}^{(2)}(X_1, X_2)=f(\alpha_0, X_1, X_2)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(2)}(X_0, X_1) = (f_0 + f_4\alpha_2) + (f_1 + f_5\alpha_2)\cdot X_0 + (f_2 + f_6\alpha_2)\cdot X_1 + (f_3 + f_7\alpha_2)\cdot X_0X_1
+\]</div>
+<ul class="simple">
+<li><p>Prover 发送折叠后的向量编码： <span class="math notranslate nohighlight">\(\pi_2 = \mathrm{Enc}_{2}[\tilde{f}^{(2)}]\)</span></p></li>
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(h^{(2)}(\alpha_2)\)</span> 作为下一轮 Sumcheck 协议的求和值</p></li>
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+h^{(1)}(X) = \sum_{b_0\in\{0,1\}}f(b_0, X, \alpha_2)\cdot \tilde{eq}((b_0, X, \alpha_2), (u_0, u_1, u_2))
+\]</div>
+<p>等式右边同样是一个关于 <span class="math notranslate nohighlight">\(X\)</span> 次数为 2 的 Univariate 多项式，因此 Prover 可以计算出 <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span> 的系数： <span class="math notranslate nohighlight">\((h^{(1)}_0, h^{(1)}_1, h^{(1)}_2)\)</span> 。</p>
+<p>第四轮：Verifier 发送挑战数 <span class="math notranslate nohighlight">\(\alpha_1\leftarrow \mathbb{F}_p\)</span></p>
+<p>第五轮：Prover 继续运行 Basefold-IOPP 协议和 Sumcheck 协议：</p>
+<ul class="simple">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_2)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(1)}(X_2) =f(X_0, \alpha_1, \alpha_2) = (f_0 + f_4\alpha_2 + f_2\alpha_1 + f_6\alpha_1\alpha_2) + (f_1 + f_5\alpha_2 + f_3\alpha_1 + f_7\alpha_1\alpha_2)\cdot X_0
+\]</div>
+<ul class="simple">
+<li><p>Prover 发送折叠后的向量编码 <span class="math notranslate nohighlight">\(\pi_1 = \mathrm{Enc}_{1}[\tilde{f}^{(1)}]\)</span></p></li>
+<li><p>Prover 计算下一轮 Sumcheck 协议的求和值： <span class="math notranslate nohighlight">\(h^{(1)}(\alpha_1)\)</span></p></li>
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+h^{(0)}(X) = \sum_{b_0\in\{0,1\}}f(X, \alpha_1, \alpha_2)\cdot \tilde{eq}((b_0, \alpha_1, \alpha_2), (u_0, u_1, u_2))
+\]</div>
+<p>假设 <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span> 的系数表示为 <span class="math notranslate nohighlight">\((h^{(0)}_0, h^{(0)}_1, h^{(0)}_2)\)</span></p>
+<p>第六轮：Verifier 发送挑战数 <span class="math notranslate nohighlight">\(\alpha_0\leftarrow \mathbb{F}_p\)</span></p>
+<p>第七轮：Prover 继续进行 Basefold-IOPP 协议：</p>
+<ul class="simple">
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(\tilde{f}^{(0)}\)</span>，这是一个 <strong>常数多项式</strong></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}^{(0)} =f(\alpha_0, \alpha_1, \alpha_2) = f_0 + f_1\alpha_0 + f_2\alpha_1 + f_3\alpha_0\alpha_1 + f_4\alpha_2 + f_5\alpha_0\alpha_2 + f_6\alpha_1\alpha_2 + f_7\alpha_0\alpha_1\alpha_2
+\]</div>
+<ul class="simple">
+<li><p>Prover 发送折叠后的向量编码 <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{Enc}_0[\tilde{f}^{(0)}]\)</span></p></li>
+</ul>
+<p>第八轮：Verifier 验证下面的等式：</p>
+<ol class="arabic simple">
+<li><p>Verifier 验证若干轮的 Basefold-Query, <span class="math notranslate nohighlight">\(Q=\{q_i\}\)</span></p></li>
+<li><p>Verifier 检验 Sumcheck 的每一步折叠的正确性：</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+h^{(2)}(0) + h^{(2)}(1) &amp;\overset{?}{=} v \\
+h^{(1)}(0) + h^{(1)}(1) &amp;\overset{?}{=} h^{(2)}(\alpha_2) \\
+h^{(0)}(0) + h^{(0)}(1) &amp;\overset{?}{=} h^{(1)}(\alpha_1) \\
+\end{split}
+\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Verifier 验证最后的编码 <span class="math notranslate nohighlight">\(\pi_0\)</span> 是否正确</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+\pi_0 \overset{?}{=} \mathsf{Enc}_0\left(\frac{h^{(0)}(\alpha_0)}{\tilde{eq}((\alpha_0,\alpha_1,\alpha_2), (u_0, u_1, u_2))}\right)
+\]</div>
+</section>
+<section id="id1">
+<h2>另一种折叠方式<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Basefold 论文中的 PCS 协议是要求 MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span> 事先被转换到 Coefficients Form，然后按照上一节的协议进行证明。不过，在很多基于 Sumcheck 协议的 SNARK 系统，Sumcheck 协议在最后一步产生的是 MLE 多项式的 Evaluation Form，即  MLE 多项式在 Boolean HyperCube 上的求值。因此，如果直接用 SNARK 协议对接 Basefold-PCS，我们还需要将 MLE 多项式转换到 Coefficients Form，这个转换算法为 <span class="math notranslate nohighlight">\(O(N\log(N))\)</span> ，其中 <span class="math notranslate nohighlight">\(N=2^d\)</span> 。这里 <span class="math notranslate nohighlight">\(d\)</span> 为 MLE 多项式中未知数的个数。下面就是 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span> 的 Evaluation Form 的定义：</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_0, X_1, \ldots, X_{d-1}) = \sum_{\mathbf{b}\in\{0,1\}^d}a_{\mathbf{b}}\cdot eq_{\mathbf{b}}(X_0, X_1, \ldots, X_{d-1})
+\]</div>
+<p>正如 FRI-Binius 论文指出，其实我们并不需要将 MLE 多项式从 Evaluation Form 转换到 Coefficients Form，而是可以直接在 Evaluation Form 下完成 PCS 协议的构造。前面一节，之所以我们需要 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span> 的 Coefficients Form，是因为我们按照 Basefold-IOPP 协议的 Commit 方式，需要用到 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, \ldots, X_{d-1})\)</span> 的系数。而如果按照我们下面即将介绍的 Basefold-PCS 协议的折叠方式，我们就可以直接在 Evaluation Form 下完成 PCS 协议的构造。</p>
+<p>现在，我们考虑下 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1,X_2)\)</span> 的 Evaluation Form 的折叠方式。先展开 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1,X_2)\)</span> 的 Evaluation Form 定义：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(3)}(X_0, X_1, X_2) &amp; = \tilde{f}(X_0, X_1, X_2) \\
+&amp; = a_0\cdot eq_{(0,0,0)}(X_0, X_1, X_2) + a_1\cdot eq_{(1,0,0)}(X_0, X_1, X_2) + a_2\cdot eq_{(0,1,0)}(X_0, X_1, X_2) + a_3\cdot eq_{(1,1,0)}(X_0, X_1, X_2) \\
+&amp; + a_4\cdot eq_{(0,0,1)}(X_0, X_1, X_2) + a_5\cdot eq_{(1,0,1)}(X_0, X_1, X_2) + a_6\cdot eq_{(0,1,1)}(X_0, X_1, X_2) + a_7\cdot eq_{(1,1,1)}(X_0, X_1, X_2)
+\end{split}
+\end{split}\]</div>
+<p>其实我们可以对上面的 Evaluation Form 进行折叠，最终也可以得到  <span class="math notranslate nohighlight">\(\tilde{f}^{(3)}(\alpha_0, \alpha_1, \alpha_2)\)</span> 的求值。比如，我们可以用 <span class="math notranslate nohighlight">\(\alpha_2\)</span> 对上面的 Evaluation Form 进行折叠，得到：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(2)}(X_0, X_1) &amp; = \tilde{f}^{(3)}(X_0, X_1, \alpha_2) \\
+&amp; = a_0\cdot eq_{(0,0,0)}(X_0, X_1, \alpha_2) + a_1\cdot eq_{(1,0,0)}(X_0, X_1, \alpha_2) + a_2\cdot eq_{(0,1,0)}(X_0, X_1, \alpha_2) + a_3\cdot eq_{(1,1,0)}(X_0, X_1, \alpha_2) \\
+&amp; + a_4\cdot eq_{(0,0,1)}(X_0, X_1, \alpha_2) + a_5\cdot eq_{(1,0,1)}(X_0, X_1, \alpha_2) + a_6\cdot eq_{(0,1,1)}(X_0, X_1, \alpha_2) + a_7\cdot eq_{(1,1,1)}(X_0, X_1, \alpha_2)
+\end{split}
+\end{split}\]</div>
+<p>这时，我们需要分解下 <span class="math notranslate nohighlight">\(eq_{\mathbf{b}}(X_0, X_1\alpha_2)\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+eq_{(b_0,b_1,b_2)}(X_0, X_1, \alpha_2) &amp; = eq_{(b_0, b_1)}(X_0, X_1)\cdot \Big((1-b_2)\cdot(1-\alpha_2) + b_2\cdot \alpha_2 \Big)\\
+\end{split}
+\end{split}\]</div>
+<p>当 <span class="math notranslate nohighlight">\(b_2=0\)</span> 时，上面等式右边化简为 <span class="math notranslate nohighlight">\((1-\alpha_2)\cdot eq_{(b_0,b_1)}(X_0, X_1)\)</span> ；当 <span class="math notranslate nohighlight">\(b_2=1\)</span> 时，上面等式右边化简为 <span class="math notranslate nohighlight">\(\alpha_2\cdot eq_{(b_0,b_1)}(X_0, X_1)\)</span> 。 然后继续化简 <span class="math notranslate nohighlight">\(\tilde{f}^{(2)}(X_0, X_1)\)</span> ：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(2)}(X_0, X_1) &amp; = ((1-\alpha_2)\cdot a_0+\alpha_2\cdot a_4)\cdot eq_{(0,0)}(X_0, X_1) 
++ ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) \cdot eq_{(0,1)}(X_0, X_1) \\
+&amp; + ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \cdot eq_{(1,0)}(X_0, X_1) + ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \cdot eq_{(1,1)}(X_0, X_1)
+\end{split}
+\end{split}\]</div>
+<p>这相当于我们用 <span class="math notranslate nohighlight">\((1-\alpha_2, \alpha_2)\)</span> 对向量 <span class="math notranslate nohighlight">\((a_0, a_1, a_2, a_3)\)</span> 和 <span class="math notranslate nohighlight">\((a_4, a_5, a_6, a_7)\)</span> 进行折叠（线性组合）。而相比较 Basefold-IOPP 协议中的折叠方式，它是用 <span class="math notranslate nohighlight">\((1, \alpha_2)\)</span> 对向量 <span class="math notranslate nohighlight">\((f_0, f_1, f_2, f_3)\)</span> 和 <span class="math notranslate nohighlight">\((f_4, f_5, f_6, f_7)\)</span> 进行折叠（线性组合）。如果继续按照新的方式折叠下去，我们最终可以得到和 Basefold-IOPP 协议一样的折叠结果。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(1)}(X_0) &amp; = \tilde{f}^{(2)}(X_0, \alpha_1) \\
+&amp; = ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4)\cdot eq_{(0,0)}(X_0, \alpha_1) + ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) \cdot eq_{(1,0)}(X_0, \alpha_1) \\
+&amp; + ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \cdot eq_{(0,1)}(X_0, \alpha_1) + ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \cdot eq_{(1,1)}(X_0, \alpha_1) \\
+&amp; = ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4)\cdot (1-\alpha_1)\cdot eq_{(0)}(X_0) + ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) \cdot (1-\alpha_1)\cdot eq_{(1)}(X_0) \\
+&amp; + ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \cdot \alpha_1\cdot eq_{(0)}(X_0) + ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \cdot \alpha_1\cdot eq_{(1)}(X_0) \\
+&amp; = \Big((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4) + \alpha_1\cdot ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6) \Big)\cdot eq_{(0)}(X_0) \\
+&amp; + \Big((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) + \alpha_1\cdot ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7) \Big)\cdot eq_{(1)}(X_0) \\
+\end{split}
+\end{split}\]</div>
+<p>继续折叠下去，最终我们可以得到：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\tilde{f}^{(0)} &amp; = \tilde{f}^{(1)}(\alpha_0) \\
+&amp; = \Big((1-\alpha_0)\cdot ((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_0 + \alpha_2\cdot a_4) + \alpha_1\cdot ((1-\alpha_2)\cdot a_2 + \alpha_2\cdot a_6)) \\
+&amp; \quad + \alpha_0\cdot ((1-\alpha_1)\cdot ((1-\alpha_2)\cdot a_1 + \alpha_2\cdot a_5) + \alpha_1\cdot ((1-\alpha_2)\cdot a_3 + \alpha_2\cdot a_7)) \Big) \\
+&amp; = \tilde{f}^{(3)}(\alpha_0, \alpha_1, \alpha_2)
+\end{split}
+\end{split}\]</div>
+<p>我们能否改进 Basefold-IOPP 协议的折叠方式，使之直接可以折叠 Evaluation Form 的 MLE 多项式？</p>
+</section>
+<section id="evaluation-form-basefold-iopp">
+<h2>基于 Evaluation Form 的 Basefold-IOPP 协议<a class="headerlink" href="#evaluation-form-basefold-iopp" title="Link to this heading">#</a></h2>
+<p>我们接下来尝试写一下 <span class="math notranslate nohighlight">\(d=3\)</span> 的情况，即 <span class="math notranslate nohighlight">\(\tilde{f}(X_0, X_1, X_2)\)</span> 的 Evaluation Form 的 Basefold-IOPP 协议。首先，我们改写下前一篇文章中的折叠函数</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}^{*}_\alpha(y_0, y_1) &amp;= (1-\alpha)\cdot \frac{t_j\cdot y_1 - t'_j\cdot y_0}{t_j - t'_j} + \alpha\cdot \frac{y_0-y_1}{t_j - t'_j} \\
+\end{split}
+\end{split}\]</div>
+<p>通过前文，我们知道折叠函数具有这样的同态性质：折叠之后的 codeword 等价于原始消息经过折叠后再编码产生的 codeword，用公式表示如下，</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}_\alpha(\mathsf{Enc}_i(\mathbf{m}))=\mathsf{Enc}_i(\mathsf{fold}_\alpha(\mathbf{m}))
+\]</div>
+<p>同样我们可以证明新的折叠函数一样满足上面的性质。我们可以尝试用新的折叠函数来折叠 codeword <span class="math notranslate nohighlight">\(\pi_i\)</span> 中的一个元素：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+\mathsf{fold}^*_\alpha(\pi_{i}[j], \pi_{i}[n_{i-1}+j]) &amp; = \frac{1-\alpha}{t_j - t'_j}\cdot\Big(
+t_j\cdot (\mathbf{m}_l G_{i-1}[j] + t'_j\cdot \mathbf{m}_r G_{i-1}[j]) - t'_j\cdot(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j]) \Big)\\
+&amp; + \frac{\alpha}{t_j - t'_j}\cdot \Big(\mathbf{m}_l G_{i-1}[j] + t_j\cdot \mathbf{m}_r G_{i-1}[j] - \mathbf{m}_l G_{i-1}[j] - t'_j\cdot \mathbf{m}_r G_{i-1}[j] \Big) \\
+&amp; = (1-\alpha)\cdot \mathbf{m}_l G_{i-1}[j] + \alpha\cdot \mathbf{m}_r G_{i-1}[j]
+\end{split}
+\end{split}\]</div>
+<p>上面的推导已经说明，新的折叠函数一样满足关于编码函数的同态性质：</p>
+<div class="math notranslate nohighlight">
+\[
+\mathsf{fold}^*_\alpha(\mathsf{Enc}_i(\mathbf{m}))=\mathsf{Enc}_i(\mathsf{fold}^*_\alpha(\mathbf{m}))
+\]</div>
+<p>并且，我们同样可以证明新的折叠过程不影响 Basefold-IOPP 协议的可靠性，即折叠后 codeword 的 Minimum Hamming Weight 仍然大于一个下界。</p>
+<p>至此，我们得到一个重要的结论，不管采用 <span class="math notranslate nohighlight">\(\mathsf{fold}_\alpha\)</span> 还是 <span class="math notranslate nohighlight">\(\mathsf{fold}^*_\alpha\)</span>，它们都可以用来构造 Proximity-Proof 协议，并且不存在什么显著的区别。</p>
+<p>下面我们走下 Commit-phase 协议的流程，方便大家理解：</p>
+<p><strong>公共输入</strong></p>
+<ul class="simple">
+<li><p>MLE 多项式 <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的 codeword， <span class="math notranslate nohighlight">\(\pi_3=\mathsf{Enc}_3(\mathbf{a})=\mathbf{a}G_3\)</span></p></li>
+</ul>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>MLE 多项式  <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的取值向量 <span class="math notranslate nohighlight">\(\mathbf{a} = (a_0, a_1, a_2, a_3, a_4, a_5, a_6, a_7)\)</span></p></li>
+</ul>
+<p>第一轮：Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha_2\)</span></p>
+<p>第二轮：Prover 计算 <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{fold}^*_\alpha(\pi_3)\)</span>，然后发送给 Verifier</p>
+<p>计算 <span class="math notranslate nohighlight">\(\pi_2\)</span> 的过程如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_2[j] = \mathsf{fold}^*_\alpha(\pi_3[j], \pi_3[j+4]), \quad j\in\{0, 1, 2, 3\}
+\]</div>
+<p>计算出的 <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{Enc}_2(f^{(2)})\)</span>，即 <span class="math notranslate nohighlight">\(\pi_2\)</span> 是 <span class="math notranslate nohighlight">\(f^{(2)}\)</span> 的 codeword，而 <span class="math notranslate nohighlight">\(f^{(2)}\)</span> 是 <span class="math notranslate nohighlight">\(f\)</span> 的关于 <span class="math notranslate nohighlight">\(\alpha_2\)</span> 的折叠结果：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(2)}(X_0, X_1) &amp;= ((1-\alpha_2)a_0 + \alpha_2a_4)\cdot eq_{(0,0)}(X_0, X_1)+ ((1-\alpha_2)a_1 + \alpha_2a_5)\cdot eq_{(1,0)}(X_0, X_1) \\
+&amp; + ((1-\alpha_2)a_2 + \alpha_2a_6)\cdot eq_{(0,1)}(X_0, X_1) + ((1-\alpha_2)a_3 + \alpha_2a_7)\cdot eq_{(1,1)}(X_0, X_1) \\
+&amp; = f(X_0, X_1, \alpha_2)
+\end{split}
+\end{split}\]</div>
+<p>第三轮：Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha_1\)</span></p>
+<p>第四轮：Prover 计算 <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{fold}^*_\alpha(\pi_2)\)</span>，然后发送给 Verifier</p>
+<p>计算 <span class="math notranslate nohighlight">\(\pi_1\)</span> 的过程如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_1[j] = \mathsf{fold}^*_\alpha(\pi_2[j], \pi_2[j+2]), \quad j\in\{0, 1\}
+\]</div>
+<p>计算出的 <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{Enc}_1(f^{(1)})\)</span>，这里 <span class="math notranslate nohighlight">\(f^{(1)}\)</span> 是 <span class="math notranslate nohighlight">\(f^{(2)}\)</span> 的关于 <span class="math notranslate nohighlight">\(\alpha_1\)</span> 的折叠结果：</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{split}
+f^{(1)}(X_0)  &amp; = \Big((1-\alpha_1) ((1-\alpha_2)a_0 + \alpha_2a_4) + \alpha_1((1-\alpha_2)a_1 + \alpha_2a_5)\Big)\cdot eq_{(0)}(X_0) \\
+&amp; + \Big((1-\alpha_1)((1-\alpha_2)a_2 + \alpha_2a_6) + \alpha_1((1-\alpha_2)a_3 + \alpha_2a_7)\Big)\cdot eq_{(1)}(X_0) \\
+&amp; = f(X_0, \alpha_1, \alpha_2) \\
+\end{split}
+\end{split}\]</div>
+<p>第五轮：Verifier 发送随机数 <span class="math notranslate nohighlight">\(\alpha_0\)</span></p>
+<p>第六轮：Prover 计算 <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{fold}_\alpha(\pi_1)\)</span>，然后发送给 Verifier</p>
+<p>计算 <span class="math notranslate nohighlight">\(\pi_0\)</span> 的过程如下：</p>
+<div class="math notranslate nohighlight">
+\[
+\pi_0[j] = \mathsf{fold}^*_\alpha(\pi_1[j], \pi_1[j+1]), \quad j=0
+\]</div>
+<p>同样 <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{Enc}_0(f^{(0)})\)</span>，即 <span class="math notranslate nohighlight">\(\pi_0\)</span> 是 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 的 codeword，而 <span class="math notranslate nohighlight">\(f^{(0)}\)</span> 是 <span class="math notranslate nohighlight">\(f\)</span> 的关于 <span class="math notranslate nohighlight">\((\alpha_0, \alpha_1, \alpha_2)\)</span> 的折叠结果：</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)} = f(\alpha_0, \alpha_1, \alpha_2) 
+\]</div>
+<p>然后我们就可以改进下 Evaluation Argument 协议了。</p>
+</section>
+<section id="evaluation-form-basefold-evaluation-argument">
+<h2>Evaluation Form 的 Basefold Evaluation Argument 协议<a class="headerlink" href="#evaluation-form-basefold-evaluation-argument" title="Link to this heading">#</a></h2>
+<p><strong>公共输入</strong></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的 Commitment <span class="math notranslate nohighlight">\(\pi_3=\mathsf{Enc}_3(\mathbf{a})\)</span></p></li>
+<li><p>求值点 <span class="math notranslate nohighlight">\(\mathbf{u}\)</span></p></li>
+<li><p>运算值 <span class="math notranslate nohighlight">\(v=\tilde{f}(\mathbf{u})\)</span></p></li>
+</ol>
+<p><strong>Witness</strong></p>
+<ul class="simple">
+<li><p>MLE  <span class="math notranslate nohighlight">\(\tilde{f}\)</span> 的 Evaluation Form 向量 <span class="math notranslate nohighlight">\(\mathbf{a}=(a_0, a_1, \ldots, a_7)\)</span></p></li>
+</ul>
+<p>满足
+$<span class="math notranslate nohighlight">\(
+\tilde{f}(X_0, X_1, X_2) = \sum_{\mathbf{b}\in\{0,1\}^3}a_{\mathbf{b}}\cdot eq_{\mathbf{b}}(X_0, X_1, X_2)
+\)</span><span class="math notranslate nohighlight">\(
+第一轮：Prover 发送 \)</span>h^{(2)}(X)<span class="math notranslate nohighlight">\( 的取值，\)</span>(h^{(2)}(0), h^{(2)}(1), h^{(2)}(2))<span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+h^{(2)}(X) = \sum_{b_1,b_2\in\{0,1\}^2}f(X, b_1, b_2)\cdot \tilde{eq}((X, b_1, b_2), \mathbf{u})
+\)</span><span class="math notranslate nohighlight">\(
+由于等式右边是一个次数为 2 的 Univariate Polynomial，因此 Prover 可以计算 \)</span>h^{(2)}(X)<span class="math notranslate nohighlight">\( 在 \)</span>X=0, 1, 2<span class="math notranslate nohighlight">\( 三个点的取值：
+\)</span><span class="math notranslate nohighlight">\(
+\begin{split}
+h^{(2)}(0) &amp;= a_0\cdot e_0 + a_1\cdot e_1 + a_2\cdot e_2 + a_3\cdot e_3 \\
+h^{(2)}(1) &amp;= a_4\cdot e_4 + a_5\cdot e_5 + a_6\cdot e_6 + a_7\cdot e_7 \\
+h^{(2)}(2) &amp;= \sum_{i=0}^{3} (2\cdot a_{i+4} - a_i)\cdot (2\cdot e_{i+4} - e_i) \\
+\end{split}
+\)</span><span class="math notranslate nohighlight">\(
+这里 \)</span>\mathbf{e}<span class="math notranslate nohighlight">\( 为 \)</span>\tilde{eq}(\mathbf{X}, \mathbf{u})$ MLE 多项式在 Boolean HyperCube 上的取值向量。</p>
+<p>第二轮：Verifier 发送挑战数 <span class="math notranslate nohighlight">\(\alpha_2 \leftarrow \mathbb{F}_p\)</span></p>
+<p>第三轮：Prover 同时进行 Basefold-IOPP 协议和 Sumcheck 协议：</p>
+<ul class="simple">
+<li><p>Prover 发送折叠后的向量编码： <span class="math notranslate nohighlight">\(\pi_2 = \mathsf{fold}^*_{\alpha_2}(\pi_3)\)</span></p></li>
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(h^{(2)}(\alpha_2)\)</span> 作为下一轮 Sumcheck 协议的求和值</p></li>
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(f^{(2)}(X_0, X_1)\)</span> 的 Evaluations 为 <span class="math notranslate nohighlight">\(\mathbf{a}^{(2)} = \mathsf{fold}^{*}_{\alpha_2}(\mathbf{a})\)</span></p></li>
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(h^{(1)}(X)\)</span>
+$<span class="math notranslate nohighlight">\(
+h^{(1)}(X) = \sum_{b_0\in\{0,1\}}f(b_0, X, \alpha_2)\cdot \tilde{eq}((b_0, X, \alpha_2), (u_2, u_1, u_0))
+\)</span><span class="math notranslate nohighlight">\(
+等式右边同样是一个关于 \)</span>X<span class="math notranslate nohighlight">\( 次数为 2 的 Univariate Polynomial，因此 Prover 可以根据 \)</span>\mathbf{a}^{(2)}<span class="math notranslate nohighlight">\( 计算出 \)</span>h^{(1)}(X)<span class="math notranslate nohighlight">\( 在 \)</span>X=0,1,2<span class="math notranslate nohighlight">\( 处的取值： \)</span>(h^{(1)}(0), h^{(1)}(1), h^{(1)}(2))$ 。</p></li>
+</ul>
+<p>第四轮：Verifier 发送挑战数 <span class="math notranslate nohighlight">\(\alpha_1\leftarrow \mathbb{F}_p\)</span></p>
+<p>第五轮：Prover 继续进行 Basefold-IOPP 协议和 Sumcheck 协议：</p>
+<ul class="simple">
+<li><p>Prover 发送折叠后的向量编码 <span class="math notranslate nohighlight">\(\pi_1 = \mathsf{fold}^*_{\alpha_1}(\pi_2)\)</span></p></li>
+<li><p>Prover 计算下一轮 Sumcheck 协议的求和值： <span class="math notranslate nohighlight">\(h^{(1)}(\alpha_1)\)</span></p></li>
+<li><p>Prover 计算 <span class="math notranslate nohighlight">\(\tilde{f}^{(1)}(X_0)\)</span> 的 Evaluations 向量：<span class="math notranslate nohighlight">\(\mathbf{a}^{(1)}=\mathsf{fold}^*_{\alpha_1}(\mathbf{a}^{(2)})\)</span></p></li>
+<li><p>Prover 计算并发送 <span class="math notranslate nohighlight">\(h^{(0)}(X)\)</span> 在 <span class="math notranslate nohighlight">\(X=0, 1, 2\)</span> 处取值：<span class="math notranslate nohighlight">\((h^{(0)}(0), h^{(0)}(1), h^{(0)}(2))\)</span>
+$<span class="math notranslate nohighlight">\(
+h^{(0)}(X) = f(X_0, \alpha_1, \alpha_2)\cdot \tilde{eq}((X_0, \alpha_1, \alpha_2), (u_0, u_1, u_2))
+\)</span><span class="math notranslate nohighlight">\(
+第六轮：Verifier 发送挑战数 \)</span>\alpha_0\leftarrow \mathbb{F}_p$</p></li>
+</ul>
+<p>第七轮：Prover 继续进行 Basefold-IOPP 协议：</p>
+<ul class="simple">
+<li><p>Prover 发送折叠后的向量编码 <span class="math notranslate nohighlight">\(\pi_0 = \mathsf{fold}^*_{\alpha_0}(\pi_1)\)</span></p></li>
+</ul>
+<p>第八轮：Verifier 验证下面的等式：</p>
+<ol class="arabic simple">
+<li><p>Verifier 发送若干轮的 Query, <span class="math notranslate nohighlight">\(Q=\{q_i\}\)</span></p></li>
+<li><p>Verifier 检验 Sumcheck 的每一步折叠的正确性：
+$<span class="math notranslate nohighlight">\(
+\begin{split}
+h^{(2)}(0) + h^{(2)}(1) &amp;\overset{?}{=} v \\
+h^{(1)}(0) + h^{(1)}(1) &amp;\overset{?}{=} h^{(2)}(\alpha_2) \\
+h^{(0)}(0) + h^{(0)}(1) &amp;\overset{?}{=} h^{(1)}(\alpha_1) \\
+\end{split}
+\)</span>$</p></li>
+<li><p>Verifier 验证最后的编码 <span class="math notranslate nohighlight">\(\pi_0\)</span> 是否正确
+$<span class="math notranslate nohighlight">\(
+\pi_0 \overset{?}{=} \mathsf{enc}_0\left(\frac{h^{(0)}(\alpha_0)}{\tilde{eq}((\alpha_0,\alpha_1,\alpha_2), \mathbf{u})}\right)
+\)</span>$</p></li>
+</ol>
+<p>到此为止，我们得到了一个基于 Evaluation Form 的 Basefold Evaluation Argument 协议。可以直接对接 Sumcheck-based zkSNARKs，或者类似 Jolt 风格的 zkVMs。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[ZCF23] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>Jiaheng Zhang, Tiancheng Xie, Yupeng Zhang, and Dawn Song. “Transparent polynomial delegation and its applications to zero knowledge proof.” In <em>2020 IEEE Symposium on Security and Privacy (SP)</em>, pp. 859-876. IEEE, 2020.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./basefold"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="basefold-02.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Basefold 笔记：IOPP</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="basefold-04.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Basefold 笔记：Random Foldable Codes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basefold-iopp">Basefold-IOPP 协议的最后输出</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sumcheck">借力 Sumcheck</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">另一种折叠方式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-form-basefold-iopp">基于 Evaluation Form 的 Basefold-IOPP 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluation-form-basefold-evaluation-argument">Evaluation Form 的 Basefold Evaluation Argument 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,873 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Note on DeepFold: Protocol Overview &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/deepfold';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fri-proximity-gap.zh.html">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/deepfold.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/deepfold.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Note on DeepFold: Protocol Overview</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-method-from-unique-decoding-to-list-decoding">DEEP Method: From Unique Decoding to List Decoding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ensuring-the-correctness-of-deep-method-evaluation">Ensuring the Correctness of DEEP Method Evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepfold-protocol">DeepFold Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="note-on-deepfold-protocol-overview">
+<h1>Note on DeepFold: Protocol Overview<a class="headerlink" href="#note-on-deepfold-protocol-overview" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>This article mainly introduces the key ideas of the DeepFold protocol [GLHQTZ24]. The DeepFold protocol is a polynomial commitment scheme (PCS) for multilinear polynomials, combining ideas from DEEP-FRI [BGKS20] and BaseFold [ZCF24]. The BaseFold protocol [ZCF24] is also a PCS for multilinear polynomials, combining the FRI protocol and the sumcheck protocol. However, in its original paper, it is limited to unique decoding. If it could be optimized to work under list decoding, the number of queries made by the verifier to achieve the same security parameter <span class="math notranslate nohighlight">\(\lambda\)</span> could be reduced, thus also reducing the size of the proof. The DeepFold protocol adopts the DEEP method from DEEP-FRI to achieve this. However, in [H24], Haböck proved the security of the BaseFold protocol for Reed-Solomon codes under list decoding. On the other hand, the STIR protocol [ACFY24a] has fewer queries compared to the DEEP-FRI protocol. The WHIR protocol [ACFY24b], which combines the STIR protocol and the BaseFold protocol, can achieve fewer queries compared to the DeepFold protocol, although its security under list decoding has not been rigorously proven yet.</p>
+<section id="deep-method-from-unique-decoding-to-list-decoding">
+<h2>DEEP Method: From Unique Decoding to List Decoding<a class="headerlink" href="#deep-method-from-unique-decoding-to-list-decoding" title="Link to this heading">#</a></h2>
+<p>First, let’s review the BaseFold protocol. Taking a trivariate (let <span class="math notranslate nohighlight">\(\mu = 3\)</span>) linear polynomial as an example, let</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(X_1, X_2, X_3) = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + a_4 X_3 + a_5 X_1X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3
+\]</div>
+<p>The corresponding univariate polynomial is</p>
+<div class="math notranslate nohighlight">
+\[
+f(X) = a_0 + a_1 X + a_2 X^2 + a_3 X^3 + a_4 X^4 + a_5 X^5 + a_6 X^6 + a_7 X^7
+\]</div>
+<p><span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(\tilde{f}\)</span> are referred to as “twin polynomials” in the [GLHQTZ24] paper, sharing the same coefficients <span class="math notranslate nohighlight">\(\vec{a} = (a_0, a_1, \cdots, a_7)\)</span>. Suppose the query point is <span class="math notranslate nohighlight">\(\vec{z} = \{z_1, z_2, z_3\}\)</span>, and the prover wants to commit to the value of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at this point as <span class="math notranslate nohighlight">\(\tilde{f}(\vec{z})\)</span>. The BaseFold protocol first converts the committed value <span class="math notranslate nohighlight">\(\tilde{f}(\vec{z})\)</span> into a sum form over a hypercube <span class="math notranslate nohighlight">\(\{0,1\}^3\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}(\vec{z}) = \sum_{\vec{b} \in \{0,1\}^3} \tilde{f}(\vec{b}) \cdot \tilde{eq}(\vec{b}, \vec{z}) \tag{1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{eq}(\vec{b}, \vec{z}) = \prod_{i = 1}^3((1 - \vec{b}[i])(1 - \vec{z}[i]) + \vec{b}[i] \cdot \vec{z}[i])\)</span>. To prove that equation (1) is correct, the sumcheck protocol can be used. However, in the last step of the sumcheck protocol, it will require obtaining the value of <span class="math notranslate nohighlight">\(\tilde{f}\)</span> at a random point <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span>. This value can be obtained through the FRI protocol for <span class="math notranslate nohighlight">\(f\)</span>. For an honest prover, a Merkle tree can be used to commit to a vector <span class="math notranslate nohighlight">\(\vec{v} = f^{(0)}(X)|_{L_0} \in \mathrm{RS}[\mathbb{F}, L_0, \rho]\)</span>, where <span class="math notranslate nohighlight">\(f^{(0)}(X) = f(X)\)</span>, rate <span class="math notranslate nohighlight">\(\rho = 2^{3} / |L_0|\)</span>, and evaluation domain <span class="math notranslate nohighlight">\(L_{i + 1} = \{x^2: x \in L_i\}\)</span>. Express <span class="math notranslate nohighlight">\(f^{(0)}(X)\)</span> as even and odd term polynomials</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(0)}(X) &amp; = f_E^{(1)}(X^2) + X \cdot f_O^{(1)}(X^2) \\
+    &amp; = (a_0 + a_2 X^2 + a_4 X^4 + a_6 X^6) + X \cdot (a_1 + a_3 X^2 + a_5 X^4 + a_7 X^6)
+\end{aligned}
+\end{split}\]</div>
+<p>Then use the same random number <span class="math notranslate nohighlight">\(r_1 \in \mathbb{F}\)</span> as in sumcheck to fold <span class="math notranslate nohighlight">\(f_E^{(1)}\)</span> and <span class="math notranslate nohighlight">\(f_O^{(1)}\)</span> to get a new polynomial <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(1)}(X) &amp; = f_E^{(1)}(X) + r_1 \cdot f_O^{(1)}(X) \\
+    &amp; = (a_0 + a_2 X + a_4 X^2 + a_6 X^3) + r_1 \cdot (a_1 + a_3 X + a_5 X^2 + a_7 X^3)
+\end{aligned}
+\end{split}\]</div>
+<p>It can be found that the multilinear polynomial corresponding to <span class="math notranslate nohighlight">\(f^{(1)}(X)\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \tilde{f}(r_1, X_2, X_3) &amp; = a_0 + a_1 r_1 + a_2 X_2 + a_3 \cdot r_1 X_2 + a_4 X_3 + a_5 \cdot  r_1X_3 + a_6 X_2 X_3 + a_7 \cdot r_1 X_2 X_3 \\
+    &amp; = (a_0 + a_2 X_2 + a_4 X_3 + a_6 X_2X_3) + r_1 \cdot (a_1 + a_3 X_2 + a_5 X_3 + a_7 X_2X_3)
+\end{aligned}
+\end{split}\]</div>
+<p>The prover sends the Merkle commitment <span class="math notranslate nohighlight">\(\vec{v}^{(1)} = f^{(1)}|_{L_1}\)</span> to the verifier. Generally, continuing the above steps, divide <span class="math notranslate nohighlight">\(f^{(i - 1)}(X)\)</span> into odd and even terms,</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i - 1)}(X) = f_E^{(i)}(X^2) + X \cdot f_O^{(i)}(X^2) \tag{2}
+\]</div>
+<p>Then fold using the random number <span class="math notranslate nohighlight">\(r_i\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(X) = f_E^{(i)}(X) + r_i \cdot f_O^{(i)}(X) \tag{3}
+\]</div>
+<p>The prover sends the Merkle commitment <span class="math notranslate nohighlight">\(\vec{v}^{(i)} = f^{(i)}|_{L_i}\)</span> to the verifier. In the last step of the FRI protocol, we can obtain <span class="math notranslate nohighlight">\(f^{(3)}(X) = \tilde{f}(r_1, r_2, r_3)\)</span> as a constant, which is exactly the value that the last step of sumcheck wants to obtain. This way, performing sumcheck protocol and FRI protocol simultaneously completes the commitment of the multilinear polynomial, which is the idea of the BaseFold protocol.</p>
+<p>It can be found that in the BaseFold protocol, the role of the FRI protocol, in addition to its own purpose of ensuring that <span class="math notranslate nohighlight">\(\vec{v}\)</span> is <span class="math notranslate nohighlight">\(\Delta\)</span> close to the corresponding RS code space <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}, L_0, \rho]\)</span>, also provides the value of <span class="math notranslate nohighlight">\(f^{(3)}\)</span> to ensure the correctness of <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span>. It is mentioned in [GLHQTZ24] that the original FRI protocol only requires the provided vector <span class="math notranslate nohighlight">\(\vec{v}\)</span> to be close to some RS codes, but in the <span class="math notranslate nohighlight">\(i\)</span>-th round, it does not specifically require which codes <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> should be close to. Under unique decoding, there is at most one code <span class="math notranslate nohighlight">\(f^{(i)}\)</span> close to the corresponding <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> in the <span class="math notranslate nohighlight">\(i\)</span>-th round. If it is list decoding, it means that there can be multiple codes <span class="math notranslate nohighlight">\(f^{(i)}\)</span> close to <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span>, and a malicious prover can choose <span class="math notranslate nohighlight">\(f^{(i)^{'}}\)</span> to proceed with the protocol, which can also pass subsequent checks, and in the last round, <span class="math notranslate nohighlight">\(f^{(3)^{'}}\)</span> is obtained, which is not a correct value.</p>
+<p><img alt="" src="../_images/deepfold-list-decoding.svg" /></p>
+<p>Therefore, we now need a method to ensure the correctness of <span class="math notranslate nohighlight">\(f^{(\mu)} = f^{(3)}\)</span> under list decoding, that is, in the <span class="math notranslate nohighlight">\(i\)</span>-th round, we need to ensure that only <span class="math notranslate nohighlight">\(f^{(i)}\)</span> can be <span class="math notranslate nohighlight">\(\Delta\)</span> close to <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span>, and <span class="math notranslate nohighlight">\(f^{(i)}\)</span> corresponds to the correct multivariate polynomial <span class="math notranslate nohighlight">\(\tilde{f}(r_1, \ldots, r_i, X_{i + 1}, \ldots, X_{\mu})\)</span>. The DeepFold protocol uses the DEEP (Domain Extending for Eliminating Pretenders) technique from the DEEP-FRI protocol [BGKS20] to solve this problem. In the <span class="math notranslate nohighlight">\(i\)</span>-th round, a random number <span class="math notranslate nohighlight">\(\alpha_i\)</span> is selected from <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> instead of from <span class="math notranslate nohighlight">\(L_i\)</span>, and the verifier additionally queries two values <span class="math notranslate nohighlight">\(f^{(i - 1)}(\pm \alpha_i)\)</span>, from which the verifier can calculate the value of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> by themselves. Since</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}_E(X^2) = \frac{f^{(i - 1)}(X) + f^{(i - 1)}(- X)}{2}, \quad f^{(i)}_O(X^2) = \frac{f^{(i - 1)}(X) - f^{(i - 1)}(- X)}{2X}
+\]</div>
+<p>Therefore</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(i)}(X^2) &amp; = f^{(i)}_E(X^2) + r_i \cdot f^{(i)}_O(X^2) \\
+    &amp; = \frac{f^{(i - 1)}(X) + f^{(i - 1)}(- X)}{2} + r_i \cdot \frac{f^{(i - 1)}(X) - f^{(i - 1)}(- X)}{2X}
+\end{aligned}
+\end{split}\]</div>
+<p>Substituting <span class="math notranslate nohighlight">\(X = \alpha_i\)</span>, we can get</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(\alpha_i^2) = \frac{f^{(i - 1)}(\alpha_i) + f^{(i - 1)}(- \alpha_i)}{2} + r_i \cdot \frac{f^{(i - 1)}(\alpha_i) - f^{(i - 1)}(- \alpha_i)}{2 \cdot \alpha_i}
+\]</div>
+<p>The verifier can calculate the value of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> based on the above equation. Since <span class="math notranslate nohighlight">\(\alpha_i\)</span> is a random number selected from the entire <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>, with high probability, there will not be two different polynomials <span class="math notranslate nohighlight">\(f^{(i)}\)</span> within the <span class="math notranslate nohighlight">\(\Delta\)</span> range of <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> that satisfy the same value at <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> under list decoding. This way, through the selection of <span class="math notranslate nohighlight">\(\alpha_i\)</span>, the list decoding is restricted to only select the unique polynomial <span class="math notranslate nohighlight">\(f^{(i)}\)</span>.</p>
+<p>Let’s explain why, with high probability, there can only be a unique polynomial <span class="math notranslate nohighlight">\(f^{(i)}\)</span> that satisfies the same value at <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span>. Suppose there are two different polynomials <span class="math notranslate nohighlight">\(f_1^{(i)}\)</span> and <span class="math notranslate nohighlight">\(f_2^{(i)}\)</span> that have the same value at a random point <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span>, i.e., <span class="math notranslate nohighlight">\(f_1^{(i)}(\alpha) = f_2^{(i)}(\alpha)\)</span>, and they are both within the <span class="math notranslate nohighlight">\(\Delta\)</span> range of <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span>. Let <span class="math notranslate nohighlight">\(|\vec{v}^{(i)}| = n\)</span>, <span class="math notranslate nohighlight">\(\Delta = 1 - \rho - \varepsilon\)</span>, and there are no more than <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> codewords within the <span class="math notranslate nohighlight">\(\Delta\)</span> range of <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span>. According to the conjecture in [BGKS20], we know that <span class="math notranslate nohighlight">\(|\mathcal{L}| \le \mathrm{poly}(n)\)</span>. Since <span class="math notranslate nohighlight">\(f_1^{(i)}(\alpha) = f_2^{(i)}(\alpha)\)</span>, the polynomial <span class="math notranslate nohighlight">\(f_1^{(i)} - f_2^{(i)}\)</span> has a value of <span class="math notranslate nohighlight">\(0\)</span> at <span class="math notranslate nohighlight">\(\alpha\)</span>, and the polynomial degrees of <span class="math notranslate nohighlight">\(f_1^{(i)}\)</span> and <span class="math notranslate nohighlight">\(f_2^{(i)}\)</span> will not exceed <span class="math notranslate nohighlight">\(n\)</span>, so the degree of <span class="math notranslate nohighlight">\(f_1^{(i)} - f_2^{(i)}\)</span> will also not exceed <span class="math notranslate nohighlight">\(n\)</span>, and there are at most <span class="math notranslate nohighlight">\(n\)</span> zeros in <span class="math notranslate nohighlight">\(\mathbb{F}\)</span>. Since <span class="math notranslate nohighlight">\(\alpha \in \mathbb{F}\)</span>, the probability of such <span class="math notranslate nohighlight">\(f_1^{(i)} - f_2^{(i)}\)</span> being <span class="math notranslate nohighlight">\(0\)</span> at point <span class="math notranslate nohighlight">\(\alpha\)</span> will not exceed <span class="math notranslate nohighlight">\(n / |\mathbb{F}|\)</span>. There are <span class="math notranslate nohighlight">\(\binom{|\mathcal{L}|}{2}\)</span> ways to choose different <span class="math notranslate nohighlight">\(f_1^{(i)}\)</span> and <span class="math notranslate nohighlight">\(f_2^{(i)}\)</span> within the <span class="math notranslate nohighlight">\(\Delta\)</span> range of <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span>, so the overall probability will not exceed <span class="math notranslate nohighlight">\(n \cdot \binom{|\mathcal{L}|}{2} / |\mathbb{F}|\)</span>. If <span class="math notranslate nohighlight">\(|\mathbb{F}|\)</span> is large enough, this probability is very small. Therefore, it’s the same for <span class="math notranslate nohighlight">\(\alpha_i^2\)</span>, with high probability, there is only one polynomial <span class="math notranslate nohighlight">\(f^{(i)}\)</span> that satisfies the same value at <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span>.</p>
+<p>Now through the DEEP technique, we can convert list decoding to unique decoding, solving the problem that under list decoding, there may be multiple polynomials within the <span class="math notranslate nohighlight">\(\Delta\)</span> range of <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span>, and the prover can choose different polynomials leading to inconsistent <span class="math notranslate nohighlight">\(f^{(\mu)}\)</span>. Now the remaining problem is to let the verifier verify the correctness of the value of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> in each round.</p>
+</section>
+<section id="ensuring-the-correctness-of-deep-method-evaluation">
+<h2>Ensuring the Correctness of DEEP Method Evaluation<a class="headerlink" href="#ensuring-the-correctness-of-deep-method-evaluation" title="Link to this heading">#</a></h2>
+<p>The [GLHQTZ24] paper mentions that in the DEEP-FRI paper [BGKS20], the quotient method can be used to verify the correctness of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span>. According to the folding relation in equation (3),</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(X) = f_E^{(i)}(X) + r_i \cdot f_O^{(i)}(X)
+\]</div>
+<p>A new form can be constructed, namely</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(X) = \frac{(f_E^{(i)}(X) + r_i \cdot f_O^{(i)}(X)) - (f_E^{(i)}(\alpha_i^2) + r_i \cdot f_O^{(i)}(\alpha_i^2))}{X - \alpha_i^2} \tag{4}
+\]</div>
+<p>If <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> is correct, then the newly constructed <span class="math notranslate nohighlight">\(f^{(i)}(X)\)</span> above is a polynomial, thus transforming the problem of verifying the correctness of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> into an IOPP problem about <span class="math notranslate nohighlight">\(f^{(i)}\)</span>. However, this method is not applicable in the current multilinear polynomial PCS scheme, because although equation (4) can ensure the correctness of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> in each round, the <span class="math notranslate nohighlight">\(f^{(\mu)}\)</span> obtained at the end of the protocol is not equal to <span class="math notranslate nohighlight">\(\tilde{f}(\vec{r})\)</span>.</p>
+<p>The DeepFold protocol provides a new method to ensure the correctness at these points <span class="math notranslate nohighlight">\(\{\alpha_i\}\)</span>. Let’s still use the case of <span class="math notranslate nohighlight">\(\mu = 3\)</span> to explain this method. Suppose now the verifier selects a random number <span class="math notranslate nohighlight">\(\alpha_1 \leftarrow \$ \mathbb{F}\)</span> in the <span class="math notranslate nohighlight">\(i = 1\)</span> round, and now the verifier wants to ensure the correctness of <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span>. First, the verifier can query the prover for the values of <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1)\)</span>, substituting into the expression of <span class="math notranslate nohighlight">\(f(X)\)</span>, we get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f^{(0)}(\pm \alpha_1) &amp; = a_0 + a_1 \cdot (\pm \alpha_1) + a_2 \cdot (\pm \alpha_1)^2 + a_3 \cdot (\pm \alpha_1)^3 \\
+    &amp; \quad + a_4 \cdot (\pm \alpha_1)^4 + a_5 \cdot (\pm \alpha_1)^5 + a_6 \cdot (\pm \alpha_1)^6 + a_7 \cdot (\pm \alpha_1)^7 \\
+    &amp; = a_0 + a_1 \cdot (\pm \alpha_1) + a_2 \cdot \alpha_1^2 + a_3 \cdot (\pm \alpha_1)\cdot \alpha_1^2 \\
+    &amp; \quad + a_4 \cdot \alpha_1^4 + a_5 \cdot (\pm \alpha_1) \cdot \alpha_1^4 + a_6 \cdot \alpha_1^2 \cdot \alpha_1^4 + a_7 \cdot (\pm \alpha_1) \cdot \alpha_1^2 \cdot \alpha_1^4
+\end{aligned}
+\end{split}\]</div>
+<p>This exactly corresponds to the value of the multilinear polynomial <span class="math notranslate nohighlight">\(\tilde{f}(X_1, X_2, X_3)\)</span> at the point <span class="math notranslate nohighlight">\((\pm \alpha_1, \alpha_1^2, \alpha_1^4)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \tilde{f}(\pm \alpha_1, \alpha_1^2, \alpha_1^4)  &amp; = a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + a_4 X_3 + a_5 X_1X_3 + a_6 X_2 X_3 + a_7 X_1 X_2 X_3 \\
+    &amp; = a_0 + a_1 \cdot (\pm \alpha_1) + a_2 \cdot \alpha_1^2 + a_3 \cdot (\pm \alpha_1)\cdot \alpha_1^2 \\
+    &amp; \quad + a_4 \cdot \alpha_1^4 + a_5 \cdot (\pm \alpha_1) \cdot \alpha_1^4 + a_6 \cdot \alpha_1^2 \cdot \alpha_1^4 + a_7 \cdot (\pm \alpha_1) \cdot \alpha_1^2 \cdot \alpha_1^4
+\end{aligned}
+\end{split}\]</div>
+<p>Therefore <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1) = \tilde{f}(\pm \alpha_1, \alpha_1^2, \alpha_1^4)\)</span>. After the verifier receives <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1)\)</span>, they can calculate <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> themselves, that is, by calculating using the following equation</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(i)}(\alpha_i^2) = \frac{f^{(i - 1)}(\alpha_i) + f^{(i - 1)}(- \alpha_i)}{2} + r_i \cdot \frac{f^{(i - 1)}(\alpha_i) - f^{(i - 1)}(- \alpha_i)}{2 \cdot \alpha_i} \tag{5}
+\]</div>
+<p>Similar to the derivation of <span class="math notranslate nohighlight">\(f^{(0)}(\pm \alpha_1)\)</span> above, the <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> obtained at this time should have the following relationship with the corresponding multilinear polynomial:</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(\alpha_1^2) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4) 
+\]</div>
+<p>Now, to ensure the correctness of <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span>, the verifier can query the prover for <span class="math notranslate nohighlight">\(f^{(1)}(-\alpha_1^2)\)</span>, and the verifier can calculate <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_1^4)\)</span> themselves using equation (5), at this time</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(2)}(\alpha_1^4) = \tilde{f}(r_1, r_2, \alpha_1^4) 
+\]</div>
+<p>Now the correctness of <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2)\)</span> has been transformed into proving the correctness of <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_1^4)\)</span>. Similarly, the verifier queries the prover for <span class="math notranslate nohighlight">\(f^{(2)}(-\alpha_1^4)\)</span>, and the verifier can calculate <span class="math notranslate nohighlight">\(f^{(3)}(\alpha_1^8)\)</span>, at this time it should equal</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(3)}(\alpha_1^8) = \tilde{f}(r_1, r_2, r_3) 
+\]</div>
+<p>In this way, the correctness of <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_1^4)\)</span> is finally transformed into the correctness of the value of <span class="math notranslate nohighlight">\(f^{(3)}(\alpha_1^8)\)</span>, which should equal <span class="math notranslate nohighlight">\(\tilde{f}(r_1, r_2, r_3)\)</span>, which is exactly the value that will be obtained in the last step of FRI.</p>
+<p><img alt="" src="../_images/deepfold-correctness.svg" /></p>
+<p>Through the above process, we can also find that if <span class="math notranslate nohighlight">\(i \neq 1\)</span>, generally, in the <span class="math notranslate nohighlight">\(i\)</span>-th round, the correctness of the value of <span class="math notranslate nohighlight">\(f^{(i-1)}(\pm \alpha_i)\)</span> provided is transformed into verifying the correctness of <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span>, by the prover additionally sending <span class="math notranslate nohighlight">\(f^{(i)}(-\alpha_i^2)\)</span>, it is transformed into verifying <span class="math notranslate nohighlight">\(f^{(i + 1)}(\alpha_i^4)\)</span>, until finally all are transformed into verifying the correctness of <span class="math notranslate nohighlight">\(f^{(\mu)} = \tilde{f}(r_1, r_2, \ldots, r_{\mu})\)</span>, which is exactly what the FRI protocol provides.</p>
+</section>
+<section id="deepfold-protocol">
+<h2>DeepFold Protocol<a class="headerlink" href="#deepfold-protocol" title="Link to this heading">#</a></h2>
+<p>Summarizing the introduction of the DEEP method above, in order to avoid a malicious prover possibly selecting an incorrect polynomial <span class="math notranslate nohighlight">\(f^{(i)'}\)</span> within the <span class="math notranslate nohighlight">\(\Delta\)</span> range of <span class="math notranslate nohighlight">\(\vec{v}^{(i)}\)</span> to pass verification under list decoding, the verifier selects <span class="math notranslate nohighlight">\(\alpha_i\)</span> from the range of <span class="math notranslate nohighlight">\(\mathbb{F}\)</span> in each round, forcing the prover to provide only the unique polynomial <span class="math notranslate nohighlight">\(f^{(i)}\)</span>, making its value at <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span> correct. To verify the correctness of the value at <span class="math notranslate nohighlight">\(f^{(i)}(\alpha_i^2)\)</span>, the prover provides <span class="math notranslate nohighlight">\(f^{(i)}(-\alpha_i^2)\)</span>, the verifier calculates <span class="math notranslate nohighlight">\(f^{(i + 1)}(\alpha_i^4)\)</span> on their own, until finally it is transformed into verifying the correctness of <span class="math notranslate nohighlight">\(f^{(\mu)} = \tilde{f}(r_1, \ldots, r_{\mu})\)</span>. Below, taking the PCS of a trivariate linear polynomial as an example, we will go through the complete DeepFold protocol [GLHQTZ24]. Although the protocol process has many steps, the core ideas are still the two points mentioned above.</p>
+<p>In the commitment phase of <span class="math notranslate nohighlight">\(\tilde{f}\)</span>, the polynomial commitment sent by the prover to the verifier is <span class="math notranslate nohighlight">\(\mathcal{C} = \langle rt_0, \alpha, c \rangle\)</span>.</p>
+<ol class="arabic simple">
+<li><p>The prover calculates <span class="math notranslate nohighlight">\(\vec{v} = f^{(0)}|_{L_0}\)</span>, and commits to this vector using a Merkle tree, that is, sends <span class="math notranslate nohighlight">\(\mathsf{MT.Commit}(\vec{v}) \rightarrow rt_0\)</span> to the verifier.</p></li>
+<li><p>The verifier sends a random point <span class="math notranslate nohighlight">\(\alpha \leftarrow \$ \mathbb{F}\)</span>.</p></li>
+<li><p>The prover calculates <span class="math notranslate nohighlight">\(c := f^{(0)}(\alpha)\)</span> and sends <span class="math notranslate nohighlight">\(c\)</span> to the verifier.</p></li>
+</ol>
+<p>The prover wants to prove to the verifier that: at the query point <span class="math notranslate nohighlight">\(\vec{z} = \{z_1, z_2, z_3\}\)</span>, <span class="math notranslate nohighlight">\(\tilde{f}(z_1, z_2, z_3) = y\)</span>. At the same time, the verifier has <span class="math notranslate nohighlight">\(\mathcal{C} = \langle rt_0, \alpha, c \rangle\)</span> received from the prover during the polynomial commitment phase. The prover and verifier perform the following protocol process:
+<strong>Step 1</strong>: Let <span class="math notranslate nohighlight">\(A_0:= \{\vec{z}, \vec{\alpha}\}\)</span>, where <span class="math notranslate nohighlight">\(\vec{\alpha} = (\alpha, \alpha^2, \alpha^4)\)</span>.
+<strong>Step 2</strong>: For each round <span class="math notranslate nohighlight">\(i \in [3]\)</span>, perform the following steps:</p>
+<p><strong>2.1 When <span class="math notranslate nohighlight">\(i = 1\)</span></strong></p>
+<p>a. The verifier sends <span class="math notranslate nohighlight">\(\alpha_1 \leftarrow \$ \mathbb{F}\)</span> to the prover. Let <span class="math notranslate nohighlight">\(A_0 := \{A_0, \vec{\alpha_1}\} = \{\vec{z}, \vec{\alpha}, \vec{\alpha_1}\}\)</span>, where <span class="math notranslate nohighlight">\(\vec{\alpha_1} = (\alpha_1, \alpha_1^2, \alpha_1^4)\)</span>.</p>
+<blockquote>
+<div><p>The <span class="math notranslate nohighlight">\(\alpha_1\)</span> sent in this step is the random number outside of <span class="math notranslate nohighlight">\(L_0\)</span> used in the DEEP method to limit the prover to only send the unique polynomial <span class="math notranslate nohighlight">\(f^{(1)}\)</span>. The vector <span class="math notranslate nohighlight">\(\vec{\alpha_1} = (\alpha_1, \alpha_1^2, \alpha_1^4)\)</span> is for subsequent continuous verification of the correctness of <span class="math notranslate nohighlight">\(f^{(1)}(\alpha_1^2) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4)\)</span>.</p>
+</div></blockquote>
+<p>b. Let <span class="math notranslate nohighlight">\(A_1 := \emptyset\)</span>, for each <span class="math notranslate nohighlight">\(\vec{\omega} \in A_0 = \{\vec{z}, \vec{\alpha}, \vec{\alpha_1}\}\)</span>, the prover sends the following polynomials to the verifier:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{\vec{z}_{[2:]}} = g_{(z_2, z_3)} := \tilde{f}(X, z_2, z_3) \\
+    &amp; g_{\vec{\alpha}_{[2:]}} =g_{(\alpha^2, \alpha^4)} := \tilde{f}(X, \alpha^2, \alpha^4) \\
+    &amp; g_{\vec{\alpha_1}_{[2:]}} =g_{(\alpha_1^2, \alpha_1^4)} := \tilde{f}(X, \alpha_1^2, \alpha_1^4)
+\end{aligned}
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(A_1 := \{A_1, \vec{w}_{[2:]}\} = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4)\}\)</span>.</p>
+<blockquote>
+<div><p>The <span class="math notranslate nohighlight">\(g(X)\)</span> polynomials in this step are similar to the univariate polynomials constructed in the sumcheck protocol to prove the correctness of the sum.</p>
+</div></blockquote>
+<p>c. The verifier sends <span class="math notranslate nohighlight">\(r_1 \leftarrow \$ \mathbb{F}\)</span> to the prover.
+d. The prover calculates the folded polynomial <span class="math notranslate nohighlight">\(f^{(1)}(X) = f_E^{(1)}(X) + r_1 \cdot f_O^{(1)}(X)\)</span>, where <span class="math notranslate nohighlight">\(f_E^{(1)}(X)\)</span> and <span class="math notranslate nohighlight">\(f_O^{(1)}(X)\)</span> should satisfy</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)}(X) = f_E^{(1)}(X^2) + X \cdot f_O^{(1)}(X^2)
+\]</div>
+<blockquote>
+<div><p>The meaning of satisfying this equation is to ensure that <span class="math notranslate nohighlight">\(f_E^{(1)}(X^2)\)</span> and <span class="math notranslate nohighlight">\(f_O^{(1)}(X^2)\)</span> are the even and odd term functions of <span class="math notranslate nohighlight">\(f^{(0)}(X)\)</span>.</p>
+</div></blockquote>
+<p>e. Let <span class="math notranslate nohighlight">\(\vec{v}^{(1)} = f^{(1)}|_{L_1}\)</span>, the prover sends the Merkle tree commitment of vector <span class="math notranslate nohighlight">\(\vec{v}^{(1)}\)</span> to the verifier, i.e., <span class="math notranslate nohighlight">\(\mathsf{MT.Commit}(\vec{v}^{(1)}) \rightarrow rt_1\)</span>.</p>
+<p><strong>2.2 When <span class="math notranslate nohighlight">\(i = 2\)</span></strong></p>
+<p>a. The verifier sends <span class="math notranslate nohighlight">\(\alpha_2 \leftarrow \$ \mathbb{F}\)</span> to the prover. Let <span class="math notranslate nohighlight">\(A_1 := \{A_1, \vec{\alpha_2}\} = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4), (\alpha_2, \alpha_2^2)\}\)</span>, where <span class="math notranslate nohighlight">\(\vec{\alpha_2} = (\alpha_2, \alpha_2^2)\)</span>.</p>
+<blockquote>
+<div><p>Note that the length of each vector in <span class="math notranslate nohighlight">\(A_1\)</span> has now changed to <span class="math notranslate nohighlight">\(2\)</span>. The <span class="math notranslate nohighlight">\(\alpha_2\)</span> selected here is to use the DEEP method in the second round to limit the prover to only send the unique polynomial <span class="math notranslate nohighlight">\(f^{(2)}(X)\)</span>, and ensure that the polynomial <span class="math notranslate nohighlight">\(f^{(2)}(X)\)</span> satisfies <span class="math notranslate nohighlight">\(f^{(2)}(\alpha_2^2) = \tilde{f}(r_1, r_2, \alpha_2^2)\)</span> at point <span class="math notranslate nohighlight">\(\alpha_2^2\)</span>.</p>
+</div></blockquote>
+<p>b. Let <span class="math notranslate nohighlight">\(A_2 := \emptyset\)</span>, for each <span class="math notranslate nohighlight">\(\vec{\omega} \in A_1 = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4), (\alpha_2, \alpha_2^2)\}\)</span>, the prover sends the following polynomials to the verifier:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{\vec{z}_{[2:]}} = g_{(z_3)} := \tilde{f}(r_1, X, z_3) \\
+    &amp; g_{\vec{\alpha}_{[2:]}} =g_{(\alpha^4)} := \tilde{f}(r_1, X, \alpha^4) \\
+    &amp; g_{\vec{\alpha_1}_{[2:]}} =g_{(\alpha_1^4)} := \tilde{f}(r_1, X, \alpha_1^4) \\
+    &amp; g_{\vec{\alpha_2}_{[2:]}} =g_{(\alpha_2^2)} := \tilde{f}(r_1, X, \alpha_2^2)
+\end{aligned}
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(A_2 := \{A_2, \vec{w}_{[2:]}\} = \{(z_3), (\alpha^4), (\alpha_1^4), (\alpha_2^2)\}\)</span>.</p>
+<p>c. The verifier sends <span class="math notranslate nohighlight">\(r_2 \leftarrow \$ \mathbb{F}\)</span> to the prover.
+d. The prover calculates the folded polynomial <span class="math notranslate nohighlight">\(f^{(2)}(X) = f_E^{(2)}(X) + r_2 \cdot f_O^{(2)}(X)\)</span>, where <span class="math notranslate nohighlight">\(f_E^{(2)}(X)\)</span> and <span class="math notranslate nohighlight">\(f_O^{(2)}(X)\)</span> should satisfy</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(1)}(X) = f_E^{(2)}(X^2) + X \cdot f_O^{(2)}(X^2)
+\]</div>
+<p>e. Let <span class="math notranslate nohighlight">\(\vec{v}^{(2)} = f^{(2)}|_{L_2}\)</span>, the prover sends the Merkle tree commitment of vector <span class="math notranslate nohighlight">\(\vec{v}^{(2)}\)</span> to the verifier, i.e., <span class="math notranslate nohighlight">\(\mathsf{MT.Commit}(\vec{v}^{(2)}) \rightarrow rt_2\)</span>.</p>
+<p><strong>2.3 When <span class="math notranslate nohighlight">\(i = 3\)</span></strong></p>
+<p>a. The verifier sends <span class="math notranslate nohighlight">\(\alpha_3 \leftarrow \$ \mathbb{F}\)</span> to the prover. Let <span class="math notranslate nohighlight">\(A_2 := \{A_2, \vec{\alpha_3}\} = \{(z_3), (\alpha^4), (\alpha_1^4), (\alpha_2^2), (\alpha_3)\}\)</span>, where <span class="math notranslate nohighlight">\(\vec{\alpha_3} = (\alpha_3)\)</span>.</p>
+<p>b. The prover sends the linear function to the verifier</p>
+<div class="math notranslate nohighlight">
+\[
+g(X) := \tilde{f}(r_1, r_2, X)
+\]</div>
+<blockquote>
+<div><p>Now it’s the last round, directly send the function <span class="math notranslate nohighlight">\(g(X)\)</span>.</p>
+</div></blockquote>
+<p>c. The verifier sends <span class="math notranslate nohighlight">\(r_3 \leftarrow \$ \mathbb{F}\)</span> to the prover.
+d. The prover calculates the folded polynomial <span class="math notranslate nohighlight">\(f^{(3)}(X) = f_E^{(3)}(X) + r_3 \cdot f_O^{(3)}(X)\)</span>, where <span class="math notranslate nohighlight">\(f_E^{(3)}(X)\)</span> and <span class="math notranslate nohighlight">\(f_O^{(3)}(X)\)</span> should satisfy</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(2)}(X) = f_E^{(3)}(X^2) + X \cdot f_O^{(3)}(X^2)
+\]</div>
+<p>e. Let <span class="math notranslate nohighlight">\(\vec{v}^{(3)} = f^{(3)}|_{L_3}\)</span>, the prover sends <span class="math notranslate nohighlight">\(f^{(3)} \in \mathbb{F}\)</span> to the verifier.</p>
+<blockquote>
+<div><p>In the last round, FRI will finally fold into a constant polynomial, so here directly send a value <span class="math notranslate nohighlight">\(f^{(3)}\)</span>.</p>
+</div></blockquote>
+<blockquote>
+<div><p>The following steps are the verification process performed by the verifier.</p>
+</div></blockquote>
+<p><strong>Step 3</strong>: The verifier checks</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{\vec{z}_{[2:]}}(z_1)  = y \\
+    &amp; g_{\vec{\alpha}_{[2:]}}(\alpha) = c \\
+    &amp; g(r_{3}) = f^{(3)}
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>According to the construction of the <span class="math notranslate nohighlight">\(g(X)\)</span> function when <span class="math notranslate nohighlight">\(i = 1\)</span> and <span class="math notranslate nohighlight">\(i = 3\)</span>, for an honest prover, the above three equations hold because</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+&gt; \begin{aligned}
+&gt;     &amp; g_{\vec{z}_{[2:]}}(z_1) = \tilde{f}(z_1, z_2, z_3) = y\\
+&gt;     &amp; g_{\vec{\alpha}_{[2:]}}(\alpha) = \tilde{f}(\alpha, \alpha^2, \alpha^4) = c\\
+&gt;     &amp; g(r_3) = \tilde{f}(r_1, r_2, r_3) = f^{(3)}
+&gt; \end{aligned}
+&gt; \end{split}\]</div>
+</div></blockquote>
+<p>Next, for each round, the verifier also needs to perform the following checks.</p>
+<p><strong>3.1 When <span class="math notranslate nohighlight">\(i = 1\)</span></strong></p>
+<p>a. For each <span class="math notranslate nohighlight">\(\vec{w} \in A_0 = \{\vec{z}, \vec{\alpha}, \vec{\alpha_1}\}\)</span>, check <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_0) = g_{\vec{w}_{[2:]}}(w_1)\)</span>, i.e., check</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{(z_1, z_2, z_3)}(r_0) = g_{(z_2, z_3)}(z_1) \\
+    &amp; g_{(\alpha, \alpha^2, \alpha^4)}(r_0) = g_{(\alpha^2, \alpha^4)}(\alpha) \\
+    &amp; g_{(\alpha_1, \alpha_1^2, \alpha_1^4)}(r_0) = g_{(\alpha_1^2, \alpha_1^4)}(\alpha_1)
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>🐞<strong>fix</strong>
+I think in the original paper’s Step 3</p>
+<blockquote>
+<div><p>For each round <span class="math notranslate nohighlight">\(i\)</span>, where <span class="math notranslate nohighlight">\(i \in [\mu]\)</span> ,
+a. For each <span class="math notranslate nohighlight">\(\vec{w} \in A_{i - 1}\)</span>, if <span class="math notranslate nohighlight">\(i &lt; \mu\)</span>, <span class="math notranslate nohighlight">\(\mathcal{V}\)</span> checks  <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_i) = g_{\vec{w}_{[2:]}}(w_1)\)</span> ; otherwise, <span class="math notranslate nohighlight">\(\mathcal{V}\)</span> checks <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_i) = g(w_1)\)</span> .</p>
+</div></blockquote>
+<p>should be changed to, when <span class="math notranslate nohighlight">\(i &lt; \mu\)</span>, verifier checks <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_{i - 1}) = g_{\vec{w}_{[2:]}}(w_1)\)</span>, otherwise checks <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_{i - 1}) = g(w_1)\)</span>. The reason is that, for example, when <span class="math notranslate nohighlight">\(i = 2\)</span>, <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_1) = g_{\vec{w}_{[2:]}}(w_1)\)</span> does not hold when substituted into the function construction sent by the prover earlier.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Actually, the last equation above does not need to be checked, i.e., <span class="math notranslate nohighlight">\(g_{(\alpha_1, \alpha_1^2, \alpha_1^4)}(r_0) = g_{(\alpha_1^2, \alpha_1^4)}(\alpha_1)\)</span>. We can verify that the above equations are correct because substituting into the <span class="math notranslate nohighlight">\(g(X)\)</span> equation from Round 1 gives
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    &amp; g_{(z_1, z_2, z_3)}(r_0) = \tilde{f}(z_1, z_2, z_3) = y &amp; g_{(z_2, z_3)}(z_1) = \tilde{f}(z_1, z_2, z_3)\\
+    &amp; g_{(\alpha, \alpha^2, \alpha^4)}(r_0) = \tilde{f}(\alpha, \alpha^2, \alpha^4) = c &amp; g_{(\alpha^2, \alpha^4)}(\alpha) = \tilde{f}(\alpha, \alpha^2, \alpha^4)
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<p><strong>3.2 When <span class="math notranslate nohighlight">\(i = 2\)</span></strong></p>
+<p>a. For each <span class="math notranslate nohighlight">\(\vec{w} \in A_1 = \{(z_2, z_3), (\alpha^2, \alpha^4), (\alpha_1^2, \alpha_1^4), (\alpha_2, \alpha_2^2)\}\)</span>, check <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_1) = g_{\vec{w}_{[2:]}}(w_1)\)</span>, i.e., check</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{(z_2, z_3)}(r_1) = g_{(z_3)}(z_2) \\
+    &amp; g_{(\alpha^2, \alpha^4)}(r_1) = g_{(\alpha^4)}(\alpha^2) \\
+    &amp; g_{(\alpha_1^2, \alpha_1^4)}(r_1) = g_{(\alpha_1^4)}(\alpha_1^2) \\
+    &amp; g_{(\alpha_2, \alpha_2^2)}(r_1) = g_{(\alpha_2^2)}(\alpha_2)
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>The last equation <span class="math notranslate nohighlight">\(g_{(\alpha_2, \alpha_2^2)}(r_1) = g_{(\alpha_2^2)}(\alpha_2)\)</span> does not need to be checked. We can verify that the above equations hold because substituting into the <span class="math notranslate nohighlight">\(g(X)\)</span> equations from Rounds 1 and 2 gives
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    &amp; g_{(z_2, z_3)}(r_1) = \tilde{f}(r_1, z_2, z_3) &amp;  g_{(z_3)}(z_2) = \tilde{f}(r_1, z_2, z_3)\\
+    &amp; g_{(\alpha^2, \alpha^4)}(r_1) = \tilde{f}(r_1, \alpha^2, \alpha^4) &amp; g_{(\alpha^4)}(\alpha^2) = \tilde{f}(r_1, \alpha^2, \alpha^4)\\
+    &amp; g_{(\alpha_1^2, \alpha_1^4)}(r_1) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4) &amp; g_{(\alpha_1^4)}(\alpha_1^2) = \tilde{f}(r_1, \alpha_1^2, \alpha_1^4) 
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<p><strong>3.2 When <span class="math notranslate nohighlight">\(i = 3\)</span></strong></p>
+<p>a. For each <span class="math notranslate nohighlight">\(\vec{w} \in A_2 = \{(z_3), (\alpha^4), (\alpha_1^4), (\alpha_2^2), (\alpha_3)\}\)</span>, check <span class="math notranslate nohighlight">\(g_{\vec{w}}(r_2) = g(w_1)\)</span>, i.e., check</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    &amp; g_{(z_3)}(r_2) = g(z_3) \\
+    &amp; g_{(\alpha^4)}(r_2) = g(\alpha^4) \\
+    &amp; g_{(\alpha_1^4)}(r_2) = g(\alpha_1^4) \\
+    &amp; g_{(\alpha_2^2)}(r_2) = g(\alpha_2^2) \\
+     &amp; g_{(\alpha_3)}(r_2) = g(\alpha_3) 
+\end{aligned}
+\end{split}\]</div>
+<blockquote>
+<div><p>Similarly, the last equation <span class="math notranslate nohighlight">\(g_{(\alpha_3)}(r_2) = g(\alpha_3)\)</span> does not need to be checked. We can verify that the above 4 equations hold because substituting into the <span class="math notranslate nohighlight">\(g(X)\)</span> equations from Rounds 2 and 3 gives
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    &amp; g_{(z_3)}(r_2) = \tilde{f}(r_1, r_2, z_3) &amp;  g(z_3) = \tilde{f}(r_1, r_2, z_3)\\
+    &amp; g_{(\alpha^4)}(r_2) = \tilde{f}(r_1, r_2, \alpha^4) &amp; g(\alpha^4) = \tilde{f}(r_1, r_2, \alpha^4)\\
+    &amp; g_{(\alpha_1^4)}(r_2) = \tilde{f}(r_1, r_2, \alpha_1^4) &amp; g(\alpha_1^4) = \tilde{f}(r_1, r_2, \alpha_1^4) \\
+    &amp; g_{(\alpha_2^2)}(r_2) = \tilde{f}(r_1, r_2, \alpha_2^2)  &amp; g(\alpha_2^2) = \tilde{f}(r_1, r_2, \alpha_2^2)
+\end{aligned}
+\)</span>$</p>
+</div></blockquote>
+<p><strong>Step 4</strong>: Repeat query <span class="math notranslate nohighlight">\(s\)</span> times:
+a. The verifier sends <span class="math notranslate nohighlight">\(\beta_0 \leftarrow \$ L_0\)</span> to the prover. For <span class="math notranslate nohighlight">\(i \in [3]\)</span>, define <span class="math notranslate nohighlight">\(\beta_i := \beta_{i - 1}^2\)</span>.
+b. For each <span class="math notranslate nohighlight">\(i \in [3]\)</span>, the prover uses <span class="math notranslate nohighlight">\(\mathsf{MT.Open}\)</span> to open <span class="math notranslate nohighlight">\(f^{(i - 1)}(\beta_{i - 1})\)</span> and <span class="math notranslate nohighlight">\(f^{(i - 1)}(-\beta_{i - 1})\)</span>.
+c. The verifier checks if the results sent by the prover are correct by calling <span class="math notranslate nohighlight">\(\mathsf{MT.Verify}\)</span>.
+d. For each <span class="math notranslate nohighlight">\(i \in [3]\)</span>, the verifier needs to check if the following three points are on a straight line:</p>
+<div class="math notranslate nohighlight">
+\[
+\left(\beta_{i - 1}, f^{(i - 1)}(\beta_{i - 1})\right), \quad \left(-\beta_{i - 1}, f^{(i - 1)}(-\beta_{i - 1})\right), \quad \left(r_i, f^{(i)}(\beta_{i})\right)
+\]</div>
+<blockquote>
+<div><p>In this step, the verifier is performing FRI folding queries, randomly checking if the folding is correct, repeating the query <span class="math notranslate nohighlight">\(s\)</span> times.</p>
+</div></blockquote>
+<p><strong>Step 5</strong>: If all the above checks pass, the verifier outputs <span class="math notranslate nohighlight">\(1\)</span>, indicating acceptance; otherwise, outputs <span class="math notranslate nohighlight">\(0\)</span>, indicating rejection.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[GLHQTZ24] Yanpei Guo, Xuanming Liu, Kexi Huang, Wenjie Qu, Tianyang Tao, and Jiaheng Zhang. “DeepFold: Efficient Multilinear Polynomial Commitment from Reed-Solomon Code and Its Application to Zero-knowledge Proofs.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[ACFY24a] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “STIR: Reed-Solomon proximity testing with fewer queries.” In <em>Annual International Cryptology Conference</em>, pp. 380-413. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[ACFY24b] Gal Arnon, Alessandro Chiesa, Giacomo Fenzi, and Eylon Yogev. “WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification.” <em>Cryptology ePrint Archive</em> (2024).</p></li>
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>[ZCF24] Hadas Zeilberger, Binyi Chen, and Ben Fisch. “BaseFold: efficient field-agnostic polynomial commitment schemes from foldable codes.” Annual International Cryptology Conference. Cham: Springer Nature Switzerland, 2024.</p></li>
+<li><p>[BGKS20] Eli Ben-Sasson, Lior Goldberg, Swastik Kopparty, and Shubhangi Saraf. “DEEP-FRI: sampling outside the box improves soundness.” <em>arXiv preprint arXiv:1903.12243</em> (2019).</p></li>
+<li><p>[H24] Ulrich Haböck. “Basefold in the List Decoding Regime.” <em>Cryptology ePrint Archive</em>(2024).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-method-from-unique-decoding-to-list-decoding">DEEP Method: From Unique Decoding to List Decoding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ensuring-the-correctness-of-deep-method-evaluation">Ensuring the Correctness of DEEP Method Evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepfold-protocol">DeepFold Protocol</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

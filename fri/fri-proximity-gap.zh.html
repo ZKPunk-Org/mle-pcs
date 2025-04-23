@@ -1,0 +1,811 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心 &#8212; Polynomial Commitment Schemes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'fri/fri-proximity-gap.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="STIR: 提升码率来降低查询复杂度" href="stir.zh.html" />
+    <link rel="prev" title="[BCIKS20] Proximity Gaps 论文 soundness 解析" href="BCIKS20-proximity-gaps.zh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Polynomial Commitment Schemes - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Polynomial Commitment Schemes - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to the land of PCS!
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basefold</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-01.zh.html">Basefold 笔记：可折叠线性编码</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-02.zh.html">Basefold 笔记：IOPP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-03.zh.html">Basefold 笔记： MLE 求值证明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-04.zh.html">Basefold 笔记：Random Foldable Codes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basefold/basefold-05.zh.html">Basefold 笔记：IOPP 可靠性分析</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="BBHR18-FRI.zh.html">[BBHR18] FRI 论文 soundness 解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BCIKS20-proximity-gaps.zh.html">[BCIKS20] Proximity Gaps 论文 soundness 解析</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stir.zh.html">STIR: 提升码率来降低查询复杂度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whir.zh.html">WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deepfold.zh.html">DeepFold 笔记：协议概览</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">FRI Binius</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-01.zh.html">Notes on FRI-Binius (Part I): Binary Towers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fri-binius/binius-02.zh.html">Notes on Binius (Part II): Subspace Polynomial</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Zeromorph</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph.zh.html">ZeroMorph 笔记</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph-fri.zh.html">Zeromorph-PCS : 对接 FRI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeromorph/zeromorph_mapping_tutorial.html">Select SageMath Kernel First</a></li>
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Ffri/fri-proximity-gap.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/fri/fri-proximity-gap.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximity-gaps">Proximity Gaps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prover">诚实的 Prover</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">恶意的 Prover</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#delta"><span class="math notranslate nohighlight">\(\delta\)</span> 增加带来的影响</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement">Correlated Agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement-soundness">Correlated Agreement 定理在 soundness 中的应用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="proximity-gaps-correlated-agreement-fri">
+<h1>Proximity Gaps 与 Correlated Agreement：FRI 安全性证明的核心<a class="headerlink" href="#proximity-gaps-correlated-agreement-fri" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Jade Xie  <a class="reference external" href="mailto:jade&#37;&#52;&#48;secbit&#46;io">jade<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+<li><p>Yu Guo <a class="reference external" href="mailto:yu&#46;guo&#37;&#52;&#48;secbit&#46;io">yu<span>&#46;</span>guo<span>&#64;</span>secbit<span>&#46;</span>io</a></p></li>
+</ul>
+<p>本文主要受 <a class="reference external" href="https://www.youtube.com/watch?v=8AMiZdWA1eM">Proximity Gaps &amp; Applications to Succinct Proofs</a> 视频中的启发，结合论文[BCIKS20] ，介绍 Proximity Gaps 的概念，以及与 Proximity Gaps 有着紧密联系的 Correlated Agreement 定理，其在 FRI 安全性证明中起了非常重要的作用。</p>
+<p>在 FRI 协议中，对于一个多项式 <span class="math notranslate nohighlight">\(f: \mathcal{D} \rightarrow \mathbb{F}_q\)</span> ，设 <span class="math notranslate nohighlight">\(f(x) = a_0 + a_1 x + a_2 x^2 + \ldots + a_{k-1}x^{k-1}\)</span> ，其是一个次数小于 <span class="math notranslate nohighlight">\(k\)</span> 的多项式，将其在域 <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> 上进行求值，其中 <span class="math notranslate nohighlight">\(|\mathcal{D}| = n\)</span> ，则 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span> 。Prover 想向 Verifier 证明 <span class="math notranslate nohighlight">\(f(x)\)</span> 的次数确实是小于 <span class="math notranslate nohighlight">\(k\)</span> 的。如果 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span> ，则 Verifier 输出 <code class="docutils literal notranslate"><span class="pre">accept</span></code> ，如果 <span class="math notranslate nohighlight">\(f\)</span> 距离对应的编码空间 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}_q, \mathcal{D}, k]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，则输出 <code class="docutils literal notranslate"><span class="pre">reject</span></code> 。Verifier 能够获得的是关于一系列函数的 oracle ，FRI 协议想要实现的就是 Verifier 查询 oracle 尽可能的少，并能区分出 <span class="math notranslate nohighlight">\(f\)</span> 属于上述哪一种情况。</p>
+<p>不妨设 <span class="math notranslate nohighlight">\(k-1\)</span> 为偶数，那么</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    f(x) &amp; = a_0 + a_1 x + a_2 x^2 + \ldots + a_{k-1}x^{k-1} \\
+    &amp; = (a_0 + a_2 x^2 + \cdots + a_{k-1}x ^{k-1}) + x (a_1 + a_3 x^2 + \cdots + a_{k-2}x^{k-3}) \\
+    &amp; := g(x^2) + xh(x^2) 
+\end{aligned}
+\end{split}\]</div>
+<p>可以发现函数</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    g(x) = a_0 + a_2 x + \cdots + a_{k-1}x ^{\frac{k-1}{2}} \\
+    h(x) = a_1 + a_3 x + \cdots + a_{k-2}x^{\frac{k-3}{2}}
+\end{aligned}
+\end{split}\]</div>
+<p>开始 Prover 想向 Verifier 证明 <span class="math notranslate nohighlight">\(f(x)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(k\)</span> ，现在可以分解成三个子问题：</p>
+<ol class="arabic simple">
+<li><p>证明函数 <span class="math notranslate nohighlight">\(g(x)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(k/2\)</span> ，即 <span class="math notranslate nohighlight">\(g(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span></p></li>
+<li><p>证明函数 <span class="math notranslate nohighlight">\(h(x)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(k/2\)</span> ，即 <span class="math notranslate nohighlight">\(h(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span></p></li>
+<li><p>证明 <span class="math notranslate nohighlight">\(f(x) = g(x^2) + x \cdot h(x^2)\)</span></p></li>
+</ol>
+<p>其中 <span class="math notranslate nohighlight">\(|{D}^{(1)}| = n/2\)</span> 。第三项是证明奇偶拆分是正确的。同样可以分别对 <span class="math notranslate nohighlight">\(g(x)\)</span> 和 <span class="math notranslate nohighlight">\(h(x)\)</span> 进行类似 <span class="math notranslate nohighlight">\(f(x)\)</span> 那样奇偶项的分解，分别分解成两个次数小于 <span class="math notranslate nohighlight">\(k/4\)</span> 的多项式，这样就要证明 4 个多项式的次数小于 <span class="math notranslate nohighlight">\(k/4\)</span> ，直到最后分解到证明常数多项式。这个过程如下图所示，可以发现要证明的多项式在以 <span class="math notranslate nohighlight">\(2\)</span> 的指数的形式增长。在这个过程中，为了证明奇偶拆分是没有问题的，需要发送关于所有这些多项式的 oracle 给 Verifier ，可以想象发送的多项式实在是太多了，随着 <span class="math notranslate nohighlight">\(k\)</span> 的增加是爆炸性增长的。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-binary.svg" /></p>
+<p>既然我们的目的是证明多项式的次数小于某一个数，我们的想法是不希望对 <span class="math notranslate nohighlight">\(f(x)\)</span> 分解问题时像上面那样分叉，分成两个多项式，我们想要下一步证明一个多项式次数小于 <span class="math notranslate nohighlight">\(k/2\)</span> ，这样能大大减少发送的多项式。怎么做到这一点呢？我们可以向 Verifer 要一个随机数 <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span> ，将 <span class="math notranslate nohighlight">\(g(x)\)</span> 和 <span class="math notranslate nohighlight">\(h(x)\)</span> 作线性组合，得到 <span class="math notranslate nohighlight">\(g(x) + r \cdot h(x)\)</span> ，将 <span class="math notranslate nohighlight">\(f(x)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(k\)</span> 的问题分解为：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(f^{(1)}(x) = g(x) + r \cdot h(x)\)</span> 的次数小于 <span class="math notranslate nohighlight">\(k/2\)</span> ，即 <span class="math notranslate nohighlight">\(f^{(1)}(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span></p></li>
+</ol>
+<p>这时发送的多项式的图形就变成下图这样了，可以看到要发送的多项式的 oracle 大大减少了。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-fold.svg" /></p>
+<p>那么现在剩下一个问题是，这样做是否和原来的方式等价呢？当然如果 Prover 是诚实的，根据 RS 编码的线性性，<span class="math notranslate nohighlight">\(g(x),h(x) \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span> ，那么其线性组合之后依然是在 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span> 中的。但如果 Prover 作弊呢？例如 <span class="math notranslate nohighlight">\(g(x)\)</span> 距离编码空间 <span class="math notranslate nohighlight">\(\mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，我们希望用随机数 <span class="math notranslate nohighlight">\(r\)</span> 进行线性组合之后的 <span class="math notranslate nohighlight">\(g(x) + r \cdot h(x)\)</span> 还是有 <span class="math notranslate nohighlight">\(\delta\)</span> 这么远，这样 Verifier 能够发现 Prover 作弊。我们不希望的是折叠之后的 <span class="math notranslate nohighlight">\(g(x) + r \cdot h(x)\)</span> 距离对应的编码空间变得更近了。Proximity Gaps 告诉我们发生这样的概率是非常小的，和中彩票一样，这样我们就可以大胆的用随机数进行折叠了。</p>
+<section id="proximity-gaps">
+<h2>Proximity Gaps<a class="headerlink" href="#proximity-gaps" title="Link to this heading">#</a></h2>
+<p>上面我们考虑的是两个多项式折叠的情况，实际中我们会用到随机数一次进行多折或者对多个多项式进行 batch。这里我们不妨考虑一般的情况，假设有 <span class="math notranslate nohighlight">\(m\)</span> 个向量 <span class="math notranslate nohighlight">\((u_0, \ldots, u_{m-1})\)</span> ，对每一个 <span class="math notranslate nohighlight">\(u_i \in \mathbb{F}_q^{\mathcal{D}}\)</span> ，可以看作是 <span class="math notranslate nohighlight">\(\mathcal{D} \rightarrow \mathbb{F}\)</span> 上的多项式，也可以看作是 <span class="math notranslate nohighlight">\(|\mathcal{D}| = n\)</span> 维的向量。对这 <span class="math notranslate nohighlight">\(m\)</span> 个向量进行线性组合，记作 <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0, \ldots, u_{m-1}\}\)</span> ，这里的 <span class="math notranslate nohighlight">\(A\)</span> 是 <span class="math notranslate nohighlight">\(\mathbb{F}^{\mathcal{D}}\)</span> 中的 affine space ，记编码空间 <span class="math notranslate nohighlight">\(V := \mathrm{RS}[\mathbb{F}, \mathcal{D},k]\)</span> 。</p>
+<p>我们关心 <span class="math notranslate nohighlight">\(A\)</span> 中的元素与编码空间 <span class="math notranslate nohighlight">\(V\)</span> 之间的距离关系是怎样的。如下图所示，将编码空间 <span class="math notranslate nohighlight">\(V\)</span> 中的所有 code 表示为点，以这些点为圆心，以 <span class="math notranslate nohighlight">\(\delta\)</span>  为半径画一个球体。<span class="math notranslate nohighlight">\(A\)</span> 形成的空间用一个二维平面表示，如果 <span class="math notranslate nohighlight">\(A\)</span> 中的元素距离 <span class="math notranslate nohighlight">\(V\)</span> 中的某些 code 之间的相对 Hamming 距离小于等于 <span class="math notranslate nohighlight">\(\delta\)</span> ，就说明与图中的某些 Hamming 球之间有交集，将所有的这些交集并起来就形成了图中绿色的阴影区域。换句话说，对于阴影区域 <span class="math notranslate nohighlight">\(S \subset A\)</span> 的每一个元素 <span class="math notranslate nohighlight">\(a\)</span> ，一定存在一个 <span class="math notranslate nohighlight">\(v \in V\)</span> ，使得 <span class="math notranslate nohighlight">\(\Delta(a, v) \leq \delta\)</span> 。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-3D.svg" /></p>
+<p>我们将 <span class="math notranslate nohighlight">\(\mathbb{F}^{\mathcal{D}}\)</span> 中的所有的 affine space 组成一个集合 <span class="math notranslate nohighlight">\(\mathrm{C}_{\mathrm{Affine}}\)</span> ，Proximity Gaps 结论[BCIKS20, Theorem 1.2]告诉对于任意一个 <span class="math notranslate nohighlight">\(A \in \mathrm{C}_{\mathrm{Affine}}\)</span> （如 <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0, \ldots, u_{m-1}\}\)</span>），都有要么 <span class="math notranslate nohighlight">\(A\)</span> 中的所有的元素都在阴影区域里面，要么 <span class="math notranslate nohighlight">\(A\)</span> 中只有很少的一部分元素在阴影区域中。不可能说 <span class="math notranslate nohighlight">\(A\)</span> 中一半的元素在阴影区域，而另一半的元素不在阴影区域中。用公式表达就是只能符合下面两种情况之一：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1\)</span></p></li>
+</ol>
+<p>我们称 <span class="math notranslate nohighlight">\(\delta\)</span> 为 proximity 参数(proximity parameter)， <span class="math notranslate nohighlight">\(\epsilon\)</span> 为误差参数(error parameter)，它是一个非常小的数。当然关于 <span class="math notranslate nohighlight">\(\epsilon\)</span> 有具体表达式的，其和 <span class="math notranslate nohighlight">\(q,n,\rho,\delta\)</span>  是相关的，即 <span class="math notranslate nohighlight">\(\epsilon = \epsilon(q,n,\rho,\delta)\)</span> ，其中 <span class="math notranslate nohighlight">\(\rho\)</span> 表示码率， <span class="math notranslate nohighlight">\(\rho = \frac{k}{n}\)</span> 。</p>
+<p>那么这里的阴影区域代表什么呢？这个结论与 FRI 的安全性分析之间有什么关系呢？下面针对诚实的 Prover 和作弊的 Prover 这两种情况来应用 Proximity Gaps 结论进行分析。</p>
+<section id="prover">
+<h3>诚实的 Prover<a class="headerlink" href="#prover" title="Link to this heading">#</a></h3>
+<p>如果是诚实的 Prover ，那么对 <span class="math notranslate nohighlight">\((u_0, \ldots, u_{m-1})\)</span> 中的每一个向量都有 <span class="math notranslate nohighlight">\(u_i \in V\)</span> 。</p>
+<p><img alt="" src="../_images/fri-proximity-affine-space.svg" /></p>
+<p>由 RS 编码的线性性，我们知道线性组合之后一定还在编码空间 <span class="math notranslate nohighlight">\(V\)</span> 中，因此 <span class="math notranslate nohighlight">\(A \subset V\)</span> ，此时 <span class="math notranslate nohighlight">\(A\)</span> 中所有的元素都在 <span class="math notranslate nohighlight">\(V\)</span> 中，那么 Verifier 进行随机线性组合之后，任意选取一点 <span class="math notranslate nohighlight">\(a \in A\)</span> ，都能得到 <span class="math notranslate nohighlight">\(a \in V\)</span> ，此时 Verifier 一定会接受。这种情况对应 Proximity Gaps 中的第二种情况，取 <span class="math notranslate nohighlight">\(\delta = 0\)</span> ，此时</p>
+<div class="math notranslate nohighlight">
+\[
+    \Pr_{a \in A}[\Delta(a, V) = 0] = 1
+\]</div>
+</section>
+<section id="id1">
+<h3>恶意的 Prover<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>如果 Prover 作弊，假设在 Prover 发送给 Verifier 的 <span class="math notranslate nohighlight">\(m\)</span> 个向量 <span class="math notranslate nohighlight">\(\vec{u} = (u_0, \ldots, u_{m-1})\)</span> 中混入了一个向量距离 <span class="math notranslate nohighlight">\(V\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 远，即</p>
+<div class="math notranslate nohighlight">
+\[
+\exists u_i^* \in \vec{u}, \quad \Delta(u_i^*, V) &gt; \delta
+\]</div>
+<p>那么在 <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0,u_1, \ldots,u_{m-1}\}\)</span> 中，取 <span class="math notranslate nohighlight">\(a^* = u_i^* \in A\)</span> ，肯定有</p>
+<div class="math notranslate nohighlight">
+\[
+\exists a^* \in A, \quad \Delta(a^*, V) &gt; \delta
+\]</div>
+<p>此时根据 Proximity Gaps 结论，已经有 <span class="math notranslate nohighlight">\(A\)</span> 中的一个元素不在阴影区域内了，因此排除 <span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1\)</span> 这种情况，只能是 <span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span> 。这也说明哪怕 <span class="math notranslate nohighlight">\(m\)</span> 个向量中只有一个向量距离对应的编码空间有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远， <span class="math notranslate nohighlight">\(A\)</span> 中大部分元素都距离 <span class="math notranslate nohighlight">\(V\)</span> 有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么远。换句话说，随机从 <span class="math notranslate nohighlight">\(A\)</span> 中选取的一点 <span class="math notranslate nohighlight">\(a\)</span> ，其与 <span class="math notranslate nohighlight">\(V\)</span> 之间的距离能代表 <span class="math notranslate nohighlight">\(m\)</span> 个向量中距离 <span class="math notranslate nohighlight">\(V\)</span> 的最远距离。</p>
+<p>现在 Verifier 就从 <span class="math notranslate nohighlight">\(A\)</span> 中随机选取一点 <span class="math notranslate nohighlight">\(a \in A\)</span> ，来检查 <span class="math notranslate nohighlight">\(\Delta(a,V)\)</span> 是否大于 <span class="math notranslate nohighlight">\(\delta\)</span> ，会出现两种情况。一种是选到了图中的阴影区域，另一种是选到阴影区域之外。</p>
+<p><img alt="" src="../_images/fri-proximity-random-choose.svg" /></p>
+<p><strong>情况 1 ： <span class="math notranslate nohighlight">\(\Delta(a, V) \le \delta\)</span> 。</strong> 此时 Verifier 选取的点 <span class="math notranslate nohighlight">\(a\)</span> 在阴影区域内。我们说此时 Prover 非常幸运，虽然 Prover 提供了的错误的 witness ，即距离编码空间 <span class="math notranslate nohighlight">\(\delta\)</span> 远，但是随机线性组合之后距离编码空间变得有 <span class="math notranslate nohighlight">\(\delta\)</span> 那么近了，此时 Prover 能成功骗过 Verifer 。出现这种情况对 Verifier 来说不是好事，好在 Proximity Gaps 结论告诉我们 <span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span> ，也就是随便选一点能进入阴影区域的概率是非常非常小的，Prover 需要像中彩票那么幸运才行，也就是此时 Prover 能成功骗过 Verifier 的概率不会超过 <span class="math notranslate nohighlight">\(\epsilon\)</span> 。</p>
+<p><strong>情况 2 ： <span class="math notranslate nohighlight">\(\Delta(a, V) &gt; \delta\)</span> 。</strong> 此时 Verifier 选取的点 <span class="math notranslate nohighlight">\(a\)</span> 在阴影区域外。Prover 还有可能作弊成功吗？还是有的，因为 Verifer 收到了关于 <span class="math notranslate nohighlight">\(a\)</span> 的 oracle ，但是不会去检查 <span class="math notranslate nohighlight">\(a\)</span> 中的所有值，只想查询某一些值来看是否在 <span class="math notranslate nohighlight">\(V\)</span> 中。如果 Verifier 只查询一次，由于 <span class="math notranslate nohighlight">\(\Delta(a, V) &gt; \delta\)</span> ，那么 <span class="math notranslate nohighlight">\(a\)</span> 中有大于 <span class="math notranslate nohighlight">\(\delta\)</span> 比例的分量与 <span class="math notranslate nohighlight">\(v\)</span> 对应的分量不等，此时 Verifier 有大于 <span class="math notranslate nohighlight">\(\delta\)</span> 的概率抓到 Prover 作弊，也就是说此时 Prover 能作弊成功的概率不超过 <span class="math notranslate nohighlight">\(1 - \delta\)</span> 。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-check.svg" /></p>
+<p>如果 Verifier 重复查询 <span class="math notranslate nohighlight">\(\kappa\)</span> 次，此时 Prover 能作弊成功的概率不会超过 <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> 。</p>
+<p>那么，作弊的 Prover 能够成功的概率是上述两种情况的联合概率，即不会超过</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon + (1 - \delta)^{\kappa}
+\]</div>
+<p>上面分析的思路其实就是一般 FRI 协议 soundness 分析的思路，论文中会将发生情况 1 叫做发生了一些“坏”的事件(“bad” event) ，然后假设“坏”的事件没有发生的情况下，估计情况 2 的概率，最后再将两个结合起来进行分析。</p>
+<p>我们知道 FRI 协议分为两个阶段，一个是 Commit 阶段，另一个是 Query 阶段。我们可以将上述两种情况与这两个阶段对应起来：</p>
+<ol class="arabic simple">
+<li><p>上述情况 1 发生在 Commit 阶段，Verifier 会选取随机数让 Prover 对多项式进行折叠。</p></li>
+<li><p>上述情况 2 对应发生在 Query 阶段，此时 Verifier 会随机选取一些点进行 query 检查。</p></li>
+</ol>
+<p>如果是 batched 版本的 FRI 协议，想证明多个多项式 <span class="math notranslate nohighlight">\(f_0^{(0)}, f_1^{(0)}, \ldots, f_t^{(0)}\)</span> ，都是小于 <span class="math notranslate nohighlight">\(k\)</span> 次的多项式，可以先用随机数 <span class="math notranslate nohighlight">\(\{x_1,\ldots, x_t\}\)</span> 进行聚合，得到</p>
+<div class="math notranslate nohighlight">
+\[
+f^{(0)}(x) = f_0^{(0)} + \sum_{i = 1}^{t} x_i \cdot f_i^{(0)}
+\]</div>
+<p>然后再对 <span class="math notranslate nohighlight">\(f^{(0)}(x)\)</span> 应用一般的 FRI 协议，证明其是小于 <span class="math notranslate nohighlight">\(k\)</span> 次的多项式。这里分析 soundness 也是对应上述情况 1 ，即可能存在由于随机数的选取导致 <span class="math notranslate nohighlight">\(f^{(0)}(x)\)</span> 距离对应的 RS 编码空间变得不再有 <span class="math notranslate nohighlight">\(\delta\)</span> 远。</p>
+</section>
+</section>
+<section id="delta">
+<h2><span class="math notranslate nohighlight">\(\delta\)</span> 增加带来的影响<a class="headerlink" href="#delta" title="Link to this heading">#</a></h2>
+<p>下面分析下 proximity 参数 <span class="math notranslate nohighlight">\(\delta\)</span> 的增加会带来什么影响？我们已经分析出作弊的 Prover 能成功骗过 Verifier 的概率不超过</p>
+<div class="math notranslate nohighlight">
+\[
+\epsilon + (1 - \delta)^{\kappa}
+\]</div>
+<p>这个概率由两部分组成， <span class="math notranslate nohighlight">\(\delta\)</span> 的增加会导致：</p>
+<p><img alt="" src="../_images/fri-proximity-gap-soundness.svg" /></p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon \uparrow\)</span>。从图形上来理解，<span class="math notranslate nohighlight">\(\delta\)</span> 控制了每个 Hamming 球的半径，如果 <span class="math notranslate nohighlight">\(\delta\)</span> 增大，那么 Hamming 球变大，其与 affine space <span class="math notranslate nohighlight">\(A\)</span> 之间的交集按理说就会更大，也就是阴影区域增大，这就意味着 <span class="math notranslate nohighlight">\(\epsilon\)</span> 会变大。</p>
+<ul class="simple">
+<li><p>对作弊的 Prover 来说是好事 :） 。因为此时 Prover 变得比之前更加幸运了，有更大的概率进入绿色的阴影区域，能成功骗过 Verifier 了。</p></li>
+<li><p>自然，对 Verifier 来说是坏事 :( 。</p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\((1 - \delta)^{\kappa} \downarrow\)</span>。这个式子是直接和 <span class="math notranslate nohighlight">\(\delta\)</span> 相关的，<span class="math notranslate nohighlight">\(\delta\)</span> 增大，那么 <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> 会变小。</p>
+<ul class="simple">
+<li><p>对作弊的 Prover 来说是坏事 :( 。因为此时 Prover 作弊成功的概率会变小。</p></li>
+<li><p>对 Verifier 来说是好事 :) 。 此时有更大的概率抓住 Prover 作弊。在达到相同的安全性要求下， Verifier 只需要更少的轮询次数就能达到要求了。</p></li>
+</ul>
+</li>
+</ol>
+<p>可以看到，<span class="math notranslate nohighlight">\(\delta\)</span> 的增加使得 <span class="math notranslate nohighlight">\(\epsilon\)</span> 变大， <span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> 变小，在实际中，<span class="math notranslate nohighlight">\(\epsilon\)</span> 是非常小的，<span class="math notranslate nohighlight">\((1 - \delta)^{\kappa}\)</span> 在整个和式中所占比例更大，因此整体还是会变小的，这对于整个 FRI 协议来说，soundness 变小，也说明会更加安全。</p>
+<p>上面是从 soundness 角度分析的，视频 <a class="reference external" href="https://www.youtube.com/watch?v=8AMiZdWA1eM">Proximity Gaps &amp; Applications to Succinct Proofs</a> 中还提到一点，<span class="math notranslate nohighlight">\(\delta\)</span> 的增大会使得 Correlated Agreement 结论变得更弱， Correlated Agreement 是一个比 Proximity Gaps 更强的结论（到目前为止，还没有证明出它们等价）。下面就介绍下 Correlated Agreement 结论。</p>
+<!-- 我理解是从整个协议层面考虑，此时 Prover 能向 Verifier 确保的存在码字 $v_{i} \in V$ ，使得 $v_{i}$ 与 $u_{i}$ 一致的区域 $\mathcal{D}'$ 变得比原来更小了，说明协议能够承诺或者确保的事情比原来更弱了。举个例子，协议原来能确保的是一个数 $x > 100$ ，现在只能确保这个数 $x > 1$ 了。 -->
+</section>
+<section id="correlated-agreement">
+<h2>Correlated Agreement<a class="headerlink" href="#correlated-agreement" title="Link to this heading">#</a></h2>
+<p>前面提到的 affine space <span class="math notranslate nohighlight">\(A = \mathrm{span}\{u_0,u_1, \ldots,u_{m-1}\}\)</span> ，为保持和 [BCIKS20, Theorem 1.6] 结论一致，在第一个向量 <span class="math notranslate nohighlight">\(u_0\)</span> 前不使用随机数，设 <span class="math notranslate nohighlight">\(A = u_0 + \mathrm{span}\{u_1, \ldots,u_{m-1}\}\)</span> 。</p>
+<p>Correlated Agreement 定理 ([BCIKS20, Theorem 1.6]) 说的是如果 <span class="math notranslate nohighlight">\(\delta \in (0, 1 - \sqrt{\rho})\)</span> 并且</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{a \in A}[\Delta(a, V) \le \delta] &gt; \epsilon,
+\]</div>
+<p>其中，<span class="math notranslate nohighlight">\(\epsilon\)</span> 就是 Proximity Gaps 结论中给出的 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，那么存在 <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}\)</span> ，以及 <span class="math notranslate nohighlight">\(v_0, \ldots, v_{m-1} \in V\)</span> 使得</p>
+<ol class="arabic simple">
+<li><p><strong>Density</strong> ： <span class="math notranslate nohighlight">\(\frac{|\mathcal{D}'|}{|\mathcal{D}|} \ge 1 - \delta\)</span> ，</p></li>
+<li><p><strong>Agreement</strong> ：对任意的 <span class="math notranslate nohighlight">\(i \in \{0, \ldots, m - 1\}\)</span> ，有 <span class="math notranslate nohighlight">\(u_i|_{\mathcal{D}'} = v_i|_{\mathcal{D}'}\)</span> 。</p></li>
+</ol>
+<p>意思是如果落入阴影区域的元素很多，占比比 Proximity Gaps 结论中的 <span class="math notranslate nohighlight">\(\epsilon\)</span> 还大的话，那么在 <span class="math notranslate nohighlight">\(V\)</span> 中存在码字 <span class="math notranslate nohighlight">\(v_0, \ldots, v_{m-1}\)</span> ，会在区域 <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> 中存在一个占比很大(超过 <span class="math notranslate nohighlight">\(1 - \delta\)</span> )的子集 <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> ，在这里每个 <span class="math notranslate nohighlight">\(u_i\)</span> 都能与对应的 <span class="math notranslate nohighlight">\(v_i\)</span> 在 <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> 上是一致的。根据 Proximity Gaps 的结论，<span class="math notranslate nohighlight">\(A\)</span> 中的元素分为以下两种情况：</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] \le \epsilon\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1\)</span></p></li>
+</ol>
+<p>现在落入阴影区域的元素占比比 <span class="math notranslate nohighlight">\(\epsilon\)</span> 还大，那么自然排除第一种情况，得出 <span class="math notranslate nohighlight">\(A\)</span> 中所有的元素都落在阴影区域中，即</p>
+<div class="math notranslate nohighlight">
+\[\Pr_{a \in A}[\Delta(a, V) \le \delta] = 1 .\]</div>
+<p>而 Correlated Agreement 定理给出了更加具体的结论，说的是在折叠之前的元素 <span class="math notranslate nohighlight">\(u_{i}\)</span> 与在编码空间 <span class="math notranslate nohighlight">\(V\)</span> 中找到的码字 <span class="math notranslate nohighlight">\(v_{i}\)</span> 之间的关系。</p>
+<p>例如，Prover 想证明的是一个多项式 <span class="math notranslate nohighlight">\(f \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(0)}, k]\)</span> ，设 <span class="math notranslate nohighlight">\(\mathcal{D}^{(0)} = \{x_1, \ldots, x_n\}\)</span> ，计算 <span class="math notranslate nohighlight">\(\{f(x_1), \ldots, f(x_n)\}\)</span> ，Prover 就会将这些值的 oracle 发送给 Verifier ，实际中会采用 Merkle 树的方式来实现 oracle。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-f.svg" /></p>
+<p>将 <span class="math notranslate nohighlight">\(f\)</span> 通过拆分得到两个多项式 <span class="math notranslate nohighlight">\(g(x)\)</span> 与 <span class="math notranslate nohighlight">\(h(x)\)</span> 。诚实的情况下 <span class="math notranslate nohighlight">\(g,h \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span> ，其中 <span class="math notranslate nohighlight">\(|\mathcal{D}^{(1)}| = |\mathcal{D}^{(0)}| / 2 = n/2\)</span> 。</p>
+<p>Correlated Agreement 结论告诉我们，对于 <span class="math notranslate nohighlight">\(g(x)\)</span> 与 <span class="math notranslate nohighlight">\(h(x)\)</span> 形成的 affine space <span class="math notranslate nohighlight">\(A = \{g + z \cdot h : z \in \mathbb{F}\}\)</span> ，如果 <span class="math notranslate nohighlight">\(A\)</span> 中有超过 Proximity Gaps 结论中的 <span class="math notranslate nohighlight">\(\epsilon\)</span> 的比例的元素都落入了“阴影区域”，即满足 <span class="math notranslate nohighlight">\(\Delta(a, V) \ge \delta\)</span> ，那么就存在如下图所示的 <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> ，以及 <span class="math notranslate nohighlight">\(\bar{g},\bar{h} \in \mathrm{RS}[\mathbb{F}_q, \mathcal{D}^{(1)}, k/2]\)</span> 。不妨设 <span class="math notranslate nohighlight">\(\mathcal{D}' = \{\alpha_1, \alpha_2, \ldots, \alpha_i\}\)</span> ，那么根据结论 <span class="math notranslate nohighlight">\(|\mathcal{D}'| / |\mathcal{D}^{(1)}| \ge 1 - \delta\)</span> ，有指标 <span class="math notranslate nohighlight">\(i \ge (1 - \delta)n/2\)</span> 。在所有的 <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> 上，<span class="math notranslate nohighlight">\(g\)</span> 与 <span class="math notranslate nohighlight">\(\bar{g}\)</span> 一致，<span class="math notranslate nohighlight">\(h\)</span> 与 <span class="math notranslate nohighlight">\(\bar{h}\)</span> 一致，在图中用绿色表示，意思就是在这些 <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> 集合中的点上求值，它们的值是一样的。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-correlated-agreement.svg" /></p>
+<p>回到 <span class="math notranslate nohighlight">\(\delta\)</span> 增大的分析，可以看到随着 <span class="math notranslate nohighlight">\(\delta\)</span> 的增大，Correlated Agreement 结论里的第一条 <strong>Density</strong> 中的 <span class="math notranslate nohighlight">\(1 - \delta\)</span> 就会变小，这使得结论中能确保的存在 <span class="math notranslate nohighlight">\(V\)</span> 中的 <span class="math notranslate nohighlight">\(v_i\)</span> 与 <span class="math notranslate nohighlight">\(u_i\)</span> 一致的子集 <span class="math notranslate nohighlight">\(\mathcal{D}'\)</span> 就变小了，使得得到的结论更弱了。</p>
+<p>在 [BCIKS20] 论文中说到， Proximity Gap 定理([BCIKS20, 定理 1.2]) 就是通过 Correlated Agreement 定理([BCIKS20, 定理 1.6]) 推导得出的，但是 Proximity Gap 定理目前还不知道能否推出 Correlated Agreement 。如果 Proximity Gap 不能推出 Correlated Agreement 定理的话，说明 Correlated Agreement 定理是一个比 Proximity Gap 定理更强的结论。那如果能推出的话，说明这两个定理就等价了。</p>
+<p><img alt="" src="../_images/fri-proximity-gap-relation.svg" /></p>
+<p>其实 Correlated Agreement 定理的版本很多，取不同的 <span class="math notranslate nohighlight">\(A\)</span> 就能得到不同的定理，<span class="math notranslate nohighlight">\(A\)</span> 可以是：</p>
+<ol class="arabic simple">
+<li><p>线(lines)：<span class="math notranslate nohighlight">\(A = \{u_0 + z u_1: z \in \mathbb{F}\}\)</span></p></li>
+<li><p>低次参数化曲线(low-degree parameterized curves)：<span class="math notranslate nohighlight">\(\mathrm{curve}(\mathbf{u}) = \left\{u_z: = \sum_{i = 0}^{m-1}z^i \cdot u_i  | z \in \mathbb{F}_q   \right\}\)</span></p></li>
+<li><p>affine space：<span class="math notranslate nohighlight">\(u_0 + \mathrm{span}\{u_1, \cdots, u_{m-1}\}\)</span></p></li>
+</ol>
+<p>同时，关于 Correlated Agreement 定理的条件</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{a \in A}[\Delta(a, V) \le \delta] &gt; \epsilon,
+\]</div>
+<p>这里我们测量的是 <span class="math notranslate nohighlight">\(a\)</span> 与 <span class="math notranslate nohighlight">\(V\)</span> 之间的相对 Hamming 距离，我们还可以将这个测度变得更一般化，加上权重，给一个权重函数 <span class="math notranslate nohighlight">\(\mu: \mathcal{D} \rightarrow [0,1]\)</span> ，定义两个向量 <span class="math notranslate nohighlight">\(u\)</span> 与 <span class="math notranslate nohighlight">\(v\)</span> 之间的相对 <em><span class="math notranslate nohighlight">\(\mu\)</span> -agreement</em> 为</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(u,v) := \frac{1}{|\mathcal{D}|} \sum_{x: u(x) = v(x)} \mu(x)
+\]</div>
+<p>当取 <span class="math notranslate nohighlight">\(\mu \equiv 1\)</span> 时，</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(u,v) = \frac{1}{|\mathcal{D}|} \sum_{x: u(x) = v(x)} \mu(x) = \frac{1}{|\mathcal{D}|} \sum_{x: u(x) = v(x)} 1 = 1 - \Delta(u,v) 
+\]</div>
+<p>这个测度的值就完全等于用 <span class="math notranslate nohighlight">\(1\)</span> 减去相对 Hamming 距离了。同样定义一个向量 <span class="math notranslate nohighlight">\(u\)</span> 与编码空间 <span class="math notranslate nohighlight">\(V\)</span> 之间的最大 agreement 为</p>
+<div class="math notranslate nohighlight">
+\[
+\mathrm{agree}_{\mu}(u,V):= \max_{v \in V} \mathrm{agree}_{\mu}(u,v)
+\]</div>
+<p>将定理中的条件变为：</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{a \in A}[\mathrm{agree}_{\mu} \le \alpha] &gt; \epsilon,
+\]</div>
+<p>就会得到对应的 Weighted correlated agreement 定理(见[BCIKS20, Section 7])。可见 Correlated agreement 定理是非常灵活的。在论文[BCIKS20, Theorem 8.3]中关于 batched FRI 协议的 soundness 证明，就先定义了需要的权重函数 <span class="math notranslate nohighlight">\(\mu\)</span> ，使用 Weighted Correlated Agreement 定理来证明，而不是用  Proximity Gap 定理来进行证明。且该定理一般都出现在反证法中，它能有力的帮我们找到编码空间的码字 <span class="math notranslate nohighlight">\(v_{i}\)</span> ，且满足定理结论中说到的性质，能够通过推导帮助我们找到矛盾。</p>
+</section>
+<section id="correlated-agreement-soundness">
+<h2>Correlated Agreement 定理在 soundness 中的应用<a class="headerlink" href="#correlated-agreement-soundness" title="Link to this heading">#</a></h2>
+<p>这里简单描述下 Correlated Agreement 定理在 soundness 证明中的应用，没有那么严谨，实际的安全性分析会更加复杂。</p>
+<p>前面说过 FRI 协议的 soundness 分析分为两个部分：</p>
+<ol class="arabic simple">
+<li><p>在batch 阶段 或者 Commit 阶段，由于随机数的选择不当，使得原本距离编码空间很远的多项式，经过折叠之后距离相应的编码空间变得更近了，也就是进入了“阴影区域”。</p></li>
+<li><p>在 Query 阶段，由于随机进行检查，导致没抓住 Prover 作弊。</p></li>
+</ol>
+<p>Correlated Agreement 定理主要就是应用在第一部分中的概率分析，会先定义“坏”的事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> ：折叠之前 <span class="math notranslate nohighlight">\(\Delta^*(f^{(i)}, \mathrm{RS}^{(i)}) &gt; \delta\)</span> ，将 <span class="math notranslate nohighlight">\(f^{(i)}\)</span> 拆分为 <span class="math notranslate nohighlight">\(g^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(h^{(i+1)}\)</span> ，再用随机数 <span class="math notranslate nohighlight">\(r \in \mathbb{F}\)</span> 进行折叠之后得到 <span class="math notranslate nohighlight">\(\mathrm{fold}_{r}(f^{(i)})\)</span> ，发生了</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta
+\]</div>
+<p>这里用到了 <span class="math notranslate nohighlight">\(\Delta^*\)</span> ，它的定义与 Hamming 距离有所区别，其联系了 FRI 的 Query 阶段的随机查询，这里就不详细展开了。假设发生一个“坏”的事件 <span class="math notranslate nohighlight">\(E^{(i)}\)</span> 的概率不超过 <span class="math notranslate nohighlight">\(\epsilon\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr[E^{(i)}] = \Pr_{r \in \mathbb{F}}[\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta] \le \epsilon \tag{1}
+\]</div>
+<p>如果 FRI 协议中折叠 <span class="math notranslate nohighlight">\(d\)</span> 次，那么发生一些“坏”的事件的概率不超过 <span class="math notranslate nohighlight">\(d \cdot \epsilon\)</span> ，即</p>
+<div class="math notranslate nohighlight">
+\[
+\bigcup_{i = 0}^{d} \Pr[E^{(i)}] \le d \cdot \epsilon
+\]</div>
+<p>这样就将第一部分的概率分析出来了，接着再假设没有这些“坏”的事件发生，来分析第二部分的概率，最终结合两部分概率就能得到 soundness 的结论。</p>
+<p>现在剩下的一个关键问题是如何证明 <span class="math notranslate nohighlight">\((1)\)</span> 式，即证明如果 <span class="math notranslate nohighlight">\(\Delta^*(f^{(i)}, \mathrm{RS}^{(i)}) &gt; \delta\)</span> ，有</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{r \in \mathbb{F}}[\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta] \le \epsilon \tag{2}
+\]</div>
+<p>思路就是用反证法，假设 <span class="math notranslate nohighlight">\((2)\)</span> 式不成立，即</p>
+<div class="math notranslate nohighlight">
+\[
+\Pr_{r \in \mathbb{F}}[\Delta(\mathrm{fold}_{r}(f^{(i)}), \mathrm{RS}^{(i+1)}) \le \delta] &gt; \epsilon
+\]</div>
+<p>这就满足了 Correlated Agreement 定理的条件了，说明此时存在 <span class="math notranslate nohighlight">\(\mathcal{D}' \subset \mathcal{D}^{(i+1)}\)</span> ，以及 <span class="math notranslate nohighlight">\(\bar{g}^{(i+1)}, \bar{h}^{(i+1)} \in \mathrm{RS}^{(i+1)}\)</span> 满足</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{g}^{(i+1)}|_{\mathcal{D}'} = {g}^{(i+1)}|_{\mathcal{D}'} , \quad \bar{h}^{(i+1)}|_{\mathcal{D}'} = {h}^{(i+1)}|_{\mathcal{D}'}
+\]</div>
+<p>并且 <span class="math notranslate nohighlight">\(|\mathcal{D}'| \ge (1-\delta) |\mathcal{D}^{(i+1)}|\)</span> 。拿着这编码空间中的码字 <span class="math notranslate nohighlight">\(\bar{g}^{(i+1)}\)</span> 与 <span class="math notranslate nohighlight">\(\bar{h}^{(i+1)}\)</span> ，能得到一个多项式 <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> ，</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{f}^{(i)}(x) = \bar{g}^{(i+1)}(x^2) + x \cdot \bar{h}^{(i+1)}(x^2)
+\]</div>
+<p>由于编码的线性性，那么 <span class="math notranslate nohighlight">\(\bar{f}^{(i)}\)</span> 肯定也是一个码字，且 <span class="math notranslate nohighlight">\(\bar{f}^{(i)} \in \mathrm{RS}^{(i)}\)</span> ，同时有</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{f}^{(i)}|_{\mathcal{D}'} = {f}^{(i)}|_{\mathcal{D}'} 
+\]</div>
+<p>由于 <span class="math notranslate nohighlight">\(|\mathcal{D}'| \ge (1-\delta) |\mathcal{D}^{(i+1)}|\)</span> ，我们可以得到 <span class="math notranslate nohighlight">\(\Delta^*(f^{(i)}, \mathrm{RS}^{(i)}) \le \Delta^*(f^{(i)}, \bar{f}^{(i)}) \le \delta\)</span> ，这与假设矛盾，因此 <span class="math notranslate nohighlight">\((2)\)</span> 式成立。</p>
+</section>
+<section id="id2">
+<h2>总结<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Proximity gap 在 FRI 协议中起着至关重要的作用，它能让我们放心的用随机数对多项式进行折叠，这大大减少了 Prover 发送 oracle 的数量，同时也减少了 Verifier 查询的数量。此外，Proximity gap 和 Correlated Agreement 定理密切相关，并且在 FRI 的 soundness 分析中起到了关键作用。</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[BCIKS20] Eli Ben-Sasson, Dan Carmon, Yuval Ishai, Swastik Kopparty, and Shubhangi Saraf. Proximity Gaps for Reed–Solomon Codes. In <em>Proceedings of the 61st Annual IEEE Symposium on Foundations of Computer Science</em>, pages 900–909, 2020.</p></li>
+<li><p>视频：<a class="reference external" href="https://www.youtube.com/watch?v=8AMiZdWA1eM">Proximity Gaps &amp; Applications to Succinct Proofs</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./fri"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="BCIKS20-proximity-gaps.zh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">[BCIKS20] Proximity Gaps 论文 soundness 解析</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="stir.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">STIR: 提升码率来降低查询复杂度</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximity-gaps">Proximity Gaps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prover">诚实的 Prover</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">恶意的 Prover</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#delta"><span class="math notranslate nohighlight">\(\delta\)</span> 增加带来的影响</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement">Correlated Agreement</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlated-agreement-soundness">Correlated Agreement 定理在 soundness 中的应用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">总结</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
