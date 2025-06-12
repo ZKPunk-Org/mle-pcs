@@ -11,7 +11,7 @@ $$
 \tilde{f}(X_0, X_1, \ldots, X_{d-1}) = f_0 + f_1X_0 + f_2X_1 + f_3X_0X_1 + \cdots + f_{2^d-1}X_{d-1} 
 $$
 
-由于 $\tilde{f}(X)$ 是一个多元多项式（Multivariate Polynomial），总共有 $d-1$ 个未知数，那么它的系数向量长度为 $2^d$ 。记住这里我们选择 Lexicographic Order 作为多项式的排序方式。
+由于 $\tilde{f}(X)$ 是一个多元多项式（Multivariate Polynomial），总共有 $d$ 个未知数，那么它的系数向量长度为 $2^d$ 。记住这里我们选择 Lexicographic Order 作为多项式的排序方式。
 
 我们对 $\tilde{f}(\mathbf{X})$ 的系数向量 $\mathbf{f}$ 进行编码， 得到 codeword $c_\mathbf{f}=\mathsf{Enc}(\mathbf{f})$ ，长度为 $n_d$。然后使用 Hash-based Merkle Tree 产生承诺：
 
@@ -78,7 +78,7 @@ $$
 上面即为折叠后的向量 $\pi_{i-1}$，假设 Prover 诚实的情况下，折叠后的向量应该是一个合法的 $C_{i-1}$ codeword。上面等式中的 $\mathsf{fold}_{\alpha_i}$ 函数定义如下：
 
 $$
-\mathsf{fold}_{\alpha}(c_j, c_{n_{i-1}+j}) = \frac{t_j\cdot c_{n_{i-1}+j} - t'_j\cdot c_{j} }{t_j + t'_j} + \alpha\cdot \frac{(c_{j} - c_{n_{i-1}+j})}{t_j - t'_j}
+\mathsf{fold}_{\alpha}(c_j, c_{n_{i-1}+j}) = \frac{t_j\cdot c_{n_{i-1}+j} - t'_j\cdot c_{j} }{t_j - t'_j} + \alpha\cdot \frac{(c_{j} - c_{n_{i-1}+j})}{t_j - t'_j}
 $$
 
 如何理解上面的 $\mathsf{fold}_{\alpha}(\cdot, \cdot)$ 函数？其实它是一个多项式插值的过程。我们把待折叠的两排向量看成是在两个 Domain 上的点集，而这两个 Domain 分别递归编码过程中所采用的 $\mathsf{diag}(T_i)=(t_0, t_1, \ldots, t_{n_{i-1}-1})$ 和 $\mathsf{diag}(T'_i)=(t'_0, t'_1, \ldots, t'_{n_{i-1}-1})$：

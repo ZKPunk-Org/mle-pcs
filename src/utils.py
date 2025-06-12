@@ -12,6 +12,7 @@ class Scalar:
         return f"Scalar({self.value})"
     
 def inner_product(a, b, z):
+    assert len(a) == len(b), "a and b must have the same length"
     return sum([a[i] * b[i] for i in range(len(a))], z)
 
 ## NOTE: Copy from py_ecc.utils
@@ -127,6 +128,43 @@ def bit_reverse_inplace(f, k):
             f[i] = f[i_rev]
             f[i_rev] = tmp
 
+def reverse_bits(n: int, bit_length: int) -> int:
+    """
+    Reverse the bits of an integer.
+
+    Args:
+        n (int): The input integer.
+        bit_length (int): The number of bits to consider.
+
+    Returns:
+        int: The integer with its bits reversed.
+    """
+    result = 0
+    for i in range(bit_length):
+        result = (result << 1) | (n & 1)
+        n >>= 1
+    return result
+
+def test_log_2():
+    x = 1
+    print(log_2(x))
+
+def delta_uni_decoding(rho):
+    return (1 - rho) / 2
+
+def delta_johnson_bound(rho):
+    from math import sqrt
+    return 1 - sqrt(rho)
+
+def delta_list_decoding(rho):
+    return 1 - rho
+
+def query_num(blowup_factor, security_bits, delta_func):
+    from math import log2
+    assert blowup_factor > 1, "blowup_factor must be greater than 1"
+    delta = delta_func(1 / blowup_factor)
+    return int(security_bits / (-log2(1 - delta))) + 1
+
 if __name__ == "__main__":
     import random
     k = random.randint(0, 15)
@@ -137,3 +175,5 @@ if __name__ == "__main__":
     print(f"k: {k}, k_rev: {k_rev}")
     assert k == bit_reverse(k_rev, 4)
     print(f"test passed")
+
+    test_log_2()
