@@ -432,7 +432,7 @@ $7\cdot\mathbb{G}_1$, $(n+1)\cdot\mathbb{F}$
 
 $$
 \begin{aligned}
-\pi_{eval} &= \big(z(\omega^{-1}\cdot\zeta), c(\zeta)，c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), \\
+\pi_{eval} &= \big(z(\omega^{-1}\cdot\zeta), c(\zeta), c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), \\
 & \qquad C_{c}, C_{t}, C_{z}, Q_c, Q_\zeta, Q_\xi, Q_{\omega\zeta}\big)
 \end{aligned}
 $$

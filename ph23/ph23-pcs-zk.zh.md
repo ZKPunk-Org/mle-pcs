@@ -430,7 +430,7 @@ $$
 
 因此可以得到一个 $O(n)$ 的算法来计算 $s_i(\zeta)$ ，并且这里不含除法运算。计算过程是：$s_{n-1}(\zeta) \rightarrow s_{n-2}(\zeta) \rightarrow \cdots \rightarrow s_0(\zeta)$ 。
 
-2. 定义求值 Domain $D'$，包含 $n+1$ 个元素：
+2. 定义求值 Domain $D'$, 包含 $n+1$ 个元素：
 
 $$
 D'=D\zeta = \{\zeta, \omega\zeta, \omega^2\zeta,\omega^4\zeta, \ldots, \omega^{2^{n-1}}\zeta\}
@@ -566,7 +566,7 @@ $$
 $9\cdot\mathbb{G}_1$, $(n+1)\cdot\mathbb{F}$ 
 $$
 \begin{split}
-\pi_{eval} &= \big(z(\omega^{-1}\cdot\zeta), c(\zeta)，c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), \\
+\pi_{eval} &= \big(z(\omega^{-1}\cdot\zeta), c(\zeta), c(\omega\cdot\zeta), c(\omega^2\cdot\zeta), c(\omega^4\cdot\zeta), \ldots, c(\omega^{2^{n-1}}\cdot\zeta), \\
 & C_{c}, C_{t}, C_{z}, Q_c, Q_\zeta, {\color{blue}E_\zeta}, Q_\xi, Q_{\omega\zeta}, {\color{blue}E_{\omega\zeta}}\big)
 \end{split}
 $$

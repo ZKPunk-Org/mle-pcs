@@ -1,4 +1,4 @@
-# Welcome to the ZKPunk's Land of PCS!
+# Welcome to the ZKPunk's Land of Polynomial Commitment Schemes!
 
 
 ```{tableofcontents}

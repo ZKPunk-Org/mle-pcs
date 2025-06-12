@@ -1,0 +1,86 @@
+version: 1
+project:
+  title: Polynomial Commitment Schemes
+  github: executablebooks/jupyter-book
+  bibliography:
+    - references.bib
+  exports:
+    - format: pdf
+      template: plain_latex_book
+      output: exports/book.pdf
+  toc:
+    - file: intro.md
+    - title: Basefold
+      children:
+        - file: basefold/basefold-01.zh.md
+        - file: basefold/basefold-02.zh.md
+        - file: basefold/basefold-03.zh.md
+        - file: basefold/basefold-04.zh.md
+        - file: basefold/basefold-05.zh.md
+        - file: basefold/basefold-habock-overview.zh.md
+        - file: basefold/basefold-habock-soundness.zh.md
+        - file: basefold/basefold-opt.zh.md
+    - title: FRI
+      children:
+        - file: fri/BBHR18-FRI.zh.md
+        - file: fri/BCIKS20-proximity-gaps.zh.md
+        - file: fri/fri-proximity-gap.zh.md
+        - file: fri/stir.zh.md
+        - file: fri/whir.zh.md
+        - file: fri/deepfold.zh.md
+    - title: FRI Binius
+      children:
+        - file: fri-binius/binius-01.zh.md
+        - file: fri-binius/binius-02.zh.md
+    - title: Gemini
+      children:
+        - file: gemini/Gemini-PCS-1.zh.md
+        - file: gemini/Gemini-PCS-2.zh.md
+        - file: gemini/hyperkzg-pcs-01.zh.md
+        - file: gemini/gemini-fri.zh.md
+    - title: KZG
+      children:
+        - file: kzg10/kzg_hiding.zh.md
+        - file: kzg10/kzg notes/kzg-soundness-1.zh.md
+        - file: kzg10/kzg notes/kzg-soundness-2.zh.md
+    - title: Hyrax
+      children:
+        - file: hyrax-pcs/hyrax-01.zh.md
+    - title: Libra
+      children:
+        - file: libra-pcs/libra-pcs.zh.md
+    - title: Ligerito
+      children:
+        - file: ligerito-pcs/ligerito-01.zh.md
+    - title: Virgo
+      children:
+        - file: virgo-pcs/virgo-pcs-01.zh.md
+    - title: Whir
+      children:
+        - file: whir-pcs/whir.zh.md
+    - title: PH23
+      children:
+        - file: ph23/ph23-pcs-01.zh.md
+        - file: ph23/ph23-pcs-02.zh.md
+        - file: ph23/ph23-pcs-zk.zh.md
+        - file: ph23/ph23-pcs-fri-01.zh.md
+        - file: ph23/ph23-pcs-fri-02.zh.md
+        - file: ph23/ph23.ipynb
+    - title: Zeromorph
+      children:
+        - file: zeromorph/zeromorph.zh.md
+        - file: zeromorph/zeromorph-fri.zh.md
+        - file: zeromorph/zeromorph_mapping_tutorial.ipynb
+    - title: Mercury
+      children:
+        - file: mercury/mercury-01.zh.md
+        - file: mercury/mercury-02.zh.md
+    - title: Reductions
+      children:
+        - file: reductions/barrett.zh.md
+        - file: reductions/montgomery.zh.md
+site:
+  options:
+    logo: logo.png
+    folders: true
+  template: book-theme

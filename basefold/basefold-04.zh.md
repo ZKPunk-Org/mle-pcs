@@ -55,7 +55,7 @@ $$
 
 参数：$\mathbf{G}_0$ 以及对角矩阵 $(T_0, T_1, \ldots, T_{d-1})$
 
-1. If $d = 0$ (即 $\mathbf{m} \in \mathbb{F}^{k_0}$ ):
+1. If $d = 0$ （即 $\mathbf{m} \in \mathbb{F}^{k_0}$ ）:
    (a) 返回 $\text{Enc}_0(\mathbf{m})$
 2. else
    (a) 分解 $\mathbf{m} := (\mathbf{m}_l, \mathbf{m}_r)$
@@ -71,7 +71,7 @@ $$
 2. 无视域的大小，即对于小域也适用
 3. 能够适用于多元线性多项式的 PCS
 
-前面提到过 Reed-Solomon 编码能够达到 Singleton 界限，但是其仅在字母表比较大(即 $q \gg n$ )的情况下才能实现这种显著的特性。好在我们可以扩展 Reed-Solomon 编码，称之为 Reed-Muller 编码，这样我们就从一元多项式编码进入到了多元多项式编码的世界。这使得我们能够在小域上( $q \ll n$) 适用了，虽然这其中会失去一点距离和纠错能力的平衡，但是这是值得的。
+前面提到过 Reed-Solomon 编码能够达到 Singleton 界限，但是其仅在字母表比较大（即 $q \gg n$ ）的情况下才能实现这种显著的特性。好在我们可以扩展 Reed-Solomon 编码，称之为 Reed-Muller 编码，这样我们就从一元多项式编码进入到了多元多项式编码的世界。这使得我们能够在小域上（ $q \ll n$ ）适用了，虽然这其中会失去一点距离和纠错能力的平衡，但是这是值得的。
 
 在 [ZCF23] 的附录 D 中告诉我们 *Random Foldable Code* 就是截断的 Reed-Muller 编码(Punctured Reed-Muller Codes)的一个特例。这样 *Random Foldable Code* 就可以无视域的大小，同时由于进入到了多元多项式的世界，也就能够适用于多元线性多项式的 PCS 了。
 
@@ -106,14 +106,14 @@ $$
 $$
 \begin{aligned}
     \text{Enc}_{i+1}(\mathbf{v}) & = \text{Enc}_{i}(\mathbf{v}_l) + \text{diag}(T_i) \circ \text{Enc}_{i}(\mathbf{v}_r) \quad \| \quad \text{Enc}_{i}(\mathbf{v}_l) + \text{diag}(T_i) \circ \text{Enc}_{i}(\mathbf{v}_r) \\
-    & \quad {\color{blue}(由 \text{Protocol} 1 编码算法得)} \\
+    & \quad {\color{blue}{\text{(由 Protocol 1 编码算法得)}}} \\
     & = (P_l(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n)) + \text{diag}(T_i) \circ (P_r(\mathbf{x}_1), \ldots, P_r(\mathbf{x}_n)) \\
     & \| \quad (P_l(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n)) + \text{diag}(T'_i) \circ (P_r(\mathbf{x}_1), \ldots, P_r(\mathbf{x}_n)) \\
-    & \quad {\color{blue}(由归纳假设可得)} \\
+    & \quad {\color{blue}{\text{(由归纳假设可得)}}} \\
     & = (P_l(\mathbf{x}_1) + t_1 P_r(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n) + t_n P_r(\mathbf{x}_n), P_l(\mathbf{x}_1) + t'_1 P_r(\mathbf{x}_1), \ldots, P_l(\mathbf{x}_n) + t'_n P_r(\mathbf{x}_n)) \\
-    & \quad {\color{blue}(由\text{Hadmard}积的定义得)} \\
+    & \quad {\color{blue}{\text{(由 Hadamard 积的定义得)}}} \\
     & = (P(\mathbf{x}_1,t_1), \ldots, P(\mathbf{x}_n, t_n), P(\mathbf{x}_1,t'_1), \ldots, P(\mathbf{x}_n, t'_n))\\
-    & \quad {\color{blue}(由 P 的定义得)}
+    & \quad {\color{blue}{\text{(由 $P$ 的定义得)}}}
 \end{aligned}
 $$
 
@@ -243,12 +243,12 @@ $$
     & = \Pr [ X \ge 2 t_i + l_{i} - 2|S|] \\
     & = \Pr [\sum_{j \in \urcorner S^*}X_j \ge 2 t_i + l_{i} - 2|S|] \\
     & \le \sum_{j = 2 t_i + l_{i} - 2|S|}^{|\urcorner S^*|} \binom{|\urcorner S^*|}{i} \cdot (\frac{2}{|\mathbb{F}| - 1})^{i} \cdot (1 - \frac{2}{|\mathbb{F}| - 1})^{|\urcorner S^*| - i}\\
-    & \quad {\color{blue}{(由二项式定理得 \binom{|\urcorner S^*|}{i} \le 2^{|\urcorner S^*|})}} \\
+    & \quad {\color{blue}{\text{(由二项式定理得 $\binom{|\urcorner S^*|}{i} \le 2^{|\urcorner S^*|}$ )}}} \\
     & \le |\urcorner S^*| \cdot 2^{|\urcorner S^*|}  (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|} \\
     & \le |\urcorner S| \cdot 2^{|\urcorner S|} \cdot (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|} \quad (\urcorner S^* \subseteq \urcorner S)\\
     & = |[1, n_i] \backslash S| \cdot 2^{|[1, n_i] \backslash S|} \cdot (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|}\\
     & = (n_i - |S|) \cdot 2^{n_i - |S|} \cdot (\frac{2}{|\mathbb{F}| - 1})^{2 t_i + l_{i} - 2|S|}\\
-    & \quad {\color{blue}{(设 |\mathbb{F}| \ge 2^{10}，可得 \frac{2}{|\mathbb{F}| - 1} \le \frac{2.002}{|\mathbb{F}|})}}\\
+    & \quad {\color{blue}{\text{(设 $|\mathbb{F}| \ge 2^{10}$，可得 $\frac{2}{|\mathbb{F}| - 1} \le \frac{2.002}{|\mathbb{F}|}$ )}}}\\
     & \le n_i \cdot 2^{n_i - |S|} \left(\frac{2.002}{|\mathbb{F}|}\right)^{2 t_i + l_{i} - 2|S|}
 \end{aligned}
 $$

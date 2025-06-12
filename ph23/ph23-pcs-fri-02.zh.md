@@ -34,7 +34,7 @@ $$
 	先用 Verifier 给出的随机数 $\alpha$ 将 $n + 1$ 个多项式 $p_i(X)$ 聚合成一个多项式 $p(X)$ ，
 	
 	$$
-	p(X) = p_0(X) + \alpha\cdot p_1(X) + \alpha^2\cdot p_2(X) + \cdots + \alpha^{n}\cdot p_{n}(X)\
+	p(X) = p_0(X) + \alpha\cdot p_1(X) + \alpha^2\cdot p_2(X) + \cdots + \alpha^{n}\cdot p_{n}(X)
 	$$
 	
 	现在需要说明 $p(X)$ 在 $H$ 上的取值都为 $0$ ，那么取 $v_H(X)$ 为 $H$ 上的 Vanishing 多项式，那么存在一个商多项式 $t(X)$ ，满足
@@ -745,7 +745,7 @@ Verifier 计算量：
 - 协议 2 需要额外计算的有
 	- 验证 $a(\zeta)\cdot c(\zeta) \overset{?}{=} q_{ac}(\zeta)\cdot v_H(\zeta) + \zeta\cdot g(\zeta) + (v/N)$
 	- 重复 $l$ 次：多 2 个打开点的验证，如验证 $g(s^{(0)}), g(-s^{(0)})$ 发送的是否正确，这里涉及一些哈希计算
-	- 重复 $l$ 次：多计算 degree correction 后的多项式在对应点的值，对于 $x \in \{s^{(0)}, -s^{(0)}, \zeta\}$ ，根据 $t(x)，g(x), q_{ac}(x)$ 来计算对应的 $t'(x), g'(x), q_{ac}'(x)$ ，这里计算一个值的复杂度是 $2 ~ \mathbb{F}_{\mathsf{mul}}$ ，因此这里总的复杂度是 $18l ~ \mathbb{F}_{\mathsf{mul}}$ 。
+	- 重复 $l$ 次：多计算 degree correction 后的多项式在对应点的值，对于 $x \in \{s^{(0)}, -s^{(0)}, \zeta\}$ ，根据 $t(x), g(x), q_{ac}(x)$ 来计算对应的 $t'(x), g'(x), q_{ac}'(x)$ ，这里计算一个值的复杂度是 $2 ~ \mathbb{F}_{\mathsf{mul}}$ ，因此这里总的复杂度是 $18l ~ \mathbb{F}_{\mathsf{mul}}$ 。
 	
 通过对比可以发现协议 1 的 Verifier 计算量要优于协议 2。
 

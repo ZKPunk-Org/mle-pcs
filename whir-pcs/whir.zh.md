@@ -192,7 +192,7 @@ $$
 
 下面深入 WHIR 协议的一次迭代(来自[ACFYb, 2.1.3 WHIR protocol])，看看 WHIR 是如何具体结合 BaseFold 与 STIR 协议的。经过一次迭代，将测试 $f \in \mathcal{C} := \mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]$ 的 proximity 问题转换为测试 $f' \in \mathcal{C}' := \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']$ 。
 
-![](./img/whir.svg)
+![](../fri/img/whir.svg)
 
 1. Sumcheck rounds. Prover 和 Verifier 针对 $\mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]$ 中的约束
 
@@ -314,7 +314,7 @@ WHIR 采用了 BaseFold 的思想，本身 CRS 的定义就引入了类似 sumch
 
 在协议第 1 步使用 sumcheck 之后，后续的第 2-5 步与 STIR 协议类似。下图是 STIR 协议的一次迭代流程。
 
-![](img/whir-stir-iteration.svg)
+![](../fri/img/whir-stir-iteration.svg)
 
 STIR 协议的核心思想是在每一次迭代中降低码率，具体做法是在下一次迭代中，得到的折叠多项式 $\hat{g}$ 不在 $\mathcal{L}^{(2^k)}$ 上去求值，而是选择在一个只有原来 domain $\mathcal{L}$ 一半大小的 domain $\mathcal{L}^{(2)}$ 上进行求值，这里对应 WHIR 协议的第 2 步，这样做的好处是大大增加了发送消息的冗余，减少了 verifier 的查询复杂度。
 
@@ -336,7 +336,7 @@ $$
 
 correlated agreement 的定义如下图所示(参照视频 [ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification](https://www.youtube.com/watch?v=iPKzmxLDdII&ab_channel=ZeroKnowledge) )。
 
-![](./img/whir-correlated-agreement.svg)
+![](../fri/img/whir-correlated-agreement.svg)
 
 [BCIKS20] 论文给出码率为 $\rho$ 的 Reed-Solomon 码具有 $(\delta, \varepsilon)$ -correlated agreement，其中 $\delta \in (0, 1 - \sqrt{\rho})$ ，$\varepsilon := \frac{\text{poly}(2^m, 1/\rho)}{|\mathbb{F}|}$ 。换句话说，如果 $\delta \in (0, 1 - \sqrt{\rho})$ 并且
 
@@ -350,7 +350,7 @@ $$
 
 可以发现 $(\delta, \varepsilon)$ -correlated agreement 定义中并未要求 $S$ 集合和 $T$ 集合是同一个集合，而在 WHIR 中引入了一个比 correlated agreement 更强的概念，叫做 *mutual correlated agreement* ，其要求 $S$ 集合和 $T$ 集合是同一个集合。如下图所示(参照视频 [ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification](https://www.youtube.com/watch?v=iPKzmxLDdII&ab_channel=ZeroKnowledge) )：
 
-![](./img/whir-mutual-correlated-agreement.svg)
+![](../fri/img/whir-mutual-correlated-agreement.svg)
 
 在 WHIR 论文中给出了关于 mutual correlated agreement 如下的一个猜想。
 
