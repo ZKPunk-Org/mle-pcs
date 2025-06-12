@@ -281,13 +281,13 @@ $$
 2. 根据 $C_f, C_{h^{(1)}}, C_{h^{(2)}},\ldots, C_{h^{(n-1)}}$，验证多项式取值运算的正确性：
 
 $$
-\begin{array}{lllll}
+\begin{array}{llllll}
 \mathsf{KZG10.Verify}&(C_f, &\beta, &h^{(0)}(\beta), &\pi_{0,\beta}) &\overset{?}{=} 1 \\
 \mathsf{KZG10.Verify}&(C_f, &-\beta, &h^{(0)}(-\beta), &\pi_{0,-\beta}) &\overset{?}{=} 1 \\
 \mathsf{KZG10.Verify}&(C_{h^{(1)}}, &\beta, &h^{(1)}(\beta), &\pi_{1,\beta}) &\overset{?}{=} 1 \\
 \mathsf{KZG10.Verify}&(C_{h^{(1)}}, &-\beta, &h^{(1)}(-\beta), &\pi_{1,-\beta}) &\overset{?}{=} 1 \\
 \mathsf{KZG10.Verify}&(C_{h^{(1)}}, &\beta^2, &h^{(1)}(\beta^2), &\pi_{1,\beta^2}) &\overset{?}{=} 1 \\
-& & \vdots \\
+& & & \vdots & & \\
 \mathsf{KZG10.Verify}&(C_{h^{(n-1)}}, &\beta, &h^{(n-1)}(\beta), &\pi_{n-1,\beta}) &\overset{?}{=} 1 \\
 \mathsf{KZG10.Verify}&(C_{h^{(n-1)}}, &-\beta, &h^{(n-1)}(-\beta), &\pi_{n-1,-\beta}) &\overset{?}{=} 1 \\
 \mathsf{KZG10.Verify}&(C_{h^{(n-1)}}, &\beta^2, &h^{(n-1)}(\beta^2), &\pi_{n-1,\beta^2}) &\overset{?}{=} 1 \\

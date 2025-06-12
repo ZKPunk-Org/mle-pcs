@@ -1,6 +1,8 @@
 # KZG Extractability based on ROM
 
-KZG10 等多项式承诺证明多用于构造 SNARK，通常我们会将一个 Interactive Oracle Proof 中的多项式 Oracle 用 PCS 编译。
+KZG10 等多项式承诺证明多用于构造 SNA可以看出，Knowledge Soundness 定义的关键在于强调构造提取器算法的可行性，也就是说，如果一个恶意证明者声称在不知道 $w$ 的情况下伪造合法证明是可行的，那么基于该恶意证明者构造一个提取 $w$ 提取器同样是可行的，这就与恶意证明者的声称是相矛盾的。从而保证，任何能输出合法证明的证明者，一定是"拥有"秘密值 $w$ 的。
+
+## **Knowledge Soundness 证明（以 Schnorr 协议为例）**通常我们会将一个 Interactive Oracle Proof 中的多项式 Oracle 用 PCS 编译。
 
 考虑到安全性，IOP 本身的 Knowledge Soundness 是容易保证的。然而，对于 IOP 用 PCS 编译之后得到的 SNARK，要证明它的 Knowledge Soundness 性质就没有那么容易了。
 
@@ -28,7 +30,7 @@ KZG10 等多项式承诺证明多用于构造 SNARK，通常我们会将一个 I
 
 要介绍 special soundness，我们首先需要了解交互式证明以及其安全定义。
 
-### **Interactive Proofs and Knowledge Soundness**
+## **Interactive Proofs and Knowledge Soundness**
 
 **【定义1：Public-coin Interactive Proofs】**
 
@@ -111,7 +113,7 @@ $$
 1. $E_{rw}$ 是一个多项式时间算法
 2. $E_{rw}$ 同样以一个不可忽略的概率成功输出 $w$
 
-### 从 Knowledge Soundness 到 **Special Soundness**
+## 从 Knowledge Soundness 到 **Special Soundness**
 
 论文 [Cra96] 对 $E_{rw}$ 算法的性质给出了相当优雅的证明，由于其过程比较长，且和之后要介绍的 [LPS24] 内容类似，我们不在这此描述。总之，上述过程被归纳为一个引理：
 

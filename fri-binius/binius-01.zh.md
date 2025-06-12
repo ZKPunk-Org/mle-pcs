@@ -110,7 +110,7 @@ $$
 
 
 $$
-\begin{array}{ccccccc}
+\begin{array}{cccccccc}
 0000 & 0001 & 0010 & 0011 & 0100 & 0101 & 0110 & 0111 \\
 0 & 1 & \theta & \theta+1 & \theta^2 & \theta^2+1 & \theta^2+\theta & \theta^2+\theta+1 \\
 \hline
@@ -216,10 +216,10 @@ $$
 那么 $\mathbb{F}_{2^4}$ 的全部元素可以用 $\eta, \zeta$ 来表示：
 
 $$
-\begin{array}{ccccccc}
+\begin{array}{cccccccc}
 \hline
 0000 & 0001 & 0010 & 0011 & 0100 & 0101 & 0110 & 0111 \\
-0 & 1 & \eta & \eta+1 & \zeta & \zeta+\eta & \zeta+\eta+1 & \zeta+\eta+1 \\
+0 & 1 & \eta & \eta+1 & \zeta & \zeta+1 & \zeta+\eta & \zeta+\eta+1 \\
 \hline
 1000 & 1001 & 1010 & 1011 & 1100 & 1101 & 1110 & 1111 \\
 \zeta\eta & \zeta\eta + 1 & \zeta\eta + \eta & \zeta\eta + \eta + 1 & \zeta\eta + \zeta & \zeta\eta + \zeta +1 & \zeta\eta+\zeta+\eta & \zeta\eta+\zeta+\eta+1 \\

@@ -264,7 +264,7 @@ $$
 
 意思就是在 $\mathcal{D}^{(i)}$ 中选取那些能够通过映射 $q(x) = x^{l^{(i)}}$ 映射到 $\mathcal{D}^{(i+1)}$ 中的 $g$ 的元素，这些元素组成了集合 $C_g^{(i)}$ ，其也是陪集。
 
-对于每个陪集 $C_g^{(i)}$ ，*插值映射(interpolation map)* $M_g^{(i)}$ 是一个可逆的线性映射 $M_g^{(i)}: \mathbb{F}^{C_g^{(i)}} \rightarrow \mathbb{F}^{l^{(i)}}$ ，它将 $f^{(i)}|_{C_g^{(i)}}: C_g^{(i)} \rightarrow \mathbb{F}$ （即限制 $f^{(i)}$ 在 domain $C_g^{(i)} \subset \mathcal{D}^{(i)}$ 上）映射到多项式 $P_{\mathbf{u}^{(i)}(g)}^{(i)}(Z) = \sum_{j<l^{(i)}} u_j^{(i)}(g) Z^j$ 的系数向量 $\mathbf{u}^{(i)}(g) = (u_0^{(i)}(g), \ldots, u_{l^{(i)}-1}^{(i)}(g))^{\intercal}$ （这里与论文原文表示一致，都表示列向量，不过原文没有加上转置符号），其中 $P_{\mathbf{u}^{(i)}(g)}^{(i)}(Z)$ 是插值 $f^{(i)}|_{C_g^{(i)}}$ 的多项式。换句话说，$M_g^{(i)}$ 是由 $C_g^{(i)}$ 生成的 Vandermonde 矩阵的逆，这意味着 $\left(M_g^{(i)}\right)^{-1} \cdot {\color{}(u_0, \ldots, u_{l^{(i)}-1})^{\intercal}}$ 是多项式 $P_{\mathbf{u}}(X) = \sum_{i<l^{(i)}} u_i X^i$ 在陪集 $C_g^{(i)}$ 上的 evaluation 。
+对于每个陪集 $C_g^{(i)}$ ，*插值映射(interpolation map)* $M_g^{(i)}$ 是一个可逆的线性映射 $M_g^{(i)}: \mathbb{F}^{C_g^{(i)}} \rightarrow \mathbb{F}^{l^{(i)}}$ ，它将 $f^{(i)}|_{C_g^{(i)}}: C_g^{(i)} \rightarrow \mathbb{F}$ （即限制 $f^{(i)}$ 在 domain $C_g^{(i)} \subset \mathcal{D}^{(i)}$ 上）映射到多项式 $P_{\mathbf{u}^{(i)}(g)}^{(i)}(Z) = \sum_{j<l^{(i)}} u_j^{(i)}(g) Z^j$ 的系数向量 $\mathbf{u}^{(i)}(g) = (u_0^{(i)}(g), \ldots, u_{l^{(i)}-1}^{(i)}(g))^{\intercal}$ （这里与论文原文表示一致，都表示列向量，不过原文没有加上转置符号），其中 $P_{\mathbf{u}^{(i)}(g)}^{(i)}(Z)$ 是插值 $f^{(i)}|_{C_g^{(i)}}$ 的多项式。换句话说，$M_g^{(i)}$ 是由 $C_g^{(i)}$ 生成的 Vandermonde 矩阵的逆，这意味着 $\left(M_g^{(i)}\right)^{-1} \cdot (u_0, \ldots, u_{l^{(i)}-1})^{\intercal}$ 是多项式 $P_{\mathbf{u}}(X) = \sum_{i<l^{(i)}} u_i X^i$ 在陪集 $C_g^{(i)}$ 上的 evaluation 。
 
 > 👀 **Notice**
 > 本文为保持前后一致，用 $(x_0, \ldots, x_n)$表示行向量，而 $(x_0, \ldots, x_n)^{\intercal}$ 表示列向量，也可写为：
@@ -331,7 +331,7 @@ $$
 
 $$
 \begin{equation}
-    f_{f^{(i)},z^{(i)}}^{(i+1)}(g) := {\color{}\left(\mathbf{z}^{(i)}\right)^{\intercal}  \cdot \mathbf{u}^{(i)}(g) = \left(\mathbf{z}^{(i)}\right)^{\intercal} \cdot M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}}} \tag{2}
+    f_{f^{(i)},z^{(i)}}^{(i+1)}(g) := \left(\mathbf{z}^{(i)}\right)^{\intercal}  \cdot \mathbf{u}^{(i)}(g) = \left(\mathbf{z}^{(i)}\right)^{\intercal} \cdot M_g^{(i)} \cdot f^{(i)}|_{C_g^{(i)}} \tag{2}
 \end{equation}
 $$
 
@@ -444,7 +444,7 @@ $$
 2. 存在一组 $l^{(i)} \times l^{(i)}$ 的可逆矩阵 $\{M_{g^{(i+1)}}^{(i)} : g^{(i+1)} \in D^{(i+1)}\}$ ，因此将 $M_{g^{(i+1)}}^{(i)}$ 应用于 $f^{(i)}|_{C_{g(i+1)}^{(i)}}$ 可以将 $f^{(i)}$ 映射到一个向量序列 $\mathbf{u} = \mathbf{u}^{(i)} = \{u_0^{(i)}, \ldots, u_{l(i)}^{(i)}\} \subset \mathbb{F}^{D^{(i+1)}}$ ，其中
 
 $$
-\mathbf{u}^{(i)}\left(g^{(i+1)}\right)  = \left(u_0^{(i)}\left(g^{(i+1)}\right), \cdots, u_{l^{(i)}-1}^{(i)}\left(g^{(i+1)}\right) \right) = {\color{}M_{g^{(i+1)}}^{(i)} \cdot f^{(i)}|_{C_{g(i+1)}^{(i)}}}. \tag{4}
+\mathbf{u}^{(i)}\left(g^{(i+1)}\right)  = \left(u_0^{(i)}\left(g^{(i+1)}\right), \cdots, u_{l^{(i)}-1}^{(i)}\left(g^{(i+1)}\right) \right) = M_{g^{(i+1)}}^{(i)} \cdot f^{(i)}|_{C_{g(i+1)}^{(i)}}. \tag{4}
 $$
 
 此外，如果 $f^{(i)}$ 是在 $D^{(i)}$ 上码率为 $\rho$ 的有效 RS 码字，那么通过 $\mathbf{u}^{(i)}$ 的参数化曲线上的每个向量也是在 $D^{(i+1)}$ 上码率为 $\rho$ 的有效 RS 码字。
@@ -817,7 +817,7 @@ $$
 满足式 $(7.1)$ ，因此由定理 7.2 可得存在一个集合 $S \subseteq \mathcal{D}^{(i+1)}$ ，存在码字 $v_0, \ldots, v_{l^{(i)} - 1} \in V$ ，满足 $u_i$ 与 $v_i$ 在 $S$ 上一致，并且 $\nu^{(i+1)}(S) > \alpha$ 。回顾式 $(8.4)$ ，知
 
 $$
-\mathbf{u}^{(i)}\left(g^{(i+1)}\right) = {\color{}M_{g^{(i+1)}}^{(i)} \cdot f^{(i)}|_{C_{g(i+1)}^{(i)}}}
+\mathbf{u}^{(i)}\left(g^{(i+1)}\right) = M_{g^{(i+1)}}^{(i)} \cdot f^{(i)}|_{C_{g(i+1)}^{(i)}}
 $$
 
 可逆的插值映射 $M_{g^{(i+1)}}^{(i)}$ 将 $f^{(i)}|_{C_{g(i+1)}^{(i)}}$ 映射到了 $\mathbf{u}^{(i)}\left(g^{(i+1)}\right)$ 。使用其逆映射，即 evaluation 映射，对每一个 $g^{(i+1)} \in \mathcal{D}^{(i+1)}$ ，将该逆映射作用到 $v_0(g^{(i+1)}), \ldots, v_{l^{(i)}-1}(g^{(i+1)})$ 上，设 $C_{g^{(i+1)}}^{(i)} =\{g'_0, \cdots, g'_{l^{(i)}-1}\}$ ，则作用后的结果为
@@ -897,7 +897,7 @@ $$
 根据式 $(8.8)$ 得到
 
 $$
-\Pr_{x_1, \ldots, x_t} [E^{(0)}] \le \epsilon , \quad 其中 \epsilon = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{{|\mathcal{D}^{(0)}|}^2}{q} {\color{blue}}.
+\Pr_{x_1, \ldots, x_t} [E^{(0)}] \le \epsilon , \quad \text{其中} \epsilon = \frac{(m + \frac{1}{2})^7}{3 \rho^{3/2}} \cdot \frac{{|\mathcal{D}^{(0)}|}^2}{q} {\color{blue}}.
 $$
 
 如果事件 $E^{(0)}$ 或者一些 $E^{(i+1)}$ 发生的概率估计为
@@ -934,9 +934,9 @@ $$
 >    \sum_{i=0}^{r-1} \frac{l^{(i)} - 1}{(l^{(0)}\cdots l^{(i)})^2} & = \sum_{i=0}^{r-1} \left(\frac{l^{(i)}}{(l^{(0)}\cdots l^{(i)})^2} - \frac{1}{(l^{(0)}\cdots l^{(i)})^2}\right) \\
 >    & = \sum_{i=0}^{r-1} \left(\frac{1}{(l^{(0)}\cdots l^{(i-1)})^2 l^{(i)}} - \frac{1}{(l^{(0)}\cdots l^{(i)})^2}\right) \\
 >    & < \sum_{i=0}^{r-1} \frac{1}{(l^{(0)}\cdots l^{(i-1)})^2 l^{(i)}} \\
->    & {\color{blue}(因为 \frac{1}{(l^{(0)}\cdots l^{(i)})^2} > 0)} \\
+>    & {\color{blue}{\text{(因为 $\frac{1}{(l^{(0)}\cdots l^{(i)})^2} > 0$ )}}} \\
 >    & < \sum_{i=0}^{r-1} \frac{1}{l^{(0)}\cdots l^{(i-1)} l^{(i)}} \\
->    & {\color{blue}(因为 l^{(i)} \ge 2, 因此 {l^{(i)}}^2 > l^{(i)} )} \\
+>    & {\color{blue}{\text{(因为 $l^{(i)} \ge 2$, 因此 ${l^{(i)}}^2 > l^{(i)}$ )}}} \\
 >    & < \sum_{i=0}^{r-1} \left(\frac{1}{2}\right) ^{i+1} \\
 >    & = \frac{1}{2}\sum_{i=0}^{r-1} \left(\frac{1}{2}\right) ^{i} \\
 >    & < \frac{1}{2} \cdot \frac{1}{2} \\
@@ -968,9 +968,9 @@ $$
 $$
 \begin{aligned}
   \text{agree}_{\mu^{(r)}} \left(f^{(r)}, V^{(r)}\right) & =  \mathbb{E}_{g^{(r)} \in \mathcal{D}^{(r)}}\left[ \mu^{(r)}(g^{(r)}) \right] \\
-  & \color{blue}{(因为 f^{(r)} \in V^{(r)})} \\
+  & \color{blue}{\text{(因为 $f^{(r)} \in V^{(r)}$ )}} \\
   & \le \max \left( \text{agree}_{\mu^{(r - 1)}} \left(f^{(r - 1)}, V^{(r - 1)}\right), \sqrt{\rho}(1 + 1/2m) \right) \\
-  & \color{blue}{(根据事件 E^{(i+1)} 的定义， 见式 (8.9) )} \\
+  & \color{blue}{\text{(根据事件 $E^{(i+1)}$ 的定义， 见式 (8.9) )}} \\
   & \le \max \left( \text{agree}_{\mu^{(r - 2)}} \left(f^{(r - 2)}, V^{(r - 2)}\right), \sqrt{\rho}(1 + 1/2m) \right) \\
   & \le \ldots \\
   & \le \max \left( \text{agree}_{\mu^{(0)}} \left(f^{(0)}, V^{(0)}\right), \sqrt{\rho}(1 + 1/2m) \right) \\
