@@ -1,4 +1,4 @@
-# Comparison of MLE-PCS (Final Report)
+# MLE-PCS 比较 （最终报告）
 
 Last update: 2025-06-12
 ## 背景
@@ -1146,10 +1146,11 @@ Basefold、Deepfold 与 WHIR 协议在协议框架上非常相似，这三个协
 Multilinear polynomial evaluations can be viewed as inner-product relations and thus can be proven directly using inner-product arguments (IPAs), such as Bulletproofs. However, a major drawback of Bulletproofs is their linear verification time: for an $n$-variate multilinear polynomial, verification requires $O(2^n)$ time.
 
 To address this inefficiency, the [Hyrax](https://eprint.iacr.org/2017/1132.pdf) PCS observes that polynomial evaluation can be reformulated as a matrix product. For example, consider $f(z_0, z_1, z_2, z_3) = v$. We can write:
+
 $$
 \tilde{f}(z_0, z_1, z_2, z_3) = 
 \begin{bmatrix}
-1 & z_2 & z_3 & z_2z_3 \\
+1 & z_2 & z_3 & z_2z_3
 \end{bmatrix}
 \begin{bmatrix}
 f_0 & f_1 & f_2 & f_3 \\
@@ -1161,9 +1162,10 @@ f_{12} & f_{13} & f_{14} & f_{15}
 1 \\
 z_0 \\
 z_1 \\
-z_0z_1 \\
-\end{bmatrix}.
+z_0z_1
+\end{bmatrix}
 $$
+
 Let $F$ denote the inner matrix, $\vec{z}_1 := (1, z_2, z_3, z_2z_3)$, and $\vec{z}_0 := (1, z_0, z_1, z_0z_1)$. In the Hyrax protocol, the prover first sends $\vec{w} = \vec{z}_1 \cdot F$, enabling the verifier to check that $\vec{w} \cdot \vec{z}_0^\top = v$. To ensure that $\vec{w}$ is computed correctly, the verifier issues a random challenge vector $\vec{r}$, and the prover responds with $\vec{t}^\top := F \cdot \vec{r}^\top$. This leads to the relation $\vec{z}_1 \cdot \vec{t}^\top = \vec{z}_1 \cdot F \cdot \vec{r}^\top = \vec{w} \cdot \vec{r}^\top$, which holds if and only if $\vec{w}$ is correctly computed. 
 
 As a result, the verifier only needs to compute two inner products of length $\sqrt{N}$ ($N = 2^n$), achieving sublinear verification cost. Furthermore, the prover can use an IPA to prove these inner-product relations, reducing the proof size to $O(\log n)$.

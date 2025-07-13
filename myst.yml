@@ -1,6 +1,6 @@
 version: 1
 project:
-  title: Polynomial Commitment Schemes
+  title: MLE-PCS 比较 （最终报告）
   github: executablebooks/jupyter-book
   bibliography:
     - references.bib
@@ -9,6 +9,7 @@ project:
       template: plain_latex_book
       output: exports/book.pdf
   toc:
+    - file: final-report.zh.md
     - file: intro.md
     - title: Basefold
       children:
@@ -20,6 +21,8 @@ project:
         - file: basefold/basefold-habock-overview.zh.md
         - file: basefold/basefold-habock-soundness.zh.md
         - file: basefold/basefold-opt.zh.md
+        - file: analysis/basefold-analysis.zh.md
+        - file: analysis/basefold-deepfold-whir.zh.md
     - title: FRI
       children:
         - file: fri/BBHR18-FRI.zh.md
@@ -38,6 +41,7 @@ project:
         - file: gemini/Gemini-PCS-2.zh.md
         - file: gemini/hyperkzg-pcs-01.zh.md
         - file: gemini/gemini-fri.zh.md
+        - file: analysis/gemini-analysis.zh.md
     - title: KZG
       children:
         - file: kzg10/kzg_hiding.zh.md
@@ -66,15 +70,26 @@ project:
         - file: ph23/ph23-pcs-fri-01.zh.md
         - file: ph23/ph23-pcs-fri-02.zh.md
         - file: ph23/ph23.ipynb
+        - file: analysis/ph23-analysis.zh.md
     - title: Zeromorph
       children:
         - file: zeromorph/zeromorph.zh.md
         - file: zeromorph/zeromorph-fri.zh.md
         - file: zeromorph/zeromorph_mapping_tutorial.ipynb
+        - file: analysis/zeromorph-anlysis.zh.md
+        - file: analysis/zeromorph-fri-analysis.zh.md
     - title: Mercury
       children:
         - file: mercury/mercury-01.zh.md
         - file: mercury/mercury-02.zh.md
+    - title: Grey Hound
+      children:
+        - file: grey-hound/greyhound_pcs.zh.md
+    - title: Math
+      children:
+        - file: math/field_ext_inverse.zh.md
+        - file: math/mle_div.zh.md
+        - file: math/unipoly_div.zh.md
     - title: Reductions
       children:
         - file: reductions/barrett.zh.md
