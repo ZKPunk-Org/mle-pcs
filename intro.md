@@ -1,4 +1,4 @@
-# Welcome to the ZKPunk's Land of Polynomial Commitment Schemes!
+# Land of Polynomial Commitment Schemes
 
 ```{grid} 2
 

@@ -1,6 +1,6 @@
 version: 1
 project:
-  title: MLE-PCS 比较 （最终报告）
+  title: Comparison of MLE-PCS (Final Report)
   github: executablebooks/jupyter-book
   bibliography:
     - references.bib
@@ -9,91 +9,111 @@ project:
       template: plain_latex_book
       output: exports/book.pdf
   toc:
-    - file: final-report.zh.md
+    - file: final-report.md
     - file: intro.md
     - title: Basefold
       children:
-        - file: basefold/basefold-01.zh.md
-        - file: basefold/basefold-02.zh.md
-        - file: basefold/basefold-03.zh.md
-        - file: basefold/basefold-04.zh.md
-        - file: basefold/basefold-05.zh.md
-        - file: basefold/basefold-habock-overview.zh.md
-        - file: basefold/basefold-habock-soundness.zh.md
-        - file: basefold/basefold-opt.zh.md
-        - file: analysis/basefold-analysis.zh.md
-        - file: analysis/basefold-deepfold-whir.zh.md
+        - file: basefold/basefold-01.md
+        - file: basefold/basefold-02.md
+        - file: basefold/basefold-03.md
+        - file: basefold/basefold-04.md
+        - file: basefold/basefold-05.md
+        - file: basefold/basefold-habock-overview.md
+        - file: basefold/basefold-habock-soundness.md
+        - file: basefold/basefold-opt.md
+        - file: basefold/basefold-notebook.ipynb
+        - file: src/Basefold.ipynb
+        - file: analysis/basefold-analysis.md
+        - file: analysis/basefold-deepfold-whir.md
     - title: FRI
       children:
-        - file: fri/BBHR18-FRI.zh.md
-        - file: fri/BCIKS20-proximity-gaps.zh.md
-        - file: fri/fri-proximity-gap.zh.md
-        - file: fri/stir.zh.md
-        - file: fri/whir.zh.md
-        - file: fri/deepfold.zh.md
+        - file: fri/BBHR18-FRI.md
+        - file: fri/BCIKS20-proximity-gaps.md
+        - file: fri/fri-proximity-gap.md
+        - file: fri/stir.en.md
+        - file: fri/whir.md
+        - file: fri/deepfold.md
+        - file: src/stir.ipynb
+        - file: src/whir_pcs.ipynb
+        - file: src/deepfold.ipynb
     - title: FRI Binius
       children:
-        - file: fri-binius/binius-01.zh.md
-        - file: fri-binius/binius-02.zh.md
+        - file: fri-binius/binius-01.md
+        - file: fri-binius/binius-02.md
     - title: Gemini
       children:
-        - file: gemini/Gemini-PCS-1.zh.md
-        - file: gemini/Gemini-PCS-2.zh.md
-        - file: gemini/hyperkzg-pcs-01.zh.md
-        - file: gemini/gemini-fri.zh.md
-        - file: analysis/gemini-analysis.zh.md
+        - file: gemini/Gemini-PCS-1.md
+        - file: gemini/Gemini-PCS-2.md
+        - file: gemini/Gemini-PCS-3.md
+        - file: gemini/Gemini-PCS-4.md
+        - file: gemini/hyperkzg-pcs-01.md
+        - file: gemini/gemini-fri.md
+        - file: gemini/gemini_01.ipynb
+        - file: gemini/hyperkzg.ipynb
+        - file: analysis/gemini-analysis.md
     - title: KZG
       children:
-        - file: kzg10/kzg_hiding.zh.md
-        - file: kzg10/kzg notes/kzg-soundness-1.zh.md
-        - file: kzg10/kzg notes/kzg-soundness-2.zh.md
+        - file: kzg10/kzg_hiding.md
+        - file: kzg10/kzg notes/kzg-soundness-1.md
+        - file: kzg10/kzg notes/kzg-soundness-2.md
+        - file: src/kzg10.ipynb
     - title: Hyrax
       children:
-        - file: hyrax-pcs/hyrax-01.zh.md
+        - file: hyrax-pcs/hyrax-01.md
     - title: Libra
       children:
-        - file: libra-pcs/libra-pcs.zh.md
+        - file: libra-pcs/libra-pcs.md
     - title: Ligerito
       children:
-        - file: ligerito-pcs/ligerito-01.zh.md
+        - file: ligerito-pcs/ligerito-01.md
+        - file: src/ligerito.ipynb
     - title: Virgo
       children:
-        - file: virgo-pcs/virgo-pcs-01.zh.md
+        - file: virgo-pcs/virgo-pcs-01.md
     - title: Whir
       children:
-        - file: whir-pcs/whir.zh.md
+        - file: whir-pcs/whir.md
     - title: PH23
       children:
-        - file: ph23/ph23-pcs-01.zh.md
-        - file: ph23/ph23-pcs-02.zh.md
-        - file: ph23/ph23-pcs-zk.zh.md
-        - file: ph23/ph23-pcs-fri-01.zh.md
-        - file: ph23/ph23-pcs-fri-02.zh.md
+        - file: ph23/ph23-pcs-01.md
+        - file: ph23/ph23-pcs-02.md
+        - file: ph23/ph23-pcs-zk.md
+        - file: ph23/ph23-pcs-fri-01.md
+        - file: ph23/ph23-pcs-fri-02.md
         - file: ph23/ph23.ipynb
-        - file: analysis/ph23-analysis.zh.md
+        - file: analysis/ph23-analysis.md
     - title: Zeromorph
       children:
-        - file: zeromorph/zeromorph.zh.md
-        - file: zeromorph/zeromorph-fri.zh.md
+        - file: zeromorph/zeromorph.md
+        - file: zeromorph/zeromorph-02.md
+        - file: zeromorph/zeromorph-fri.md
         - file: zeromorph/zeromorph_mapping_tutorial.ipynb
-        - file: analysis/zeromorph-anlysis.zh.md
-        - file: analysis/zeromorph-fri-analysis.zh.md
+        - file: analysis/zeromorph-anlysis.md
+        - file: analysis/zeromorph-fri-analysis.md
     - title: Mercury
       children:
-        - file: mercury/mercury-01.zh.md
-        - file: mercury/mercury-02.zh.md
-    - title: Grey Hound
+        - file: mercury/mercury-01.md
+        - file: mercury/mercury-02.md
+        - file: src/mercury_pcs.ipynb
+    - title: Greyhound
       children:
-        - file: grey-hound/greyhound_pcs.zh.md
+        - file: grey-hound/greyhound_pcs.md
+    - title: Other Implementations
+      children:
+        - file: src/bcho_pcs.ipynb
+        - file: src/circle.ipynb
+        - file: notebooks.ipynb
     - title: Math
       children:
-        - file: math/field_ext_inverse.zh.md
-        - file: math/mle_div.zh.md
-        - file: math/unipoly_div.zh.md
+        - file: math/field_ext_inverse.md
+        - file: math/mle_div.md
+        - file: math/unipoly_div.md
     - title: Reductions
       children:
-        - file: reductions/barrett.zh.md
-        - file: reductions/montgomery.zh.md
+        - file: reductions/barrett.md
+        - file: reductions/montgomery.md
+        - file: math/reductions/logjump_reduction.ipynb
+        - file: math/reductions/montgomery_reduction.ipynb
 site:
   options:
     logo: logo.png

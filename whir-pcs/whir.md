@@ -192,7 +192,7 @@ As mentioned earlier, BaseFold combined the Sumcheck and FRI protocols, while th
 
 Let's delve into one iteration of the WHIR protocol (from [ACFYb, 2.1.3 WHIR protocol]) to see how WHIR specifically combines BaseFold and the STIR protocol. After one iteration, the problem of testing the proximity of $f \in \mathcal{C} := \mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]$ is transformed into testing $f' \in \mathcal{C}' := \mathrm{CRS}[\mathbb{F}, \mathcal{L}^{(2)}, m - k, \hat{w}', \sigma']$.
 
-![](./img/whir.svg)
+![](../fri/img/whir.svg)
 
 1. Sumcheck rounds. Prover and Verifier interact for $k$ rounds of Sumcheck for the constraint in $\mathrm{CRS}[\mathbb{F}, \mathcal{L}, m, \hat{w}, \sigma]$
 
@@ -314,7 +314,7 @@ WHIR adopts the idea of BaseFold, and the definition of CRS itself introduces a 
 
 After using sumcheck in step 1 of the protocol, the subsequent steps 2-5 are similar to the STIR protocol. The following figure shows one iteration of the STIR protocol.
 
-![](img/whir-stir-iteration.svg)
+![](../fri/img/whir-stir-iteration.svg)
 
 The core idea of the STIR protocol is to reduce the rate in each iteration. Specifically, in the next iteration, the folded polynomial $\hat{g}$ is not evaluated on $\mathcal{L}^{(2^k)}$, but instead chooses to evaluate on a domain $\mathcal{L}^{(2)}$ that is only half the size of the original domain $\mathcal{L}$. This corresponds to step 2 of the WHIR protocol. The benefit of doing this is that it greatly increases the redundancy of the sent messages, reducing the query complexity of the verifier.
 
@@ -336,7 +336,7 @@ In the above definition, describing a function $f$ as "consistent" with a code $
 
 The definition of correlated agreement is shown in the following figure (refer to the video [ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification](https://www.youtube.com/watch?v=iPKzmxLDdII&ab_channel=ZeroKnowledge)).
 
-![](./img/whir-correlated-agreement.svg)
+![](../fri/img/whir-correlated-agreement.svg)
 
 The [BCIKS20] paper shows that a Reed-Solomon code with rate $\rho$ has $(\delta, \varepsilon)$-correlated agreement, where $\delta \in (0, 1 - \sqrt{\rho})$, $\varepsilon := \frac{\text{poly}(2^m, 1/\rho)}{|\mathbb{F}|}$. In other words, if $\delta \in (0, 1 - \sqrt{\rho})$ and
 
@@ -350,7 +350,7 @@ then, there exist sets $T \subseteq \mathcal{L}$, and codes $c_0, \ldots, c_l \i
 
 It can be found that the definition of $(\delta, \varepsilon)$-correlated agreement does not require the sets $S$ and $T$ to be the same set, while in WHIR, a concept stronger than correlated agreement is introduced, called *mutual correlated agreement*, which requires the sets $S$ and $T$ to be the same set. As shown in the following figure (refer to the video [ZK12: WHIR: Reed-Solomon Proximity Testing with Super-Fast Verification](https://www.youtube.com/watch?v=iPKzmxLDdII&ab_channel=ZeroKnowledge)):
 
-![](./img/whir-mutual-correlated-agreement.svg)
+![](../fri/img/whir-mutual-correlated-agreement.svg)
 
 The WHIR paper gives the following conjecture about mutual correlated agreement.
 
