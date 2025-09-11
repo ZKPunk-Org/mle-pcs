@@ -117,5 +117,6 @@ project:
 site:
   options:
     logo: logo.png
+    favicon: favicon.png
     folders: true
   template: book-theme
