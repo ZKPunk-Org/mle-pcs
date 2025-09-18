@@ -114,6 +114,13 @@ project:
         - file: reductions/montgomery.md
         - file: math/reductions/logjump_reduction.ipynb
         - file: math/reductions/montgomery_reduction.ipynb
+    - title: Coding Theory
+      children:
+        - file: coding-theory/Shannon-Theorem.ipynb
+        - file: coding-theory/Reed-Solomon-Codes.ipynb
+        - file: coding-theory/Unique-Decoding-Algorithm.ipynb
+        - file: coding-theory/List-Decoding.ipynb
+        - file: coding-theory/List-Decoding-Algorithms.ipynb
 site:
   options:
     logo: logo.png
