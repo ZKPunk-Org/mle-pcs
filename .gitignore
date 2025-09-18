@@ -1,5 +1,5 @@
 .DS_Store
 .obsidian
 src/__pycache__/*
-_build
-.claude
+_build/*
+.claude/*
